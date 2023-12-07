@@ -1,0 +1,16 @@
+
+partner
+
+Usage: partner user_name
+
+  This command is used in order to ask another user to become your partner for
+a bughouse match.  The other user will need to accept or decline the offer. 
+If the other user accepts the partner offer, the two of you will then be able
+to hold bughouse matches against other partnerships and the two of you can be
+identified using the "who" command (namely by "who B") as being available for
+bughouse matches.
+
+See Also:  accept  bughouse  decline  pending  who
+
+[Last modified: December 17, 1995 -- Friar]
+

@@ -1,0 +1,4 @@
+Command:  xtell
+Purpose:  send a message to a user, but not affect current "tell" setting
+Usage:    xtell user message
+Examples: xtell sms Thanks for your help!

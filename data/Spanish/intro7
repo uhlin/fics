@@ -1,0 +1,99 @@
+
+intro7
+
+HACIENDO JUGADAS EN UNA PARTIDA DE AJEDREZ
+
+
+Hay  dos  maneras  de  hacer jugadas durante una partida.  Muchos usuarios
+tienen una interface grafica. En ese caso, el usuario mueve la pieza sobre
+el tablero  grafico usando el  mouse de su computador, y el software de la
+interface  traduce  este  movimiento  en notacion de ajedrez y lo envia al
+servidor para procesamiento. Lea el archivo de  informacion de  interfaces
+para obtener algunos detalles sobre interfaces graficas.
+
+Si no tiene una interface grafica, necesitara entrar sus jugadas usando un
+teclado.  A fin de hacerlo,  debe saber que  clase de notacion  utiliza el
+servidor de ajedrez. Los jugadores de ajedrez utilizan uno de dos sistemas
+notacionales diferentes: descriptivo o algebraico. El servidor entiende el
+algebraico unicamente (aunque tambien es capaz de comprender la version de
+computador de la notacion de ajedrez; ver mas abajo).
+
+En notacion algebraica,  cada escaque tiene un unico nombre.  Cada fila se
+numera del  1 al  8,  siendo la primera fila del lado blanco la  numero 1.
+Analogamente, cada columna se etiqueta desde la  a  hasta la  h, siendo la
+primera columna de la izquierda del lado blanco la  a.   Asi, cada casilla
+tiene un nombre de fila y columna, mencionandose primero el de la columna. 
+En notacion algebraica, cada pieza de ajedrez tiene su propio simbolo: 
+    k = king = rey;
+    q = queen = reina o dama; 
+    b = bishop = alfil; 
+    n = knight = caballo; 
+    r = rook = torre; 
+    p = pawn = peon (aunque la "p" realmente no se utiliza).
+
+Aqui hay una muestra de una posicion de una partida,  tal como se ve en el
+estilo 1 que es el estilo por defecto.  En este ejemplo, el blanco esta en
+la parte inferior del tablero y el negro en la superior.   Los simbolos de 
+las piezas estan en letras mayusculas; el  "*"  significa que la  pieza es
+negra.
+
+        ---------------------------------
+     8  |   | *R|   |   | *R|   | *K|   |
+        |---+---+---+---+---+---+---+---|
+     7  | *P|   |   | *B| *P| *P| *B| *P|
+        |---+---+---+---+---+---+---+---|
+     6  |   |   |   |   |   | *N| *P|   |
+        |---+---+---+---+---+---+---+---|
+     5  | *Q|   |   | *P|   |   | B |   |
+        |---+---+---+---+---+---+---+---|
+     4  |   |   |   |   |   | P |   |   |
+        |---+---+---+---+---+---+---+---|
+     3  |   |   | N | B | P |   |   |   |
+        |---+---+---+---+---+---+---+---|
+     2  | P | P |   |   | Q |   | P | P |
+        |---+---+---+---+---+---+---+---|
+     1  |   |   | R |   |   | R | K |   |
+        ---------------------------------
+          a   b   c   d   e   f   g   h
+
+El rey negro (*K) esta en el escaque g8;  el rey blanco (K) esta en el g1,
+y asi sucesivamente.  Le toca mover al negro.  Suponga que el negro quiere
+colocar el caballo (*N)  en el escaque e4.  La movida a entrar en notacion 
+algebraica seria Ne4.  Mover los peones es mas facil:  usted no utiliza la 
+"p" para la pieza, sino  que simplemente da el  escaque al cual el peon se
+va a mover. Suponga que el negro decide mover el peon  (*P) del escaque h7 
+al  h6. La jugada a escribir seria  h6.  En muchas posiciones del tablero,
+varias piezas iguales  (por ejemplo,  dos  torres o dos  caballos)  pueden 
+moverse a la misma casilla. En este caso,  usted debe  indicar cual de las
+varias  piezas quiere mover.  Por ejemplo,  suponga  que  el  negro  tiene
+caballos en c2 y e2, desde donde ambos pueden moverse a d4.  Para mover el
+caballo de  c2 a d4  usted podria escribir  Ncd4,  donde la "c" sirve para
+decir al servidor que caballo mover.
+
+En  notacion  algebraica,  las  capturas se denotan generalmente por  "x".
+Suponga que el negro quiere capturar el peon blanco de b2 (P) con la torre
+de  b8  (*R).  El negro ingresaria  el  movimiento  Rxb2.  Sin embargo, el
+servidor  tambien  entenderia el simple   Rb2   y comprenderia que hay una
+captura implicita.  Asi que,  para este servidor,  usted puede ingresar la
+casilla en la cual la pieza va a capturar.  Para hacer un enroque, utilice
+O-O si es el corto y O-O-O si se trata del largo. 
+
+Muchos  computadores requieren  instrucciones muy explicitas de como mover
+las piezas.  Esta notacion de computadores tiene el siguiente formato:
+    casilla_de_salida-casilla_de_llegada
+
+Por ejemplo,  en la anterior posicion del tablero,  mover  la torre  negra
+desde  b8  hasta  b2  se escribiria b8-b2. Nunca se utilizan simbolos para
+las piezas;  solo se nombran las  casillas.  El servidor tambien  entiende
+esta notacion de computador.
+
+En resumen,  para mover una pieza durante una partida,  ingrese la movida.
+Cada vez que usted o su oponente  hacen una movida,  el servidor actualiza
+la posicion del tablero y envia la nueva posicion tanto a su oponente como
+a usted mismo. Es asi de simple !
+
+Vea tambien:       interfaces   style
+
+[Ultima modificacion: junio 16, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

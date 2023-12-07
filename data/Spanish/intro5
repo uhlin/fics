@@ -1,0 +1,28 @@
+
+intro5
+
+FUNCIONES ESPECIALES
+
+
+Hay varios  comandos que realizan funciones  especiales mas alla de enviar
+mensajes  a   otros  usuarios,   desplegar  informacion  o  modificar  sus 
+parametros. Aqui estan algunos de los mas utiles:
+
+
+    comando        funcion
+    -------        --------------------------------------------
+    alias          facilita la escritura de frases frecuentemente usadas
+    examine        permite analizar un juego
+    mailmoves      le envia las jugadas de la partida actual de un usuario
+    mailoldmoves   le envia las jugadas de la ultima partida de un usuario
+    oldmoves       le permite ver la ultima partida de un usuario
+    smoves         despliega las jugadas de una partida guardada
+    sposition      despliega la posicion final de una partida guardada
+
+Con el tiempo se iran agregando mas funciones.
+
+Vea tambien:       [comandos individuales]
+
+[Ultima modificacion: junio 29, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

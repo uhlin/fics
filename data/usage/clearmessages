@@ -1,0 +1,4 @@
+Command:  clearmessages
+Purpose:  delete one or more stored messages from your message file
+Usage:    clearmessages [user]
+Examples: clearmessages; clearmessages Solid

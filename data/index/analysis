@@ -1,0 +1,13 @@
+
+index for ANALYSIS items
+
+These commands (and help files on commands) concern analyzing games:
+
+  allobservers   flip          mexamine       refresh        unexamine
+  backward       forward       observe        revert         unobserve
+  examine
+
+Type "help TOPIC" in order to read them. 
+
+[Last modified: July 10, 1995 by Friar]
+

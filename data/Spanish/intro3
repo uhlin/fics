@@ -1,0 +1,65 @@
+
+intro3
+
+
+DESPLIEGUE DE INFORMACION
+
+Hay varios comandos que pueden usarse para obtener informacion general:
+
+    comando      informacion
+    -------      --------------------------------------------
+    allobservers lista todos los usuarios que observan una partida
+    best         despliega los puntajes mas altos alcanzados en los varios
+                 tipos de partidas (incluyendo computadores)
+    date         fecha actual
+    games        informa las partidas que se estan jugando en este momento
+    handle       muestra los usuarios registrados con nombres que inician 
+                 con la letra o letras dadas
+    hbest        despliega los puntajes mas altos alcanzados en los varios
+                 tipos de partidas (excluyendo computadores)
+    help         describe un comando, despliega informacion util, o lista
+                 todos los comandos y los temas de los archivos de ayuda
+                 alfabeticamente
+    hrank        lista los usuarios y sus puntajes dentro del rango de 
+                 valores especificados (excluyendo computadores)
+    inchannel    lista a todos los usuarios que estan escuchando un canal
+                 de comunicacion dado
+    info         lista los nombres de todos los archivos de ayuda que no 
+                 se refieren a comandos
+    llogons      lista las ultimas 30 conexiones/desconexiones al servidor
+    rank         lista los usuarios y puntajes dentro del rango de valores
+                 especificado (incluyendo computadores)
+    statistics   despliega informacion sobre uso del servidor
+    time         hora actual
+    uptime       cuanto tiempo ha estado corriendo el servidor desde su
+                 ultimo arranque
+    who          usuarios actualmente conectados
+
+Otros  comandos  despliegan  informacion  sobre  usted a otro  usuario y/o
+viceversa:
+
+    comando      informacion
+    -------      --------------------------------------------
+    assess       despliega como los puntajes suyo y de otro usuario 
+                 cambiarian si ambos jugaran una partida valida por puntos
+    eco          despliega informacion sobre la apertura utilizada en una
+                 partida
+    finger       despliega informacion general sobre un usuario
+    history      despliega informacion sobre las partidas recientes de un
+                 usuario
+    hrank        informa el puesto y puntaje de un jugador (excluyendo los
+                 computadores)
+    logons       lista las ultimas 10 conexiones de un usuario
+    pending      informa las peticiones que han sido hechas a usted o por
+                 usted y que todavia no han sido declinadas
+    rank         informa el puesto y puntaje de un jugador (incluyendo los
+                 computadores)
+    stored       lista las partidas almacenadas por un usuario
+    variables    despliega la preferencias y parametros actuales de un 
+                 usuario
+
+Vea tambien:       [comandos individuales]
+
+[Ultima modificacion: junio 26, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

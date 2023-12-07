@@ -1,0 +1,33 @@
+
+**** Anand-Kasparov World Championship Match Information: ****
+
+            1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
+Kasparov    =  =  =  =  =  =  =  =  0  1  1  =  1  1  =  =  =  =    10.5
+Anand       =  =  =  =  =  =  =  =  1  0  0  =  0  0  =  =  =  =     7.5
+
+Kasparov retains title!  That's all folks ... !
+
+
+To review a game in this match, you need to know (a) the special handles on
+the server for these two players, (b) how to read "history" correctly for this
+match, and (c) how "examine" mode works.
+
+A.  HANDLES -- The special handles for the contenders are "GMAnand" and
+"GMKasparov".  To read their 'notes' type "finger <handle>".
+
+B.  HISTORY -- To display the list of games of the match, type "history
+<handle>".  Please note that the first game of the match is listed as history
+#0, the second game of the match as history #1 and so on.
+
+C.  EXAMINE -- Examine mode loads the game for you so you can replay the moves
+and even try subvariations.  The "examine" help file has complete details of
+the the various things you can do during examine mode.
+
+
+EXAMPLE:  Suppose you want to review the 9th game in the match, the game Anand
+won.  You would type: "examine GMAnand 8" -or- "examine GMKasparov 8".
+
+If you want the moves of this game emailed to you (and are are registered on
+the server), you can type "mailstored GMAnand 8" at any time.
+
+ENJOY!!!

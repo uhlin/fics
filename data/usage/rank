@@ -1,0 +1,4 @@
+Command:  rank
+Purpose:  display rank for user or range of users by category
+Usage:    rank [user [b][s][w]] -OR- rank m-n [b][s][w]
+Examples: rank; rank sveshi; rank 50-100; rank s

@@ -1,0 +1,54 @@
+
+intro6
+
+PARTIDAS DE AJEDREZ
+
+
+El proposito principal  de este servidor de ajedrez es reunir usuarios que
+quieran jugar ajedrez.  Entre otras cosas, el servidor permite contactar a
+otros usuarios para jugar partidas,  valida que todos los movimientos sean 
+legales,  mantiene la  posicion del tablero  a  medida que  transcurre  el
+juego, y actualiza los puntajes de los jugadores luego de cada partida.
+
+La  manera basica  de contactar a  un usuario para  jugar una partida es a
+traves del comando match. Hay un archivo de ayuda especial para el comando
+match,  asi que no iremos en mucho detalle aqui.  En seguida hay una lista
+de comandos sobre los que usted puede querer saber algo mas  (recuerde que
+las peticiones estan dirigidas a su  oponente, no al servidor, y que deben
+ser aceptadas por el para que tengan efecto):
+
+    comando      funcion
+    -------      --------------------------------------------
+    match        pedir a otro usuario jugar una partida
+    abort        pedir que la partida sea cancelada
+    accpet       aceptar una peticion de un usuario
+    adjourn      pedir que la partida sea detenida y grabada para 
+                 continuarla en algun otro momento
+    decline      declinar una peticion de un usuario
+    draw         pedir que la partida sea declarada tablas
+    flag         finalizar la partida porque su oponente se quedo sin 
+                 tiempo
+    moves        hacer que FICS le envie las movidas de la partida que 
+                 usted esta jugando
+    pause        pedir que la partida sea suspendida temporalmente, pero
+                 sin aplazarla
+    promote      decir a que pieza va a ser promovido un peon cuando 
+                 alcanza la octava fila
+    refresh      mostrar la posicion actual del tablero
+    resign       terminar la partida, dando a su oponente la victoria
+    say          comunicarse con su actual (o ultimo) oponente
+    switch       pedir a su oponente cambiar de lado (color)
+    takeback     pedir a su oponente devolver (cancelar) una o mas jugadas
+    unpause      pedir que una partida detenida con pause sea continuada
+    withdraw     cancelar una peticion hecha por usted
+
+Es posible  jugar partidas con mas de un usuario al tiempo, a semejanza de
+una exhibicion de simultaneas de un gran torneo de ajedrez.  Si usted esta
+interesado en jugar contra otros en partidas  simultaneas,  lea el archivo
+"simuls".
+
+Vea tambien:       match   simuls   [y los comandos individuales]
+
+[Ultima modificacion: junio 16, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

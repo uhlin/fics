@@ -1,0 +1,4 @@
+Command:  examine
+Purpose:  review or start a game under examination mode
+Usage:    examine [player1 [player2, game_number]
+Examples: examine; examine river; examine TheDane sms; examine McKeork 7

@@ -1,0 +1,40 @@
+
+intro4
+
+DEFINIENDO SUS PREFERENCIAS
+
+
+Cada usuario  tiene desde el  comienzo  ciertos  valores y parametros  por
+defecto,  pero pueden  cambiarse si se desea.  Para cambiar los parametros
+se utiliza el comando "set"; usted puede ver sus parametros actuales o los
+de otro usuario, usando el comando "variables".
+
+Algunos parametros afectan la informacion que el servidor le transmitira a
+usted,  como las  comunicaciones de otros usuarios y las notificaciones de
+partidas que comienzan o de usuarios que llegan o se van. Otros parametros
+afectan las partidas de ajedrez, como los controles de tiempo por defecto,
+el si usted oye o no un timbre cuando se le envia una nueva posicion en el
+tablero,  si debe enviarsele automaticamente un  listado de las movidas de 
+su partida cuando esta termina (o se aplaza),  o incluso el  formato usado
+para enviarle la posicion del tablero.
+
+Al  cambiar estos parametros,  usted puede crear la clase de atmosfera que
+le gustaria tener.  Los parametros pueden cambiarse en cualquier  momento,
+incluso varias veces durante una misma sesion.  En su mayoria, los cambios
+que haga en sus parametros seran grabados luego de desconectarse,  de modo 
+que no tendra que volverlos a cambiar cada vez que ingrese al FICS.
+
+Su clave secreta (password) tambien es un parametro especial, aunque nunca
+se despliega en ninguna parte.  Cuando usted se registra, se le asigna una
+clave de  ingreso que usted puede  cambiar en cualquier momento utilizando
+el comando password.
+
+Finalmente, el servidor le permite crear alias especiales para evitarle el
+teclear  frases que usa a menudo.  En lugar de escribir toda la frase,  lo
+unico que tiene que hacer es teclear el alias.
+
+Vea tambien :      aliases   password   set   variables
+
+[Ultima modificacion: junio 16, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

@@ -1,0 +1,31 @@
+# Makefile for FICS
+# This was originally written under NeXTSTEP
+#
+# Define the system below that you are compiling on.
+# SYSFLAG=-DSYSTEM_NEXT
+SYSFLAG=-DSYSTEM_ULTRIX
+
+# Set the flags for your system
+
+# Turn on optimization
+# There seems to be an optimization bug which screws up
+# ratings calculation.
+# OPTFLAGS=-O
+
+# Turn on debugging
+DEBUGFLAGS=-DDEBUG
+
+# Anything else you care to flag?
+# OTHERFLAGS=-Wall
+
+# Which architectures are you compiling for? (NeXTSTEP)
+#ARCHFLAGS=-arch m68k -arch i386
+
+PROGRAM=fics
+
+
+CC=cc
+CFLAGS=${SYSFLAG} ${OPTFLAGS} ${DEBUGFLAGS} ${OTHERFLAGS} ${ARCHFLAGS}
+LNFLAGS=-lm
+
+include ./Makefile.common

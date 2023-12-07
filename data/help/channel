@@ -1,0 +1,26 @@
+
+channel
+
+Usage: +|-|= channel [#]
+
+  This command refers to your list of channels.  When a channel is on your
+list, you will receive messages (tells) sent to that channel.  Here are the
+forms of the command:
+
+    +channel #        Add channel # to your channel list
+    -channel #        Remove channel # from your channel list
+    =channel          Display your channel list
+
+  In order too see which channels another user has on his/her list, use the
+"inchannel" command.
+
+  Some channels are designated for specific purposes and/or topics.  Channel 1
+is the general help channel and of special importance to users.  The "chan_1"
+help file has more details about the use of channel 1 and gives the general
+procedure for using a channel.  Other designated channels are listed in the
+"channel_list" help file.
+
+See Also:  chan_1  channel_list inchannel  say  tell
+
+[Last modified: December 19, 1995 -- Friar]
+

@@ -1,0 +1,4 @@
+Command:  finger
+Purpose:  display information about yourself or another user
+Usage:    finger [user]
+Examples: finger; finger TheViking

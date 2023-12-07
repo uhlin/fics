@@ -1,0 +1,4 @@
+Command:  sublist
+Purpose:  removes information from the given list
+Usage:    sublist list information
+Examples: sublist notify Friar

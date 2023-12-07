@@ -1,0 +1,19 @@
+
+pause
+
+Usage: pause
+
+  A "pause" request asks your opponent that the game you are playing be paused --
+though not adjourned.  An accepted pause request has the effect of rolling
+back the clocks to the time of the last move.  If your opponent has given you
+a pause request, using the pause command (or accept) will accept the request. 
+You may decline a pause request by using the decline command.  To unpause a
+game use "unpause".
+
+  You might want to consider using pause rather than adjourn if, for example,
+you want to consult with an admin about a problem with the match.
+  
+See Also:  accept  decline  pending  unpause
+
+[Last modified: October 8, 1995 -- Friar]
+

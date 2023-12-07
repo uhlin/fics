@@ -1,0 +1,1795 @@
+/* gamedb.c
+ *
+ */
+
+/*
+    fics - An internet chess server.
+    Copyright (C) 1993  Richard V. Nash
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+*/
+
+/* Revision history:
+   name		email		yy/mm/dd	Change
+   Richard Nash	              	93/10/22	Created
+*/
+
+#include "stdinclude.h"
+
+#include "common.h"
+#include "ficsmain.h"
+#include "config.h"
+#include "gamedb.h"
+#include "playerdb.h"
+#include "gameproc.h"
+#include "command.h"
+#include "utils.h"
+#include "rmalloc.h"
+#include "eco.h"
+#include "network.h"
+
+PUBLIC game *garray = NULL;
+PUBLIC int g_num = 0;
+
+PRIVATE int get_empty_slot()
+/* this method is awful! how about allocation as we need it and freeing
+    afterwards! */
+{
+  int i;
+
+  for (i = 0; i < g_num; i++) {
+    if (garray[i].status == GAME_EMPTY)
+      return i;
+  }
+  g_num++;
+  if (!garray) {
+    garray = (game *) rmalloc(sizeof(game) * g_num);
+  } else {
+    garray = (game *) rrealloc(garray, sizeof(game) * g_num);
+  } /* yeah great, bet this causes lag!  - DAV*/
+  garray[g_num - 1].status = GAME_EMPTY;
+  return g_num - 1;
+}
+
+PUBLIC int game_new()
+{
+  int new = get_empty_slot();
+  game_zero(new);
+  return new;
+}
+
+PUBLIC int game_zero(int g)
+{
+  garray[g].white = -1;
+  garray[g].black = -1;
+/*  garray[g].old_white = -1;
+    garray[g].old_black = -1;
+*/
+  garray[g].status = GAME_NEW;
+  garray[g].link = -1;
+  garray[g].rated = 0;
+  garray[g].private = 0;
+  garray[g].result = END_NOTENDED;
+  garray[g].type = TYPE_UNTIMED;
+  garray[g].passes = 0;
+  board_init(&garray[g].game_state, NULL, NULL);
+  garray[g].game_state.gameNum = g;
+  garray[g].numHalfMoves = 0;
+  garray[g].moveListSize = 0;
+  garray[g].moveList = NULL;
+  garray[g].examMoveListSize = 0;
+  garray[g].examMoveList = NULL;
+  garray[g].wInitTime = 300;	/* 5 minutes */
+  garray[g].wIncrement = 0;
+  garray[g].bInitTime = 300;	/* 5 minutes */
+  garray[g].bIncrement = 0;
+#ifdef TIMESEAL
+  garray[g].flag_pending = FLAG_NONE;
+  garray[g].flag_check_time = 0L;
+#endif
+  garray[g].white_name[0] = '\0';
+  garray[g].black_name[0] = '\0';
+  garray[g].white_rating = 0;
+  garray[g].black_rating = 0;
+  garray[g].revertHalfMove = 0;
+  return 0;
+}
+
+PUBLIC int game_free(int g)
+{
+  if (garray[g].moveListSize)
+    rfree(garray[g].moveList);
+  if (garray[g].examMoveListSize)
+    rfree(garray[g].examMoveList);
+  garray[g].moveListSize = 0;
+  garray[g].examMoveListSize = 0;
+  return 0;
+}
+
+PUBLIC int game_clear(int g)
+{
+  game_free(g);
+  game_zero(g);
+  return 0;
+}
+
+PUBLIC int game_remove(int g)
+{
+  /* Should remove game from players observation list */
+  game_clear(g);
+  garray[g].status = GAME_EMPTY;
+  return 0;
+}
+
+/* old moves not stored now - uses smoves */
+PUBLIC int game_finish(int g)
+{
+  player_game_ended(g);		/* Alert playerdb that game ended */
+/*  NewOldGame(g); */
+/*  game_free(g) */
+  game_remove(g);
+  return 0;
+}
+
+#if 0
+PUBLIC void PosToBoardList (int g)
+{
+  if (garray[g].numHalfMoves >= garray[g].boardListSize) {
+    garray[g].boardListSize += 50;
+    if (garray[g].boardListSize <= 50)
+      garray[g].boardList =
+        (boardList_t *) rmalloc(garray[g].boardListSize * sizeof(boardList_t));
+    else
+      garray[g].boardList = (boardList_t *) rrealloc (garray[g].boardList,
+                              garray[g].boardListSize * sizeof(boardList_t));
+  }
+  if (garray[g].boardList != NULL)
+    strcpy(garray[g].boardList[garray[g].numHalfMoves], boardToFEN(g));
+  else
+    fprintf(stderr, "Board List could not be allocated for game %d.\n", g+1);
+}
+#endif
+
+PUBLIC void MakeFENpos (int g, char *FEN)
+{
+  strcpy(FEN, boardToFEN(g));
+}
+
+PUBLIC char *game_time_str(int wt, int winc, int bt, int binc)
+{
+  static char tstr[50];
+
+  if ((!wt) && (!winc)) {			/* Untimed */
+    strcpy(tstr, "");
+    return tstr;
+  }
+  if ((wt == bt) && (winc == binc)) {
+    sprintf(tstr, " %d %d", wt, winc);
+  } else {
+    sprintf(tstr, " %d %d : %d %d", wt, winc, bt, binc);
+  }
+  return tstr;
+}
+
+PUBLIC char *bstr[] = {"untimed", "blitz", "standard", "non-standard", "wild", "lightning", "bughouse"};
+PUBLIC char *rstr[] = {"unrated", "rated"};
+
+PUBLIC char *game_str(int rated, int wt, int winc, int bt, int binc,
+		       char *cat, char *board)
+{
+  static char tstr[200];
+
+  if (cat && cat[0] && board && board[0] &&
+      (strcmp(cat, "standard") || strcmp(board, "standard"))) {
+    sprintf(tstr, "%s %s%s Loaded from %s/%s",
+	    rstr[rated],
+	    bstr[game_isblitz(wt / 60, winc, bt / 60, binc, cat, board)],
+	    game_time_str(wt / 60, winc, bt / 60, binc),
+	    cat, board);
+  } else {
+    sprintf(tstr, "%s %s%s",
+	    rstr[rated],
+	    bstr[game_isblitz(wt / 60, winc, bt / 60, binc, cat, board)],
+	    game_time_str(wt / 60, winc, bt / 60, binc));
+  }
+  return tstr;
+}
+
+PUBLIC int game_isblitz(int wt, int winc, int bt, int binc,
+			 char *cat, char *board)
+{
+  int total;
+
+  if (cat && cat[0] && board && board[0] && (!strcmp(cat, "wild")))
+    return TYPE_WILD;
+  if (cat && cat[0] && board && board[0] &&
+      (strcmp(cat, "standard") || strcmp(board, "standard")))
+    return TYPE_NONSTANDARD;
+  if (((wt == 0) && (winc == 0)) || ((bt == 0) && (binc == 0)))
+			/* nonsense if one is timed and one is not */
+    return TYPE_UNTIMED;
+  if ((wt != bt) || (winc != binc))
+    return TYPE_NONSTANDARD;
+  total = wt * 60 + winc * 40;
+  if (total < 180)		/* 3 minute */
+    return TYPE_LIGHT;
+  if (total >= 900)		/* 15 minutes */
+    return TYPE_STAND;
+  else
+    return TYPE_BLITZ;
+}
+
+PUBLIC void send_board_to(int g, int p)
+{
+  char *b;
+  int side;
+  int relation;
+
+/* since we know g and p, figure out our relationship to this game */
+
+  side = WHITE;
+  if (garray[g].status == GAME_EXAMINE) {
+    if (parray[p].game == g) {
+      relation = 2;
+    } else {
+      relation = -2;
+    }
+  } else {
+    if (parray[p].game == g) {
+      side = parray[p].side;
+      relation = ((side == garray[g].game_state.onMove) ? 1 : -1);
+    } else {
+      relation = 0;
+    }
+  }
+
+  if (parray[p].flip) {		/* flip board? */
+    if (side == WHITE)
+      side = BLACK;
+    else
+      side = WHITE;
+  }
+  game_update_time(g);
+  b = board_to_string(garray[g].white_name,
+		      garray[g].black_name,
+		      garray[g].wTime,
+		      garray[g].bTime,
+		      &garray[g].game_state,
+		      (garray[g].status == GAME_EXAMINE) ?
+		      garray[g].examMoveList : garray[g].moveList,
+		      parray[p].style,
+		      side, relation, p);
+
+#ifdef TIMESEAL
+
+  if (con[parray[p].socket].timeseal) {
+    if (parray[p].bell) {
+      pprintf_noformat(p, "\007\n[G]\n%s", b);
+    } else {
+      pprintf_noformat(p, "\n[G]\n%s", b);
+    }
+  } else {
+    if (parray[p].bell) {
+      pprintf_noformat(p, "\007\n%s", b);
+    } else {
+      pprintf_noformat(p, "\n%s", b);
+    }
+  }
+
+#else
+
+  if (parray[p].bell) {
+    pprintf_noformat(p, "\007\n%s", b);
+  } else {
+    pprintf_noformat(p, "\n%s", b);
+  }
+
+#endif
+
+  if (p != commanding_player) {
+    pprintf(p, "%s", parray[p].prompt);
+  }
+}
+
+PUBLIC void send_boards(int g)
+{
+  int p;
+  simul_info_t *simInfo = &parray[garray[g].white].simul_info;
+
+  if (simInfo->numBoards == 0 || simInfo->boards[simInfo->onBoard] == g)
+    for (p = 0; p < p_num; p++) {
+      if (parray[p].status == PLAYER_EMPTY)
+	continue;
+      if (player_is_observe(p, g) || (parray[p].game == g))
+	send_board_to(g, p);
+    }
+}
+
+PUBLIC void game_update_time(int g)
+{
+  unsigned now, timesince;
+
+  if (garray[g].clockStopped)
+    return;
+  if (garray[g].type == TYPE_UNTIMED)
+    return;
+  now = tenth_secs();
+  timesince = now - garray[g].lastDecTime;
+  if (garray[g].game_state.onMove == WHITE) {
+    garray[g].wTime -= timesince;
+  } else {
+    garray[g].bTime -= timesince;
+  }
+  garray[g].lastDecTime = now;
+}
+
+PUBLIC void game_update_times()
+{
+  int g;
+
+  for (g = 0; g < g_num; g++) {
+    if (garray[g].status != GAME_ACTIVE)
+      continue;
+    if (garray[g].clockStopped)
+      continue;
+    game_update_time(g);
+  }
+}
+
+#if 0 /* oldgame is obsolete - games are stored in history */
+PRIVATE int oldGameArray[MAXOLDGAMES];
+PRIVATE int numOldGames = 0;
+
+PRIVATE int RemoveOldGame(int g)
+{
+  int i;
+
+  for (i = 0; i < numOldGames; i++) {
+    if (oldGameArray[i] == g)
+      break;
+  }
+  if (i == numOldGames)
+    return -1;			/* Not found! */
+  for (; i < numOldGames - 1; i++)
+    oldGameArray[i] = oldGameArray[i + 1];
+  numOldGames--;
+  game_remove(g);
+  return 0;
+}
+
+PRIVATE int AddOldGame(int g)
+{
+  if (numOldGames == MAXOLDGAMES)	/* Remove the oldest */
+    RemoveOldGame(oldGameArray[0]);
+  oldGameArray[numOldGames] = g;
+  numOldGames++;
+  return 0;
+}
+
+PUBLIC int FindOldGameFor(int p)
+{
+  int i;
+
+  if (p == -1)
+    return numOldGames - 1;
+  for (i = numOldGames - 1; i >= 0; i--) {
+    if (garray[oldGameArray[i]].old_white == p)
+      return oldGameArray[i];
+    if (garray[oldGameArray[i]].old_black == p)
+      return oldGameArray[i];
+  }
+  return -1;
+}
+
+/* This just removes the game if both players have new-old games */
+PUBLIC int RemoveOldGamesForPlayer(int p)
+{
+  int g;
+
+  g = FindOldGameFor(p);
+  if (g < 0)
+    return 0;
+  if (garray[g].old_white == p)
+    garray[g].old_white = -1;
+  if (garray[g].old_black == p)
+    garray[g].old_black = -1;
+  if ((garray[g].old_white == -1) && (garray[g].old_black == -1)) {
+    RemoveOldGame(g);
+  }
+  return 0;
+}
+
+/* This recycles any old games for players who disconnect */
+PUBLIC int ReallyRemoveOldGamesForPlayer(int p)
+{
+  int g;
+
+  g = FindOldGameFor(p);
+  if (g < 0)
+    return 0;
+  RemoveOldGame(g);
+  return 0;
+}
+
+PUBLIC int NewOldGame(int g)
+{
+  RemoveOldGamesForPlayer(garray[g].white);
+  RemoveOldGamesForPlayer(garray[g].black);
+  garray[g].old_white = garray[g].white;
+  garray[g].old_black = garray[g].black;
+  garray[g].status = GAME_STORED;
+  AddOldGame(g);
+  return 0;
+}
+#endif
+
+PUBLIC char *EndString(int g, int personal)
+{
+/* personal 0 == White checkmated; personal 1 == loon checkmated */
+
+  static char endstr[200];
+  char *blackguy, *whiteguy;
+  static char blackstr[] = "Black";
+  static char whitestr[] = "White";
+
+  blackguy = (personal ? garray[g].black_name : blackstr);
+  whiteguy = (personal ? garray[g].white_name : whitestr);
+
+  switch (garray[g].result) {
+  case END_CHECKMATE:
+    sprintf(endstr, "%s checkmated",
+	    garray[g].winner == WHITE ? blackguy : whiteguy);
+    break;
+  case END_RESIGN:
+    sprintf(endstr, "%s resigned",
+	    garray[g].winner == WHITE ? blackguy : whiteguy);
+    break;
+  case END_FLAG:
+    sprintf(endstr, "%s ran out of time",
+	    garray[g].winner == WHITE ? blackguy : whiteguy);
+    break;
+  case END_AGREEDDRAW:
+    sprintf(endstr, "Game drawn by mutual agreement");
+    break;
+  case END_BOTHFLAG:
+    sprintf(endstr, "Game drawn because both players ran out of time");
+    break;
+  case END_REPETITION:
+    sprintf(endstr, "Game drawn by repetition");
+    break;
+  case END_50MOVERULE:
+    sprintf(endstr, "Draw by the 50 move rule");
+    break;
+  case END_ADJOURN:
+    sprintf(endstr, "Game adjourned by mutual agreement");
+    break;
+  case END_LOSTCONNECTION:
+    sprintf(endstr, "%s lost connection, game adjourned",
+	    garray[g].winner == WHITE ? whiteguy : blackguy);
+    break;
+  case END_ABORT:
+    sprintf(endstr, "Game aborted by mutual agreement");
+    break;
+  case END_STALEMATE:
+    sprintf(endstr, "Stalemate.");
+    break;
+  case END_NOTENDED:
+    sprintf(endstr, "Still in progress");
+    break;
+  case END_COURTESY:
+    sprintf(endstr, "Game courtesyaborted by %s",
+	    garray[g].winner == WHITE ? whiteguy : blackguy);
+    break;
+  case END_COURTESYADJOURN:
+    sprintf(endstr, "Game courtesyadjourned by %s",
+	    garray[g].winner == WHITE ? whiteguy : blackguy);
+    break;
+  case END_NOMATERIAL:
+    sprintf(endstr, "Game drawn because neither player has mating material");
+    break;
+  case END_FLAGNOMATERIAL:
+    sprintf(endstr, "%s ran out of time and %s has no material to mate",
+	    garray[g].winner == WHITE ? blackguy : whiteguy,
+	    garray[g].winner == WHITE ? whiteguy : blackguy);
+    break;
+  case END_ADJDRAW:
+    sprintf(endstr, "Game drawn by adjudication");
+    break;
+  case END_ADJWIN:
+    sprintf(endstr, "%s wins by adjudication",
+	    garray[g].winner == WHITE ? whiteguy : blackguy);
+    break;
+  case END_ADJABORT:
+    sprintf(endstr, "Game aborted by adjudication");
+    break;
+  default:
+    sprintf(endstr, "???????");
+    break;
+  }
+
+  return (endstr);
+}
+
+PUBLIC char *EndSym(int g)
+{
+  static char *symbols[] = {"1-0", "0-1", "1/2-1/2", "*"};
+
+  switch (garray[g].result) {
+  case END_CHECKMATE:
+  case END_RESIGN:
+  case END_FLAG:
+  case END_ADJWIN:
+    return ((garray[g].winner == WHITE) ? symbols[0] : symbols[1]);
+    break;
+  case END_AGREEDDRAW:
+  case END_BOTHFLAG:
+  case END_REPETITION:
+  case END_50MOVERULE:
+  case END_STALEMATE:
+  case END_NOMATERIAL:
+  case END_FLAGNOMATERIAL:
+  case END_ADJDRAW:
+    return (symbols[2]);
+    break;
+  }
+
+  return (symbols[3]);
+}
+
+/* This should be enough to hold any game up to at least 250 moves
+ * If we overwrite this, the server will crash.
+ */
+#define GAME_STRING_LEN 16000
+PRIVATE char gameString[GAME_STRING_LEN];
+PUBLIC char *movesToString(int g, int pgn)
+{
+  char tmp[160];
+  int wr, br;
+  int i, col;
+  unsigned curTime;
+  char *serv_loc = SERVER_LOCATION;
+  char *serv_name = SERVER_NAME;
+
+  wr = garray[g].white_rating;
+  br = garray[g].black_rating;
+  
+
+  curTime = untenths(garray[g].timeOfStart);
+
+  if (pgn) {
+    sprintf(gameString,
+	    "\n[Event \"%s %s %s game\"]\n"
+	    "[Site \"%s, %s\"]\n",
+	    serv_name,rstr[garray[g].rated], bstr[garray[g].type],serv_name,serv_loc);
+    strftime(tmp, sizeof(tmp),
+	     "[Date \"%Y.%m.%d\"]\n"
+	     "[Time \"%H:%M:%S\"]\n",
+	     localtime((time_t *) &curTime));
+    strcat(gameString, tmp);
+    sprintf(tmp,
+	    "[Round \"-\"]\n"
+	    "[White \"%s\"]\n"
+	    "[Black \"%s\"]\n"
+	    "[WhiteElo \"%d\"]\n"
+	    "[BlackElo \"%d\"]\n",
+	    garray[g].white_name, garray[g].black_name, wr, br);
+    strcat(gameString, tmp);
+    sprintf(tmp,
+	    "[TimeControl \"%d+%d\"]\n"
+	    "[Mode \"ICS\"]\n"
+	    "[Result \"%s\"]\n\n",
+	    garray[g].wInitTime / 10, garray[g].wIncrement / 10, EndSym(g));
+    strcat(gameString, tmp);
+
+    col = 0;
+    for (i = 0; i < garray[g].numHalfMoves; i++) {
+      if (!(i % 2)) {
+	if ((col += sprintf(tmp, "%d. ", i / 2 + 1)) > 70) {
+	  strcat(gameString, "\n");
+	  col = 0;
+	}
+	strcat(gameString, tmp);
+      }
+      if ((col += sprintf(tmp, "%s ", (garray[g].status == GAME_EXAMINE) ? garray[g].examMoveList[i].algString : garray[g].moveList[i].algString)) > 70) {
+	strcat(gameString, "\n");
+	col = 0;
+      }
+      strcat(gameString, tmp);
+    }
+    strcat(gameString, "\n");
+
+  } else {
+
+    sprintf(gameString, "\n%s ", garray[g].white_name);
+    if (wr > 0) {
+      sprintf(tmp, "(%d) ", wr);
+    } else {
+      sprintf(tmp, "(UNR) ");
+    }
+    strcat(gameString, tmp);
+    sprintf(tmp, "vs. %s ", garray[g].black_name);
+    strcat(gameString, tmp);
+    if (br > 0) {
+      sprintf(tmp, "(%d) ", br);
+    } else {
+      sprintf(tmp, "(UNR) ");
+    }
+    strcat(gameString, tmp);
+    strcat(gameString, "--- ");
+    strcat(gameString, (char*) (localtime((time_t *) &curTime)));
+    if (garray[g].rated) {
+      strcat(gameString, "\nRated ");
+    } else {
+      strcat(gameString, "\nUnrated ");
+    }
+    if (garray[g].type == TYPE_BLITZ) {
+      strcat(gameString, "Blitz ");
+    } else if (garray[g].type == TYPE_LIGHT) {
+      strcat(gameString, "Lighting ");
+    } else if (garray[g].type == TYPE_BUGHOUSE) {
+      strcat(gameString, "Bughouse ");
+    } else if (garray[g].type == TYPE_STAND) {
+      strcat(gameString, "Standard ");
+    } else if (garray[g].type == TYPE_WILD) {
+      strcat(gameString, "Wild ");
+    } else if (garray[g].type == TYPE_NONSTANDARD) {
+      strcat(gameString, "Non-standard ");
+    } else {
+      strcat(gameString, "Untimed ");
+    }
+    strcat(gameString, "match, initial time: ");
+    if ((garray[g].bInitTime != garray[g].wInitTime) || (garray[g].wIncrement != garray[g].bIncrement)) { /* different starting times */ 
+      sprintf(tmp, "%d minutes, increment: %d seconds AND %d minutes, increment: %d seconds.\n\n", garray[g].wInitTime / 600, garray[g].wIncrement / 10, garray[g].bInitTime / 600, garray[g].bIncrement / 10);
+    } else {
+      sprintf(tmp, "%d minutes, increment: %d seconds.\n\n", garray[g].wInitTime / 600, garray[g].wIncrement / 10);
+    }
+    strcat(gameString, tmp);
+    sprintf(tmp, "Move  %-19s%-19s\n", garray[g].white_name, garray[g].black_name);
+    strcat(gameString, tmp);
+    strcat(gameString, "----  ----------------   ----------------\n");
+
+    for (i = 0; i < garray[g].numHalfMoves; i += 2) {
+      if (i + 1 < garray[g].numHalfMoves) {
+	sprintf(tmp, "%3d.  %-16s   ", i / 2 + 1,
+		(garray[g].status == GAME_EXAMINE) ?
+		move_and_time(&garray[g].examMoveList[i]) :
+		move_and_time(&garray[g].moveList[i]));
+	strcat(gameString, tmp);
+	sprintf(tmp, "%-16s\n",
+		(garray[g].status == GAME_EXAMINE) ?
+		move_and_time(&garray[g].examMoveList[i + 1]) :
+		move_and_time(&garray[g].moveList[i + 1]));
+      } else {
+	sprintf(tmp, "%3d.  %-16s\n", i / 2 + 1,
+		(garray[g].status == GAME_EXAMINE) ?
+		move_and_time(&garray[g].examMoveList[i]) :
+		move_and_time(&garray[g].moveList[i]));
+      }
+      strcat(gameString, tmp);
+      if (strlen(gameString) > GAME_STRING_LEN - 100) {	/* Bug out if getting
+							   close to filling this
+							   string */
+	return gameString;
+      }
+    }
+
+    strcat(gameString, "      ");
+  }
+
+  sprintf(tmp, "{%s} %s\n", EndString(g, 0), EndSym(g));
+  strcat(gameString, tmp);
+
+  return gameString;
+}
+
+PUBLIC void game_disconnect(int g, int p)
+{
+  game_ended(g, (garray[g].white == p) ? WHITE : BLACK, END_LOSTCONNECTION);
+}
+
+PUBLIC int CharToPiece(char c)
+{
+  switch (c) {
+    case 'P':return W_PAWN;
+  case 'p':
+    return B_PAWN;
+  case 'N':
+    return W_KNIGHT;
+  case 'n':
+    return B_KNIGHT;
+  case 'B':
+    return W_BISHOP;
+  case 'b':
+    return B_BISHOP;
+  case 'R':
+    return W_ROOK;
+  case 'r':
+    return B_ROOK;
+  case 'Q':
+    return W_QUEEN;
+  case 'q':
+    return B_QUEEN;
+  case 'K':
+    return W_KING;
+  case 'k':
+    return B_KING;
+  default:
+    return NOPIECE;
+  }
+}
+
+PUBLIC int PieceToChar(int piece)
+{
+  switch (piece) {
+    case W_PAWN:return 'P';
+  case B_PAWN:
+    return 'p';
+  case W_KNIGHT:
+    return 'N';
+  case B_KNIGHT:
+    return 'n';
+  case W_BISHOP:
+    return 'B';
+  case B_BISHOP:
+    return 'b';
+  case W_ROOK:
+    return 'R';
+  case B_ROOK:
+    return 'r';
+  case W_QUEEN:
+    return 'Q';
+  case B_QUEEN:
+    return 'q';
+  case W_KING:
+    return 'K';
+  case B_KING:
+    return 'k';
+  default:
+    return ' ';
+  }
+}
+
+/* One line has everything on it */
+PRIVATE int WriteMoves(FILE * fp, move_t *m)
+{
+  unsigned long MoveInfo = (m->color == BLACK);
+  int piece, castle;
+  int useFile = 0, useRank = 0, check = 0;
+  int i;
+
+  castle = (m->moveString[0] == 'o');
+  if (castle)
+    piece = KING;
+  else
+    piece = piecetype(CharToPiece(m->moveString[0]));
+
+  MoveInfo = (MoveInfo <<= 3) | piece;
+  MoveInfo = (MoveInfo <<= 3) | m->fromFile;
+  MoveInfo = (MoveInfo <<= 3) | m->fromRank;
+  MoveInfo = (MoveInfo <<= 3) | m->toFile;
+  MoveInfo = (MoveInfo <<= 3) | m->toRank;
+  MoveInfo = (MoveInfo <<= 3) | (m->pieceCaptured & 7);
+  MoveInfo = (MoveInfo <<= 3) | (m->piecePromotionTo & 7);
+  MoveInfo = (MoveInfo <<= 1) | (m->enPassant != 0);
+
+  /* Are we using from-file or from-rank in algString? */
+  i = strlen(m->algString) - 1;
+  if (m->algString[i] == '+') {
+    check = 1;
+    i--;
+  }
+  if (piece != PAWN && !castle) {
+    i -= 2;
+    if (i < 0)
+      return -1;
+    if (m->algString[i] == 'x')
+      i--;
+    if (i < 0)
+      return -1;
+    if (isdigit(m->algString[i])) {
+      useRank = 2;
+      i--;
+    }
+    if (i < 0)
+      return -1;
+    useFile = (islower(m->algString[i]) ? 4 : 0);
+  }
+  MoveInfo = (MoveInfo << 3) | useFile | useRank | check;
+  fprintf(fp, "%lx %x %x\n", MoveInfo, m->tookTime, m->atTime);
+
+#if 0
+  fprintf(fp, "%d %d %d %d %d %d %d %d %d \"%s\" \"%s\" %u %u\n",
+	  m->color, m->fromFile, m->fromRank, m->toFile, m->toRank,
+	  m->pieceCaptured, m->piecePromotionTo, m->enPassant, m->doublePawn,
+	  m->moveString, m->algString, m->atTime, m->tookTime);
+#endif
+  return 0;
+}
+
+PRIVATE int ReadMove(FILE * fp, move_t *m)
+{
+  char line[MAX_GLINE_SIZE];
+  fgets(line, MAX_GLINE_SIZE - 1, fp);
+  if (sscanf(line, "%d %d %d %d %d %d %d %d %d \"%[^\"]\" \"%[^\"]\" %u %u\n",
+	     &m->color, &m->fromFile, &m->fromRank, &m->toFile, &m->toRank,
+     &m->pieceCaptured, &m->piecePromotionTo, &m->enPassant, &m->doublePawn,
+	     m->moveString, m->algString, &m->atTime, &m->tookTime) != 13)
+    return -1;
+  return 0;
+}
+
+PRIVATE void WriteGameState(FILE * fp, game_state_t *gs)
+{
+  int i, j;
+
+  for (i = 0; i < 8; i++)
+    for (j = 0; j < 8; j++) {
+      fprintf(fp, "%c", PieceToChar(gs->board[i][j]));
+    }
+  fprintf(fp, "%d %d %d %d %d %d",
+	  gs->wkmoved, gs->wqrmoved, gs->wkrmoved,
+	  gs->bkmoved, gs->bqrmoved, gs->bkrmoved);
+  for (i = 0; i < 8; i++)
+    fprintf(fp, " %d %d", gs->ep_possible[0][i], gs->ep_possible[1][i]);
+  fprintf(fp, " %d %d %d\n", gs->lastIrreversable, gs->onMove, gs->moveNum);
+}
+
+PRIVATE int ReadGameState(FILE * fp, game_state_t *gs, int version)
+{
+  int i, j;
+  char pieceChar;
+  int wkmoved, wqrmoved, wkrmoved, bkmoved, bqrmoved, bkrmoved;
+
+  if (version == 0) {
+    for (i = 0; i < 8; i++)
+      for (j = 0; j < 8; j++)
+	if (fscanf(fp, "%d ", &gs->board[i][j]) != 1)
+	  return -1;
+  } else {
+    getc(fp);			/* Skip past a newline. */
+    for (i = 0; i < 8; i++)
+      for (j = 0; j < 8; j++) {
+	pieceChar = getc(fp);
+	gs->board[i][j] = CharToPiece(pieceChar);
+      }
+  }
+  if (fscanf(fp, "%d %d %d %d %d %d",
+	     &wkmoved, &wqrmoved, &wkrmoved,
+	     &bkmoved, &bqrmoved, &bkrmoved) != 6)
+    return -1;
+  gs->wkmoved = wkmoved;
+  gs->wqrmoved = wqrmoved;
+  gs->wkrmoved = wkrmoved;
+  gs->bkmoved = bkmoved;
+  gs->bqrmoved = bqrmoved;
+  gs->bkrmoved = bkrmoved;
+  for (i = 0; i < 8; i++)
+    if (fscanf(fp, " %d %d", &gs->ep_possible[0][i], &gs->ep_possible[1][i]) != 2)
+      return -1;
+  if (fscanf(fp, " %d %d %d\n", &gs->lastIrreversable, &gs->onMove, &gs->moveNum) != 3)
+    return -1;
+  return 0;
+}
+
+PUBLIC int got_attr_value(int g, char *attr, char *value, FILE * fp, char *file)
+{
+  int i;
+
+  if (!strcmp(attr, "w_init:")) {
+    garray[g].wInitTime = atoi(value);
+  } else if (!strcmp(attr, "w_inc:")) {
+    garray[g].wIncrement = atoi(value);
+  } else if (!strcmp(attr, "b_init:")) {
+    garray[g].bInitTime = atoi(value);
+  } else if (!strcmp(attr, "b_inc:")) {
+    garray[g].bIncrement = atoi(value);
+  } else if (!strcmp(attr, "white_name:")) {
+    strcpy(garray[g].white_name, value);
+  } else if (!strcmp(attr, "black_name:")) {
+    strcpy(garray[g].black_name, value);
+  } else if (!strcmp(attr, "white_rating:")) {
+    garray[g].white_rating = atoi(value);
+  } else if (!strcmp(attr, "black_rating:")) {
+    garray[g].black_rating = atoi(value);
+  } else if (!strcmp(attr, "result:")) {
+    garray[g].result = atoi(value);
+  } else if (!strcmp(attr, "timestart:")) {
+    garray[g].timeOfStart = atoi(value);
+  } else if (!strcmp(attr, "w_time:")) {
+    garray[g].wTime = atoi(value);
+  } else if (!strcmp(attr, "b_time:")) {
+    garray[g].bTime = atoi(value);
+  } else if (!strcmp(attr, "clockstopped:")) {
+    garray[g].clockStopped = atoi(value);
+  } else if (!strcmp(attr, "rated:")) {
+    garray[g].rated = atoi(value);
+  } else if (!strcmp(attr, "private:")) {
+    garray[g].private = atoi(value);
+  } else if (!strcmp(attr, "type:")) {
+    garray[g].type = atoi(value);
+  } else if (!strcmp(attr, "halfmoves:")) {
+    garray[g].numHalfMoves = atoi(value);
+    if (garray[g].numHalfMoves == 0)
+      return 0;
+    garray[g].moveListSize = garray[g].numHalfMoves;
+    garray[g].moveList = (move_t *) rmalloc(sizeof(move_t) * garray[g].moveListSize);
+    for (i = 0; i < garray[g].numHalfMoves; i++) {
+      if (ReadMove(fp, &garray[g].moveList[i])) {
+	fprintf(stderr, "FICS: Trouble reading moves from %s.\n", file);
+	return -1;
+      }
+    }
+  } else if (!strcmp(attr, "gamestate:")) {	/* Value meaningless */
+    if (garray[g].status != GAME_EXAMINE &&
+	ReadGameState(fp, &garray[g].game_state, 0)) {
+      fprintf(stderr, "FICS: Trouble reading game state from %s.\n", file);
+      return -1;
+    }
+  } else {
+    fprintf(stderr, "FICS: Error bad attribute >%s< from file %s\n", attr, file);
+  }
+  return 0;
+}
+
+void ReadOneV1Move(FILE * fp, move_t *m)
+{
+  int i;
+  char PieceChar;
+  int useFile, useRank, check, piece;
+  unsigned long MoveInfo;
+
+  fscanf(fp, "%lx %x %x", &MoveInfo, &m->tookTime, &m->atTime);
+  check = MoveInfo & 1;
+  useRank = MoveInfo & 2;
+  useFile = MoveInfo & 4;
+  MoveInfo >>= 3;
+  m->enPassant = MoveInfo & 1;	/* may have to negate later. */
+  MoveInfo >>= 1;
+  m->piecePromotionTo = MoveInfo & 7;	/* may have to change color. */
+  MoveInfo >>= 3;
+  m->pieceCaptured = MoveInfo & 7;	/* may have to change color. */
+  MoveInfo >>= 3;
+  m->toRank = MoveInfo & 7;
+  MoveInfo >>= 3;
+  m->toFile = MoveInfo & 7;
+  MoveInfo >>= 3;
+  m->fromRank = MoveInfo & 7;
+  MoveInfo >>= 3;
+  m->fromFile = MoveInfo & 7;
+  MoveInfo >>= 3;
+  piece = MoveInfo & 7;
+  m->color = (MoveInfo & 8) ? BLACK : WHITE;
+  if (m->pieceCaptured != NOPIECE) {
+    if (m->color == BLACK)
+      m->pieceCaptured |= WHITE;
+    else
+      m->pieceCaptured |= BLACK;
+  }
+  if (piece == PAWN) {
+    PieceChar = 'P';
+    if ((m->toRank == 3 && m->fromRank == 1)
+	|| (m->toRank == 4 && m->fromRank == 6))
+      m->doublePawn = m->toFile;
+    else
+      m->doublePawn = -1;
+    if (m->pieceCaptured)
+      sprintf(m->algString, "%cx%c%d", 'a' + m->fromFile,
+	      'a' + m->toFile, m->toRank + 1);
+    else
+      sprintf(m->algString, "%c%d", 'a' + m->toFile, m->toRank + 1);
+    if (m->piecePromotionTo != 0) {
+      if (m->piecePromotionTo == KNIGHT)
+	strcat(m->algString, "=N");
+      else if (m->piecePromotionTo == BISHOP)
+	strcat(m->algString, "=B");
+      else if (m->piecePromotionTo == ROOK)
+	strcat(m->algString, "=R");
+      else if (m->piecePromotionTo == QUEEN)
+	strcat(m->algString, "=Q");
+      m->piecePromotionTo |= m->color;
+    }
+    if (m->enPassant)
+      m->enPassant = m->toFile - m->fromFile;
+  } else {
+    m->doublePawn = -1;
+    PieceChar = PieceToChar(piecetype(piece) | WHITE);
+    if (PieceChar == 'K' && m->fromFile == 4 && m->toFile == 6) {
+      strcpy(m->algString, "O-O");
+      strcpy(m->moveString, "o-o");
+    } else if (PieceChar == 'K' && m->fromFile == 4 && m->toFile == 2) {
+      strcpy(m->algString, "O-O-O");
+      strcpy(m->moveString, "o-o-o");
+    } else {
+      i = 0;
+      m->algString[i++] = PieceChar;
+      if (useFile)
+	m->algString[i++] = 'a' + m->fromFile;
+      if (useRank)
+	m->algString[i++] = '1' + m->fromRank;
+      if (m->pieceCaptured != 0)
+	m->algString[i++] = 'x';
+      m->algString[i++] = 'a' + m->toFile;
+      m->algString[i++] = '1' + m->toRank;
+      m->algString[i] = '\0';
+    }
+  }
+  if (m->algString[0] != 'O')
+    sprintf(m->moveString, "%c/%c%d-%c%d", PieceChar, 'a' + m->fromFile,
+	    m->fromRank + 1, 'a' + m->toFile, m->toRank + 1);
+  if (check)
+    strcat(m->algString, "+");
+}
+
+int ReadV1Moves(game *g, FILE * fp)
+{
+  int i;
+
+  g->moveListSize = g->numHalfMoves;
+  g->moveList = (move_t *) rmalloc(sizeof(move_t) * g->moveListSize);
+  for (i = 0; i < g->numHalfMoves; i++) {
+    ReadOneV1Move(fp, &g->moveList[i]);
+  }
+  return 0;
+}
+
+int ReadV1GameFmt(game *g, FILE * fp, char *file, int version)
+{
+  fscanf(fp, "%s %s", g->white_name, g->black_name);
+  fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
+  fscanf(fp, "%d %d %d %d", &g->wInitTime, &g->wIncrement,
+	 &g->bInitTime, &g->bIncrement);
+  if ((version < 3) && (!(g->bInitTime)))
+    g->bInitTime = g->wInitTime;
+                       /*PRE-V3 assumed bInitTime was 0 if balanced clocks*/
+  fscanf(fp, "%lx", &g->timeOfStart);
+  fscanf(fp, "%d %d", &g->wTime, &g->bTime);
+
+/* fixing an (apparently) old bug: winner not saved */
+  if (version > 1)
+    fscanf(fp, "%d %d", &g->result, &g->winner);
+  else
+    fscanf(fp, "%d", &g->result);
+
+  fscanf(fp, "%d %d %d %d", &g->private, &g->type,
+	 &g->rated, &g->clockStopped);
+  fscanf(fp, "%d", &g->numHalfMoves);
+  ReadV1Moves(g, fp);
+  if (g->status != GAME_EXAMINE
+      && ReadGameState(fp, &g->game_state, version)) {
+    fprintf(stderr, "FICS: Trouble reading game state from %s.\n", file);
+    return -1;
+  }
+  return 0;
+}
+
+PUBLIC int ReadGameAttrs(FILE * fp, char *fname, int g)
+{
+  int len;
+  int version = 0;
+  char *attr, *value;
+  char line[MAX_GLINE_SIZE];
+
+  fgets(line, MAX_GLINE_SIZE - 1, fp);
+
+  if (line[0] == 'v') {
+    sscanf(line, "%*c %d", &version);
+  }
+  if (version > 0) {
+    ReadV1GameFmt(&garray[g], fp, fname, version);
+  }
+  /* Read the game file here */
+  else
+    do {
+      if ((len = strlen(line)) <= 1) {
+	fgets(line, MAX_GLINE_SIZE - 1, fp);
+	continue;
+      }
+      line[len - 1] = '\0';
+      attr = eatwhite(line);
+      if (attr[0] == '#')
+	continue;		/* Comment */
+      value = eatword(attr);
+      if (!*value) {
+	fprintf(stderr, "FICS: Error reading file %s\n", fname);
+	fgets(line, MAX_GLINE_SIZE - 1, fp);
+	continue;
+      }
+      *value = '\0';
+      value++;
+      value = eatwhite(value);
+      if (!*value) {
+	fprintf(stderr, "FICS: Error reading file %s\n", fname);
+	fgets(line, MAX_GLINE_SIZE - 1, fp);
+	continue;
+      }
+      stolower(attr);
+      if (got_attr_value(g, attr, value, fp, fname)) {
+	return -1;
+      }
+      fgets(line, MAX_GLINE_SIZE - 1, fp);
+    } while (!feof(fp)); 
+  if (!(garray[g].bInitTime))
+     garray[g].bInitTime = garray[g].wInitTime;
+  return 0;
+}
+
+PUBLIC int game_read(int g, int wp, int bp)
+{
+  FILE *fp;
+  char fname[MAX_FILENAME_SIZE];
+
+  garray[g].white = wp;
+  garray[g].black = bp;
+/*  garray[g].old_white = -1;
+    garray[g].old_black = -1;
+*/
+  garray[g].moveListSize = 0;
+  garray[g].game_state.gameNum = g;
+  strcpy(garray[g].white_name, parray[wp].name);
+  strcpy(garray[g].black_name, parray[bp].name);
+  if (garray[g].type == TYPE_BLITZ) {
+    garray[g].white_rating = parray[wp].b_stats.rating;
+    garray[g].black_rating = parray[bp].b_stats.rating;
+  } else if (garray[g].type == TYPE_WILD) {
+    garray[g].white_rating = parray[wp].w_stats.rating;
+    garray[g].black_rating = parray[bp].w_stats.rating;
+  } else if (garray[g].type == TYPE_LIGHT) {
+    garray[g].white_rating = parray[wp].l_stats.rating;
+    garray[g].black_rating = parray[bp].l_stats.rating;
+  } else if (garray[g].type == TYPE_BUGHOUSE) {
+    garray[g].white_rating = parray[wp].bug_stats.rating;
+    garray[g].black_rating = parray[bp].bug_stats.rating;
+  } else {
+    garray[g].white_rating = parray[wp].s_stats.rating;
+    garray[g].black_rating = parray[bp].s_stats.rating;
+  }
+  sprintf(fname, "%s/%c/%s-%s", adj_dir, parray[wp].login[0],
+	  parray[wp].login, parray[bp].login);
+  fp = fopen(fname, "r");
+  if (!fp) {
+    return -1;
+  }
+  if (ReadGameAttrs(fp, fname, g) < 0) {
+    fclose(fp);
+    return -1;
+  }
+  fclose(fp);
+
+  if (garray[g].result == END_ADJOURN
+      || garray[g].result == END_COURTESYADJOURN)
+    garray[g].result = END_NOTENDED;
+  garray[g].status = GAME_ACTIVE;
+  garray[g].startTime = tenth_secs();
+  garray[g].lastMoveTime = garray[g].startTime;
+  garray[g].lastDecTime = garray[g].startTime;
+  /* Need to do notification and pending cleanup */
+  return 0;
+}
+
+PUBLIC int game_delete(int wp, int bp)
+{
+  char fname[MAX_FILENAME_SIZE];
+  char lname[MAX_FILENAME_SIZE];
+
+  sprintf(fname, "%s/%c/%s-%s", adj_dir, parray[wp].login[0],
+	  parray[wp].login, parray[bp].login);
+  sprintf(lname, "%s/%c/%s-%s", adj_dir, parray[bp].login[0],
+	  parray[wp].login, parray[bp].login);
+  unlink(fname);
+  unlink(lname);
+  return 0;
+}
+
+void WriteGameFile(FILE * fp, int g)
+{
+  int i;
+  game *gg = &garray[g];
+  player *wp = &parray[gg->white], *bp = &parray[gg->black];
+
+  fprintf(fp, "v %d\n", GAMEFILE_VERSION);
+  fprintf(fp, "%s %s\n", wp->name, bp->name);
+  fprintf(fp, "%d %d\n", gg->white_rating, gg->black_rating);
+  fprintf(fp, "%d %d %d %d\n", gg->wInitTime, gg->wIncrement,
+	  gg->bInitTime, gg->bIncrement);
+  fprintf(fp, "%lx\n", gg->timeOfStart);
+/*  fprintf(fp, "%d %d\n", gg->wTime, gg->bTime); */
+#ifdef TIMESEAL
+  fprintf(fp, "%d %d\n",
+    (con[wp->socket].timeseal ? gg->wRealTime/100 : gg->wTime),
+    (con[bp->socket].timeseal ? gg->bRealTime/100 : gg->bTime));
+#endif
+  fprintf(fp, "%d %d\n", gg->result, gg->winner);
+  fprintf(fp, "%d %d %d %d\n", gg->private, gg->type,
+	  gg->rated, gg->clockStopped);
+  fprintf(fp, "%d\n", gg->numHalfMoves);
+  for (i = 0; i < garray[g].numHalfMoves; i++) {
+    WriteMoves(fp, &garray[g].moveList[i]);
+  }
+  WriteGameState(fp, &garray[g].game_state);
+}
+
+PUBLIC int game_save(int g)
+{
+  FILE *fp;
+  player *wp, *bp;
+  game *gg = &garray[g];
+  char fname[MAX_FILENAME_SIZE];
+  char lname[MAX_FILENAME_SIZE];
+
+  wp = &parray[gg->white];
+  bp = &parray[gg->black];
+  sprintf(fname, "%s/%c/%s-%s", adj_dir, wp->login[0],
+	  wp->login, bp->login);
+  sprintf(lname, "%s/%c/%s-%s", adj_dir, bp->login[0],
+	  wp->login, bp->login);
+  fp = fopen(fname, "w");
+  if (!fp) {
+    fprintf(stderr, "FICS: Problem opening file %s for write\n", fname);
+    return -1;
+  }
+  WriteGameFile(fp, g);
+#if 0
+  fprintf(fp, "W_Init: %d\n", garray[g].wInitTime);
+  fprintf(fp, "W_Inc: %d\n", garray[g].wIncrement);
+  fprintf(fp, "B_Init: %d\n", garray[g].bInitTime);
+  fprintf(fp, "B_Inc: %d\n", garray[g].bIncrement);
+  fprintf(fp, "white_name: %s\n", wp->name);
+  fprintf(fp, "black_name: %s\n", bp->name);
+  fprintf(fp, "white_rating: %d\n", garray[g].white_rating);
+  fprintf(fp, "black_rating: %d\n", garray[g].black_rating);
+  fprintf(fp, "result: %d\n", garray[g].result);
+  fprintf(fp, "TimeStart: %d\n", (int) garray[g].timeOfStart);
+  fprintf(fp, "W_Time: %d\n", garray[g].wTime);
+  fprintf(fp, "B_Time: %d\n", garray[g].bTime);
+  fprintf(fp, "ClockStopped: %d\n", garray[g].clockStopped);
+  fprintf(fp, "Rated: %d\n", garray[g].rated);
+  fprintf(fp, "Private: %d\n", garray[g].private);
+  fprintf(fp, "Type: %d\n", garray[g].type);
+  fprintf(fp, "HalfMoves: %d\n", garray[g].numHalfMoves);
+  for (i = 0; i < garray[g].numHalfMoves; i++) {
+    WriteMoves(fp, &garray[g].moveList[i]);
+  }
+  fprintf(fp, "GameState: IsNext\n");
+  WriteGameState(fp, &garray[g].game_state);
+#endif
+  fclose(fp);
+  /* Create link for easier stored game finding */
+  if (bp->login[0] != wp->login[0])
+    link(fname, lname);
+  return 0;
+}
+
+#if 0
+PRIVATE int history_game_save(int g, char *fname)
+{
+  FILE *fp;
+  int wp, bp;
+  int i;
+
+  wp = garray[g].white;
+  bp = garray[g].black;
+  fp = fopen(fname, "w");
+  if (!fp) {
+    fprintf(stderr, "FICS: Problem openning file %s for write\n", fname);
+    return -1;
+  }
+  fprintf(fp, "W_Init: %d\n", garray[g].wInitTime);
+  fprintf(fp, "W_Inc: %d\n", garray[g].wIncrement);
+  fprintf(fp, "B_Init: %d\n", garray[g].bInitTime);
+  fprintf(fp, "B_Inc: %d\n", garray[g].bIncrement);
+  fprintf(fp, "TimeStart: %d\n", (int) garray[g].timeOfStart);
+  fprintf(fp, "W_Time: %d\n", garray[g].wTime);
+  fprintf(fp, "B_Time: %d\n", garray[g].bTime);
+  fprintf(fp, "ClockStopped: %d\n", garray[g].clockStopped);
+  fprintf(fp, "Rated: %d\n", garray[g].rated);
+  fprintf(fp, "Private: %d\n", garray[g].private);
+  fprintf(fp, "Type: %d\n", garray[g].type);
+  fprintf(fp, "HalfMoves: %d\n", garray[g].numHalfMoves);
+  for (i = 0; i < garray[g].numHalfMoves; i++) {
+    WriteMoves(fp, &garray[g].moveList[i]);
+  }
+  fprintf(fp, "GameState: IsNext\n");
+  WriteGameState(fp, &garray[g].game_state);
+  fclose(fp);
+  return 0;
+}
+#endif
+
+PRIVATE long OldestHistGame(char *login)
+{
+  FILE *fp;
+  char pFile[MAX_FILENAME_SIZE];
+  long when;
+
+  sprintf(pFile, "%s/player_data/%c/%s.%s", stats_dir,
+	  login[0], login, STATS_GAMES);
+  fp = fopen(pFile, "r");
+
+  if (fp == NULL) {
+    sprintf(pFile, "%s/player_data/%c/.rem.%s.%s", stats_dir,
+	    login[0], login, STATS_GAMES);
+    fp = fopen(pFile, "r");
+  }
+  if (fp != NULL) {
+    fscanf(fp, "%*d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d %*s %*s %ld",
+	   &when);
+    fclose(fp);
+    return when;
+  } else
+    return 0L;
+}
+
+PRIVATE void RemoveHistGame(char *file, int maxlines)
+{
+  FILE *fp;
+  char GameFile[MAX_FILENAME_SIZE];
+  char Opponent[MAX_LOGIN_NAME];
+  char line[MAX_LINE_SIZE];
+  long When, oppWhen;
+  int count = 0;
+
+  fp = fopen(file, "r");
+  if (fp == NULL)
+    return;
+
+  fgets(line, MAX_LINE_SIZE - 1, fp);
+  sscanf(line, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d %*d %*s %*s %ld",
+	 Opponent, &When);
+  count++;
+
+  while (!feof(fp)) {
+    fgets(line, MAX_LINE_SIZE - 1, fp);
+    if (!feof(fp))
+      count++;
+  }
+  fclose(fp);
+
+  stolower(Opponent);
+  if (count > maxlines) {
+    truncate_file(file, maxlines);
+
+    oppWhen = OldestHistGame(Opponent);
+    if (oppWhen > When || oppWhen <= 0L) {
+      sprintf(GameFile, "%s/%ld/%ld", hist_dir, When % 100, When);
+      unlink(GameFile);
+    }
+  }
+}
+
+PUBLIC void RemHist(char *who)
+{
+  FILE *fp;
+  char fName[MAX_FILENAME_SIZE];
+  char Opp[MAX_LOGIN_NAME];
+  long When, oppWhen;
+
+  sprintf(fName, "%s/player_data/%c/%s.%s", stats_dir,
+	  who[0], who, STATS_GAMES);
+  fp = fopen(fName, "r");
+  if (fp != NULL) {
+    while (!feof(fp)) {
+      fscanf(fp, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d %*d %*s %*s %ld",
+	     Opp, &When);
+      stolower(Opp);
+      oppWhen = OldestHistGame(Opp);
+      if (oppWhen > When || oppWhen <= 0L) {
+	sprintf(fName, "%s/%ld/%ld", hist_dir, When % 100, When);
+	unlink(fName);
+      }
+    }
+  }
+}
+
+PRIVATE void write_g_out(int g, char *file, int maxlines, int isDraw,
+			  char *EndSymbol, char *name, time_t *now)
+{
+  FILE *fp;
+  int wp, bp;
+  int wr, br;
+  char type[4];
+  char tmp[2048];
+  char *ptmp = tmp;
+  char cResult;
+  int count = -1;
+  char *goteco;
+
+  wp = garray[g].white;
+  bp = garray[g].black;
+
+  if (garray[g].private) {
+    type[0] = 'p';
+  } else {
+    type[0] = ' ';
+  }
+  if (garray[g].type == TYPE_BLITZ) {
+    wr = parray[wp].b_stats.rating;
+    br = parray[bp].b_stats.rating;
+    type[1] = 'b';
+  } else if (garray[g].type == TYPE_WILD) {
+    wr = parray[wp].w_stats.rating;
+    br = parray[bp].w_stats.rating;
+    type[1] = 'w';
+  } else if (garray[g].type == TYPE_STAND) {
+    wr = parray[wp].s_stats.rating;
+    br = parray[bp].s_stats.rating;
+    type[1] = 's';
+  } else if (garray[g].type == TYPE_LIGHT) {
+    wr = parray[wp].l_stats.rating;
+    br = parray[bp].l_stats.rating;
+    type[1] = 'l';
+  } else if (garray[g].type == TYPE_BUGHOUSE) {
+    wr = parray[wp].bug_stats.rating;
+    br = parray[bp].bug_stats.rating;
+    type[1] = 'd';
+  } else {
+    wr = 0;
+    br = 0;
+    if (garray[g].type == TYPE_NONSTANDARD)
+      type[1] = 'n';
+    else
+      type[1] = 'u';
+  }
+  if (garray[g].rated) {
+    type[2] = 'r';
+  } else {
+    type[2] = 'u';
+  }
+  type[3] = '\0';
+
+  fp = fopen(file, "r");
+  if (fp) {
+    while (!feof(fp))
+      fgets(tmp, 1024, fp);
+    sscanf(ptmp, "%d", &count);
+    fclose(fp);
+  }
+  count = (count + 1) % 100;
+
+  fp = fopen(file, "a");
+  if (!fp)
+    return;
+
+  goteco = getECO(g);
+
+/* Counter Result MyRating MyColor OppRating OppName [pbr 2 12 2 12] ECO End Date */
+  if (name == parray[wp].name) {
+    if (isDraw)
+      cResult = '=';
+    else if (garray[g].winner == WHITE)
+      cResult = '+';
+    else
+      cResult = '-';
+
+    fprintf(fp, "%d %c %d W %d %s %s %d %d %d %d %s %s %ld\n",
+	    count, cResult, wr, br, parray[bp].name, type,
+	    garray[g].wInitTime, garray[g].wIncrement,
+	    garray[g].bInitTime, garray[g].bIncrement,
+	    goteco,
+	    EndSymbol,
+	    (long) *now);
+  } else {
+    if (isDraw)
+      cResult = '=';
+    else if (garray[g].winner == BLACK)
+      cResult = '+';
+    else
+      cResult = '-';
+
+    fprintf(fp, "%d %c %d B %d %s %s %d %d %d %d %s %s %ld\n",
+	    count, cResult, br, wr, parray[wp].name, type,
+	    garray[g].wInitTime, garray[g].wIncrement,
+	    garray[g].bInitTime, garray[g].bIncrement,
+	    goteco,
+	    EndSymbol,
+	    (long) *now);
+  }
+  fclose(fp);
+
+  RemoveHistGame(file, maxlines);
+/*
+  if ((name == parray[wp].name) && (parray[wp].registered)) {
+    sprintf(tmp, "%s/%c/%s.%d", adj_dir, parray[wp].login[0], parray[wp].login, count);
+    history_game_save(g, tmp);
+  }
+  if ((name == parray[bp].name) && (parray[bp].registered)) {
+    sprintf(tmp, "%s/%c/%s.%d", adj_dir, parray[bp].login[0], parray[bp].login, count);
+    history_game_save(g, tmp);
+  }
+*/
+}
+
+/* Find from_spot in journal list - return 0 if corrupted */
+
+PUBLIC int journal_get_info(int p,char from_spot,char* WhiteName, int* WhiteRating,
+ char* BlackName, int* BlackRating, char* type,int* t,int* i,char* eco,
+ char* ending,char* result, char *fname)
+{
+  char count;
+  FILE *fp;
+
+  fp = fopen(fname, "r");
+  if (!fp) {
+    fprintf (stderr, "Corrupt journal file! %s\n",fname);
+    pprintf (p, "The journal file is corrupt! See an admin.\n");
+    return 0;
+  }
+  while (!feof(fp)) {
+    if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+               &count,
+               WhiteName,
+               &(*WhiteRating),
+               BlackName,
+               &(*BlackRating),
+               type,
+               &(*t), &(*i),
+               eco,
+               ending,
+               result) != 11) {
+      fprintf(stderr, "FICS: Error in journal info format. %s\n", fname);
+      pprintf(p, "The journal file is corrupt! Error in internal format.\n");
+      fclose(fp);
+      return 0;
+    }
+    if (tolower(count) == from_spot) {
+       fclose(fp);
+       return 1;
+    }
+  }
+  fclose(fp);
+  return 0;
+}
+
+PUBLIC void addjournalitem(int p,char count2,char* WhiteName2, int WhiteRating2,
+ char* BlackName2, int BlackRating2, char* type2,int t2,int i2,char* eco2,
+ char* ending2,char* result2, char* fname)
+
+{
+  int WhiteRating, BlackRating;
+  int t, i;
+  char WhiteName[MAX_LOGIN_NAME + 1];
+  char BlackName[MAX_LOGIN_NAME + 1];
+  char type[100];
+  char eco[100];
+  char ending[100];
+  char count;
+  char result[100];
+  int have_output=0;
+  char fname2[MAX_FILENAME_SIZE];
+
+ FILE *fp;
+ FILE *fp2;
+
+  strcpy (fname2,fname);
+  strcat (fname2,".w");
+  fp2 = fopen(fname2, "w");
+  if (!fp2) {
+    fprintf(stderr, "FICS: Problem opening file %s for write\n", fname);
+    pprintf (p, "Couldn't update journal! Report this to an admin.\n");
+    return;
+  } 
+  fp = fopen(fname, "r");
+  if (!fp) { /* Empty? */
+    fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+       count2, WhiteName2, WhiteRating2, BlackName2, BlackRating2,
+       type2, t2, i2, eco2, ending2,
+       result2);
+  fclose (fp2);
+  rename (fname2, fname);
+  return;
+  } else {
+   while (!feof(fp)) {
+    if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+               &count,
+               WhiteName,
+               &WhiteRating,
+               BlackName,
+               &BlackRating,
+               type,
+               &t, &i,
+               eco,
+               ending,
+               result) != 11) {
+               fprintf(stderr, "FICS: Error in journal info format - aborting. %s\n", fname);
+               fclose(fp);
+               fclose(fp2);
+               return;
+               }
+    if ((count >= count2) && (!have_output)) {
+      fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+               count2,
+               WhiteName2,
+               WhiteRating2,
+               BlackName2,
+               BlackRating2,
+               type2,
+               t2, i2,
+               eco2,
+               ending2,
+               result2);
+      have_output = 1;
+    }
+    if (count != count2) {
+    fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+               count,
+               WhiteName,
+               WhiteRating,
+               BlackName,
+               BlackRating,
+               type,
+               t, i,
+               eco,
+               ending,
+               result);
+   }
+  }
+  if (!have_output) { /* Haven't written yet */
+  fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+               count2,
+               WhiteName2,
+               WhiteRating2,
+               BlackName2,
+               BlackRating2,
+               type2,
+               t2, i2,
+               eco2,
+               ending2,
+               result2);
+  }
+  }
+  fclose(fp);
+  fclose(fp2);
+  rename(fname2, fname);
+  return;
+} 
+
+PUBLIC int pjournal(int p, int p1, char *fname)
+{
+  FILE *fp;
+  int WhiteRating, BlackRating;
+  int t, i;
+  char WhiteName[MAX_LOGIN_NAME + 1];
+  char BlackName[MAX_LOGIN_NAME + 1];
+  char type[100];
+  char eco[100];
+  char ending[100];
+  char count;
+  char result[100];
+
+  fp = fopen(fname, "r");
+  if (!fp) {
+    pprintf(p, "Sorry, no journal information available.\n");
+    return COM_OK;
+  }
+  pprintf(p, "Journal for %s:\n", parray[p1].name);
+  pprintf(p, "   White         Rating  Black         Rating  Type         ECO End Result\n");
+  while (!feof(fp)) {
+    if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+               &count,
+               WhiteName,
+               &WhiteRating,
+               BlackName,
+               &BlackRating,
+               type,
+               &t, &i,
+               eco,
+               ending,
+               result) != 11) {
+      fprintf(stderr, "FICS: Error in journal info format. %s\n", fname);
+      fclose(fp);
+      return COM_OK;
+    }
+    WhiteName[13] = '\0';         /* only first 13 chars in name */
+    BlackName[13] = '\0';
+    pprintf(p, "%c: %-13s %4d    %-13s %4d    [%3s%3d%4d] %s %3s %-7s\n",
+            count, WhiteName, WhiteRating,
+            BlackName, BlackRating,
+            type, t / 600, i / 10, eco, ending,
+            result);
+  }
+  fclose(fp);
+  return COM_OK;
+}
+
+PUBLIC int pgames(int p, int p1, char *fname)
+{
+  FILE *fp;
+  time_t t;
+  int MyRating, OppRating;
+  int wt, wi, bt, bi;
+  char OppName[MAX_LOGIN_NAME + 1];
+  char type[100];
+  char eco[100];
+  char ending[100];
+  char MyColor[2];
+  int count;
+  char result[2];
+
+  fp = fopen(fname, "r");
+  if (!fp) {
+    pprintf(p, "Sorry, no game information available.\n");
+    return COM_OK;
+  }
+  pprintf(p, "History for %s:\n", parray[p1].name);
+  pprintf(p, "                  Opponent      Type         ECO End Date\n");
+  while (!feof(fp)) {
+    if (fscanf(fp, "%d %s %d %s %d %s %s %d %d %d %d %s %s %ld\n",
+	       &count,
+	       result,
+	       &MyRating,
+	       MyColor,
+	       &OppRating,
+	       OppName,
+	       type,
+	       &wt, &wi,
+	       &bt, &bi,
+	       eco,
+	       ending,
+	       (long *) &t) != 14) {
+      fprintf(stderr, "FICS: Error in games info format. %s\n", fname);
+      fclose(fp);
+      return COM_OK;
+    }
+    OppName[13] = '\0';		/* only first 13 chars in name */
+    pprintf(p, "%2d: %s %4d %s %4d %-13s [%3s%3d%4d] %s %3s %s",
+	    count, result, MyRating, MyColor,
+	    OppRating, OppName,
+	    type, wt / 600, wi / 10, eco, ending,
+	    ctime(&t));
+  }
+  fclose(fp);
+  return COM_OK;
+}
+
+PUBLIC void game_write_complete(int g, int isDraw, char *EndSymbol)
+{
+  char fname[MAX_FILENAME_SIZE];
+  int wp = garray[g].white, bp = garray[g].black;
+  time_t now = time(NULL);
+  int fd;
+  FILE *fp;
+
+  do {
+    sprintf(fname, "%s/%ld/%ld", hist_dir, (long) now % 100, (long) now);
+    fd = open(fname, O_WRONLY | O_CREAT | O_EXCL, 0644);
+    if (fd == EEXIST)
+      now++;
+  } while (fd == EEXIST);
+
+  if (fd >= 0) {
+    fp = fdopen(fd, "w");
+    if (fp != NULL)
+      WriteGameFile(fp, g);
+    else
+      fprintf(stderr, "Trouble writing history file %s", fname);
+    fclose(fp);
+    close(fd);
+  }
+  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
+	  parray[wp].login[0], parray[wp].login, STATS_GAMES);
+  write_g_out(g, fname, 10, isDraw, EndSymbol, parray[wp].name, &now);
+  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
+	  parray[bp].login[0], parray[bp].login, STATS_GAMES);
+  write_g_out(g, fname, 10, isDraw, EndSymbol, parray[bp].name, &now);
+}
+
+PUBLIC int game_count(void)
+{
+  int g, count = 0;
+
+  for (g = 0; g < g_num; g++) {
+    if ((garray[g].status == GAME_ACTIVE) || (garray[g].status == GAME_EXAMINE))
+      count++;
+  }
+  if (count > game_high)
+    game_high = count;
+  return count;
+}
+

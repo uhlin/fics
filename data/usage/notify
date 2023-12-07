@@ -1,0 +1,4 @@
+Command:  notify
+Purpose:  add user to your notify list -OR- display your notify list
+Usage:    notify [user]
+Examples: notify; notify sms

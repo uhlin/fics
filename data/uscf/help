@@ -1,0 +1,25 @@
+
+uscf
+
+Usage: uscf [string]
+
+  As a service to users, USCF (the United States Chess Federation) has given
+us a file of USCF tournament information.  We have these tournaments divided 
+into several sections (similarly to "Chess Life"): National, Gran_prix,
+Beginners and the various states of the United States according to state
+appreviation (with two sections for CA: ca_n and ca_s for northern and
+southern California).
+
+  Typing "uscf" alone will list the various files that can be used as strings
+for this command.  Use "string" to select which of these states or types of
+tournaments to display.  For example, "uscf ny" will display upcoming
+tournaments in New York and "uscf gran_prix" will list upcoming Gran Prix
+events (tournaments having points that count to a special annual prize). 
+Typing "uscf help" will display this help file.
+
+  Information about USCF is presented in the "uscf_faq" help file.
+
+See Also:  uscf_faq
+
+[Last modified: October 23, 1995 -- Friar]
+

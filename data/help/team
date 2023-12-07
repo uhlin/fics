@@ -1,0 +1,18 @@
+
+team
+
+  It is possible to have a "team" account on the chess server.  Team accounts
+would be good for groups of players (whether human or computer) to play chess
+matches against either individual players or other teams.  These accounts are
+designed for relatively stable groups of players, in contrast to teams formed
+spontaneously for just one match (see "teamgames" help file).  Good examples
+would be chess clubs at schools or companies.
+
+  If you represent a group of players who would like to form a team for a team
+account, contact an admin.  The team handle will be added to the "team" list
+and will have the "(T)" designation appearing on who lists.
+
+See Also:  admins  lists  showlists  teamgames  who
+
+[Last modified: October 10, 1995 -- Friar]
+

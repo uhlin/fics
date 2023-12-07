@@ -1,0 +1,110 @@
+##
+##  fics - An internet chess server.
+##  Copyright (C) 1993  Richard V. Nash
+##
+##  This program is free software; you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation; either version 2 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##
+##  This is the Makefile template; see machine dependant config.h for
+##  more configuration options.
+
+
+SHELL = /bin/sh
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+
+##
+##  Where to install FICS
+##
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = ${exec_prefix}/bin
+
+
+##
+##  Binaries and Options to use
+##
+CC = @CC@
+CFLAGS = @CFLAGS@ -DTIMESEAL -I${srcdir}
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+LIBS = @LIBS@
+LNFLAGS = @LDFLAGS@ ${LIBS}
+
+
+##
+##  Version information
+##
+VERSION=echo 'char SGS_VERS[]=""; char VERS_NUM[]="1.2.3";'
+
+
+SRCS=adminproc.c algcheck.c board.c channel.c command.c talkproc.c comproc.c \
+	fics_addplayer.c ficsmain.c formula.c gamedb.c gameproc.c \
+	get_tcp_conn.c legal.c lists.c makerank.c \
+	movecheck.c multicol.c network.c playerdb.c ratings.c \
+	rmalloc.c utils.c variable.c vers.c eco.c matchproc.c \
+	timeseal.c ${MORESRCS}
+
+OBJS=network.o lists.o formula.o playerdb.o command.o talkproc.o comproc.o movecheck.o \
+     ratings.o gamedb.o channel.o utils.o rmalloc.o legal.o vers.o variable.o \
+     board.o gameproc.o algcheck.o adminproc.o \
+     get_tcp_conn.o multicol.o eco.o matchproc.o timeseal.o ${MOREOBJS}
+
+VERSION=echo 'char SGS_VERS[]=""; char VERS_NUM[]="1.2.18"; char COMP_DATE[]="'`date`'";'
+
+PROGRAM=fics
+ADDPLAYER=fics_addplayer
+#DELPLAYER=fics_delplayer
+#MAILSERVER=fics_mailproc
+#MAILPROC=mailproc
+MAKERANK=makerank
+
+ALL= ${PROGRAM} ${ADDPLAYER} ${MAKERANK}
+
+#all: ${PROGRAM} ${MAILSERVER} ${ADDPLAYER} ${DELPLAYER} ${MAILPROC}
+all: ${ALL}
+
+${PROGRAM}: ficsmain.o $(OBJS)
+	$(CC) ficsmain.o $(CFLAGS) $(OBJS) $(LNFLAGS) -o ${PROGRAM}
+
+#${MAILSERVER}: fics_mailproc.o $(OBJS)
+#	$(CC) fics_mailproc.o $(CFLAGS) $(OBJS) $(LNFLAGS) -o ${MAILSERVER}
+
+${ADDPLAYER}: fics_addplayer.o $(OBJS)
+	$(CC) fics_addplayer.o $(CFLAGS) $(OBJS) $(LNFLAGS) -o ${ADDPLAYER}
+
+#${DELPLAYER}: fics_delplayer.o $(OBJS)
+#	$(CC) fics_delplayer.o $(CFLAGS) $(OBJS) $(LNFLAGS) -o ${DELPLAYER}
+
+#${MAILPROC}: mailproc.o lock.o network.o rmalloc.o
+#	$(CC) mailproc.o lock.o network.o rmalloc.o  $(CFLAGS) -o ${MAILPROC}
+#	$(CC) mailproc.o lock.o network.o rmalloc.o memmove.o  $(CFLAGS) -o ${MAILPROC}
+
+${MAKERANK}: makerank.o
+	$(CC) makerank.o $(CFLAGS) $(LNFLAGS) -o ${MAKERANK}
+
+vers.c:
+	${VERSION} >vers.c
+
+depend:
+	makedepend -- ${CFLAGS} ${MAKEDEPMORECFLAGS} -- ${SRCS}
+
+clean: 
+	rm -f *.o ${ALL} *~ vers.c
+	@ echo "Project cleaned."
+
+distclean: clean
+	rm -rf Makefile autoconfig.h config.h config.status config.cache \
+	       config.log
+
+install:
+	for f in ${ALL}; do ${INSTALL} $$f ${bindir}; done 

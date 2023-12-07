@@ -1,0 +1,14 @@
+
+index for GAME_INFO items
+
+These commands (and help files on commands) concern game information:
+
+
+  allobservers   mailmoves      moves          smoves         stored
+  eco            mailoldmoves   observe        sposition      unobserve
+  games          mailstored     oldmoves
+
+Type "help TOPIC" in order to read them.
+
+[Last modified: July 10, 1995 by Friar]
+

@@ -1,0 +1,4 @@
+Command:  who
+Purpose:  lists all or a subset of current users on the server
+Usage:    who [o][r][f][a][R][U][s][b][A][l][t][v][n][1-3]
+Examples: who; who 1; who s; who a; who as; who asA

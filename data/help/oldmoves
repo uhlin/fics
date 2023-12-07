@@ -1,0 +1,19 @@
+
+oldmoves
+
+SPECIAL NOTE:  This command has been superceded by an enhanced "smoves"
+command.  Please refer to that help file.
+
+Usage: oldmoves [user]
+
+  Displays the moves of the most recent game of 'user', or of yourself if
+'user' is omitted.
+
+NOTE: At present, both players of the game in question must be logged on in
+order for the stored game to be access and mailed to you.  We hope to expand
+the mail feature in the future.
+
+See Also:  mailstored  smoves
+
+[Last modified: October 8, 1995 -- Friar]
+

@@ -1,0 +1,25 @@
+
+index for PLAY items
+
+These commands (and help files on commands) concerning playing chess matches
+on this server:
+
+   abort             draw              open              resign
+   accept            flag              pause             switch
+   adjourn           flip              partner           takeback
+   assess            match             pending           time
+   boards            moretime          promote           unpause
+   decline           noplay            refresh           withdraw
+
+Other, informative files (not commands) that are relevant:
+
+   abuser            computers         intro_playing     teamgames
+   adjournments      formula           lag               timeseal
+   adjudication      glicko            lightning         untimed
+   blindfold         interfaces        standard          variables
+   blitz             intro_moving      team              wild
+
+Type "help TOPIC" in order to read them.
+
+[Last modified: December 25, 1995 by Friar]
+

@@ -1,0 +1,103 @@
+README file for FICS - Free Internet Chess Server
+
+Please report any changes back to chess@ics.onenet.net. The code is
+very volatile right now, so keep gratuitous changes to a minimum.  DO NOT
+send mail about the code to Richard Nash.  He is no longer working on the 
+FICS project.  (We thank him for all his past work!)
+
+HOW TO START YOUR CHESS SERVER
+
+A. INTRODUCTION
+  First off, you should be familiar with programming in C and with the
+nuances of the system on which you will be running the server. The
+documentation is sparse, so often the code is the best place to go to find
+the answers.
+
+B. Compiling the code
+  1. cd FICS
+  2. Edit the file config.h to set the directories where the program's 
+     data can be found.  
+  3. Copy the Makefile for your system to Makefile. At the time of writing
+     this there are only a few machines represented, so you may have to edit. 
+     If you create a new Makefile that works on your machine, please mail
+     it back to the above address so that we can include it in the distribution.
+     NB. You may have to # out dfree.c and dfree.o in the makefile - they are
+      for debug perposes only (sun4).
+  4. type 'makedepend' type 'make'
+  5. If it doesn't compile, well...do your best. If you modify the code to
+     get it to compile on your machine, use #ifdef's wisely and send the
+     changes back to us so that we can include them in the distribution.
+     Also check the code for already defined ifdefs.
+  6. Once code is built, start the server with "fics", the default port
+     is 5000.  To specify another, use "fics -p #".  login as AdminGuy
+     with no password and set his password.  :-)  Good luck.
+
+
+C. Registering with the ratings server.
+*** THERE IS NO RATINGS SERVER IN OPERATION AT PRESENT ***
+** The procedures below were for FICS 1.0 and are now obsolete **
+** Distributed ratings may come in a later version **
+
+  If you want to be hooked in with the distributed ratings server, and I
+hope everyone does, send mail to XXXXXXXXXXX to get your password and to
+confirm to and from email addresses.
+
+D. Configuring for the ratings server.
+  Once you have your email address, the servers email address and your secret
+code, copy the file config/hostinfo.client.format to config/hostinfo.client.
+Then edit that file and replace the appropriate entry with the correct
+information. Here is what an example should look like.
+
+client fics_client@foobar.com
+fics_server@XXXXXXX.XXX MyPassword 0 0
+
+  The next part is a little tricky, and you may need root privileges on your
+machine to do it. The goal here is this... To get the contents of the mail
+sent to fics_client piped into the fics_mailproc program. If there is no way
+you are getting root privileges, go right to way #4.
+
+1. One way is to create a mail alias that does it.
+
+ Here is the pertanent line from my aliases file.
+
+fics_client: "|/Users/nash/Source/FICS/FICS-distrib/fics_mailproc client"
+
+The '|' character causes mail to fics_client to get sent to the program that
+follows. The 'client' parameter to the fics_mailproc program is important
+because the fics_mailproc program is two-faced. It can run as a client or as
+the server.
+
+  Once you are set up, the ratings server should send you accounts for all
+of the registered network players.
+
+2. Another way is to create a user called fics_client with the same UID as
+   the user you will be running FICS as. This is to allow fics and 
+   fics_mailproc to have the same uid. Then, in /etc/crontab put an entry
+   that periodically calls the 'mailproc' program. Here is my entry:
+0,15,30,45 * * * * nash /Users/nash/Source/FICS/FICS-distrib/mailproc /usr/spool/mail/fics_client "/Users/nash/Source/FICS/FICS-distrib/fics_mailproc client"
+
+3. Yet another way is to simply run mailproc by hand when you want mail to
+   be picked up. In a C-shell this works:
+while (1)
+  /Users/nash/Source/FICS/FICS-distrib/mailproc /usr/spool/mail/fics_client "/Users/nash/Source/FICS/FICS-distrib/fics_mailproc client"
+  sleep 900
+end
+
+4. There is yet one more way to set up a connection to the rating's server
+   if there is no way to get the mail client set up. It may be lest reliable
+   than the mail way of doing things because it doesn't have store and 
+   forward capability if network errors occur during transmission. But it
+   will probably work. The mailproc program can be a daemon wait for 
+   connections on a port and then send what it gets to a program. For
+   example:
+mailproc 5001 "/Users/nash/Source/FICS/FICS-distrib/fics_mailproc client"
+   Will wait for the server to connect and send the mail directly. Of course
+   you will need to set this up with the server administrator so that he
+   knows to send directly rather than through mail.
+
+E. Adding local players.
+  Of course this is your server and you have the write to include or exclude
+players as you like. To add a player user the fics_addplayer function or
+use addplayer when logged in as an ADMIN. To remove a player, just put *
+in the password field of their file. They won't be able to log in.
+

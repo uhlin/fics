@@ -1,0 +1,195 @@
+
+ficsfaq
+
+PREGUNTAS DE OCURRENCIA FRECUENTE ACERCA DE FICS
+
+
+Los  admins  de  este  sitio  pueden estar muy ocupados,  asi que si usted
+encuentra un error (bug) o tiene preguntas, lea primero este archivo:
+
+1> Como me registro?
+   Lea el archivo de ayuda "register" -- "help register"
+
+2> Que es global (de red) vs. local ?
+   iene que ver con los puntajes distribuidos -- contacte a un admin si se
+   le presenta este error.
+
+3> Puedo tener mas de una cuenta?
+   Solo para jugar a la ciega, con/sin computador, para administrar o para
+   jugar en equipos.
+
+4> Puedo registrar mas de un computador?
+   Si. 
+
+5> Puedo tener mas de una persona usando mi direccion electronica?
+   Si.
+
+6> Pueden varias personas compartir una cuenta para juegos en equipos?
+   Si, WEENIES es un ejemplo.
+
+7> Puedo ser un admin?
+   Lea el arcivo de ayuda "admin-new" -- "help admin-new".
+
+8> Puedo ayudar con la programacion?
+   Pregunte a Hawk [uno de los admins de aqui].
+
+9> Quien esta programando?
+   Dan/DAV/foxbat/grimm/hawk/Len/Mann/Shane, etc.
+   Gracias a Friar por algunos archivos de ayuda.
+   Y Cthulu (clong) por la base de datos ECO - proximamente.
+   Gracias a  Richard Nash (red) y  Michael Moore por el  codigo del viejo
+   fics.
+
+10> Donde mas puedo jugar ajedrez GRATIS?
+    anemone.daimi.aau.dk 5000
+    arapaho.cse.ucsc.edu 5000
+    helium.daimi.aau.dk 5000
+    ics.onenet.net 5000
+    pitt.chess.edu 5000
+    Si usted sabe de mas sitios GRATUITOS, cuentenos!
+
+11> De donde consigo una interface?
+    pub/chess  en ftp ics.onenet.net (use ftp-anonimo)
+
+12> De donde puedo conseguir el codigo mas reciente?
+    pub/chess/Unix en ftp ics.onenet.net (use ftp-anonimo)
+    Los archivos de ayuda estan en la version mas antigua FICS.tar.gz
+
+13> No me gusta el admin x. El admin y me esta tratando de mala manera.
+    Contacte a Sparky (onenet) y Hawk (helium).
+
+14> Darooha, arcsin y POTZY han venido a llevarse algo. Que hacer?
+    A veces, algunas personas fingen ser ellos.
+    No incurra en comportamiento abusivo contra ellos si entran al FICS.
+    Nuestro codigo es  GNU  - ellos pueden usar nuestras ideas y codigo en
+    ICC si quieren. Recuerde quien escribio este servidor en primer lugar.
+    [Nota  del  traductor:  GNU es un proyecto del  MIT para  intercambiar
+    software libremente.  Cualquiera puede tomar software de  GNU y usarlo
+    como quiera  -copiarlo,  incorporarlo en sus  programas,  modificarlo,
+    distribuirlo-, dentro de los limites de la licencia publica de GNU.]
+
+15> Que es ICC?
+    No pregunte -- no hay publicidad gratuita -- usted paga  $49 por jugar
+    ajedrez alli. :)
+
+16> Puedo gritar (shout) mensajes sobre ICC?
+    Si, seguro. Dada la eleccion de pagar $49 o $0. Yo elegiria la de $0.
+
+17> Deberia promocionar a FICS?
+    Si, hagalo. Procure sin embargo, no armar un lio en ICC. Si se conecta
+    a  ICC,  consulte el archivo de anuncios  ("help ads").  Recuerde, las
+    hamburguesas Burger King son gratis. :)
+
+18> No puedo gritar (shout) !
+    Ya se ha registrado? Ha sido sancionado?
+
+19> No puedo jugar partidas validas por puntaje.
+    Han colocado usted y su oponente la variable "rated" en 1?
+    Tiene el error global (de red) vs. local?
+
+20> Como uso la cosa "-->Nombre mensaje" que he visto desplegada?
+    Use "it", "i" o ":" seguido del mensaje.
+
+21> Observo que ha resurgido el canal de las hormonas (51).
+    Si,  pero  solo  se  permite  el uso de  lenguaje decente.  Este es un
+    servidor familiar.  No  diga  cosas  que no diria en  frente de ninhos
+    pequenhos. Aunque tal vez si las diga. :)
+
+
+22> El tablero esta invertido (cabeza-abajo).
+    Problema del "flip" en el estilo 12  --  la vieja version de  ZIICS  y
+    SLICS se ven afectados por ello.
+
+23> No puedo coronar (promover un peon) - xboard -.
+    Intente e7e8 para una dama (reina).
+
+24> Como continuo un juego que fue aplazado?
+    Desafie ("match")  al jugador nuevamente,  y el servidor reiniciara el
+    juego si su oponente acepta.
+
+25> No  puedo enrocar despues de  devolver (cancelar) una jugada en la que
+    movi el rey.
+    Lo sabemos.
+
+26> Puedo enrocarme en jaque.
+    Si, sucedio una vez.
+
+27> "takeback" da informacion equivocada sobre la ultima jugada.
+    Un error.
+
+28> "simuls" no funciona.
+    Las simultaneas  estuvieron fuera  de servico  algun tiempo.  Deberian
+    funcionar bien ahora.
+
+29> Mi puntaje esta muy alto/bajo.
+    Debe haber un error en alguna parte.
+
+30> +alias/+censor etc. no funcionan.
+    Utilice alias/unalias y censor/uncensor por ahora.
+
+31> Tengo una vieja cuenta aqui, pero no recuerdo mi clave ...
+    Pida ayuda a un admin -- y tenga a mano su direccion electronica.
+
+34> "stats" da informacion inutil.
+    Lo sabemos.
+
+35> Hay variantes "salvajes" ?
+    Si ... y puntajes tambien.
+
+36> Zippy no quiere callarse, y grita mucho.
+    Utilice  censor [nombre], cshout (equivalente a sshout en  ICC) estara
+    listo proximamente.
+
+37> En cuantos canales puedo estar simultaneamente?
+    En  tantos como quiera,  pero no demasiados pues  ello toma espacio de
+    archivos; teclee  "help channel"  para ver los  canales  predefinidos.
+    [Nota  del  traductor:  canal 69  =  canal latino;  canal 73  =  canal 
+    espanhol. Con un poco de suerte, a traves de ellos puede obtener ayuda
+    en linea en espanhol].
+
+39> La informacion de "who" no aparece bien alineada.
+    Se arreglara proximamente.
+
+40> Como retiro un desafio ("match") ?
+    Escriba "withdraw".
+
+41> Estoy teniendo "lag" -- que puedo hacer?
+    Intente Ctrl-C para cancelar, o use "adjourn" para aplazar.
+    De otro modo, haga que su oponente le de mas tiempo con  "moretime #",
+    donde # <= 600 segundos.
+    [Nota del traductor:  "lag"  (en espanhol, "demora" o "retardo") es la
+    diferencia  entre el  momento  en que usted ingresa un  comando  o una 
+    jugada y el momento  en que el  servidor le responde.  Es una caracte-
+    ristica  normal  dentro  del  estado  tecnologico actual de  Internet,
+    aunque en algunos dias -y en algunos sitios- es peor que en otros].
+
+42> Repentinamente recibi el mensaje "connection closed".
+    a> Se bajo el servidor (shutdown)
+    b> Se cayo el servidor (crash) -tenganos paciencia-.
+    c> El servidor lo expulso por alguna razon
+    d> Usted armo algun lio
+
+43> Cuando  duran los bajones  (shutdowns)  del servidor,  y  por  que  se
+    producen?
+    Alrededor de 10 segundos.
+    A  veces  necesitamos  anhadir  nuevo  codigo, o corregir errores -por
+    favor, tenganos paciencia.
+
+44> Recibo caracteres no-desplegables / "delete" no funciona.
+    En reparacion.
+
+45> Donde puedo conseguir mas ayuda?
+    Siga estos pasos:
+    (a) Escriba "channel 1"
+    (b) Escriba "tell 1 help me!" 
+    (c) Cuando sea suficiente, puede escribir  "channel 1"  para salir del
+        canal
+    [Nota del traductor: en los canales 69 (latino) y 73 (espanhol) puede
+    recibir ayuda en espanhol]
+
+46> Como detengo un archivo extenso que pasa de largo por mi pantalla?
+    Use Ctrl Q para detenerlo y Ctrl S para proseguir -- o use su barra de
+    "scroll".
+    Tambien "set height ##" determina cuantas lineas deben ser desplegadas
+    al tiempo.
+

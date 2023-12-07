@@ -1,0 +1,42 @@
+
+intro1
+
+INFORMACION GENERAL
+
+
+Internet  tiene  gran  capacidad para  conectar gente alrededor del mundo.
+Este servidor de  ajedrez  es una alternativa  para los usuarios de la red
+que disfrutan del ajedrez.  Otros servidores de ajedrez ( al menos los que 
+nosotros conocemos )  se encuentran en el archivo "address".   Entre otras
+cosas, un servidor de ajedrez permite a  los usuarios jugar partidas  unos 
+con otros, asi como comunicarse entre si.   El ( computador ) servidor  de
+ajedrez esta programado para enviar las movidas y mensajes de cada jugador
+a los usuarios correctos. Tambien mantiene cierta informacion adicional.
+
+A  fin de usar sus  caracteristicas  usted  necesita ingresar  ciertos co-
+mandos.  Para  listar dichos comandos escriba  "help".  Para conseguir una 
+descripcion de un comando en particular, escriba "help [comando]"   -- sin 
+los parentesis cuadrados, por supuesto.  NOTA: usted no tiene que escribir 
+el comando entero a fin de usarlo o leer su archivo de ayuda;  teclear las
+primeras letras funcionara en la mayoria de los casos.
+
+En general, los comandos hacen  una de estas cuatro  cosas:  (a) envian un
+mensaje a uno o mas usuarios (ver intro2), (b) despliegan informacion para
+usted  (ver intro3),  (c) modifican uno de sus parametros/caracteristicas/
+funciones (ver intro4), o  (d) hacen que el servidor realice alguna accion
+especial. Algunos comandos estan permitidos solo a los administradores del
+servidor ("admins") y no pueden ser empleados por los usuarios corrientes.
+  
+Los nuevos usuarios podrian querer empezar con caracteristicas simples,  y
+gradualmente  aprender sobre  las otras caracteristicas  a medida que  van
+avanzando.  El servidor permite  determinar como se  quiere recibir cierta
+informacion. Por ejemplo, usted puede decidir como se muestra una posicion 
+en una partida (ver style). Tambien puede fijar sus preferencias sobre los
+tipos de partidas de ajedrez que a usted le gustaria jugar, o los tipos de
+mensajes que recibe de otros (ver variables).
+
+Vea tambien:       addresses   intro2   intro3   intro4   intro5
+
+[Ultima modificacion: junio 11, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

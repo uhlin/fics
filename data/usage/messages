@@ -1,0 +1,4 @@
+Command:  messages
+Purpose:  display your stored messages -OR- send a stored message to a user
+Usage:    messages [user [text]]
+Examples: messages; messages Shane; messages Ramius Thanks for your help!

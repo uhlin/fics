@@ -1,0 +1,55 @@
+
+intro0
+
+                           B I E N V E N I D O
+
+                                   al
+   
+          S E R V I D O R   G R A T U I T O  D E   A J E D R E Z
+                       D E   I N T E R N E T (FICS)
+
+
+Hemos creado varios archivos de informacion para usuarios de este servidor
+de ajedrez. Los archivos describen diferentes caracteristicas del servidor
+y le dan algunas sugerencias sobre como esas caracteristicas pueden ayudar
+a disfrutar del ajedrez en internet. Aqui hay un directorio de archivos de
+informacion, con el tema que cubre cada uno:
+
+     Archivo    Tema
+     -------    --------------------------------------------------
+     intro1     Informacion General
+     intro2     Comunicacion
+     intro3     Despliegue de Informacion
+     intro4     Definiendo sus Preferencias
+     intro5     Funciones Especiales
+     intro6     Partidas de Ajedrez
+     intro7     Haciendo Jugadas en una Partida de Ajedrez
+
+Para  leer la informacion  de uno de estos archivos , simplemente  escriba
+"help intro#" usando el numero adecuado.   Si despues de leer los archivos
+aun tiene preguntas, hay varias cosas que puede hacer.  (1) Lea el archivo
+de ayuda del comando sobre el que tenga dudas ;  su respuesta podria estar
+alli.   (2) Contacte a otros usuarios, especialmente a los administradores
+del servidor (conocidos como "admins"); sus ayudas suelen ser muy utiles.
+
+Para leer  un  archivo  de ayuda teclee "help [tema]",  sin los parentesis
+cuadrados.  Si el tema es un comando,  el archivo de ayuda  le dara infor-
+macion  acerca del  formato para ese comando.  Es facil notar que se trata
+de un  comando porque la pimera  linea describe el formato ( "Uso" ).  Las 
+palabras  en parentesis cuadrados designan parametros opcionales;  incluir
+tales  parametros afecta el modo  en que se procesa el comando.  En muchos
+casos un archivo de ayuda sugiere otros que usted seguramente querra leer.
+
+Algunos archivos son mas largos que una pantalla.Para continuar leyendo el
+archivo, teclee "next" o (su alias) "more". Cuantas lineas recibe usted de
+una vez depende del valor de su variable "height".
+
+Sus sugerencias sobre los archivos de informacion (y sobre los archivos de
+ayuda) son  bienvenidas.   Sientase libre de enviar un mensaje a HelpFiles
+("message helpfiles") con sus comentarios.
+
+Vea tambien:       help   next   variables
+
+[Ultima modificacion: julio 1, 1995 -- Friar
+ Version en espanhol: julio 3, 1995 -- Spike]
+

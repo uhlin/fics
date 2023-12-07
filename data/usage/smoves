@@ -1,0 +1,4 @@
+Command:  smoves
+Purpose:  displays moves of a user's game (either history or stored)
+Usage:    smoves player1 {#, player2}
+Examples: smoves Rattlesnake 9; smoves cranium TheViking

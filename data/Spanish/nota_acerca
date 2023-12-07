@@ -1,0 +1,40 @@
+
+NOTA ACERCA DE LA TRADUCCION
+
+El  espanhol  no  es  un  idioma uniforme entre todos los  paises hispano-
+parlantes; como  cualquier hablante  nativo  sabe, en  Espanha se utilizan
+giros  y  expresiones   virtualmente  desconocidos  en  Hispanoamerica,  y 
+viceversa;  entre  los  paises de esta ultima, por supuesto,  tambien  hay
+diferencias de mayor o menor importancia.
+
+A  pesar  de  que en esta traduccion se ha procurado ser  "neutral" en ese
+sentido, es seguro que existen sesgos en favor del uso que se da al idioma
+en America,  especialmente en los  paises andinos  (estos sesgos se deben,
+logicamente, a la procedencia del autor de la traduccion: Colombia).
+
+En  solo  un caso dicho  favorecimiento ha sido  consciente: en el caso de
+tres terminos relacionados con computadores. Tales terminos son:
+
+  Ingles                     Traducido como
+
+  file                       archivo
+  interface                  interface
+  mouse                      mouse
+
+Es posible que un hablante espanhol encuentre mas natural traducir  "file"
+por  "fichero",  "interface"  por  "interfaz"  y  "mouse" por "raton"; sin
+embargo, el traductor espera que, una vez hecha la aclaracion,  la lectura
+de la version traducida no presente mayores dificultades.
+
+Una observacion final sobre acentuacion: a fin de facilitar la difusion de
+este archivo por cualquier tipo de sistema, no se han utilizado caracteres
+acentuados; tampoco se acudio a recursos de uso  corriente, como  escribir
+en  mayUsculas las vocales  acentuadas,  ni con  apo'strofes,  por  cuanto 
+parecia evidente que tales recursos iban a entorpecer,  mas que favorecer,
+la lectura del texto.  Por tanto, las vocales van sin acentuar, y la letra
+del alfabeto espanhol que va entre la "n" y la "o" (y que aqui hay que 
+describir por no poder llamarla por su nombre) se representa por la
+combinacion "nh": "enhe".
+
+                                     Spike -- julio 3, 1995
+

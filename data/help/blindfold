@@ -1,0 +1,23 @@
+
+blindfold
+
+    Blindfold accounts are special accounts for users who wish to play without
+a board.  Users playing blindfold chess must use style 9 while playing since
+this style displays only the last few moves, not the board position.  Since
+style 9 does not list the times on the chess clocks, you may wish to use the
+"time" command in order to list clock times.
+
+  Users on the "blind" list will have the notation "(B)" displayed behind
+their handles on who displays and will have their handles displayed when a
+user types "=blind" (to show the contents of the list of players having
+blindfold accounts chess).  Users who have blindfold accounts must use style 9
+when playing.  Not using style 9 to play will be considered abuse and make you
+subject to sanctions.
+
+  In order to be included on the blindfold list or to have an additional
+account for blindfold chess, please contact an admin.
+
+See Also:  admins  lists  showlists  style  who
+
+[Last modified: October 17, 1995 -- Friar]
+

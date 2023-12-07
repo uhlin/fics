@@ -1,0 +1,4 @@
+Command:  draw
+Purpose:  requests (or agrees to) a draw offer during a chess match
+Usage:    draw
+Examples: draw

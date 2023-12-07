@@ -1,0 +1,79 @@
+
+index for ALL items
+
+These lists explain how helpfiles are organized by index entries.
+
+analysis commands:
+  allobservers, backward, examine, flip, forward, mexamine, observe,
+  refresh, revert, unexamine, unobserve.
+
+game_info commands:
+  allobservers, eco, games, mailmoves, mailoldmoves, mailstored,
+  moves, observe, oldmoves, smoves, sposition, stored, unobserve.
+
+help commands:
+  help, index, info, mailhelp, news, quit.
+
+help information:
+  fics_lingo, ficsfaq, ftp_hints, handle, intro_basics, intro_general,
+  intro_information, intro_moving, intro_playing, intro_settings,
+  intro_special, intro_welcome, login, logout.
+
+mail commands:
+  mailhelp, mailmess, mailmoves, mailoldmoves, mailsource, mailstored.
+
+play commands:
+  abort, accept, adjourn, assess, boards, decline, draw, flag, flip,
+  match, moretime, open, noplay, partner, pause, pending, promote, refresh,
+  resign, switch, takeback, time, unpause, withdraw.
+
+play information:
+  abuser, adjournments, adjudication, blindfold, blitz, computers, formula,
+  glicko, interfaces, intro_moving, intro_playing, lag, lightning, standard,
+  team, teamgames, timeseal, untimed, variables, wild.
+
+preferences commands:
+  addlist, alias, bell, formula, gnotify, highlight, kiblevel, notify,
+  password, set, style, sublist, unalias, variables.
+
+preferences information:
+  intro_settings, showlist.
+
+server_info commands:
+  boards, date, help, index, limits, llogons, mailhelp, mailsource,
+  news, next, servers, showlist, statistics, uptime.
+
+server information:
+  addresses, adm_info, adm_new, admins, credit, interfaces,
+  intro_general, limits, motd, motd_help, newstuff, sourcecode,
+  totals.
+
+simul commands:
+  accept, decline, goboard, gonum, simabort, simadjourn, simallabort,
+  simalladjourn, simgames, simmatch, simnext, simopen, simpass,
+  simprev.
+
+simul information:
+  simuls.
+
+special information:
+  eggo, gm_game, inetchesslib, lecture1, uscf.
+
+talk commands:
+  censor, channel, clearmessages, cshout, inchannel, it, kibitz,
+  mailmess, messages, ptell, say, shout, tell, whisper, xtell.
+
+talk information:
+  channel_list, etiquette, limits, shout_abuse, shout_quota, intro_talking.
+
+user_info commands:
+  best, convert_bcf, convert_elo, convert_uscf, finger, handles, hbest,
+  history, hrank, jsave, logons, mailstored, rank, stored, who, znotify.
+
+user_info information:
+  formula, handles, journal, notes, ratings, register.
+
+Type "help TOPIC" in order to read a specific help file.
+
+[Last modified: December 25, 1995 by Friar]
+

@@ -1,0 +1,20 @@
+
+index for HELP items
+
+These commands (and help files on commands) provide basic, helpful
+information:
+
+  help          info           mailhelp       news          quit
+  index
+
+Other, informative files (not commands) that are relevant:
+
+  fics_lingo   handle         intro_information   intro_settings   login
+  ficsfaq      intro_basics   intro_moving        intro_special    logout
+  ftp_hints    intro_general  intro_playing       intro_welcome
+
+
+Type "help TOPIC" in order to read them.
+
+[Last modified: September 22, 1995 by Friar]
+

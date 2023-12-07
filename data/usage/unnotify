@@ -1,0 +1,4 @@
+Command:  unnotify
+Purpose:  remove a user (or all users) from your notify list
+Usage:    notify [user]
+Examples: unnotify; unnotify Solid

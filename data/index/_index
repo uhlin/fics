@@ -1,0 +1,23 @@
+
+_index
+
+Type ...             In Order To List Commands and Help Files About ...
+----------------     --------------------------------------------------
+index all            all help files, by categories
+index analysis       examining chess games or positions
+index commands       all command help files, by categories
+index game_info      games on the server
+index help           basic information and assistance
+index mail           mailing information and games to youself
+index play           playing chess matches on the server
+index preferences    the variables you can set
+index server_info    the server itself
+index simul          playing simultaneous matches
+index special        special features
+index talk           communicating on the server
+index user_info      users on the server
+
+FOR FURTHER ASSISTANCE, read the "chan_1" help file by typing:
+
+  help chan_1
+
