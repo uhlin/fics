@@ -100,9 +100,6 @@
 #include <sys/ioctl.h>
 #include <sys/wait.h>
 
-extern time_t time(time_t *);
-extern int rand(void);
-extern int close(int);
-extern size_t malloc_size(void *ptr);
+extern size_t malloc_size(void *ptr); /* XXX */
 
 #endif /* _STDINCLUDE_H */
