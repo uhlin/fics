@@ -27,7 +27,6 @@
 #include "common.h"
 #include "utils.h"
 #include "playerdb.h"
-/* #include "hostinfo.h" */
 #include "command.h"
 
 PRIVATE void usage(char *progname)
