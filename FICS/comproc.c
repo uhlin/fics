@@ -57,11 +57,11 @@
 /* int system(char *arg); */
 #endif
 
-const none = 0;
-const blitz_rat = 1;
-const std_rat = 2;
-const wild_rat = 3;
-const light_rat = 4;
+const int none = 0;
+const int blitz_rat = 1;
+const int std_rat = 2;
+const int wild_rat = 3;
+const int light_rat = 4;
 
 
 PUBLIC int com_rating_recalc(int p, param_list param)

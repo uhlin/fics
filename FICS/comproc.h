@@ -25,11 +25,12 @@
 #ifndef _COMPROC_H
 #define _COMPROC_H
 
-extern const none;      /* = 0;  */
-extern const blitz_rat; /* = 1;  */
-extern const std_rat;   /* = 2;  */
-extern const wild_rat;   /* = 3;  */
-extern const light_rat;
+extern const int	none;
+extern const int	blitz_rat;
+extern const int	std_rat;
+extern const int	wild_rat;
+extern const int	light_rat;
+
 extern int com_rating_recalc();
 extern int com_more();
 extern void rscan_news(FILE *, int, int);
