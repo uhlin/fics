@@ -115,7 +115,7 @@ PUBLIC int main(int argc, char *argv[])
       fprintf(stderr, "Remember you need -l for local.\n");
       exit(1);
     } else {
-    } 
+    }
   } */
   player_init(0);
   srand(time(0));
@@ -149,7 +149,7 @@ PUBLIC int main(int argc, char *argv[])
   sprintf(text, "\nYou have been added as a %s player.\nIf this is a network account it may take a while to show up on all of the\nclients.\n\nLogin Name: %s\nFull Name: %s\nEmail Address: %s\nInitial Password: %s\n\nIf any of this information is incorrect, please contact the administrator\nto get it corrected.\nPlease write down your password, as it will be your initial passoword\non all of the servers.\n", local ? "local" : "network", funame, fname, email, password);
 */
 
-  printf("Added player account: >%s< >%s< >%s< >%s<\n", 
+  printf("Added player account: >%s< >%s< >%s< >%s<\n",
          funame, fname, email, password);
 
   sprintf(text, "\nYour player account has been created.\n\n"
@@ -161,7 +161,7 @@ PUBLIC int main(int argc, char *argv[])
    "you, by using it you take the risk of being banned from accessing this\n"
    "chess server.\n\nTo connect to the server and use this account:\n\n"
    "	telnet %s 5000\n\nand enter your handle name and password.\n\n"
-   "Regards,\n\nThe FICS admins\n", 
+   "Regards,\n\nThe FICS admins\n",
         funame, fname, email, password, fics_hostname);
 
   mail_string_to_address(email, "FICS Account Created", text);
