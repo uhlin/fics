@@ -30,8 +30,10 @@
 /* #include "hostinfo.h" */
 #include "command.h"
 
+#if 0
 extern time_t time();
 extern int printf();
+#endif
 
 PRIVATE void usage(char *progname)
 {
