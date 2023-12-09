@@ -24,10 +24,10 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
-#include "utils.h"
-#include "playerdb.h"
 #include "command.h"
+#include "common.h"
+#include "playerdb.h"
+#include "utils.h"
 
 PRIVATE void usage(char *progname)
 {
