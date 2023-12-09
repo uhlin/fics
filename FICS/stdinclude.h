@@ -25,29 +25,27 @@
 #ifndef _STDINCLUDE_H
 #define _STDINCLUDE_H
 
-#include <sys/types.h>
-
+#include <arpa/inet.h>
+#include <ctype.h>
+#include <math.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <strings.h>
 #include <sys/dir.h>
-
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <ctype.h>
 #include <sys/errno.h>
-#include <signal.h>
-#include <time.h>
-#include <math.h>
-#include <sys/time.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
 #include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
 
 extern size_t malloc_size(void *ptr); /* XXX */
 
