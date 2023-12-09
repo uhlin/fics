@@ -2,4 +2,4 @@
 
 ROOT := ./
 TARGETS_DIR := $(ROOT)maketargets/
-TGTS = fics
+TGTS = fics fics_addplayer makerank

@@ -31,12 +31,26 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)utils.o\
 	$(SRC_DIR)variable.o\
 	$(SRC_DIR)vers.o
+
+AP_OBJS = $(SRC_DIR)fics_addplayer.o\
+	$(OBJS)
+AP_LDFLAGS =
+AP_LDLIBS = -lcrypt
+
+MR_OBJS = $(SRC_DIR)makerank.o
+MR_LDFLAGS =
+MR_LDLIBS =
 # dfree
-# fics_addplayer
-# makerank
 # memmove
 
 fics: $(OBJS)
 	$(E) "  LINK    " $@
 	$(Q) $(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS) $(LDLIBS)
+fics_addplayer: $(AP_OBJS)
+	strip --strip-symbol=main $(SRC_DIR)ficsmain.o
+	$(E) "  LINK    " $@
+	$(Q) $(CXX) $(CXXFLAGS) -o $@ $(AP_OBJS) $(AP_LDFLAGS) $(AP_LDLIBS)
+makerank: $(MR_OBJS)
+	$(E) "  LINK    " $@
+	$(Q) $(CXX) $(CXXFLAGS) -o $@ $(MR_OBJS) $(MR_LDFLAGS) $(MR_LDLIBS)
 # EOF
