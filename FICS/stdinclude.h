@@ -139,17 +139,5 @@ extern int rand(void);
 extern int close(int);
 extern size_t malloc_size(void *ptr);
 
-#ifdef __STDC__
-/*  extern fcntl(int fildes, int cmd, ...); */
-/*  extern open(char *path, int oflag, ...); */
-/*  extern int ioctl(int, long, ...); */
-
-#else
-  extern fcntl();
-  extern open();
-  extern int ioctl();
-
-#endif	/* __STDC__ */
-
 #endif /* _STDINCLUDE_H */
 
