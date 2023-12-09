@@ -26,6 +26,8 @@
 #ifndef _ADMINPROC_H
 #define _ADMINPROC_H
 
+#include "command.h"
+
 extern int num_anews;
 
 extern int com_addcomment();
