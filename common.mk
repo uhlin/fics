@@ -2,7 +2,7 @@
 
 .c.o:
 	$(E) "  CC      " $@
-	$(Q) $(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(Q) $(CC) $(CFLAGS) -I $(INCLUDE_DIR) $(CPPFLAGS) -c -o $@ $<
 .cpp.o:
 	$(E) "  CXX     " $@
-	$(Q) $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(Q) $(CXX) $(CXXFLAGS) -I $(INCLUDE_DIR) $(CPPFLAGS) -c -o $@ $<
