@@ -84,7 +84,7 @@ extern int alphastring( );
 extern int printablestring( );
 #if defined(SGI)
 #else
-/* extern char *strdup( ); */
+extern char *strdup( ); /* XXX */
 #endif
 
 extern char *hms_desc();
