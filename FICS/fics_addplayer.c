@@ -29,10 +29,12 @@
 #include "playerdb.h"
 #include "utils.h"
 
-PRIVATE void usage(char *progname)
+PRIVATE void
+usage(char *progname)
 {
-  fprintf(stderr, "Usage: %s [-l] [-n] UserName FullName EmailAddress\n", progname);
-  exit(1);
+	fprintf(stderr, "Usage: %s [-l] [-n] UserName FullName EmailAddress\n",
+	    progname);
+	exit(1);
 }
 
 /* Parameters */
