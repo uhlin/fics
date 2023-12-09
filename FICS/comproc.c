@@ -41,14 +41,12 @@
 #include "gameproc.h"
 #include "obsproc.h"
 #include "board.h"
-/* #include "hostinfo.h" */
 #include "multicol.h"
 #include "ratings.h"
 #include "formula.h"
 #include "lists.h"
 #include "eco.h"
 #include "network.h"
-#include <string.h>
 
 #include <sys/resource.h>
 
