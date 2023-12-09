@@ -129,15 +129,9 @@ extern int fprintf(FILE *, char *, ...);
 extern int printf(char *, ...);
 #endif
 
-
-#ifndef NETBSD
-//extern char *crypt (char *key, char *salt);
-#endif
-
 extern time_t time(time_t *);
 extern int rand(void);
 extern int close(int);
 extern size_t malloc_size(void *ptr);
 
 #endif /* _STDINCLUDE_H */
-
