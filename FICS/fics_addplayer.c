@@ -31,6 +31,12 @@
 
 #define PASSLEN 4
 
+PRIVATE char *funame = NULL;
+PRIVATE char *fname = NULL;
+PRIVATE char *email = NULL;
+
+PRIVATE int local = 1;
+
 PRIVATE void
 usage(char *progname)
 {
@@ -38,10 +44,6 @@ usage(char *progname)
 	    progname);
 	exit(1);
 }
-
-/* Parameters */
-int local = 1;
-char *funame = NULL, *fname = NULL, *email = NULL;
 
 PUBLIC int
 main(int argc, char *argv[])
