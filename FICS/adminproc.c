@@ -58,7 +58,7 @@ PUBLIC int com_adjudicate(int p, param_list param)
   if (!FindPlayer(p, param[0].val.word, &wp, &wconnected))
     return COM_OK;
   if (!FindPlayer(p, param[1].val.word, &bp, &bconnected)) {
-    if (!wconnected) 
+    if (!wconnected)
      player_remove(wp);
     return COM_OK;
   }
@@ -164,7 +164,7 @@ PRIVATE int create_news_file(int p, param_list param, int admin)
   return COM_OK;
 }
 
-PRIVATE int add_item(char *new_item, char *filename) 
+PRIVATE int add_item(char *new_item, char *filename)
 {
   FILE *new_fp, *old_fp;
   char tmp_file[MAX_FILENAME_SIZE];
@@ -173,9 +173,9 @@ PRIVATE int add_item(char *new_item, char *filename)
   sprintf(tmp_file, "%s/.tmp.idx", news_dir);
   new_fp = fopen(tmp_file, "w");
   old_fp = fopen(filename, "r");
-  
+
   if (!new_fp || !old_fp)
-    return 0;  
+    return 0;
 
   fprintf(new_fp, "%s", new_item);
   while (1) {
@@ -188,7 +188,7 @@ PRIVATE int add_item(char *new_item, char *filename)
   fclose(old_fp);
   remove(filename);
   rename(tmp_file, filename);
-  
+
   return 1;
 }
 
@@ -213,7 +213,7 @@ PRIVATE int create_news_index(int p, param_list param, int admin)
       if (add_item(new_item, filename)) {
 	pprintf(p, "Index for admin news item #%d created.\n", num_anews);
 	pprintf(p, "Please use 'canewsf' to include more info.\n");
-      } else 
+      } else
 	pprintf(p, "Something went wrong creating item.\nNotify Marsalis.\n");
     }
   } else {
@@ -302,7 +302,7 @@ PUBLIC int com_anews(int p, param_list param)
     fprintf(stderr, "Cant find news index.\n");
     return COM_OK;
   }
-  
+
   if (param[0].type == 0) {
 
     /* no params - then just display index over news */
@@ -327,7 +327,7 @@ PUBLIC int com_anews(int p, param_list param)
     junkp = nextword(junkp);
     junkp = nextword(junkp);
     pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-    fclose(fp); 
+    fclose(fp);
 
   } else {
 
@@ -507,7 +507,7 @@ PUBLIC int com_checkTIMESEAL(int p, param_list param)
 
 #ifdef TIMESEAL
   for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].status != PLAYER_EMPTY 
+    if (parray[p1].status != PLAYER_EMPTY
         && con[parray[p1].socket].timeseal) {
       pprintf(p, "%s\n", parray[p1].name);
       count++;
@@ -526,9 +526,9 @@ PUBLIC int com_checkGAME (int p,param_list param)
  int startTime;
  multicol *m;
  int found = 0;
- 
+
   ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
- 
+
  if (g_num == 0) {
   pprintf (p,"No games are currently linked into the garray structure.\n");
   return COM_OK;
@@ -562,7 +562,7 @@ PUBLIC int com_checkGAME (int p,param_list param)
    }
 
    if ((g = parray[p1].game) < 0) {
-     pprintf(p,"%s doesn't appear to be playing a game.\n",parray[p1].name); 
+     pprintf(p,"%s doesn't appear to be playing a game.\n",parray[p1].name);
      pprintf(p,"Searching through garray to find matching game numbers.\n");
      pprintf(p,"Use chkgame <number> to view the results.\n");
      m = multicol_start(g_num*2); /* Obviously no more than that */
@@ -581,7 +581,7 @@ PUBLIC int com_checkGAME (int p,param_list param)
      if (found)
        multicol_pprint(m,p,parray[p].d_width,2);
      else
-       pprintf (p,"No matching games were found.\n"); 
+       pprintf (p,"No matching games were found.\n");
      multicol_end(m);
      return COM_OK;
    }
@@ -633,7 +633,7 @@ PUBLIC int com_checkGAME (int p,param_list param)
   garray[g].status == GAME_ACTIVE ? "GAME_ACTIVE" :
   garray[g].status == GAME_EXAMINE ? "GAME_EXAMINE" :
   "Unknown - Error!");
- return COM_OK; 
+ return COM_OK;
 }
 
 /*
@@ -823,7 +823,7 @@ PUBLIC int com_addplayer(int p, param_list param)
   lookup = player_read(p1, newplayerlower);
   if (!lookup) {
    pprintf(p, "A player by the name %s is already registered.\n", newplayerlower);
-   player_remove(p1); 
+   player_remove(p1);
    return COM_OK;
   }
   parray[p1].name = strdup(newplayer);
@@ -867,8 +867,8 @@ PUBLIC int com_addplayer(int p, param_list param)
    "You may change your password with the password command on the the server.\n"
    "\nPlease be advised that if this is an unauthorized duplicate account for\n"
    "you, by using it you take the risk of being banned from accessing this\n"
-   "chess server.\n\nTo connect to the server and use this account:\n\n"        
-   "    telnet %s 5000\n\nand enter your handle name and password.\n\n" 
+   "chess server.\n\nTo connect to the server and use this account:\n\n"
+   "    telnet %s 5000\n\nand enter your handle name and password.\n\n"
    "Regards,\n\nThe FICS admins\n",
         newplayer, newname, newemail, password, fics_hostname);
 
@@ -1585,11 +1585,11 @@ PUBLIC int com_asetmaxplayer(int p, param_list param)
               max_connections-2);
     }
   }
-  pprintf(p, 
-    "There are currently %d regular and %d admin connections available,\n", 
+  pprintf(p,
+    "There are currently %d regular and %d admin connections available,\n",
     max_connections-10, 10 );
-  pprintf(p, 
-    "with %d maximum logins before unregistered login restrictions begin.\n", 
+  pprintf(p,
+    "with %d maximum logins before unregistered login restrictions begin.\n",
     MAX(max_connections-50, 200) );
     pprintf(p, "Total allowed connections: %d.\n", max_connections );
   return COM_OK;
