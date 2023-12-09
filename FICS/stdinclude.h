@@ -100,28 +100,6 @@
 #include <sys/ioctl.h>
 #include <sys/wait.h>
 
-/* Forward declare the functions that aren't defined above */
-
-#if defined(SGI)
-#include <errno.h>
-#define GOOD_STDIO
-#define NO_TM_ZONE
-#else
-#define GOOD_STDIO
-/*
-extern FILE *popen(char *, char *);
-extern int pclose(FILE *);
-extern int fputs(char *, FILE *);
-extern int fseek(FILE *, long, int);
-extern int fread(char *, int, int, FILE *);
-extern int fwrite(char *, int, int, FILE *);
-extern int socket(int, int, int);
-extern int atoi (char *nptr);
-extern long atol (char *nptr);
-extern int truncate(char *, off_t), ftruncate(int, off_t);
-*/
-#endif
-
 extern time_t time(time_t *);
 extern int rand(void);
 extern int close(int);
