@@ -8,6 +8,7 @@ documented in this file.
 - Did new revisions of the following files:
   - `fics_addplayer.c`
   - `stdinclude.h`
+- Fixed implicit integers
 
 ## 2023-12-07 ##
 - Forked FICS version 1.6.2 made by Richard Nash.
