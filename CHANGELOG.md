@@ -8,6 +8,7 @@ documented in this file.
 - Did new revisions of the following files:
   - `fics_addplayer.c`
   - `stdinclude.h`
+- Fixed a `sscanf()` bug in `com_anews()`.
 - Fixed implicit integers
 - Fixed unused variables
 
