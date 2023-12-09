@@ -19,8 +19,9 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash	              	93/10/22	Created
-   foxbat                       95/03/11        added filters in cmatch.
+   Richard Nash			93/10/22	Created
+   foxbat			95/03/11	Added filters in cmatch
+   Markus Uhlin			23/12/09	Fixed implicit ints
 */
 
 #include "stdinclude.h"
