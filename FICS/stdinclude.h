@@ -49,6 +49,6 @@
 #include <time.h>
 #include <unistd.h>
 
-extern size_t malloc_size(void *ptr); /* XXX */
+//extern size_t	malloc_size(void *);
 
 #endif /* _STDINCLUDE_H */
