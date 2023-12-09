@@ -1,6 +1,0 @@
-# Makefile for tar
-
-distrib:
-	tar cvf - GNU* Make* *.[c,h] READ*  | compress > FICS.src_beta-1.2.17.tar.Z
-
-
