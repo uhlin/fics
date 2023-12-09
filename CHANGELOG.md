@@ -9,6 +9,7 @@ documented in this file.
   - `fics_addplayer.c`
   - `stdinclude.h`
 - Fixed implicit integers
+- Fixed unused variables
 
 ## 2023-12-07 ##
 - Forked FICS version 1.6.2 made by Richard Nash.
