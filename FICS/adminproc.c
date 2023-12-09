@@ -322,7 +322,7 @@ PUBLIC int com_anews(int p, param_list param)
     /* param all - displays all news items */
     pprintf(p, "Index of all admin news items:\n");
     fgets(junk, MAX_LINE_SIZE, fp);
-    sscanf(junkp, "%d %s", &crtime, count);
+    sscanf(junk, "%d %s", &crtime, count);
     rscan_news(fp, p, 0);
     junkp = junk;
     junkp = nextword(junkp);
