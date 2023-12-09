@@ -43,7 +43,7 @@
 
 #if defined(SGI)
 #else
-int gettimeofday(struct timeval * tp, struct timezone * tzp);
+//int gettimeofday(struct timeval * tp, struct timezone * tzp);
 #endif
 
 PUBLIC int count_lines(FILE *fp)

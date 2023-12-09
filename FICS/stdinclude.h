@@ -131,7 +131,7 @@ extern int printf(char *, ...);
 
 
 #ifndef NETBSD
-extern char *crypt (char *key, char *salt);
+//extern char *crypt (char *key, char *salt);
 #endif
 
 extern time_t time(time_t *);
