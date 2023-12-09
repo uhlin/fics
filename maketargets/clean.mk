@@ -2,5 +2,7 @@
 
 clean:
 	$(E) "  CLEAN"
-	$(RM) $(OBJS)
+#	$(RM) $(OBJS)
+	$(RM) $(AP_OBJS)
+	$(RM) $(MR_OBJS)
 	$(RM) $(TGTS)
