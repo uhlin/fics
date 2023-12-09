@@ -29,6 +29,8 @@
 #include "playerdb.h"
 #include "utils.h"
 
+#define PASSLEN 4
+
 PRIVATE void
 usage(char *progname)
 {
@@ -41,7 +43,6 @@ usage(char *progname)
 int local = 1;
 char *funame = NULL, *fname = NULL, *email = NULL;
 
-#define PASSLEN 4
 PUBLIC int main(int argc, char *argv[])
 {
   int i;
