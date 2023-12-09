@@ -122,13 +122,6 @@ extern int truncate(char *, off_t), ftruncate(int, off_t);
 */
 #endif
 
-#ifndef GOOD_STDIO
-extern int fclose(FILE *);
-extern int fscanf(FILE *, char *, ...);
-extern int fprintf(FILE *, char *, ...);
-extern int printf(char *, ...);
-#endif
-
 extern time_t time(time_t *);
 extern int rand(void);
 extern int close(int);
