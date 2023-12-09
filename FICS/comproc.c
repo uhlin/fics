@@ -50,12 +50,6 @@
 
 #include <sys/resource.h>
 
-/* grimm */
-#if defined(SGI)
-#else
-/* int system(char *arg); */
-#endif
-
 const int none = 0;
 const int blitz_rat = 1;
 const int std_rat = 2;
