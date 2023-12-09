@@ -503,6 +503,10 @@ PUBLIC int com_checkTIMESEAL(int p, param_list param)
 {
   int p1, count = 0;
 
+  /* XXX: maybe unused */
+  (void) p1;
+  (void) count;
+
   ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
   pprintf(p, "The following player(s) are using timeseal:\n\n");
 
@@ -1245,7 +1249,7 @@ PUBLIC int com_asethandle(int p, param_list param)
  */
 PUBLIC int com_asetadmin(int p, param_list param)
 {
-  int p1, connected, oldlevel;
+  int p1, connected;
 
   ASSERT(parray[p].adminLevel >= ADMIN_GOD);
   if (!FindPlayer(p, param[0].val.word,&p1, &connected))
@@ -1267,7 +1271,7 @@ PUBLIC int com_asetadmin(int p, param_list param)
       player_remove(p1);
     return COM_OK;
   }
-  oldlevel = parray[p1].adminLevel;
+  //oldlevel = parray[p1].adminLevel; XXX: set but not used
   parray[p1].adminLevel = param[1].val.integer;
   pprintf(p, "Admin level of %s set to %d.\n", parray[p1].name, parray[p1].adminLevel);
   player_save(p1);
