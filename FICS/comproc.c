@@ -72,7 +72,7 @@ PUBLIC int com_more(int p, param_list param)
 
 PUBLIC int num_news = -1;
 
-PUBLIC void rscan_news2(FILE *fp, int p, int num) 
+PUBLIC void rscan_news2(FILE *fp, int p, int num)
 {
   char junk[MAX_LINE_SIZE], count[10];
   int crtime;
@@ -80,7 +80,7 @@ PUBLIC void rscan_news2(FILE *fp, int p, int num)
 
   if (num == 0)
     return;
-  
+
   fgets(junk, MAX_LINE_SIZE, fp);
   if (feof(fp))
     return;
@@ -90,7 +90,7 @@ PUBLIC void rscan_news2(FILE *fp, int p, int num)
   junkp = nextword(junkp);
   junkp = nextword(junkp);
   pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-}  
+}
 
 PUBLIC int com_news(int p, param_list param)
 {
@@ -109,10 +109,10 @@ PUBLIC int com_news(int p, param_list param)
     return COM_OK;
   }
 
-  if (param[0].type == 0) { 
-    
+  if (param[0].type == 0) {
+
     /* no params - then just display index of last ten news items */
-    
+
     pprintf(p,"Index of recent news items:\n");
     fgets(junk, MAX_LINE_SIZE, fp);
     sscanf(junk, "%d %s", &crtime, count);
@@ -135,12 +135,12 @@ PUBLIC int com_news(int p, param_list param)
     junkp = nextword(junkp);
     junkp = nextword(junkp);
     pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-    fclose(fp); 
+    fclose(fp);
 
-  } else { 
+  } else {
 
     /* check if the specific news file exist in index */
-    
+
     while (!feof(fp) && !found) {
       junkp = junk;
       fgets(junk, MAX_LINE_SIZE, fp);
@@ -161,7 +161,7 @@ PUBLIC int com_news(int p, param_list param)
     if (!found) {
       pprintf(p, "Bad index number!\n");
       return COM_OK;
-    } 
+    }
 
     /* file exists - show it */
     sprintf(filename, "%s/news.%s", news_dir, param[0].val.word);
@@ -315,7 +315,7 @@ PUBLIC int com_stats(int p, param_list param)
   } else if (parray[p1].game >= 0) {
     g = parray[p1].game;
     if (garray[g].status == GAME_EXAMINE) {
-      pprintf(p, "(Examining game %d: %s vs. %s)\n", g + 1, 
+      pprintf(p, "(Examining game %d: %s vs. %s)\n", g + 1,
             garray[g].white_name, garray[g].black_name);
     } else {
       pprintf(p, "(playing game %d: %s vs. %s)\n", g + 1,
@@ -397,7 +397,7 @@ PUBLIC int com_stats(int p, param_list param)
     if (parray[p1].num_comments)
       pprintf(p, "Comments   : %d\n", parray[p1].num_comments);
 
-  if (connected && parray[p1].registered && (p==p1 || 
+  if (connected && parray[p1].registered && (p==p1 ||
      (parray[p].adminLevel > 0))) {
     char *timeToStr = ctime((time_t *) &parray[p1].timeOfReg);
 
@@ -406,19 +406,19 @@ PUBLIC int com_stats(int p, param_list param)
     onTime = (time(0) - parray[p1].logon_time) + parray[p1].totalTime;
 
     pprintf(p, "Total time on-line: %s\n", hms_desc(onTime) );
-    pprintf(p, "%% of life on-line:  %3.1f  (since %s)\n", 
+    pprintf(p, "%% of life on-line:  %3.1f  (since %s)\n",
            (double)((onTime*100)/(double)(time(0)-parray[p1].timeOfReg)),
            timeToStr);
   }
 
 #ifdef TIMESEAL
-  if (connected) 
-    pprintf(p, "\nTimeseal   : %s\n", 
+  if (connected)
+    pprintf(p, "\nTimeseal   : %s\n",
 	    (con[parray[p1].socket].timeseal) ? "On" : "Off");
   if ((parray[p].adminLevel > 0) && (connected)) {
     if (findConnection(parray[p1].socket) && con[parray[p1].socket].timeseal) {
-      pprintf(p, "Unix acc   : %s\nSystem/OS  : %s\n", 
-             con[parray[p1].socket].user, 
+      pprintf(p, "Unix acc   : %s\nSystem/OS  : %s\n",
+             con[parray[p1].socket].user,
              con[parray[p1].socket].sys);
     }
   }
@@ -469,28 +469,28 @@ PUBLIC int com_uptime(int p, param_list param)
   struct rusage ru;
   int days  = (uptime / (60*60*24));
   int hours = ((uptime % (60*60*24)) / (60*60));
-  int mins  = (((uptime % (60*60*24)) % (60*60)) / 60); 
+  int mins  = (((uptime % (60*60*24)) % (60*60)) / 60);
   int secs  = (((uptime % (60*60*24)) % (60*60)) % 60);
 
   pprintf(p, "Server location: %s   Server version : %s\n", fics_hostname,VERS_NUM);
   pprintf(p, "The server has been up since %s.\n", strltime(&startuptime));
   if ((days==0) && (hours==0) && (mins==0)) {
-    pprintf(p, "(Up for %d second%s)\n", 
-               secs, (secs==1) ? "" : "s"); 
+    pprintf(p, "(Up for %d second%s)\n",
+               secs, (secs==1) ? "" : "s");
   } else if ((days==0) && (hours==0)) {
-    pprintf(p, "(Up for %d minute%s and %d second%s)\n", 
-               mins, (mins==1) ? "" : "s", 
+    pprintf(p, "(Up for %d minute%s and %d second%s)\n",
+               mins, (mins==1) ? "" : "s",
                secs, (secs==1) ? "" : "s");
   } else if (days==0) {
     pprintf(p, "(Up for %d hour%s, %d minute%s and %d second%s)\n",
                hours, (hours==1) ? "" : "s",
-               mins, (mins==1) ? "" : "s", 
+               mins, (mins==1) ? "" : "s",
                secs, (secs==1) ? "" : "s");
   } else {
     pprintf(p, "(Up for %d day%s, %d hour%s, %d minute%s and %d second%s)\n",
                days, (days==1) ? "" : "s",
                hours, (hours==1) ? "" : "s",
-               mins, (mins==1) ? "" : "s", 
+               mins, (mins==1) ? "" : "s",
                secs, (secs==1) ? "" : "s");
   }
   pprintf(p, "\nAllocs: %u  Frees: %u  Allocs In Use: %u\n",
@@ -837,7 +837,7 @@ PRIVATE int who_ok(int p, unsigned int sel_bits)
     p2 = parray[p].partner;
     if (p2 < 0 || parray[p2].partner != p)
       return 0;
-    }  
+    }
   return 1;
 }
 
@@ -866,15 +866,15 @@ PRIVATE int blitz_cmp(const void *pp1, const void *pp2)
 }
 
 PRIVATE int light_cmp(const void *pp1, const void *pp2)
-{         
+{
   register int p1 = *(int *) pp1;
   register int p2 = *(int *) pp2;
   if (parray[p1].status != PLAYER_PROMPT) {
     if (parray[p2].status != PLAYER_PROMPT)
-      return 0; 
+      return 0;
     else
       return -1;
-  }       
+  }
   if (parray[p2].status != PLAYER_PROMPT)
     return 1;
   if (parray[p1].l_stats.rating > parray[p2].l_stats.rating)
@@ -1492,7 +1492,7 @@ PUBLIC int com_mailsource(int p, param_list param)
   if (count == 0) {
     pprintf(p, "Found no source file matching \"%s\".\n", iwant);
   } else if ((count == 1) || !strcmp(iwant, *buffer)) {
-    sprintf(subj, "FICS source file from server %s: %s",fics_hostname,*buffer); 
+    sprintf(subj, "FICS source file from server %s: %s",fics_hostname,*buffer);
     sprintf(fname, "%s/%s",source_dir, *buffer);
     mail_file_to_user (p, subj, fname);
     pprintf(p, "Source file %s sent to %s\n", *buffer, parray[p].emailAddress);
@@ -1620,7 +1620,7 @@ PUBLIC int com_limits(int p, param_list param)
   pprintf(p, "  Max number of people in a simul game: %d\n", MAX_SIMUL);
   pprintf(p, "  Max number of messages one can receive: %d\n", MAX_MESSAGES);
   pprintf(p, "  Min number of games to be active: %d\n", PROVISIONAL);
-  if ((parray[p].adminLevel < ADMIN_ADMIN) && (!titled_player(p,parray[p].login))) { 
+  if ((parray[p].adminLevel < ADMIN_ADMIN) && (!titled_player(p,parray[p].login))) {
     pprintf(p, "  Size of journal (entries): %d\n", MAX_JOURNAL);
   } else {
     pprintf(p, "  Size of journal (entries): 26\n");
