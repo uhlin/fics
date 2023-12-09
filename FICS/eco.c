@@ -155,7 +155,7 @@ void ECO_init()
   sprintf(filename, "%s/eco999.idx", book_dir);
   fp= fopen(filename, "r");
   if (!fp) {
-    fprintf(stderr, "Could not open ECO file\n");
+    fprintf(stderr, "Could not open ECO file (%s)\n", filename);
     exit(1);
   }
   while (!feof(fp)) {
