@@ -27,39 +27,6 @@
 
 #include <sys/types.h>
 
-/* Set up system specific defines */
-#if defined(SYSTEM_NEXT)
-
-#define HASMALLOCSIZE
-#include <sys/vfs.h>
-
-#elif defined(SYSTEM_ULTRIX)
-
-#include <sys/param.h>
-#include <sys/mount.h>
-
-#endif
-
-#ifdef SYSTEM_USL
-# define NO_TM_ZONE
-#endif
-
-#ifdef SYSTEM_SUN4
-# define USE_VARARGS
-#endif
-
-#ifdef SGI
-#define _BSD_SIGNALS
-#include <fcntl.h>
-#include <bstring.h>
-#endif
-
-#if defined(SYSTEM_RS6K)
-#include <sys/select.h>
-#include <dirent.h>
-#define USE_DIRENT
-#endif
-
 /* These are included into every .c file */
 #if defined(SYSTEM_SUN5)
 #define USE_RLIMIT
