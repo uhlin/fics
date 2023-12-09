@@ -27,26 +27,8 @@
 
 #include <sys/types.h>
 
-/* These are included into every .c file */
-#if defined(SYSTEM_SUN5)
-#define USE_RLIMIT
-#define USE_TIMES
-#define USE_WAITPID
-#define GOOD_STDIO
-#define NO_TM_ZONE
-#include <string.h>
-#include <dirent.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/filio.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#define direct dirent
-
-#else
 #include <strings.h>
 #include <sys/dir.h>
-#endif
 
 #include <sys/stat.h>
 #include <stdio.h>
