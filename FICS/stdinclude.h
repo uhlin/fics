@@ -150,25 +150,6 @@ extern size_t malloc_size(void *ptr);
   extern int ioctl();
 
 #endif	/* __STDC__ */
-/* extern void *malloc(unsigned int size); */
-/* extern void *calloc(unsigned int num, unsigned int size); */
-/* extern void *realloc(void *addr, unsigned int size); */
-/* extern void free(void *data); */
-/* extern void malloc_good_size(unsigned int size); */
-/* extern int link(); */
-/* extern int unlink(); */
-/* extern int rename(); */
-/* extern int getpid(); */
-/* extern int kill(); */
-/* extern int fork(); */
-/* extern int access(); */
-/* extern int getdtablesize(); */
-/* extern int write(); */
-#if !defined(SYSTEM_ULTRIX)
-/* extern int sleep(); */
-/* extern int getuid(); */
-extern int statfs();
-#endif
 
 #endif /* _STDINCLUDE_H */
 
