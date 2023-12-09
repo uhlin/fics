@@ -25,16 +25,6 @@
 #ifndef _STDINCLUDE_H
 #define _STDINCLUDE_H
 
-#include <arpa/inet.h>
-#include <ctype.h>
-#include <math.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <strings.h>
 #include <sys/dir.h>
 #include <sys/errno.h>
 #include <sys/file.h>
@@ -44,6 +34,18 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+
+#include <ctype.h>
+#include <math.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
 #include <time.h>
 #include <unistd.h>
 
