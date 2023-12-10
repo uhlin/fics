@@ -593,7 +593,7 @@ PUBLIC int com_inchannel(int p, param_list param)
   char tmp[18];
 
 
-  if (param[0].type == NULL) {
+  if (param[0].type == TYPE_NULL) {
     pprintf (p,"inchannel [no params] has been removed\n");
     pprintf (p,"Please use inchannel [name] or inchannel [number]\n");
     return COM_OK;
