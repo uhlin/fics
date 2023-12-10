@@ -135,35 +135,14 @@ PUBLIC int main(int argc, char *argv[])
     exit(1);
   }
   startuptime = time(0);
-/*  Using the value defined in config.h now instead of the real hostname.
-    This is used as the return address in email, so it needs to be a real
-    DNS resolvable hostname!                    Sparky                     */
-/*  gethostname(fics_hostname, 80); */
   strcpy ( fics_hostname, SERVER_HOSTNAME );
   quota_time = 60;
   player_high = 0;
   game_high = 0;
   srand(startuptime);
   fprintf(stderr, "FICS: Initialized on port %d at %s.\n", port, strltime(&startuptime));
-/*  iamserver = 0; */
-/*  if (hostinfo_init()) {
-    MailGameResult = 0;
-    fprintf(stderr, "FICS: No ratings server connection.\n");
-  } else {
-    if (iamserver) {
-      fprintf(stderr, "FICS: I don't know how to be a ratings server, refusing.\n");
-      MailGameResult = 0;
-    } else {
-      fprintf(stderr, "FICS: Ratings server set to: %s\n", hArray[0].email_address);
-      MailGameResult = 1;
-    }
-  } */
-/*  if (mail_log_file)
-    fclose(mail_log_file); */
   fprintf(stderr, "FICS: commands_init()\n");
   commands_init();
-/*  fprintf(stderr, "FICS: channel_init()\n");
-  channel_init(); */
   fprintf(stderr, "FICS: rating_init()\n");
   rating_init();
   fprintf(stderr, "FICS: wild_init()\n");
