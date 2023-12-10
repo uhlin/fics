@@ -643,26 +643,27 @@ PRIVATE char *strtime(struct tm * stm)
   return (tstr);
 }
 
-PUBLIC char *fix_time(char *old_time) {
+PUBLIC char *
+fix_time(char *old_time)
+{
+	char		 date[5];
+	char		 day[5];
+	char		 i;
+	char		 month[5];
+	static char	 new_time[20];
 
-  char day[5];
-  char month[5];
-  char date[5];
-  char new_time[20];
-  char i;
+	sscanf(old_time, "%s %s %s", day, month, date);
 
-  sscanf(old_time, "%s %s %s", day, month, date);
+	if (date[2] != ',') {
+		i = date[0];
+		date[0] = '0';
+		date[1] = i;
+	}
+	date[2] = '\0';
 
-  if (date[2] != ',') {
-    i = date[0];
-    date[0] = '0';
-    date[1] = i;
-  }
-  date[2] = '\0';
+	sprintf(new_time, "%s, %s %s", day, month, date);
 
-  sprintf (new_time, "%s, %s %s", day, month, date);
-
-  return new_time;
+	return &new_time[0];
 }
 
 PUBLIC char *strltime(time_t *clock)
