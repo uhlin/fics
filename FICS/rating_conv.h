@@ -1,11 +1,10 @@
-/* rating_conv.h */
-
-
 #ifndef _RATINGCONV_H
 #define _RATINGCONV_H
 
-extern int com_CONVERT_BCF();
-extern int com_CONVERT_ELO();
-extern int com_CONVERT_USCF();
+#include "command.h"     /* param_list */
 
-#endif   /* _RATINGCONV_H */
+extern int com_CONVERT_BCF(int, param_list);
+extern int com_CONVERT_ELO(int, param_list);
+extern int com_CONVERT_USCF(int, param_list);
+
+#endif    /* _RATINGCONV_H */
