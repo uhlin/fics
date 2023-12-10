@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash			93/10/22	Created
    Markus Uhlin			23/12/10	Fixed compiler warnings (plus more)
+   Markus Uhlin			23/12/10	Deleted check_emailaddr()
 */
 
 #include "stdinclude.h"
@@ -103,29 +104,6 @@ PUBLIC char *nextword(char *str)
 {
   return eatwhite(eatword(str));
 }
-
-/* check_the_email_address function: */
-/*
-PUBLIC int check_emailaddr(char *email)
-{
-  int qbuflen;
-  char qabuf[5120];
-
-  if ((email = strchr(email, '@')) == NULL)
-    return 2;
-  email++;
-
-  res_init();
-  _res.options = (RES_INIT | RES_RECURSE);
-  if ((qbuflen = res_mkquery(QUERY, email, C_IN, T_ANY, NULL, 0, NULL, qabuf, sizeof(qabuf))) == -1)
-    return 1;
-
-  if (res_send(qabuf, qbuflen, qabuf, sizeof(qabuf)) == -1)
-    return 1;
-
-  return (_getshort(qabuf + 6) ? 0 : 2);
-}
-*/
 
 PUBLIC int mail_string_to_address(char *addr, char *subj, char *str)
 {

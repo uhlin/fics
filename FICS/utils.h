@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash			93/10/22	Created
    Markus Uhlin			23/12/10	Renamed strdup() to xstrdup()
+   Markus Uhlin			23/12/10	Deleted check_emailaddr()
 */
 
 #ifndef _UTILS_H
@@ -57,7 +58,6 @@ extern char *eattailwhite( );
 /* Returns the next word in a given string >eatwhite(eatword(foo))< */
 extern char *nextword( );
 
-extern int check_emailaddr(char *);
 extern int mail_string_to_address();
 extern int mail_string_to_user();
 extern int mail_file_to_address(char *, char *, char *);
