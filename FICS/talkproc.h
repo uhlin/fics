@@ -32,7 +32,6 @@ extern int quota_time;
 extern int com_xtell();
 extern int com_shout();
 extern int com_cshout();
-/* extern int com_query(); */
 extern int com_it();
 extern int com_tell();
 extern int com_ptell();

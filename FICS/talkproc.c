@@ -55,56 +55,6 @@
 
 int quota_time;
 
-#if 0
-PUBLIC int com_query(int p, param_list param)
-{
-  int p1;
-  int count = 0;
-
-  if (!parray[p].registered) {
-    pprintf(p, "Only registered players can use the query command.\n");
-    return COM_OK;
-  }
-  if (in_list(p, L_MUZZLE, parray[p].login)) {
-    pprintf(p, "You are muzzled.\n");
-    return COM_OK;
-  }
-  if (!printablestring(param[0].val.string)) {
-    pprintf(p, "Your message contains some unprintable character(s).\n");
-    return COM_OK;
-  }
-  if (!parray[p].query_log) {
-    parray[p].query_log = tl_new(5);
-  } else {
-    if (tl_numinlast(parray[p].query_log, 60 * 60) >= 2) {
-      pprintf(p, "Your can only query twice per hour.\n");
-      return COM_OK;
-    }
-  }
-  in_push(IN_SHOUT);
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (p1 == p)
-      continue;
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    if (player_censored(p1, p))
-      continue;
-    count++;
-    if (parray[p1].highlight) {
-      pprintf_prompt(p1, "\n\033[7m%s queries:\033[0m %s\n", parray[p].name,
-		     param[0].val.string);
-    } else {
-      pprintf_prompt(p1, "\n%s queries: %s\n", parray[p].name,
-		     param[0].val.string);
-    }
-  }
-  pprintf(p, "Query heard by %d player(s).\n", count);
-  tl_logevent(parray[p].query_log, 1);
-  in_pop();
-  return COM_OK;
-}
-#endif
-
 /* hawk: hacked it to fit ALL persons - quota list is not needed anymore */
 int CheckShoutQuota(int p)
 {
