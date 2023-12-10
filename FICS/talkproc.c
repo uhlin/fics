@@ -744,8 +744,9 @@ com_mailmess(int p, param_list param)
 		return COM_OK;
 	}
 
-	sprintf(filename, "%s.messages", parray[p].login);
-	sprintf(mdir, "%s/player_data/%c/", stats_dir, parray[p].login[0]);
+	snprintf(filename, sizeof filename, "%s.messages", parray[p].login);
+	snprintf(mdir, sizeof mdir, "%s/player_data/%c/", stats_dir,
+	    parray[p].login[0]);
 
 	if (search_directory(mdir, filename, buffer, 1000)) {
 		snprintf(subj, sizeof subj, "Your FICS messages from server %s",
