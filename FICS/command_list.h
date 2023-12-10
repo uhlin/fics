@@ -25,18 +25,18 @@
 #ifndef _COMMAND_LIST_H
 #define _COMMAND_LIST_H
 
-#include "comproc.h"
-#include "matchproc.h"
-#include "talkproc.h"
-#include "lists.h"
-#include "gameproc.h"
-#include "obsproc.h"
 #include "adminproc.h"
-#include "playerdb.h"
-#include "ratings.h"
+#include "comproc.h"
 #include "eco.h"
+#include "gameproc.h"
+#include "lists.h"
+#include "matchproc.h"
+#include "obsproc.h"
+#include "playerdb.h"
 #include "rating_conv.h"
+#include "ratings.h"
 #include "shutdown.h"
+#include "talkproc.h"
 
 /*
   Parameter string format
