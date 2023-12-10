@@ -32,17 +32,21 @@ elo_to_bcf(int elo)
 	return (elo - 600) / 8;
 }
 
+#if 0
 PRIVATE int
 uscf_to_bcf(int uscf)
 {
 	return (uscf - 700) / 8;
 }
+#endif
 
+#if 0
 PRIVATE int
 bcf_to_uscf(int bcf)
 {
 	return (bcf * 8 + 700);
 }
+#endif
 
 PRIVATE void
 printgrades(int p, int elo, int uscf, int bcf)
