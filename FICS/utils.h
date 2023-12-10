@@ -41,7 +41,7 @@
 #endif
 
 #define SetFlag(VAR, FLAG) (VAR |= (FLAG))
-#define ClearFlag(VAR, FLAG) (VAR &= ~(FLAG))   
+#define ClearFlag(VAR, FLAG) (VAR &= ~(FLAG))
 #define CheckFlag(VAR, FLAG) (VAR & (FLAG))
 
 extern int count_lines(FILE *);
@@ -110,4 +110,3 @@ extern int search_directory(char *, char *, char **, int);
 extern int display_directory(int, char **, int);
 
 #endif /* _UTILS_H */
-
