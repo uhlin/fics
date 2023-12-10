@@ -24,21 +24,22 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
-#include "ficsmain.h"
-#include "config.h"
-#include "network.h"
-#include "command.h"
-#include "playerdb.h"
-#include "ratings.h"
-#include "utils.h"
 #include "board.h"
-#include "talkproc.h"
+#include "command.h"
+#include "common.h"
 #include "comproc.h"
-#include "shutdown.h"
+#include "config.h"
 #ifndef IGNORE_ECO
 #include "eco.h"
 #endif
+#include "ficsmain.h"
+#include "network.h"
+#include "playerdb.h"
+#include "ratings.h"
+#include "shutdown.h"
+#include "talkproc.h"
+#include "utils.h"
+
 #include <sys/param.h>
 
 /* Arguments */
