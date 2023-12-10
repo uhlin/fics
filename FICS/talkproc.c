@@ -53,12 +53,6 @@
 
 #include <sys/resource.h>
 
-/* grimm */
-#if defined(SGI)
-#else
-/* int system(char *arg); */
-#endif
-
 int quota_time;
 
 #if 0
