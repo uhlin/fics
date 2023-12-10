@@ -20,15 +20,15 @@
 /* Revision history:
    name				yy/mm/dd	Change
    hersco and Marsalis         	95/07/24	Created
-   Sparky                       95/10/05        
-                                Modifed tell function for the following 
+   Sparky                       95/10/05
+                                Modifed tell function for the following
                                 changes:  no longer informs you that someone
                                 is censoring in tells to channels, whisper or
                                 kibitz.  Titles now shown instead of ratings
                                 in kibitz and whisper, admins on duty now are
                                 shown as (*), and computers marked as (C) as
                                 well as with rating.
-                                               
+
 */
 
 #include "stdinclude.h"
@@ -340,7 +340,7 @@ PRIVATE int tell(int p, int p1, char *msg, int why, int ch)
       pprintf(p1, "\n%s(GM)", parray[p].name);
     else if ((parray[p].adminLevel >= 10) && (parray[p].i_admin))
       pprintf(p1, "\n%s(*)", parray[p].name);
-    else if ((rating >= parray[p1].kiblevel) || 
+    else if ((rating >= parray[p1].kiblevel) ||
              ((parray[p].adminLevel >= 10) && (parray[p].i_admin)))
         if (!parray[p].registered)
             pprintf(p1, "\n%s(++++)", parray[p].name);
@@ -350,13 +350,13 @@ PRIVATE int tell(int p, int p1, char *msg, int why, int ch)
                pprintf(p1, "\n%s(%d)(C)", parray[p].name, rating);
            else
                pprintf(p1, "\n%s(%d)", parray[p].name, rating);
-        else 
+        else
             pprintf(p1, "\n%s(----)", parray[p].name, rating);
     else break;
 
-    if (why == TELL_WHISPER) 
+    if (why == TELL_WHISPER)
        pprintf_prompt(p1, " whispers: %s\n", msg);
-    else 
+    else
        pprintf_prompt(p1, " kibitzes: %s\n", msg);
 
     break;
@@ -386,8 +386,8 @@ PRIVATE int tell(int p, int p1, char *msg, int why, int ch)
   }
   if ((why == TELL_SAY) || (why == TELL_TELL)) {
     pprintf(p, "(told %s%s)\n", parray[p1].name,
-            (((parray[p1].game>=0) && (garray[parray[p1].game].status == GAME_EXAMINE)) 
-            ? ", who is examining a game" : 
+            (((parray[p1].game>=0) && (garray[parray[p1].game].status == GAME_EXAMINE))
+            ? ", who is examining a game" :
 	    (parray[p1].game >= 0 && (parray[p1].game != parray[p].game))
 	    ? ", who is playing" : tmp));
     parray[p].last_tell = p1;
@@ -457,7 +457,7 @@ PRIVATE int chtell(int p, int ch, char *msg)
   }
 
   for (p1 = 0; p1 < p_num; p1++) {
-    if ((p1 == p) || (parray[p1].status != PLAYER_PROMPT)) 
+    if ((p1 == p) || (parray[p1].status != PLAYER_PROMPT))
       continue;
     if ((on_channel(ch, p1)) && (!player_censored(p1, p))) {
       tell(p, p1, msg, TELL_CHANNEL, ch);
@@ -465,13 +465,13 @@ PRIVATE int chtell(int p, int ch, char *msg)
     }
   }
 
-  if (count) 
+  if (count)
     parray[p].last_channel = ch;
-  
+
   pprintf(p, "(%d->(%d))\n", ch, count);
   if (!on_channel(ch, p))
     pprintf(p, " (You're not listening to channel %d.)\n", ch);
-  
+
   return COM_OK;
 }
 
@@ -625,8 +625,8 @@ PUBLIC int com_xtell(int p, param_list param)
     }
   }
   pprintf(p, "(told %s%s)\n", parray[p1].name,
-          (((parray[p1].game>=0) && (garray[parray[p1].game].status == GAME_EXAMINE)) 
-          ? ", who is examining a game" : 
+          (((parray[p1].game>=0) && (garray[parray[p1].game].status == GAME_EXAMINE))
+          ? ", who is examining a game" :
 	  (parray[p1].game >= 0 && (parray[p1].game != parray[p].game))
           ? ", who is playing" : tmp));
   return COM_OK;
@@ -834,7 +834,7 @@ PUBLIC int com_inchannel(int p, param_list param)
           pprintf(p,"Channel %d:",param[0].val.integer);
         pprintf (p," %s%s",parray[p1].name,(((parray[p1].adminLevel >= 10) && (parray[p1].i_admin) && (param[0].val.integer < 2)) ? "(*)" : ""));
         count++;
-        } 
+        }
     }
     if (!count)
       pprintf(p,"Channel %d is empty.\n",param[0].val.integer);
@@ -939,7 +939,7 @@ PUBLIC int com_sendmessage(int p, param_list param)
     if (connected) {
       pprintf(p1, "\n%s just sent you a message:\n", parray[p].name);
       pprintf_prompt(p1, "    %s\n", param[1].val.string);
-    } 
+    }
   }
   if (!connected)
     player_remove(p1);
