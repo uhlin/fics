@@ -25,11 +25,11 @@
 #include "stdinclude.h"
 
 #include "common.h"
-#include "utils.h"
-#include "playerdb.h"
-#include "network.h"
-#include "rmalloc.h"
 #include "config.h"
+#include "network.h"
+#include "playerdb.h"
+#include "rmalloc.h"
+#include "utils.h"
 
 PUBLIC int count_lines(FILE *fp)
 {
