@@ -176,7 +176,7 @@ PUBLIC int mail_file_to_address(char *addr, char *subj, char *fname)
   if (!fp)
     return -1;
 #ifdef SENDMAILPROG
-  fprintf(fp, "To: %s\nSubject: %s\n", addr, subj); 
+  fprintf(fp, "To: %s\nSubject: %s\n", addr, subj);
   file_fp = fopen(fname, "r");
   if (!file_fp)
     return -1;
@@ -399,10 +399,10 @@ PUBLIC int psend_file(int p, char *dir, char *file)
   return 0;
 }
 
-/* 
+/*
  * Marsalis added on 8/27/95 so that [next] does not
  * appear in the logout process for those that have
- * a short screen height.  (Fixed due to complaint 
+ * a short screen height.  (Fixed due to complaint
  * in Bug's messages).
  */
 PUBLIC int psend_logoutfile(int p, char *dir, char *file)
@@ -410,7 +410,7 @@ PUBLIC int psend_logoutfile(int p, char *dir, char *file)
   FILE *fp;
   char tmp[MAX_LINE_SIZE];
   char fname[MAX_FILENAME_SIZE];
-  
+
   if (parray[p].last_file)
     rfree(parray[p].last_file);
   parray[p].last_file = NULL;
@@ -651,14 +651,14 @@ PUBLIC char *fix_time(char *old_time) {
   char i;
 
   sscanf(old_time, "%s %s %s", day, month, date);
-  
+
   if (date[2] != ',') {
     i = date[0];
     date[0] = '0';
     date[1] = i;
   }
   date[2] = '\0';
-   
+
   sprintf (new_time, "%s, %s %s", day, month, date);
 
   return new_time;
