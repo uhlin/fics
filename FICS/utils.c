@@ -161,37 +161,38 @@ PUBLIC int mail_string_to_user(int p, char *subj, char *str)
   }
 }
 
-PUBLIC int mail_file_to_address(char *addr, char *subj, char *fname)
+PUBLIC int
+mail_file_to_address(char *addr, char *subj, char *fname)
 {
-  char com[1000];
-  char tmp[MAX_LINE_SIZE];
-  FILE *fp;
-  FILE *file_fp;
+	FILE	*fp1, *fp2;
+	char	 com[1000];
+	char	 tmp[MAX_LINE_SIZE];
+
+	/* maybe unused */
+	(void) fp2;
+	(void) tmp;
 
 #ifdef SENDMAILPROG
-  sprintf(com, "%s\n", SENDMAILPROG);
+	sprintf(com, "%s\n", SENDMAILPROG);
 #else
-  sprintf(com, "%s -s \"%s\" %s < %s&", MAILPROGRAM, subj, addr, fname);
+	sprintf(com, "%s -s \"%s\" %s < %s&", MAILPROGRAM, subj, addr, fname);
 #endif
-  fp = popen(com, "w");
-  if (!fp)
-    return -1;
+	if ((fp1 = popen(com, "w")) == NULL)
+		return -1;
 #ifdef SENDMAILPROG
-  fprintf(fp, "To: %s\nSubject: %s\n", addr, subj);
-  file_fp = fopen(fname, "r");
-  if (!file_fp)
-    return -1;
-  while (!feof(file_fp)) {
-    fgets(tmp, MAX_LINE_SIZE - 1, file_fp);
-    if (!feof(file_fp)) {
-      fputs(tmp, fp);
-    }
-  }
-  fclose(file_fp);
-
+	fprintf(fp1, "To: %s\nSubject: %s\n", addr, subj);
+	if ((fp2 = fopen(fname, "r")) == NULL)
+		return -1;
+	while (!feof(fp2)) {
+		fgets(tmp, MAX_LINE_SIZE - 1, fp2);
+		if (!feof(fp2)) {
+			fputs(tmp, fp1);
+		}
+	}
+	fclose(fp2);
 #endif
-  pclose(fp);
-  return 0;
+	pclose(fp1);
+	return 0;
 }
 
 PUBLIC int mail_file_to_user(int p, char *subj, char *fname)
