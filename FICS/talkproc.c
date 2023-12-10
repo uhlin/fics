@@ -736,7 +736,7 @@ com_mailmess(int p, param_list param)
 	char	 filename[MAX_FILENAME_SIZE];
 	char	 fname[MAX_FILENAME_SIZE];
 	char	 mdir[MAX_FILENAME_SIZE];
-	char	 subj[81];
+	char	 subj[120];
 
 	if (!parray[p].registered) {
 		pprintf(p, "Only registered people can use the mailmess "
@@ -748,9 +748,9 @@ com_mailmess(int p, param_list param)
 	sprintf(mdir, "%s/player_data/%c/", stats_dir, parray[p].login[0]);
 
 	if (search_directory(mdir, filename, buffer, 1000)) {
-		sprintf(subj, "Your FICS messages from server %s",
+		snprintf(subj, sizeof subj, "Your FICS messages from server %s",
 		    fics_hostname);
-		sprintf(fname, "%s/%s", mdir, filename);
+		snprintf(fname, sizeof fname, "%s/%s", mdir, filename);
 		mail_file_to_user(p, subj, fname);
 		pprintf(p, "Messages sent to %s\n", parray[p].emailAddress);
 	} else {
