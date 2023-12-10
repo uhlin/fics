@@ -70,7 +70,6 @@ PUBLIC command_type command_list[] = {
   {"bell",		"",	com_bell,	ADMIN_USER },
   {"best",		"o",	com_best,	ADMIN_USER },
   {"boards",		"o",	com_boards,	ADMIN_USER },
-/*  {"channel",		"p",	com_channel,	ADMIN_USER }, */
   {"clearmessages",	"n",	com_clearmessages,	ADMIN_USER },
   {"convert_bcf",	"d",	com_CONVERT_BCF,	ADMIN_USER },
   {"convert_elo",	"d",	com_CONVERT_ELO,	ADMIN_USER },
