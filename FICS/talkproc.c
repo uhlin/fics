@@ -629,67 +629,6 @@ PUBLIC int com_inchannel(int p, param_list param)
   }
 }
 
-#if 0 /* if anyone can do inchannel NULL without n^3 computation
-		please do so*/
-PUBLIC int com_inchannel(int p, param_list param)
-{
-  int c1, c2;
-  int i, j, count = 0;
-
-  if (param[0].type == TYPE_NULL) {	/* List everyone on every channel */
-    c1 = -1;
-    c2 = -1;
-  } else if (param[1].type == TYPE_NULL) {	/* One parameter */
-    c1 = param[0].val.integer;
-    if (c1 < 0) {
-      pprintf(p, "The lowest channel number is 0.\n");
-      return COM_OK;
-    }
-    c2 = -1;
-  } else {			/* Two parameters */
-    c1 = param[0].val.integer;
-    c2 = param[1].val.integer;
-    if ((c1 < 0) || (c2 < 0)) {
-      pprintf(p, "The lowest channel number is 0.\n");
-      return COM_OK;
-    }
-    pprintf(p, "Two parameter inchannel is not implemented.\n");
-    return COM_OK;
-  }
-  if ((c1 >= MAX_CHANNELS) || (c2 >= MAX_CHANNELS)) {
-    pprintf(p, "The maximum channel number is %d.\n", MAX_CHANNELS - 1);
-    return COM_OK;
-  }
-  for (i = 0; i < MAX_CHANNELS; i++) {
-    if (numOn[i] && ((c1 < 0) || (i == c1))) {
-      /* First get rid of ghosts. */
-      for (j=0; j < numOn[i]; j++) {
-        if (parray[channels[i][j]].status == PLAYER_PROMPT)
-          continue;
-        channels[i][j] = channels[i][--numOn[i]];
-        j--;
-      }
-      pprintf(p, "Channel %d:", i);
-      for (j = 0; j < numOn[i]; j++) {
-	pprintf(p, " %s", parray[channels[i][j]].name);
-        if ((i==0 || i==1) && parray[channels[i][j]].adminLevel >= 10
-                           && parray[channels[i][j]].i_admin)
-          pprintf(p, "(*)");
-      }
-      count++;
-      pprintf(p, "\n");
-    }
-  }
-  if (!count) {
-    if (c1 < 0)
-      pprintf(p, "No channels in use.\n");
-    else
-      pprintf(p, "Channel not in use.\n");
-  }
-  return COM_OK;
-}
-#endif
-
 PUBLIC int com_sendmessage(int p, param_list param)
 {
   int p1, connected = 1;
