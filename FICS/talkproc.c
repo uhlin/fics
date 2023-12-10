@@ -737,6 +737,7 @@ com_mailmess(int p, param_list param)
 	char	 fname[MAX_FILENAME_SIZE];
 	char	 mdir[MAX_FILENAME_SIZE];
 	char	 subj[120];
+	int	 ret, too_long;
 
 	if (!parray[p].registered) {
 		pprintf(p, "Only registered people can use the mailmess "
@@ -751,9 +752,13 @@ com_mailmess(int p, param_list param)
 	if (search_directory(mdir, filename, buffer, 1000)) {
 		snprintf(subj, sizeof subj, "Your FICS messages from server %s",
 		    fics_hostname);
-		snprintf(fname, sizeof fname, "%s/%s", mdir, filename);
-		mail_file_to_user(p, subj, fname);
-		pprintf(p, "Messages sent to %s\n", parray[p].emailAddress);
+		ret = snprintf(fname, sizeof fname, "%s/%s", mdir, filename);
+		too_long = (ret < 0 || (size_t)ret >= sizeof fname);
+		if (!too_long) {
+			mail_file_to_user(p, subj, fname);
+			pprintf(p, "Messages sent to %s\n",
+			    parray[p].emailAddress);
+		}
 	} else {
 		pprintf(p, "You have no messages.\n");
 	}
