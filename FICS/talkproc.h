@@ -38,7 +38,7 @@ extern int com_cshout();
 extern int com_inchannel(int, param_list);
 extern int com_it();
 extern int com_kibitz();
-extern int com_mailmess();
+extern int com_mailmess(int, param_list);
 extern int com_messages();
 extern int com_ptell();
 extern int com_qtell();
