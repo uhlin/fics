@@ -32,7 +32,6 @@
 #include "playerdb.h"
 #include "ratings.h"
 #include "utils.h"
-/*#include "hostinfo.h" */
 #include "board.h"
 #include "talkproc.h"
 #include "comproc.h"
