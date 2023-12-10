@@ -27,13 +27,15 @@
 #ifndef _TALKPROC_H
 #define _TALKPROC_H
 
+#include "command.h" /* param_list */
+
 #define MAX_CHANNELS 256
 
 extern int quota_time;
 
 extern int com_clearmessages();
 extern int com_cshout();
-extern int com_inchannel();
+extern int com_inchannel(int, param_list);
 extern int com_it();
 extern int com_kibitz();
 extern int com_mailmess();
