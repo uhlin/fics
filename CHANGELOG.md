@@ -5,6 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added a new build system (and deleted the old).
+- Deleted disabled code
 - Did new revisions of the following files:
   - `fics_addplayer.c`
   - `stdinclude.h`
