@@ -557,15 +557,15 @@ PUBLIC int printablestring(char *str)
   return 1;
 }
 
-PUBLIC char *xstrdup(const char *str)
+PUBLIC char *
+xstrdup(const char *str)
 {
-  char *tmp;
+	char *out;
 
-  if (!str)
-    return NULL;
-  tmp = rmalloc(strlen(str) + 1);
-  strcpy(tmp, str);
-  return tmp;
+	if (str == NULL)
+		return NULL;
+	out = rmalloc(strlen(str) + 1);
+	return strcpy(out, str);
 }
 
 PUBLIC char *hms_desc(int t)
