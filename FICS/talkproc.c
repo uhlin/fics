@@ -47,11 +47,9 @@
 #include "gamedb.h"
 #include "gameproc.h"
 #include "obsproc.h"
-/* #include "hostinfo.h" */
 #include "multicol.h"
 #include "lists.h"
 #include "formula.h"
-#include <string.h>
 
 #include <sys/resource.h>
 
