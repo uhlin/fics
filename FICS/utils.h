@@ -60,7 +60,7 @@ extern char *nextword( );
 extern int check_emailaddr(char *);
 extern int mail_string_to_address();
 extern int mail_string_to_user();
-extern int mail_file_to_address();
+extern int mail_file_to_address(char *, char *, char *);
 extern int mail_file_to_user();
 extern int pcommand(int, char *, ...);
 extern int pprintf(int, char *, ...);
