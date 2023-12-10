@@ -729,31 +729,34 @@ PUBLIC int com_clearmessages(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_mailmess(int p, param_list param)
+PUBLIC int
+com_mailmess(int p, param_list param)
 {
-  char *buffer[1000];
-  char mdir[MAX_FILENAME_SIZE];
-  char filename[MAX_FILENAME_SIZE];
-  char subj[81], fname[MAX_FILENAME_SIZE];
+	char	*buffer[1000];
+	char	 filename[MAX_FILENAME_SIZE];
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 mdir[MAX_FILENAME_SIZE];
+	char	 subj[81];
 
+	if (!parray[p].registered) {
+		pprintf(p, "Only registered people can use the mailmess "
+		    "command.\n");
+		return COM_OK;
+	}
 
-  if (!parray[p].registered) {
-    pprintf(p, "Only registered people can use the mailmess command.\n");
-    return COM_OK;
-  }
-  sprintf(filename, "%s.messages", parray[p].login);
-  sprintf(mdir, "%s/player_data/%c/", stats_dir, parray[p].login[0]);
+	sprintf(filename, "%s.messages", parray[p].login);
+	sprintf(mdir, "%s/player_data/%c/", stats_dir, parray[p].login[0]);
 
-  if (search_directory(mdir, filename, buffer, 1000)) {
-    sprintf(subj, "Your FICS messages from server %s", fics_hostname);
-    sprintf(fname, "%s/%s", mdir, filename);
-    mail_file_to_user (p, subj, fname);
-    pprintf(p, "Messages sent to %s\n", parray[p].emailAddress);
-  } else {
-    pprintf(p, "You have no messages.\n");
-  }
-  return COM_OK;
-
+	if (search_directory(mdir, filename, buffer, 1000)) {
+		sprintf(subj, "Your FICS messages from server %s",
+		    fics_hostname);
+		sprintf(fname, "%s/%s", mdir, filename);
+		mail_file_to_user(p, subj, fname);
+		pprintf(p, "Messages sent to %s\n", parray[p].emailAddress);
+	} else {
+		pprintf(p, "You have no messages.\n");
+	}
+	return COM_OK;
 }
 
 PUBLIC int com_znotify(int p, param_list param)
