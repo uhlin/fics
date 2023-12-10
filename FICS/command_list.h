@@ -40,16 +40,16 @@
 
 /*
   Parameter string format
-  w - a word 
-  o - an optional word 
+  w - a word
+  o - an optional word
   d - integer
   p - optional integer
   i - word or integer
   n - optional word or integer
   s - string to end
   t - optional string to end
-  
-  If the parameter option is given in lower case then the parameter is 
+
+  If the parameter option is given in lower case then the parameter is
   converted to lower case before being passsed to the function. If it is
   in upper case, then the parameter is passed as typed.
  */
@@ -79,7 +79,7 @@ PUBLIC command_type command_list[] = {
   {"date",		"",	com_date,	ADMIN_USER },
   {"decline",		"n",	com_decline,	ADMIN_USER },
   {"draw",		"",	com_draw,	ADMIN_USER },
-  {"eco",               "n",    com_eco,        ADMIN_USER }, 
+  {"eco",               "n",    com_eco,        ADMIN_USER },
   {"examine",           "on",   com_examine,    ADMIN_USER },
   {"finger",		"o",	com_stats,	ADMIN_USER },
   {"flag",		"",	com_flag,	ADMIN_USER },
@@ -101,7 +101,7 @@ PUBLIC command_type command_list[] = {
   {"journal",		"o",	com_journal,	ADMIN_USER },
   {"jsave",		"wwi",	com_jsave,	ADMIN_USER },
   {"kibitz",		"S",	com_kibitz,	ADMIN_USER },
-  {"limits",            "",     com_limits,     ADMIN_USER },  
+  {"limits",            "",     com_limits,     ADMIN_USER },
   {"llogons",           "",     com_llogons,    ADMIN_USER },
 /*  {"load",		"ww",	com_load,	ADMIN_USER },  */
   {"logons",		"o",	com_logons,	ADMIN_USER },
@@ -171,7 +171,7 @@ PUBLIC command_type command_list[] = {
   {"who",               "T",    com_who,        ADMIN_USER },
   {"withdraw",		"n",	com_withdraw,	ADMIN_USER },
   {"xtell",             "wS",   com_xtell,      ADMIN_USER },
-  {"znotify",		"",	com_znotify,	ADMIN_USER }, 
+  {"znotify",		"",	com_znotify,	ADMIN_USER },
 
   {"addcomment",	"wS",	com_addcomment,    ADMIN_ADMIN },
   {"addplayer",		"WWS",	com_addplayer,	   ADMIN_ADMIN },
@@ -203,7 +203,7 @@ PUBLIC command_type command_list[] = {
   {"canewsf",           "dS",   com_canewsf,       ADMIN_ADMIN },
   {"muzzle",		"o",	com_muzzle,	   ADMIN_ADMIN },
   {"nuke",              "w",    com_nuke,          ADMIN_ADMIN },
-  {"pose",		"wS",	com_pose,	   ADMIN_GOD   }, 
+  {"pose",		"wS",	com_pose,	   ADMIN_GOD   },
   {"asetmaxplayers",    "p",    com_asetmaxplayer, ADMIN_ADMIN },
   {"quota",             "p",    com_quota,         ADMIN_ADMIN },
   {"raisedead",         "WO",   com_raisedead,     ADMIN_ADMIN },
