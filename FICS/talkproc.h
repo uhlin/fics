@@ -31,7 +31,6 @@
 
 extern int quota_time;
 
-extern int com_censor();
 extern int com_clearmessages();
 extern int com_cshout();
 extern int com_inchannel();
@@ -39,15 +38,12 @@ extern int com_it();
 extern int com_kibitz();
 extern int com_mailmess();
 extern int com_messages();
-extern int com_notify();
 extern int com_ptell();
 extern int com_qtell();
 extern int com_say();
 extern int com_sendmessage();
 extern int com_shout();
 extern int com_tell();
-extern int com_uncensor();
-extern int com_unnotify();
 extern int com_whisper();
 extern int com_xtell();
 extern int com_znotify();
