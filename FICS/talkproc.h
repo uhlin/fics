@@ -20,7 +20,7 @@
 /* Revision history:
    name				yy/mm/dd	Change
    hersco and Marsalis		95/07/24	Created
-   Markus Uhlin			23/12/10	Deleted com_query()
+   Markus Uhlin			23/12/10	Deleted declarations
    Markus Uhlin			23/12/10	Sorted the declarations
 */
 
@@ -32,7 +32,6 @@
 extern int quota_time;
 
 extern int com_censor();
-extern int com_channel();
 extern int com_clearmessages();
 extern int com_cshout();
 extern int com_inchannel();

@@ -702,48 +702,6 @@ PUBLIC int com_uncensor(int p, param_list param)
 
 #endif
 
-#if 0 /* now in lists.c */
-PUBLIC int com_channel(int p, param_list param)
-{
-  int i, err;
-
-  if (param[0].type == TYPE_NULL) {	/* Turn off all channels */
-    for (i = 0; i < MAX_CHANNELS; i++) {
-      if (!channel_remove(i, p))
-	pprintf(p, "Channel %d turned off.\n", i);
-    }
-  } else {
-    i = param[0].val.integer;
-    if ((i == 0) && (!on_channel(i, p)) && (parray[p].adminLevel == 0)) {
-      pprintf(p, "Only admins may join channel 0.\n");
-      return COM_OK;
-    }
-    if (i < 0) {
-      pprintf(p, "The lowest channel number is 0.\n");
-      return COM_OK;
-    }
-    if (i >= MAX_CHANNELS) {
-      pprintf(p, "The maximum channel number is %d.\n", MAX_CHANNELS - 1);
-      return COM_OK;
-    }
-    if (on_channel(i, p)) {
-      if (!channel_remove(i, p))
-	pprintf(p, "Channel %d turned off.\n", i);
-    } else {
-      if (!(err = channel_add(i, p)))
-	pprintf(p, "Channel %d turned on.\n", i);
-      else {
-	if (err == 1)
-	  pprintf(p, "Channel %d is already full.\n", i);
-	if (err == 3)
-	  pprintf(p, "Maximum channel number exceeded.\n");
-      }
-    }
-  }
-  return COM_OK;
-}
-#endif
-
 PUBLIC int com_inchannel(int p, param_list param)
 {
   int p1,count = 0;
