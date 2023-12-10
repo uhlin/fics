@@ -30,21 +30,6 @@
 #include "network.h"
 #include "rmalloc.h"
 #include "config.h"
-#if defined(SYSTEM_SUN4)
-/* #include <sys/vfs.h> */
-#endif
-
-/*
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/nameser.h>
-#include <resolv.h>
-*/
-
-#if defined(SGI)
-#else
-//int gettimeofday(struct timeval * tp, struct timezone * tzp);
-#endif
 
 PUBLIC int count_lines(FILE *fp)
 {
