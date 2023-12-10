@@ -588,46 +588,62 @@ PUBLIC int com_say(int p, param_list param)
   return tell(p, parray[p].opponent, param[0].val.string, TELL_SAY, 0);
 }
 
-PUBLIC int com_inchannel(int p, param_list param)
+PUBLIC int
+com_inchannel(int p, param_list param)
 {
-  int p1,count = 0;
-  char tmp[18];
+	char	 tmp[18];
+	int	 p1, count = 0;
 
+	if (param[0].type == TYPE_NULL) {
+		pprintf(p, "inchannel [no params] has been removed\n");
+		pprintf(p, "Please use inchannel [name] or inchannel"
+		    "[number]\n");
+		return COM_OK;
+	}
 
-  if (param[0].type == TYPE_NULL) {
-    pprintf (p,"inchannel [no params] has been removed\n");
-    pprintf (p,"Please use inchannel [name] or inchannel [number]\n");
-    return COM_OK;
-  }
+	if (param[0].type == TYPE_WORD) {
+		p1 = player_find_part_login(param[0].val.word);
 
-  if (param[0].type == TYPE_WORD) {
-    p1 = player_find_part_login(param[0].val.word);
-    if ((p1 < 0) || (parray[p1].status != PLAYER_PROMPT)) {
-      pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-      return COM_OK;
-    }
-    pprintf (p,"%s is in the following channels:",parray[p1].name); /* no \n */
-    if (list_channels (p,p1))
-      pprintf (p," No channels found.\n",parray[p1].name);
-    return COM_OK;
-  } else {
-    sprintf (tmp,"%d",param[0].val.integer);
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p1].status != PLAYER_PROMPT)
-	continue;
-      if (in_list(p1,L_CHANNEL,tmp)) {
-        if (!count)
-          pprintf(p,"Channel %d:",param[0].val.integer);
-        pprintf (p," %s%s",parray[p1].name,(((parray[p1].adminLevel >= 10) && (parray[p1].i_admin) && (param[0].val.integer < 2)) ? "(*)" : ""));
-        count++;
-        }
-    }
-    if (!count)
-      pprintf(p,"Channel %d is empty.\n",param[0].val.integer);
-    else
-      pprintf (p,"\n%d %s in channel %d.\n",count,(count == 1 ? "person is" : "people are"),param[0].val.integer);
-    return COM_OK;
-  }
+		if ((p1 < 0) || (parray[p1].status != PLAYER_PROMPT)) {
+			pprintf(p, "No user named \"%s\" is logged in.\n",
+			    param[0].val.word);
+			return COM_OK;
+		}
+
+		pprintf(p, "%s is in the following channels:", parray[p1].name);
+
+		if (list_channels(p, p1))
+			pprintf(p, " No channels found.\n", parray[p1].name);
+		return COM_OK;
+	} else {
+		sprintf(tmp, "%d", param[0].val.integer);
+
+		for (p1 = 0; p1 < p_num; p1++) {
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+			if (in_list(p1, L_CHANNEL, tmp)) {
+				if (!count) {
+					pprintf(p, "Channel %d:",
+					    param[0].val.integer);
+				}
+				pprintf(p, " %s%s", parray[p1].name,
+				    (((parray[p1].adminLevel >= 10) &&
+				    (parray[p1].i_admin) &&
+				    (param[0].val.integer < 2)) ? "(*)" : ""));
+				count++;
+			}
+		}
+
+		if (!count) {
+			pprintf(p, "Channel %d is empty.\n",
+			    param[0].val.integer);
+		} else {
+			pprintf(p, "\n%d %s in channel %d.\n", count,
+			    (count == 1 ? "person is" : "people are"),
+			    param[0].val.integer);
+		}
+		return COM_OK;
+	}
 }
 
 PUBLIC int com_sendmessage(int p, param_list param)
