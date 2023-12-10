@@ -28,7 +28,7 @@
                                 in kibitz and whisper, admins on duty now are
                                 shown as (*), and computers marked as (C) as
                                 well as with rating.
-
+   Markus Uhlin                 23/12/10	Cleaned up the file
 */
 
 #include "stdinclude.h"

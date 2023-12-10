@@ -19,7 +19,8 @@
 
 /* Revision history:
    name				yy/mm/dd	Change
-   hersco and Marsalis         	95/07/24	Created
+   hersco and Marsalis		95/07/24	Created
+   Markus Uhlin			23/12/10	Deleted com_query()
 */
 
 #ifndef _TALKPROC_H
