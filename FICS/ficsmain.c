@@ -135,7 +135,7 @@ PUBLIC int main(int argc, char *argv[])
     exit(1);
   }
   startuptime = time(0);
-/*  Using the value defined in config.h now instead of the real hostname.  
+/*  Using the value defined in config.h now instead of the real hostname.
     This is used as the return address in email, so it needs to be a real
     DNS resolvable hostname!                    Sparky                     */
 /*  gethostname(fics_hostname, 80); */
