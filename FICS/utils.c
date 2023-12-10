@@ -571,14 +571,6 @@ PUBLIC int printablestring(char *str)
   return 1;
 }
 
-
-/*#if defined(SGI)
-#else*/
-/* This version of strdup must be used, or the count of allocs
-   in "uptime" will omit them.  Maybe we change the name to
-   rstrdup and replace all calls, if the name is causing a conflict
-   with anyone's libraries.  --mann
-*/
 PUBLIC char *strdup(const char *str)
 {
   char *tmp;
@@ -589,7 +581,6 @@ PUBLIC char *strdup(const char *str)
   strcpy(tmp, str);
   return tmp;
 }
-/*#endif*/
 
 PUBLIC char *hms_desc(int t)
 {
