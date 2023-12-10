@@ -9,6 +9,7 @@ documented in this file.
   - `fics_addplayer.c`
   - `stdinclude.h`
 - Fixed a `sscanf()` bug in `com_anews()`.
+- Fixed a bug in `fix_time()` (did return a local address)
 - Fixed implicit integers
 - Fixed unused variables
 - Renamed functions in order to avoid conflicts with system
