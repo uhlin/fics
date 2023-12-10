@@ -29,6 +29,7 @@
                                 shown as (*), and computers marked as (C) as
                                 well as with rating.
    Markus Uhlin                 23/12/10	Cleaned up the file
+   Markus Uhlin                 23/12/10	Fixed compiler warnings
 */
 
 #include "stdinclude.h"
