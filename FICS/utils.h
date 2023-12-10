@@ -82,7 +82,7 @@ extern int safechar( );
 extern int safestring( );
 extern int alphastring( );
 extern int printablestring( );
-extern char *strdup( ); /* XXX */
+extern char *xstrdup( ); /* XXX */
 
 extern char *hms_desc();
 extern char *hms();

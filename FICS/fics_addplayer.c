@@ -104,11 +104,11 @@ main(int argc, char *argv[])
 		fprintf(stderr, "%s already exists.\n", funame);
 		exit(0);
 	}
-	parray[p].name = strdup(funame);
-	parray[p].login = strdup(funame);
+	parray[p].name = xstrdup(funame);
+	parray[p].login = xstrdup(funame);
 	stolower(parray[p].login);
-	parray[p].fullName = strdup(fname);
-	parray[p].emailAddress = strdup(email);
+	parray[p].fullName = xstrdup(fname);
+	parray[p].emailAddress = xstrdup(email);
 	for (i = 0; i < PASSLEN; i++) {
 		password[i] = 'a' + rand() % 26;
 	}
@@ -116,7 +116,7 @@ main(int argc, char *argv[])
 	salt[0] = 'a' + rand() % 26;
 	salt[1] = 'a' + rand() % 26;
 	salt[2] = '\0';
-	parray[p].passwd = strdup(crypt(password, salt));
+	parray[p].passwd = xstrdup(crypt(password, salt));
 	parray[p].registered = 1;
 //	parray[p].network_player = !local;
 	parray[p].rated = 1;

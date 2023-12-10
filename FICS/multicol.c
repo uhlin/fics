@@ -56,7 +56,7 @@ PUBLIC int multicol_store(multicol * m, char *str)
     return -1;
   if (!str)
     return -1;
-  m->strArray[m->num] = strdup(str);
+  m->strArray[m->num] = xstrdup(str);
   m->num++;
   return 0;
 }
@@ -73,13 +73,13 @@ PUBLIC int multicol_store_sorted(multicol * m, char *str)
   for (i = m->num; (i > 0) && (!found); i--) {
     if (strcasecmp(str, m->strArray[i - 1]) >= 0) {
       found = 1;
-      m->strArray[i] = strdup(str);
+      m->strArray[i] = xstrdup(str);
     } else {
       m->strArray[i] = m->strArray[i - 1];
     }
   }
   if (!found)
-    m->strArray[0] = strdup(str);
+    m->strArray[0] = xstrdup(str);
   m->num++;
   return 0;
 }

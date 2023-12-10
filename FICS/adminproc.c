@@ -770,7 +770,7 @@ PUBLIC int com_raisedead(int p, param_list param)
       p2 = player_new();
       if (!(lookup = player_read(p2, newplayerlower))) {
 	strfree(parray[p2].name);
-	parray[p2].name = strdup(newplayer);
+	parray[p2].name = xstrdup(newplayer);
 	player_save(p2);
 	if (parray[p2].s_stats.rating > 0)
 	  UpdateRank(TYPE_STAND, newplayer, &parray[p2].s_stats, newplayer);
@@ -831,10 +831,10 @@ PUBLIC int com_addplayer(int p, param_list param)
    player_remove(p1);
    return COM_OK;
   }
-  parray[p1].name = strdup(newplayer);
-  parray[p1].login = strdup(newplayerlower);
-  parray[p1].fullName = strdup(newname);
-  parray[p1].emailAddress = strdup(newemail);
+  parray[p1].name = xstrdup(newplayer);
+  parray[p1].login = xstrdup(newplayerlower);
+  parray[p1].fullName = xstrdup(newname);
+  parray[p1].emailAddress = xstrdup(newemail);
   if (strcmp(newemail, "none")) {
     for (i = 0; i < PASSLEN; i++) {
       password[i] = 'a' + rand() % 26;
@@ -843,10 +843,10 @@ PUBLIC int com_addplayer(int p, param_list param)
     salt[0] = 'a' + rand() % 26;
     salt[1] = 'a' + rand() % 26;
     salt[2] = '\0';
-    parray[p1].passwd = strdup(crypt(password, salt));
+    parray[p1].passwd = xstrdup(crypt(password, salt));
   } else {
     password[0] = '\0';
-    parray[p1].passwd = strdup(password);
+    parray[p1].passwd = xstrdup(password);
   }
   parray[p1].registered = 1;
 /*  parray[p1].network_player = 0; */
@@ -1049,14 +1049,14 @@ PUBLIC int com_asetpasswd(int p, param_list param)
   if (parray[p1].passwd)
     rfree(parray[p1].passwd);
   if (param[1].val.word[0] == '*') {
-    parray[p1].passwd = strdup(param[1].val.word);
+    parray[p1].passwd = xstrdup(param[1].val.word);
     pprintf(p, "Account %s locked!\n", parray[p1].name);
     sprintf(text, "Password of %s is now useless.  Your account at our FICS has been locked.\n", parray[p1].name);
   } else {
     salt[0] = 'a' + rand() % 26;
     salt[1] = 'a' + rand() % 26;
     salt[2] = '\0';
-    parray[p1].passwd = strdup(crypt(param[1].val.word, salt));
+    parray[p1].passwd = xstrdup(crypt(param[1].val.word, salt));
     sprintf(text, "Password of %s changed to \"%s\".\n", parray[p1].name, param[1].val.word);
     pprintf(p, "%s", text);
   }
@@ -1108,7 +1108,7 @@ PUBLIC int com_asetemail(int p, param_list param)
     parray[p1].emailAddress = NULL;
     pprintf(p, "Email address for %s removed\n", parray[p1].name);
   } else {
-    parray[p1].emailAddress = strdup(param[1].val.word);
+    parray[p1].emailAddress = xstrdup(param[1].val.word);
     pprintf(p, "Email address of %s changed to \"%s\".\n", parray[p1].name, param[1].val.word);
   }
   player_save(p1);
@@ -1152,7 +1152,7 @@ PUBLIC int com_asetrealname(int p, param_list param)
     parray[p1].fullName = NULL;
     pprintf(p, "Real name for %s removed\n", parray[p1].name);
   } else {
-    parray[p1].fullName = strdup(param[1].val.word);
+    parray[p1].fullName = xstrdup(param[1].val.word);
     pprintf(p, "Real name of %s changed to \"%s\".\n", parray[p1].name, param[1].val.word);
   }
   player_save(p1);
@@ -1222,7 +1222,7 @@ PUBLIC int com_asethandle(int p, param_list param)
   if ((!player_rename(playerlower, newplayerlower)) && (!player_read(p1, newplayerlower))) {
     pprintf(p, "Player %s renamed to %s.\n", player, newplayer);
     strfree(parray[p1].name);
-    parray[p1].name = strdup(newplayer);
+    parray[p1].name = xstrdup(newplayer);
     player_save(p1);
     if (parray[p1].s_stats.rating > 0)
       UpdateRank(TYPE_STAND, newplayer, &parray[p1].s_stats, player);

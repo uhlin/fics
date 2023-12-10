@@ -458,7 +458,7 @@ PUBLIC int com_password(int p, param_list param)
   salt[0] = 'a' + rand() % 26;
   salt[1] = 'a' + rand() % 26;
   salt[2] = '\0';
-  parray[p].passwd = strdup(crypt(newpassword, salt));
+  parray[p].passwd = xstrdup(crypt(newpassword, salt));
   pprintf(p, "Password changed to \"%s\".\n", newpassword);
   return COM_OK;
 }
@@ -1285,9 +1285,9 @@ PUBLIC int com_alias(int p, param_list param)
 	  pprintf(p, "You can't alias this command.\n");
 	} else {
 	  parray[p].alias_list[parray[p].numAlias].comm_name =
-	    strdup(param[0].val.word);
+	    xstrdup(param[0].val.word);
 	  parray[p].alias_list[parray[p].numAlias].alias =
-	    strdup(param[1].val.string);
+	    xstrdup(param[1].val.string);
 	  parray[p].numAlias++;
 	  pprintf(p, "Alias set.\n");
 
@@ -1295,7 +1295,7 @@ PUBLIC int com_alias(int p, param_list param)
       }
     } else {
       rfree(parray[p].alias_list[al].alias);
-      parray[p].alias_list[al].alias = strdup(param[1].val.string);
+      parray[p].alias_list[al].alias = xstrdup(param[1].val.string);
       pprintf(p, "Alias replaced.\n");
     }
     parray[p].alias_list[parray[p].numAlias].comm_name = NULL;

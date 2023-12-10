@@ -631,7 +631,7 @@ PRIVATE int set_plan(int p, char *var, char *val)
     }
     if (parray[p].num_plan < MAX_PLAN)
       parray[p].num_plan++;
-    parray[p].planLines[0] = ((val == NULL) ? NULL : strdup(val));
+    parray[p].planLines[0] = ((val == NULL) ? NULL : xstrdup(val));
     pprintf(p, "\nPlan variable %d changed to '%s'.\n", which+1, parray[p].planLines[which]);
     pprintf(p, "All other variables moved down.\n");
     return VAR_OK;
@@ -645,7 +645,7 @@ PRIVATE int set_plan(int p, char *var, char *val)
     } else {
       parray[p].num_plan++;
     }
-    parray[p].planLines[which - 1] = ((val == NULL) ? NULL : strdup(val));
+    parray[p].planLines[which - 1] = ((val == NULL) ? NULL : xstrdup(val));
     pprintf(p, "\nPlan variable %d changed to '%s'.\n", which, parray[p].planLines[which-1]);
     return VAR_OK;
   }
@@ -654,7 +654,7 @@ PRIVATE int set_plan(int p, char *var, char *val)
     rfree(parray[p].planLines[which]);
   }
   if (val != NULL) {
-    parray[p].planLines[which] = strdup(val);
+    parray[p].planLines[which] = xstrdup(val);
     pprintf(p, "\nPlan variable %d changed to '%s'.\n", which+1, parray[p].planLines[which]);
   } else {
     parray[p].planLines[which] = NULL;

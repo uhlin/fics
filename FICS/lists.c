@@ -91,7 +91,7 @@ PRIVATE List *list_find(int p, enum ListWhich l)
     while (!feof(fp)) {
       if (fgets(listmember, 100, fp) != NULL) {
 	listmember[strlen(listmember) - 1] = '\0';
-	tempList->member[count++] = strdup(listmember);
+	tempList->member[count++] = xstrdup(listmember);
       }
     }
     fclose(fp);
@@ -110,7 +110,7 @@ PUBLIC int list_add(int p, enum ListWhich l, char *s)
 
   if (gl) {
     if (gl->numMembers < MAX_GLOBAL_LIST_SIZE) {
-      gl->member[gl->numMembers] = strdup(s);
+      gl->member[gl->numMembers] = xstrdup(s);
       gl->numMembers++;
       return 0;
     } else {

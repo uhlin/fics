@@ -687,7 +687,7 @@ PRIVATE int notorcen(int p, param_list param, int *num, int max,
     pprintf(p, "You can't %s yourself.\n", listname);
     return COM_OK;
   }
-  list[*num] = strdup(parray[p1].name);
+  list[*num] = xstrdup(parray[p1].name);
   ++(*num);
   pprintf(p, "%s is now on your %s list.\n", parray[p1].name, listname);
   if (!connected)

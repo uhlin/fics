@@ -435,7 +435,7 @@ PRIVATE int process_login(int p, char *loginname)
 
   if (!*loginname) {		/* do something in here? */
   } else {
-    char *loginnameii = strdup(loginname);
+    char *loginnameii = xstrdup(loginname);
     stolower(loginname);
     if (!alphastring(loginname)) {
       pprintf(p, "\nSorry, names can only consist of lower and upper case letters.  Try again.\n");

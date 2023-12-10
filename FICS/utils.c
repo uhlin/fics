@@ -406,7 +406,7 @@ PUBLIC int psend_file(int p, char *dir, char *file)
     }
   }
   if (!feof(fp)) {
-    parray[p].last_file = strdup(fname);
+    parray[p].last_file = xstrdup(fname);
     parray[p].last_file_byte = ftell(fp);
     pprintf(p, "Type [next] to see next page.\n");
   }
@@ -571,7 +571,7 @@ PUBLIC int printablestring(char *str)
   return 1;
 }
 
-PUBLIC char *strdup(const char *str)
+PUBLIC char *xstrdup(const char *str)
 {
   char *tmp;
 

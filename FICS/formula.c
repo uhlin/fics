@@ -554,7 +554,7 @@ int SetValidFormula (int p, int clause, char *string)
 
   if (string != NULL) {
       string = eatwhite(string);
-      *Cur = (*string != '\0'  ?  strdup (string)  :  NULL);
+      *Cur = (*string != '\0'  ?  xstrdup (string)  :  NULL);
   }
   else *Cur = NULL;
 

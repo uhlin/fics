@@ -1199,7 +1199,7 @@ PUBLIC int com_switch(int p, param_list param)
     garray[g].white = garray[g].black;
     garray[g].black = tmp;
     parray[p].side = (parray[p].side == WHITE) ? BLACK : WHITE;
-    strTmp = strdup(garray[g].white_name);
+    strTmp = xstrdup(garray[g].white_name);
     strcpy(garray[g].white_name, garray[g].black_name);
     strcpy(garray[g].black_name, strTmp);
     strfree(strTmp);

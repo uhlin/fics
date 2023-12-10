@@ -82,12 +82,12 @@ PUBLIC void player_init(int startConsole)
   if (startConsole) {
     net_addConnection(0, 0);
     p = player_new();
-    parray[p].login = strdup("console");
-    parray[p].name = strdup("console");
-    parray[p].passwd = strdup("*");
-    parray[p].fullName = strdup("The Operator");
+    parray[p].login = xstrdup("console");
+    parray[p].name = xstrdup("console");
+    parray[p].passwd = xstrdup("*");
+    parray[p].fullName = xstrdup("The Operator");
     parray[p].emailAddress = NULL;
-    parray[p].prompt = strdup("fics%");
+    parray[p].prompt = xstrdup("fics%");
     parray[p].adminLevel = ADMIN_GOD;
     parray[p].socket = 0;
     parray[p].busy[0] = '\0';
@@ -335,25 +335,25 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
  fgets(tmp2, MAX_STRING_LENGTH, fp);
  if (strcmp(tmp2,"NONE\n")) {
    tmp2[strlen(tmp2)-1] = '\0';
-   pp->name = strdup (tmp2);
+   pp->name = xstrdup (tmp2);
  } else
    pp->name = NULL;
  fgets(tmp2, MAX_STRING_LENGTH, fp);
  if (strcmp(tmp2,"NONE\n")) {
    tmp2[strlen(tmp2)-1] = '\0';
-   pp->fullName = strdup (tmp2);
+   pp->fullName = xstrdup (tmp2);
  } else
    pp->fullName = NULL;
  fgets(tmp2, MAX_STRING_LENGTH, fp);
  if (strcmp(tmp2,"NONE\n")) {
    tmp2[strlen(tmp2)-1] = '\0';
-   pp->passwd = strdup (tmp2);
+   pp->passwd = xstrdup (tmp2);
  } else
    pp->passwd = NULL;
  fgets(tmp2, MAX_STRING_LENGTH, fp);
  if (strcmp(tmp2,"NONE\n")) {
    tmp2[strlen(tmp2)-1] = '\0';
-   pp->emailAddress = strdup (tmp2);
+   pp->emailAddress = xstrdup (tmp2);
  } else
    pp->emailAddress = NULL;
  if (fscanf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %d\n",
@@ -390,7 +390,7 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
 
  fgets (tmp2, MAX_STRING_LENGTH, fp);
    tmp2[strlen(tmp2)-1] = '\0';
-   pp->prompt = strdup(tmp2);
+   pp->prompt = xstrdup(tmp2);
  if (fscanf (fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
  &pp->open, &pp->rated, &pp->ropen, &pp->timeOfReg,
  &pp->totalTime, &pp->bell, &pp->pgn, &pp->notifiedby,
@@ -416,7 +416,7 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
          pp->num_plan--; 
        } else {
          tmp2[len - 1] = '\0';  /* Get rid of '\n' */
-         pp->planLines[i] = (len > 1) ? strdup(tmp2) : NULL;
+         pp->planLines[i] = (len > 1) ? xstrdup(tmp2) : NULL;
        }
      }
    }
@@ -429,7 +429,7 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
          pp->num_formula--;
        } else {
          tmp2[len - 1] = '\0';  /* Get rid of '\n' */
-         pp->formulaLines[i] = (len > 1) ? strdup(tmp2) : NULL;
+         pp->formulaLines[i] = (len > 1) ? xstrdup(tmp2) : NULL;
        }
      }
    }
@@ -438,7 +438,7 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
   if (!strcmp (tmp2,"NONE"))
     pp->formula = NULL;
   else
-    pp->formula = strdup(tmp2);
+    pp->formula = xstrdup(tmp2);
 
   if (pp->numAlias > 0) {
     for (i = 0; i < pp->numAlias; i++) {
@@ -454,8 +454,8 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
         *tmp = '\0';
         tmp++;
         tmp = eatwhite(tmp);
-        pp->alias_list[i].comm_name = strdup(tmp2);
-        pp->alias_list[i].alias = strdup(tmp);
+        pp->alias_list[i].comm_name = xstrdup(tmp2);
+        pp->alias_list[i].alias = xstrdup(tmp);
       }
     }
   }
@@ -492,15 +492,15 @@ PRIVATE int got_attr_value_player(int p, char *attr, char *value, FILE * fp, cha
   char tmp[MAX_LINE_SIZE], *tmp1;
 
   if (!strcmp(attr, "name:")) {
-    parray[p].name = strdup(value);
+    parray[p].name = xstrdup(value);
   } else if (!strcmp(attr, "password:")) {
-    parray[p].passwd = strdup(value);
+    parray[p].passwd = xstrdup(value);
   } else if (!strcmp(attr, "fullname:")) {
-    parray[p].fullName = strdup(value);
+    parray[p].fullName = xstrdup(value);
   } else if (!strcmp(attr, "email:")) {
-    parray[p].emailAddress = strdup(value);
+    parray[p].emailAddress = xstrdup(value);
   } else if (!strcmp(attr, "prompt:")) {
-    parray[p].prompt = strdup(value);
+    parray[p].prompt = xstrdup(value);
   } else if (!strcmp(attr, "s_num:")) {
     parray[p].s_stats.num = atoi(value);
   } else if (!strcmp(attr, "s_win:")) {
@@ -642,7 +642,7 @@ PRIVATE int got_attr_value_player(int p, char *attr, char *value, FILE * fp, cha
           parray[p].num_plan--;
 	} else {
 	  tmp[len - 1] = '\0';	/* Get rid of '\n' */
-	  parray[p].planLines[i] = (len > 1) ? strdup(tmp) : NULL;
+	  parray[p].planLines[i] = (len > 1) ? xstrdup(tmp) : NULL;
 	}
       }
     }
@@ -657,12 +657,12 @@ PRIVATE int got_attr_value_player(int p, char *attr, char *value, FILE * fp, cha
           parray[p].num_formula--;
 	} else {
 	  tmp[len - 1] = '\0';	/* Get rid of '\n' */
-	  parray[p].formulaLines[i] = (len > 1) ? strdup(tmp) : NULL;
+	  parray[p].formulaLines[i] = (len > 1) ? xstrdup(tmp) : NULL;
 	}
       }
     }
   } else if (!strcmp(attr, "formula:")) {
-    parray[p].formula = strdup(value);
+    parray[p].formula = xstrdup(value);
   } else if (!strcmp(attr, "num_alias:")) {
     parray[p].numAlias = atoi(value);
     if (parray[p].numAlias > 0) {
@@ -679,8 +679,8 @@ PRIVATE int got_attr_value_player(int p, char *attr, char *value, FILE * fp, cha
 	  *tmp1 = '\0';
 	  tmp1++;
 	  tmp1 = eatwhite(tmp1);
-	  parray[p].alias_list[i].comm_name = strdup(tmp);
-	  parray[p].alias_list[i].alias = strdup(tmp1);
+	  parray[p].alias_list[i].comm_name = xstrdup(tmp);
+	  parray[p].alias_list[i].alias = xstrdup(tmp1);
 	}
       }
     }
@@ -743,13 +743,13 @@ PUBLIC int player_read(int p, char *name)
   int len;
   int version = 0;
 
-  parray[p].login = stolower(strdup(name));
+  parray[p].login = stolower(xstrdup(name));
 
   sprintf(fname, "%s/%c/%s", player_dir, parray[p].login[0], parray[p].login);
   fp = fopen(fname, "r");
 
   if (!fp) { /* unregistered player */
-    parray[p].name = strdup(name);
+    parray[p].name = xstrdup(name);
     parray[p].registered = 0;
     return -1;
   }
@@ -794,7 +794,7 @@ PUBLIC int player_read(int p, char *name)
    player_save (p); /* ensure old files are quickly converted eg when someone
 						fingers */
   if (!parray[p].name) {
-    parray[p].name = strdup(name);
+    parray[p].name = xstrdup(name);
     pprintf(p, "\n*** WARNING: Your Data file is corrupt. Please tell an admin ***\n");
   }
   return 0;
@@ -2039,7 +2039,7 @@ PUBLIC int player_show_messages(int p)
 PUBLIC void SaveTextListEntry(textlist **Entry, char *string, int n)
 {
   *Entry = (textlist *) rmalloc(sizeof(textlist));
-  (*Entry)->text = strdup(string);
+  (*Entry)->text = xstrdup(string);
   (*Entry)->index = n;
   (*Entry)->next = NULL;
 }
