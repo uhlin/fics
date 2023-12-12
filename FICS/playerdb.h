@@ -74,10 +74,6 @@ typedef struct _statistics {
 #define PEND_BUGHOUSE 9
 #define PEND_ALL -1
 
-#if 0    /* We never use this. -- hersco */
-extern char *pend_strings[7];
-#endif
-
 #define PEND_TO 0
 #define PEND_FROM 1
 typedef struct _pending {
@@ -265,9 +261,6 @@ extern int ShowMsgsBySender(int, param_list);
 extern int ClrMsgRange(int, int, int);
 extern int ShowMsgRange(int, int, int);
 extern int ClearMsgsBySender(int, param_list);
-#if 0
-extern int MessagesBySender(int, param_list, int);
-#endif
 extern int player_search(int, char *);
 
 extern int sort_blitz[];
