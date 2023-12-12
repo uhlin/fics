@@ -48,15 +48,9 @@ PUBLIC int	port;
 PUBLIC int	withConsole;
 
 PRIVATE void
-usage(char *progname)
+BrokenPipe(int sig)
 {
-	fprintf(stderr, "Usage: %s [-p port] [-C] [-h]\n", progname);
-	fprintf(stderr, "\t\t-p port\t\tSpecify port.  (Default=%d)\n",
-	    DEFAULT_PORT);
-	fprintf(stderr, "\t\t-C\t\tStart with console player connected "
-	    "to stdin.\n");
-	fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
-	exit(1);
+	fprintf(stderr, "FICS: Got Broken Pipe\n");
 }
 
 PRIVATE void
@@ -91,6 +85,16 @@ GetArgs(int argc, char *argv[])
 }
 
 PRIVATE void
+TerminateServer(int sig)
+{
+	fprintf(stderr, "FICS: Got signal %d\n", sig);
+	output_shut_mess();
+	TerminateCleanup();
+	net_close();
+	exit(1);
+}
+
+PRIVATE void
 main_event_loop(void)
 {
 	char	 command_string[MAX_STRING_LENGTH];
@@ -105,20 +109,16 @@ main_event_loop(void)
 	}
 }
 
-void
-TerminateServer(int sig)
+PRIVATE void
+usage(char *progname)
 {
-	fprintf(stderr, "FICS: Got signal %d\n", sig);
-	output_shut_mess();
-	TerminateCleanup();
-	net_close();
+	fprintf(stderr, "Usage: %s [-p port] [-C] [-h]\n", progname);
+	fprintf(stderr, "\t\t-p port\t\tSpecify port.  (Default=%d)\n",
+	    DEFAULT_PORT);
+	fprintf(stderr, "\t\t-C\t\tStart with console player connected "
+	    "to stdin.\n");
+	fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
 	exit(1);
-}
-
-void
-BrokenPipe(int sig)
-{
-	fprintf(stderr, "FICS: Got Broken Pipe\n");
 }
 
 PUBLIC int
