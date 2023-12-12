@@ -25,15 +25,21 @@
 #ifndef _FICSMAIN_H
 #define _FICSMAIN_H
 
-/* Heartbead functions occur approx in this time, including checking for
- * new connections and decrementing timeleft counters. */
+/*
+ * Heartbead functions occur approx in this time, including checking
+ * for new connections and decrementing timeleft counters.
+ */
 #define HEARTBEATTIME 2
 
-/* Number of seconds that an idle connection can stand at login or password
- * prompt. */
+/*
+ * Number of seconds that an idle connection can stand at login or
+ * password prompt.
+ */
 #define MAX_LOGIN_IDLE 120
 
-/* Players who have been idle for more than 1 hour is logged out */
+/*
+ * Players who have been idle for more than 1 hour is logged out.
+ */
 #define MAX_IDLE_TIME 3600
 
 #define DEFAULT_PROMPT "fics% "
