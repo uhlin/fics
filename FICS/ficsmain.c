@@ -101,14 +101,17 @@ PRIVATE void
 main_event_loop(void)
 {
 	char	 command_string[MAX_STRING_LENGTH];
-	int	 sockfd;
+	int	 sockfd = -1;
 
 	while (1) {
 		ngc2(command_string, HEARTBEATTIME);
-		if (process_heartbeat(&sockfd) == COM_LOGOUT) {
+
+		if (process_heartbeat(&sockfd) == COM_LOGOUT && sockfd != -1) {
 			process_disconnection(sockfd);
 			net_close_connection(sockfd);
 		}
+
+		sockfd = -1;
 	}
 }
 
