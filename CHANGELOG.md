@@ -13,6 +13,7 @@ documented in this file.
 - Fixed a bug in `fix_time()` (did return a local address)
 - Fixed comparison between pointer and integer in `com_inchannel()`.
 - Fixed implicit integers
+- Fixed _multiple_ cases of use of possibly uninitialized variables.
 - Fixed _multiple_ possible buffer overflows
 - Fixed unused variables
 - Renamed functions in order to avoid conflicts with system
