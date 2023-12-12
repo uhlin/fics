@@ -97,92 +97,92 @@ typedef struct _player {
 	/*
 	 * This first block is not saved between logins
 	 */
-	char		*login;
-	int		 registered;
-	int		 socket;
-	int		 status;
-	int		 game;
-	int		 opponent; // Only valid if game is >= 0
-	int		 side; // Only valid if game is >= 0
-	int		 timeOfReg;
-	int		 totalTime;
-	int		 last_tell;
-	int		 last_channel;
-	int		 last_opponent;
-	int		 logon_time;
-	int		 last_command_time;
-	int		 num_from;
-	pending		 p_from_list[MAX_PENDING];
-	int		 num_to;
-	pending		 p_to_list[MAX_PENDING];
-	int		 num_observe;
-	int		 observe_list[MAX_OBSERVE];
-	int		 lastColor;
-	unsigned int	 thisHost;
-	int		 lastshout_a;
-	int		 lastshout_b;
-	int		 sopen;
-	simul_info_t	 simul_info;
+	List		*lists;
 	char		 busy[100];
 	char		*identptr;
-	int		 num_comments; // number of lines in comments file
-	int		 flip;
-	List		*lists;
-	int		 partner;
-	long		 last_file_byte;
 	char		*last_file;
+	char		*login;
+	int		 flip;
+	int		 game;
 	int		 i_admin;
 	int		 kiblevel;
+	int		 lastColor;
+	int		 last_channel;
+	int		 last_command_time;
+	int		 last_opponent;
+	int		 last_tell;
+	int		 lastshout_a;
+	int		 lastshout_b;
+	int		 logon_time;
+	int		 num_comments; // number of lines in comments file
+	int		 num_from;
+	int		 num_observe;
+	int		 num_to;
+	int		 observe_list[MAX_OBSERVE];
+	int		 opponent; // Only valid if game is >= 0
+	int		 side; // Only valid if game is >= 0
+	int		 partner;
+	int		 registered;
+	int		 socket;
+	int		 sopen;
+	int		 status;
+	int		 timeOfReg;
+	int		 totalTime;
+	long		 last_file_byte;
+	pending		 p_from_list[MAX_PENDING];
+	pending		 p_to_list[MAX_PENDING];
+	simul_info_t	 simul_info;
+	unsigned int	 thisHost;
 
 	/*
 	 * All of this is saved between logins
 	 */
 	char		*name;
-	char		*passwd;
-	char		*fullName;
 	char		*emailAddress;
+	char		*fullName;
+	char		*passwd;
 	char		*prompt;
-	statistics	 s_stats;
 	statistics	 b_stats;
-	statistics	 w_stats;
 	statistics	 l_stats;
+	statistics	 s_stats;
+	statistics	 w_stats;
 	statistics	 bug_stats;
-	int		 d_time;
-	int		 d_inc;
+	alias_type	 alias_list[MAX_ALIASES];
+	char		*formula;
+	char		*formulaLines[MAX_FORMULA];
+	char		*planLines[MAX_PLAN];
+	int		 adminLevel;
+	int		 automail;
+	int		 bell;
 	int		 d_height;
+	int		 d_inc;
+	int		 d_time;
 	int		 d_width;
+	int		 highlight;
+	int		 i_cshout;
+	int		 i_game;
+	int		 i_kibitz;
+	int		 i_login;
+	int		 i_mailmess;
+	int		 i_shout;
+	int		 i_tell;
+	int		 jprivate;
 	int		 language;
+	int		 nochannels;
+	int		 notifiedby;
+	int		 numAlias;
+	int		 num_black;
+	int		 num_formula;
+	int		 num_plan;
+	int		 num_white;
 	int		 open;
+	int		 pgn;
+	int		 private;
+	int		 promote;
 	int		 rated;
 	int		 ropen;
-	int		 notifiedby;
-	int		 bell;
-	int		 pgn;
-	int		 i_login;
-	int		 i_game;
-	int		 i_shout;
-	int		 i_cshout;
-	int		 i_tell;
-	int		 i_kibitz;
-	int		 private;
-	int		 jprivate;
-	int		 automail;
-	int		 i_mailmess;
 	int		 style;
-	int		 promote;
-	int		 adminLevel;
-	int		 num_plan;
-	char		*planLines[MAX_PLAN];
-	int		 num_formula;
-	char		*formulaLines[MAX_FORMULA];
-	char		*formula;
-	int		 nochannels;
-	int		 num_white;
-	int		 num_black;
 	unsigned int	 lastHost;
-	int		 numAlias;
-	alias_type	 alias_list[MAX_ALIASES];
-	int		 highlight;
 } player;
 
 typedef struct _textlist {
