@@ -62,20 +62,21 @@ typedef struct _statistics {
 	double sterr;
 } statistics;
 
-#define PEND_MATCH 0  /* Params 1=wt 2=winc 3=bt 4=binc 5=registered */
-#define PEND_DRAW 1
-#define PEND_ABORT 2
-#define PEND_TAKEBACK 3
-#define PEND_ADJOURN 4
-#define PEND_SWITCH 5
-#define PEND_SIMUL 6
-#define PEND_PAUSE 7
-#define PEND_PARTNER 8
-#define PEND_BUGHOUSE 9
+#define PEND_MATCH	0
+#define PEND_DRAW	1
+#define PEND_ABORT	2
+#define PEND_TAKEBACK	3
+#define PEND_ADJOURN	4
+#define PEND_SWITCH	5
+#define PEND_SIMUL	6
+#define PEND_PAUSE	7
+#define PEND_PARTNER	8
+#define PEND_BUGHOUSE	9
 #define PEND_ALL -1
 
-#define PEND_TO 0
-#define PEND_FROM 1
+#define PEND_TO		0
+#define PEND_FROM	1
+
 typedef struct _pending {
   int type;
   int whoto;
