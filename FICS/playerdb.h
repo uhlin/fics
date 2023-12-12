@@ -119,7 +119,7 @@ typedef struct _player {
   int observe_list[MAX_OBSERVE];
   int lastColor;
   unsigned int thisHost;
-/*  timelog *query_log; */    
+/*  timelog *query_log; */
   int lastshout_a;
   int lastshout_b;
   int sopen;
@@ -194,7 +194,7 @@ typedef struct _textlist {
 } textlist;
 
 #define PARRAY_SIZE (MAX_PLAYER + 50)
-extern player parray[PARRAY_SIZE]; 
+extern player parray[PARRAY_SIZE];
 extern int p_num;
 
 extern void player_init(int);
@@ -286,4 +286,3 @@ extern int player_show_comments(int, int);
 extern int player_ishead(int);
 
 #endif /* _PLAYERDB_H */
-
