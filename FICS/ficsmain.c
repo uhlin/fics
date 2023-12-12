@@ -44,8 +44,8 @@
 #include <sys/param.h>
 
 /* Arguments */
-PUBLIC int port;
-PUBLIC int withConsole;
+PUBLIC int	port;
+PUBLIC int	withConsole;
 
 PRIVATE void
 usage(char *progname)
