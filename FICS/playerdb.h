@@ -30,17 +30,17 @@
 
 #define PLAYER_VERSION 1
 
-#define MAX_PLAYER	500
-#define MAX_PENDING	10
-#define MAX_OBSERVE	30
-#define MAX_PLAN	10
-#define MAX_FORMULA	9
-#define MAX_CENSOR	50
-#define MAX_NOTIFY	80
 #define MAX_ALIASES	30
-#define MAX_SIMUL	30
-#define MAX_MESSAGES	40
+#define MAX_CENSOR	50
+#define MAX_FORMULA	9
 #define MAX_INCHANNELS	16
+#define MAX_MESSAGES	40
+#define MAX_NOTIFY	80
+#define MAX_OBSERVE	30
+#define MAX_PENDING	10
+#define MAX_PLAN	10
+#define MAX_PLAYER	500
+#define MAX_SIMUL	30
 
 #define PLAYER_EMPTY          0
 #define PLAYER_NEW            1
