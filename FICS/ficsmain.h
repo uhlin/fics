@@ -56,6 +56,5 @@ extern int current_socket;
 /* Arguments */
 extern int port;
 extern int withConsole;
-extern time_t time();
 
 #endif /* _FICSMAIN_H */
