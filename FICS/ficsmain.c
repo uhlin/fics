@@ -53,7 +53,7 @@ PRIVATE void usage(char *);
 PRIVATE void
 BrokenPipe(int sig)
 {
-	fprintf(stderr, "FICS: Got Broken Pipe\n");
+	fprintf(stderr, "FICS: Got Broken Pipe (%d)\n", sig);
 }
 
 PRIVATE void
