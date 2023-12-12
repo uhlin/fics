@@ -58,8 +58,8 @@
 #define SORT_WILD	3
 
 typedef struct _statistics {
-	int num, win, los, dra, rating, ltime, best, whenbest;
-	double sterr;
+	int	 num, win, los, dra, rating, ltime, best, whenbest;
+	double	 sterr;
 } statistics;
 
 #define PEND_MATCH	0
