@@ -51,13 +51,16 @@ PUBLIC int withConsole;
 void player_array_init(void);
 /* for warning */
 
-PRIVATE void usage(char *progname)
+PRIVATE void
+usage(char *progname)
 {
-  fprintf(stderr, "Usage: %s [-p port] [-C] [-h]\n", progname);
-  fprintf(stderr, "\t\t-p port\t\tSpecify port.  (Default=5000)\n");
-  fprintf(stderr, "\t\t-C\t\tStart with console player connected to stdin.\n");
-  fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
-  exit(1);
+	fprintf(stderr, "Usage: %s [-p port] [-C] [-h]\n", progname);
+	fprintf(stderr, "\t\t-p port\t\tSpecify port.  (Default=%d)\n",
+	    DEFAULT_PORT);
+	fprintf(stderr, "\t\t-C\t\tStart with console player connected "
+	    "to stdin.\n");
+	fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
+	exit(1);
 }
 
 PRIVATE void
