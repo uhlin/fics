@@ -41,10 +41,6 @@
 PUBLIC player parray[PARRAY_SIZE];
 PUBLIC int p_num = 0;
 
-#if 0    /* This never gets used! -- hersco */
-PUBLIC char *pend_strings[7] = {"match", "draw", "abort", "take back", "adjourn", "switch", "simul"};
-#endif
-
 PRIVATE int get_empty_slot(void)
 {
   int i;
@@ -288,14 +284,6 @@ PUBLIC int player_remove(int p)
       }
     }
   }
-#if 0 /* was finished elsewhere */
-  if ((parray[p].game >=0) && (garray[parray[p].game].status == GAME_EXAMINE)) {
-    if (garray[parray[p].game].white == p) {   /* owner of exam game */
-
-      /* not yet done */
-
-    }
-#endif
 
   if (parray[p].game >=0) {  /* Player disconnected in the middle of a
 				       game! */
@@ -915,110 +903,6 @@ void WritePlayerFile(FILE* fp, int p)
   list_print(fp, p, L_GNOTIFY);
   list_print(fp, p, L_CHANNEL);
 }
-
-	#if 0 /* the old way */
-	  if (parray[p].name)
-	    fprintf(fp, "Name: %s\n", parray[p].name);
-	  if (parray[p].fullName)
-	    fprintf(fp, "Fullname: %s\n", parray[p].fullName);
-	  if (parray[p].passwd)
-	    fprintf(fp, "Password: %s\n", parray[p].passwd);
-	  if (parray[p].emailAddress)
-	    fprintf(fp, "Email: %s\n", parray[p].emailAddress);
-	  fprintf(fp, "S_NUM: %u\n", parray[p].s_stats.num);
-	  fprintf(fp, "S_WIN: %u\n", parray[p].s_stats.win);
-	  fprintf(fp, "S_LOSS: %u\n", parray[p].s_stats.los);
-	  fprintf(fp, "S_DRAW: %u\n", parray[p].s_stats.dra);
-	  fprintf(fp, "S_RATING: %u\n", parray[p].s_stats.rating);
-	  fprintf(fp, "S_STERR: %u\n", (int) (parray[p].s_stats.sterr * 10.0));
-	  fprintf(fp, "S_LTIME: %u\n", parray[p].s_stats.ltime);
-	  fprintf(fp, "S_BEST: %u\n", parray[p].s_stats.best);
-	  fprintf(fp, "S_WBEST: %u\n", parray[p].s_stats.whenbest);
-	  fprintf(fp, "B_NUM: %u\n", parray[p].b_stats.num);
-	  fprintf(fp, "B_WIN: %u\n", parray[p].b_stats.win);
-	  fprintf(fp, "B_LOSS: %u\n", parray[p].b_stats.los);
-	  fprintf(fp, "B_DRAW: %u\n", parray[p].b_stats.dra);
-	  fprintf(fp, "B_RATING: %u\n", parray[p].b_stats.rating);
-	  fprintf(fp, "B_STERR: %u\n", (int) (parray[p].b_stats.sterr * 10.0));
-	  fprintf(fp, "B_LTIME: %u\n", parray[p].b_stats.ltime);
-	  fprintf(fp, "B_BEST: %u\n", parray[p].b_stats.best);
-	  fprintf(fp, "B_WBEST: %u\n", parray[p].b_stats.whenbest);
-	  fprintf(fp, "W_NUM: %u\n", parray[p].w_stats.num);
-	  fprintf(fp, "W_WIN: %u\n", parray[p].w_stats.win);
-	  fprintf(fp, "W_LOSS: %u\n", parray[p].w_stats.los);
-	  fprintf(fp, "W_DRAW: %u\n", parray[p].w_stats.dra);
-	  fprintf(fp, "W_RATING: %u\n", parray[p].w_stats.rating);
-	  fprintf(fp, "W_STERR: %u\n", (int) (parray[p].w_stats.sterr * 10.0));
-	  fprintf(fp, "W_LTIME: %u\n", parray[p].w_stats.ltime);
-	  fprintf(fp, "W_BEST: %u\n", parray[p].w_stats.best);
-	  fprintf(fp, "W_WBEST: %u\n", parray[p].w_stats.whenbest);
-	/*  fprintf(fp, "Network: %d\n", parray[p].network_player); */
-	/*  if (iamserver)
-		    return 0;	*//* No need to write any more */
-
-	  fprintf(fp, "LastHost: %d\n", parray[p].lastHost);
-	  if (parray[p].prompt != def_prompt)
-	    fprintf(fp, "Prompt: %s\n", parray[p].prompt);
-	  fprintf(fp, "Open: %d\n", parray[p].open);
-	  fprintf(fp, "Rated: %d\n", parray[p].rated);
-	  fprintf(fp, "Ropen: %d\n", parray[p].ropen);
-	  fprintf(fp, "timeofreg: %d\n", parray[p].timeOfReg);
-	  fprintf(fp, "totaltime: %d\n", parray[p].totalTime);
-	  fprintf(fp, "Bell: %d\n", parray[p].bell);
-	  fprintf(fp, "PGN: %d\n", parray[p].pgn);
-	  fprintf(fp, "Notifiedby: %d\n", parray[p].notifiedby);
-	  fprintf(fp, "I_Login: %d\n", parray[p].i_login);
-	  fprintf(fp, "I_Game: %d\n", parray[p].i_game);
-	  fprintf(fp, "I_Shout: %d\n", parray[p].i_shout);
-	  fprintf(fp, "I_CShout: %d\n", parray[p].i_cshout);
-	  fprintf(fp, "I_Tell: %d\n", parray[p].i_tell);
-	  fprintf(fp, "I_Kibitz: %d\n", parray[p].i_kibitz);
-	  fprintf(fp, "Private: %d\n", parray[p].private);
-	  fprintf(fp, "JPrivate: %d\n", parray[p].jprivate);
-	  fprintf(fp, "Automail: %d\n", parray[p].automail);
-	  fprintf(fp, "I_Mailmess: %d\n", parray[p].i_mailmess);
-	  fprintf(fp, "Style: %d\n", parray[p].style);
-	  fprintf(fp, "D_Time: %d\n", parray[p].d_time);
-	  fprintf(fp, "D_Inc: %d\n", parray[p].d_inc);
-	  fprintf(fp, "D_Height: %d\n", parray[p].d_height);
-	  fprintf(fp, "D_Width: %d\n", parray[p].d_width);
-	  fprintf(fp, "Language: %d\n", parray[p].language);
-	  fprintf(fp, "Admin_level: %d\n", parray[p].adminLevel);
-	/*  fprintf(fp, "I_Admin: %d\n", parray[p].i_admin);  */
-	/*  if (parray[p].computer) {
-	    fprintf(fp, "Computer: %d\n", parray[p].computer);
-	  } */
-	  fprintf(fp, "White_Games: %d\n", parray[p].num_white);
-	  fprintf(fp, "Black_Games: %d\n", parray[p].num_black);
-	/*   fprintf(fp, "USCF: %d\n", parray[p].uscfRating); */
-	  fprintf(fp, "Highlight: %d\n", parray[p].highlight);
-	  fprintf(fp, "Num_Comments: %d\n", parray[p].num_comments);
-	  for (i = 0; i < MAX_CHANNELS; i++) {
-	    if (on_channel(i, p))
-	      fprintf(fp, "Channel: %d\n", i);
-	  }
-	  fprintf(fp, "Num_plan: %d\n", parray[p].num_plan);
-	  for (i = 0; i < parray[p].num_plan; i++)
-	    fprintf(fp, "%s\n", (parray[p].planLines[i] ? parray[p].planLines[i] : ""));
-	  fprintf(fp, "Num_formula: %d\n", parray[p].num_formula);
-	  for (i = 0; i < parray[p].num_formula; i++)
-	    fprintf(fp, "%s\n", (parray[p].formulaLines[i] ? parray[p].formulaLines[i] : ""));
-	  if (parray[p].formula != NULL)
-	    fprintf(fp, "Formula: %s\n", parray[p].formula);
-	  fprintf(fp, "Num_censor: %d\n", list_size(p, L_CENSOR));
-	  list_print(fp, p, L_CENSOR);
-	  fprintf(fp, "Num_notify: %d\n", list_size(p, L_NOTIFY));
-	  list_print(fp, p, L_NOTIFY);
-	  fprintf(fp, "Num_noplay: %d\n", list_size(p, L_NOPLAY));
-	  list_print(fp, p, L_NOPLAY);
-	  fprintf(fp, "Num_gnotify: %d\n", list_size(p, L_GNOTIFY));
-	  list_print(fp, p, L_GNOTIFY);
-	  fprintf(fp, "Num_alias: %d\n", parray[p].numAlias);
-	  for (i = 0; i < parray[p].numAlias; i++)
-	    fprintf(fp, "%s %s\n", parray[p].alias_list[i].comm_name,
-		    parray[p].alias_list[i].alias);
-	}
-	#endif
 
 PUBLIC int player_save(int p)
 {
@@ -2020,22 +1904,6 @@ PUBLIC int player_add_message(int top, int fromp, char *message)
   return 0;
 }
 
-#if 0
-/* Function changed and moved lower to have messages numbered. */
-PUBLIC int player_show_messages(int p)
-{
-  char fname[MAX_FILENAME_SIZE];
-
-  if (!parray[p].registered)
-    return -1;
-  GetMsgFile (p, fname);
-  if (lines_file(fname) <= 0)
-    return -1;
-  psend_file(p, NULL, fname);
-  return 0;
-}
-#endif
-
 PUBLIC void SaveTextListEntry(textlist **Entry, char *string, int n)
 {
   *Entry = (textlist *) rmalloc(sizeof(textlist));
@@ -2151,38 +2019,6 @@ PRIVATE int LoadMsgRange(int p, int start, int end, textlist **Head)
     return nSave;
   }
 }
-
-#if 0
-PRIVATE int LoadMsgsFromP1(int p, int p1, int saveP1, textlist **Head)
-{
-  textlist **Cur=Head;
-  char Sender[MAX_LOGIN_NAME];
-  int nKeep = 0;
-  int nKill = 0;
-
-  /* First load all messages; then get rid of the ones we don't want. */
-  LoadMsgs(p, 0, Head);
-  while (Cur != NULL && *Cur != NULL) {
-    sscanf ((*Cur)->text, "%s", Sender);
-    if ((saveP1 && strcmp(Sender, parray[p1].name))
-        || (!saveP1 && !strcmp(Sender, parray[p1].name)))
-      /* either the message is from p1 and we're not saving his message
-         or it's not from p1, and we're only saving his messages. In
-         either case, we want to get rid of this one. */
-      *Cur = ClearTextListEntry (*Cur);
-      nKill++;
-    }
-    else {
-      /* Save this message; move on to the next one. */
-      if ((*Cur)->next != NULL)
-        Cur = &(*Cur)->next;
-      else Cur = NULL;
-      nKeep++;
-    }
-  }
-  return (saveP1 ? nKeep : nKill);
-}
-#endif
 
 PRIVATE int WriteMsgFile (int p, textlist *Head)
 {
