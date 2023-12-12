@@ -78,18 +78,19 @@ typedef struct _statistics {
 #define PEND_FROM	1
 
 typedef struct _pending {
-  int type;
-  int whoto;
-  int whofrom;
-  int param1, param2, param3, param4, param5, param6;
-  char char1[50], char2[50];
+	int	 type;
+	int	 whoto;
+	int	 whofrom;
+	int	 param1, param2, param3, param4, param5, param6;
+	char	 char1[50];
+	char	 char2[50];
 } pending;
 
 typedef struct _simul_info_t {
-  int numBoards;
-  int onBoard;
-  int results[MAX_SIMUL];
-  int boards[MAX_SIMUL];
+	int	 numBoards;
+	int	 onBoard;
+	int	 results[MAX_SIMUL];
+	int	 boards[MAX_SIMUL];
 } simul_info_t;
 
 typedef struct _player {
