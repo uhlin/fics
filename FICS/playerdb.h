@@ -94,101 +94,101 @@ typedef struct _simul_info_t {
 } simul_info_t;
 
 typedef struct _player {
-/* This first block is not saved between logins */
-  char *login;
-  int registered;
-  int socket;
-  int status;
-  int game;
-  int opponent; /* Only valid if game is >= 0 */
-  int side;     /* Only valid if game is >= 0 */
-  int timeOfReg;
-  int totalTime;
-  int last_tell;
-  int last_channel;
-  int last_opponent;
-  int logon_time;
-  int last_command_time;
-  int num_from;
-  pending p_from_list[MAX_PENDING];
-  int num_to;
-  pending p_to_list[MAX_PENDING];
-  int num_observe;
-  int observe_list[MAX_OBSERVE];
-  int lastColor;
-  unsigned int thisHost;
-/*  timelog *query_log; */
-  int lastshout_a;
-  int lastshout_b;
-  int sopen;
-  simul_info_t simul_info;
-  char busy[100]; /* more than enough */
-  char *identptr; /* identd stuff */
-  int num_comments; /* number of lines in comments file */
-  int flip;
-  List *lists;
-  int partner;
-  long last_file_byte;
-  char *last_file;
-  int i_admin;
-  int kiblevel;
+	/*
+	 * This first block is not saved between logins
+	 */
+	char		*login;
+	int		 registered;
+	int		 socket;
+	int		 status;
+	int		 game;
+	int		 opponent; // Only valid if game is >= 0
+	int		 side; // Only valid if game is >= 0
+	int		 timeOfReg;
+	int		 totalTime;
+	int		 last_tell;
+	int		 last_channel;
+	int		 last_opponent;
+	int		 logon_time;
+	int		 last_command_time;
+	int		 num_from;
+	pending		 p_from_list[MAX_PENDING];
+	int		 num_to;
+	pending		 p_to_list[MAX_PENDING];
+	int		 num_observe;
+	int		 observe_list[MAX_OBSERVE];
+	int		 lastColor;
+	unsigned int	 thisHost;
+	int		 lastshout_a;
+	int		 lastshout_b;
+	int		 sopen;
+	simul_info_t	 simul_info;
+	char		 busy[100];
+	char		*identptr;
+	int		 num_comments; // number of lines in comments file
+	int		 flip;
+	List		*lists;
+	int		 partner;
+	long		 last_file_byte;
+	char		*last_file;
+	int		 i_admin;
+	int		 kiblevel;
 
-/* All of this is saved between logins */
-  char *name;
-  char *passwd;
-  char *fullName;
-  char *emailAddress;
-  char *prompt;
-  statistics s_stats;
-  statistics b_stats;
-  statistics w_stats;
-  statistics l_stats;
-  statistics bug_stats;
-  int d_time;
-  int d_inc;
-  int d_height;
-  int d_width;
-  int language;
-  int open;
-  int rated;
-  int ropen;
-  int notifiedby;
-  int bell;
-  int pgn;
-  int i_login;
-  int i_game;
-  int i_shout;
-  int i_cshout;
-  int i_tell;
-  int i_kibitz;
-  int private;
-  int jprivate;
-  int automail;
-  int i_mailmess;
-  int style;
-  int promote;
-  int adminLevel;
-/*  int computer; */  /* 1 if the player is a computer */
-  int num_plan;
-  char *planLines[MAX_PLAN];
-  int num_formula;
-  char *formulaLines[MAX_FORMULA];
-  char *formula;
-  int nochannels;
-  int num_white;
-  int num_black;
-/*  int uscfRating; */
-/*  int network_player; */
-  unsigned int lastHost;
-  int numAlias;
-  alias_type alias_list[MAX_ALIASES];
-  int highlight;
+	/*
+	 * All of this is saved between logins
+	 */
+	char		*name;
+	char		*passwd;
+	char		*fullName;
+	char		*emailAddress;
+	char		*prompt;
+	statistics	 s_stats;
+	statistics	 b_stats;
+	statistics	 w_stats;
+	statistics	 l_stats;
+	statistics	 bug_stats;
+	int		 d_time;
+	int		 d_inc;
+	int		 d_height;
+	int		 d_width;
+	int		 language;
+	int		 open;
+	int		 rated;
+	int		 ropen;
+	int		 notifiedby;
+	int		 bell;
+	int		 pgn;
+	int		 i_login;
+	int		 i_game;
+	int		 i_shout;
+	int		 i_cshout;
+	int		 i_tell;
+	int		 i_kibitz;
+	int		 private;
+	int		 jprivate;
+	int		 automail;
+	int		 i_mailmess;
+	int		 style;
+	int		 promote;
+	int		 adminLevel;
+	int		 num_plan;
+	char		*planLines[MAX_PLAN];
+	int		 num_formula;
+	char		*formulaLines[MAX_FORMULA];
+	char		*formula;
+	int		 nochannels;
+	int		 num_white;
+	int		 num_black;
+	unsigned int	 lastHost;
+	int		 numAlias;
+	alias_type	 alias_list[MAX_ALIASES];
+	int		 highlight;
 } player;
 
 typedef struct _textlist {
-  char *text;
-  int index;
-  struct _textlist *next;
+	char	*text;
+	int	 index;
+	struct _textlist *next;
 } textlist;
 
 #define PARRAY_SIZE (MAX_PLAYER + 50)
