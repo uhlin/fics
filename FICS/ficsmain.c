@@ -91,7 +91,7 @@ TerminateServer(int sig)
 	output_shut_mess();
 	TerminateCleanup();
 	net_close();
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 PRIVATE void
@@ -118,7 +118,7 @@ usage(char *progname)
 	fprintf(stderr, "\t\t-C\t\tStart with console player connected "
 	    "to stdin.\n");
 	fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 PUBLIC int
@@ -140,7 +140,7 @@ main(int argc, char *argv[])
 	if (net_init(port)) {
 		fprintf(stderr, "FICS: Network initialize failed on port %d.\n",
 		    port);
-		exit(1);
+		return EXIT_FAILURE;
 	}
 
 	startuptime = time(0);
@@ -177,5 +177,5 @@ main(int argc, char *argv[])
 	output_shut_mess();
 	net_close();
 
-	return 0;
+	return EXIT_SUCCESS;
 }
