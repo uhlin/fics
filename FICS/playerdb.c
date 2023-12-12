@@ -291,10 +291,10 @@ PUBLIC int player_remove(int p)
 #if 0 /* was finished elsewhere */
   if ((parray[p].game >=0) && (garray[parray[p].game].status == GAME_EXAMINE)) {
     if (garray[parray[p].game].white == p) {   /* owner of exam game */
-  
+
       /* not yet done */
 
-    }  
+    }
 #endif
 
   if (parray[p].game >=0) {  /* Player disconnected in the middle of a
@@ -379,7 +379,7 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
  &pp->bug_stats.ltime, &pp->bug_stats.best, &pp->bug_stats.whenbest,
  &pp->lastHost) != 46) {
   fprintf(stderr,"Player %s is corrupt\n",parray[p].name);
-  return; 
+  return;
  }
 
  pp->b_stats.sterr = bs / 10.0;
@@ -413,7 +413,7 @@ void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
        if (!(len = strlen(tmp2))) {
          fprintf(stderr, "FICS: Error bad plan in file %s\n", file);
          i--;
-         pp->num_plan--; 
+         pp->num_plan--;
        } else {
          tmp2[len - 1] = '\0';  /* Get rid of '\n' */
          pp->planLines[i] = (len > 1) ? xstrdup(tmp2) : NULL;
@@ -860,10 +860,10 @@ void WritePlayerFile(FILE* fp, int p)
  if (pp->emailAddress == NULL)
    fprintf (fp,"NONE\n");
  else
-   fprintf(fp, "%s\n", pp->emailAddress); 
+   fprintf(fp, "%s\n", pp->emailAddress);
  fprintf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %d\n",
 
- pp->s_stats.num, pp->s_stats.win, pp->s_stats.los, 
+ pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
  pp->s_stats.dra, pp->s_stats.rating, (int) (pp->s_stats.sterr * 10.0),
  pp->s_stats.ltime, pp->s_stats.best, pp->s_stats.whenbest,
 
@@ -1215,7 +1215,7 @@ PUBLIC int showstored(int p)
   int c=0,p1;
   char dname[MAX_FILENAME_SIZE];
   multicol *m = multicol_start(50); /* Limit to 50, should be enough*/
-  
+
   sprintf(dname, "%s/%c", adj_dir, parray[p].login[0]);
   dirp = opendir(dname);
   if (!dirp) {
@@ -1236,7 +1236,7 @@ PUBLIC int showstored(int p)
       	pprintf_highlight(p1,"%s",parray[p].name);
       	pprintf_prompt(p1,", who has an adjourned game with you, has arrived.\n");
       	c++;
-      } 
+      }
     }
   }
   closedir(dirp);
@@ -2216,7 +2216,7 @@ PUBLIC int ClearMsgsBySender(int p, param_list param)
     pprintf(p, "You have no messages from %s.\n", parray[p1].name);
   } else {
     if (WriteMsgFile (p, Head))
-      pprintf(p, "Messages from %s cleared.\n", parray[p1].name); 
+      pprintf(p, "Messages from %s cleared.\n", parray[p1].name);
     else {
       pprintf(p, "Problem writing message file; please contact an admin.\n");
       fprintf(stderr, "Problem writing message file for %s.\n", parray[p].name);
@@ -2273,7 +2273,7 @@ PUBLIC int ShowMsgsBySender(int p, param_list param)
        parray[p1].name);
     return -1; /* no need to disconnect */
   }
- 
+
   if (p != p1) {
     nTo = LoadMsgs(p1, p+1, &Head);
     if (nTo <= 0) {
