@@ -48,6 +48,8 @@
 PUBLIC int	port;
 PUBLIC int	withConsole;
 
+PRIVATE void usage(char *);
+
 PRIVATE void
 BrokenPipe(int sig)
 {
