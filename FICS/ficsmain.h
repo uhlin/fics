@@ -41,20 +41,20 @@ extern int current_socket;
 
 #define DEFAULT_PROMPT "fics% "
 
-#define MESS_WELCOME "welcome"
-#define MESS_LOGIN "login"
-#define MESS_LOGOUT "logout"
-#define MESS_MOTD "motd"
-#define MESS_ADMOTD "admotd"
-#define MESS_UNREGISTERED "unregistered"
+#define MESS_WELCOME		"welcome"
+#define MESS_LOGIN		"login"
+#define MESS_LOGOUT		"logout"
+#define MESS_MOTD		"motd"
+#define MESS_ADMOTD		"admotd"
+#define MESS_UNREGISTERED	"unregistered"
 
-#define STATS_MESSAGES "messages"
-#define STATS_LOGONS "logons"
-#define STATS_GAMES "games"
-#define STATS_JOURNAL "journal"
+#define STATS_MESSAGES	"messages"
+#define STATS_LOGONS	"logons"
+#define STATS_GAMES	"games"
+#define STATS_JOURNAL	"journal"
 
 /* Arguments */
-extern int port;
-extern int withConsole;
+extern int	port;
+extern int	withConsole;
 
 #endif /* _FICSMAIN_H */
