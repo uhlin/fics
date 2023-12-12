@@ -36,9 +36,6 @@
 /* Players who have been idle for more than 1 hour is logged out */
 #define MAX_IDLE_TIME 3600
 
-/* This is the socket that the current command came in on */
-extern int current_socket;
-
 #define DEFAULT_PROMPT "fics% "
 
 #define MESS_WELCOME		"welcome"
