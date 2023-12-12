@@ -35,7 +35,6 @@
 #include "talkproc.h"
 #include "gamedb.h"
 #include "lists.h"
-/*#include "hostinfo.h" */
 #include "ratings.h"
 
 PUBLIC player parray[PARRAY_SIZE];
