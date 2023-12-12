@@ -23,19 +23,20 @@
 */
 
 #include "stdinclude.h"
-#include "common.h"
+
 #include "command.h"
+#include "common.h"
 #include "comproc.h"
-#include "playerdb.h"
-#include "rmalloc.h"
-#include "utils.h"
-#include "network.h"
-#include "ficsmain.h"
 #include "config.h"
-#include "talkproc.h"
+#include "ficsmain.h"
 #include "gamedb.h"
 #include "lists.h"
+#include "network.h"
+#include "playerdb.h"
 #include "ratings.h"
+#include "rmalloc.h"
+#include "talkproc.h"
+#include "utils.h"
 
 PUBLIC player parray[PARRAY_SIZE];
 PUBLIC int p_num = 0;
