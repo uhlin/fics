@@ -30,32 +30,32 @@
 
 #define PLAYER_VERSION 1
 
-#define MAX_PLAYER 500
-#define MAX_PENDING 10
-#define MAX_OBSERVE 30		/* max # of games one person can observe */
-#define MAX_PLAN 10
-#define MAX_FORMULA 9
-#define MAX_CENSOR 50
-#define MAX_NOTIFY 80
-#define MAX_ALIASES 30
-#define MAX_SIMUL 30
-#define MAX_MESSAGES 40
-#define MAX_INCHANNELS 16
+#define MAX_PLAYER	500
+#define MAX_PENDING	10
+#define MAX_OBSERVE	30
+#define MAX_PLAN	10
+#define MAX_FORMULA	9
+#define MAX_CENSOR	50
+#define MAX_NOTIFY	80
+#define MAX_ALIASES	30
+#define MAX_SIMUL	30
+#define MAX_MESSAGES	40
+#define MAX_INCHANNELS	16
 
-#define PLAYER_EMPTY 0
-#define PLAYER_NEW 1
-#define PLAYER_INQUEUE 2
-#define PLAYER_LOGIN 3
-#define PLAYER_PASSWORD 4
-#define PLAYER_PROMPT 5
+#define PLAYER_EMPTY          0
+#define PLAYER_NEW            1
+#define PLAYER_INQUEUE        2
+#define PLAYER_LOGIN          3
+#define PLAYER_PASSWORD       4
+#define PLAYER_PROMPT         5
 
-#define P_LOGIN 0
-#define P_LOGOUT 1
+#define P_LOGIN		0
+#define P_LOGOUT	1
 
-#define SORT_BLITZ 0
-#define SORT_STAND 1
-#define SORT_ALPHA 2
-#define SORT_WILD 3
+#define SORT_BLITZ	0
+#define SORT_STAND	1
+#define SORT_ALPHA	2
+#define SORT_WILD	3
 
 typedef struct _statistics {
   int num, win, los, dra, rating, ltime, best, whenbest;
