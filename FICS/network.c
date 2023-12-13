@@ -267,125 +267,140 @@ PUBLIC int net_send_string(int fd, char *str, int format)
    if we don't get a complete line, but there is no error, return 0.
    if some error, return -1.
  */
-PUBLIC int readline2(char *com, int who)
+PUBLIC int
+readline2(char *com, int who)
 {
-  unsigned char *start, *s, *d;
-  int howmany, state, fd, pending;
+	int		 howmany, state, fd, pending;
+	unsigned char	*start, *s, *d;
 
-  static unsigned char will_tm[] = {IAC, WILL, TELOPT_TM, '\0'};
-  static unsigned char will_sga[] = {IAC, WILL, TELOPT_SGA, '\0'};
-  static unsigned char ayt[] = "[Responding to AYT: Yes, I'm here.]\n";
+	static unsigned char	ayt[] = "[Responding to AYT: Yes, I'm here.]\n";
+	static unsigned char	will_sga[] = { IAC, WILL, TELOPT_SGA, '\0' };
+	static unsigned char	will_tm[] = { IAC, WILL, TELOPT_TM, '\0' };
 
-  state = con[who].state;
-  if ((state == 2) || (state > 4)) {
-    fprintf(stderr, "FICS: state screwed for con[%d], this is a bug.\n", who);
-    state = 0;
-  }
-  s = start = con[who].inBuf;
-  pending = con[who].numPending;
-  fd = con[who].fd;
+	state = con[who].state;
 
-  howmany = recv(fd, start + pending, MAX_STRING_LENGTH - 1 - pending, 0);
-  if (howmany == 0)		/* error: they've disconnected */
-    return (-1);
-  else if (howmany == -1) {
-    if (errno != EWOULDBLOCK) {	/* some other error */
-      return (-1);
-    } else if (con[who].processed) {	/* nothing new and nothing old */
-      return (0);
-    } else {			/* nothing new, but some unprocessed old */
-      howmany = 0;
-    }
-  }
-  if (con[who].processed)
-    s += pending;
-  else
-    howmany += pending;
-  d = s;
+	if (state == 2 || state > 4) {
+		fprintf(stderr, "FICS: state screwed for con[%d], "
+		    "this is a bug.\n", who);
+		state = 0;
+	}
 
-  for (; howmany-- > 0; s++) {
-    switch (state) {
-    case 0:			/* Haven't skipped over any control chars or
-				   telnet commands */
-      if (*s == IAC) {
+	s = start = con[who].inBuf;
+	pending = con[who].numPending;
+	fd = con[who].fd;
+
+	if ((howmany = recv(fd, start + pending, MAX_STRING_LENGTH - 1 -
+	    pending, 0)) == 0) { // error: they've disconnected
+		return -1;
+	} else if (howmany == -1) {
+		if (errno != EWOULDBLOCK) { // some other error
+			return -1;
+		} else if (con[who].processed) { // nothing new and nothing old
+			return 0;
+		} else {	// nothing new
+				// but some unprocessed old
+			howmany = 0;
+		}
+	}
+
+	if (con[who].processed)
+		s += pending;
+	else
+		howmany += pending;
 	d = s;
-	state = 1;
-      } else if (*s == '\n') {
-	*s = '\0';
-	strcpy(com, start);
-	if (howmany)
-	  bcopy(s + 1, start, howmany);
-	con[who].state = 0;
-	con[who].numPending = howmany;
-	con[who].processed = 0;
-	con[who].outPos = 0;
-	return (1);
-      } else if ((*s > (0xff - 0x20)) || (*s < 0x20)) {
-	d = s;
-	state = 2;
-      }
-      break;
-    case 1:			/* got telnet IAC */
-      if (*s == IP)
-	return (-1);		/* ^C = logout */
-      else if (*s == DO)
-	state = 4;
-      else if ((*s == WILL) || (*s == DONT) || (*s == WONT))
-	state = 3;		/* this is cheesy, but we aren't using em */
-      else if (*s == AYT) {
-	send(fd, (char *) ayt, strlen((char *) ayt), 0);
-	state = 2;
-      } else if (*s == EL) {	/* erase line */
-	d = start;
-	state = 2;
-      } else			/* dunno what it is, so ignore it */
-	state = 2;
-      break;
-    case 2:			/* we've skipped over something, need to
-				   shuffle processed chars down */
-      if (*s == IAC)
-	state = 1;
-      else if (*s == '\n') {
-	*d = '\0';
-	strcpy(com, start);
-	if (howmany)
-	  memmove(start, s + 1, howmany);
-	con[who].state = 0;
-	con[who].numPending = howmany;
-	con[who].processed = 0;
-	con[who].outPos = 0;
-	return (1);
-      } else if (*s >= ' ')
-	*(d++) = *s;
-      break;
-    case 3:			/* some telnet junk we're ignoring */
-      state = 2;
-      break;
-    case 4:			/* got IAC DO */
-      if (*s == TELOPT_TM)
-	send(fd, (char *) will_tm, strlen((char *) will_tm), 0);
-      else if (*s == TELOPT_SGA)
-	send(fd, (char *) will_sga, strlen((char *) will_sga), 0);
-      state = 2;
-      break;
-    }
-  }
-  if (state == 0)
-    d = s;
-  else if (state == 2)
-    state = 0;
-  con[who].state = state;
-  con[who].numPending = d - start;
-  con[who].processed = 1;
-  if (con[who].numPending == MAX_STRING_LENGTH - 1) {	/* buffer full */
-    *d = '\0';
-    strcpy(com, start);
-    con[who].state = 0;
-    con[who].numPending = 0;
-    con[who].processed = 0;
-    return (1);
-  }
-  return (0);
+
+	for (; howmany-- > 0; s++) {
+		switch (state) {
+		case 0:	// haven't skipped over any control chars or
+			// telnet commands
+			if (*s == IAC) {
+				d = s;
+				state = 1;
+			} else if (*s == '\n') {
+				*s = '\0';
+				strcpy(com, start);
+				if (howmany)
+					bcopy(s + 1, start, howmany);
+				con[who].state		= 0;
+				con[who].numPending	= howmany;
+				con[who].processed	= 0;
+				con[who].outPos		= 0;
+				return 1;
+			} else if (*s > (0xff - 0x20) || *s < 0x20) {
+				d = s;
+				state = 2;
+			}
+			break;
+		case 1: // got telnet IAC
+			if (*s == IP) {
+				return -1; // ^C = logout
+			} else if (*s == DO) {
+				state = 4;
+			} else if (*s == WILL || *s == DONT || *s == WONT) {
+				state = 3;	// this is cheesy
+						// but we aren't using em
+			} else if (*s == AYT) {
+				send(fd, (char *)ayt, strlen((char *)ayt), 0);
+				state = 2;
+			} else if (*s == EL) {	// erase line
+				d = start;
+				state = 2;
+			} else {	// dunno what it is
+					// so ignore it
+				state = 2;
+			}
+			break;
+		case 2:	// we've skipped over something
+			// need to shuffle processed chars down
+			if (*s == IAC)
+				state = 1;
+			else if (*s == '\n') {
+				*d = '\0';
+				strcpy(com, start);
+				if (howmany)
+					memmove(start, s + 1, howmany);
+				con[who].state		= 0;
+				con[who].numPending	= howmany;
+				con[who].processed	= 0;
+				con[who].outPos		= 0;
+				return 1;
+			} else if (*s >= ' ')
+				*(d++) = *s;
+			break;
+		case 3: // some telnet junk we're ignoring
+			state = 2;
+			break;
+		case 4: // got IAC DO
+			if (*s == TELOPT_TM) {
+				send(fd, (char *)will_tm,
+				    strlen((char *)will_tm), 0);
+			} else if (*s == TELOPT_SGA) {
+				send(fd, (char *)will_sga,
+				    strlen((char *)will_sga), 0);
+			}
+			state = 2;
+			break;
+		}
+	}
+
+	if (state == 0)
+		d = s;
+	else if (state == 2)
+		state = 0;
+
+	con[who].state = state;
+	con[who].numPending = d - start;
+	con[who].processed = 1;
+
+	if (con[who].numPending == MAX_STRING_LENGTH - 1) { // buffer full
+		*d = '\0';
+		strcpy(com, start);
+		con[who].state		= 0;
+		con[who].numPending	= 0;
+		con[who].processed	= 0;
+		return 1;
+	}
+	return 0;
 }
 
 PUBLIC int
