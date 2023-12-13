@@ -20,6 +20,7 @@
 /* Revision history:
    name		email		yy/mm/dd	Change
    Dave Herscovici		95/11/26	Created
+   Markus Uhlin			23/12/13	Fixed bugs
 */
 
 #include "stdinclude.h"
