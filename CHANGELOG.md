@@ -8,6 +8,7 @@ documented in this file.
 - Deleted disabled code
 - Did new revisions of the following files:
   - `fics_addplayer.c`
+  - `network.c`
   - `stdinclude.h`
 - Fixed a `sscanf()` bug in `com_anews()`.
 - Fixed a bug in `fix_time()` (did return a local address)
