@@ -25,24 +25,24 @@
 #ifndef _NETWORK_H
 #define _NETWORK_H
 
-#include "command.h"		/* For MAX_STRING_LENGTH */
+#include "command.h"	/* For MAX_STRING_LENGTH */
 
-#define NET_NETERROR 0
-#define NET_NEW 1
-#define NET_DISCONNECT 2
-#define NET_READLINE 3
-#define NET_TIMEOUT 4
-#define NET_NOTCOMPLETE 5
+#define NET_NETERROR		0
+#define NET_NEW			1
+#define NET_DISCONNECT		2
+#define NET_READLINE		3
+#define NET_TIMEOUT		4
+#define NET_NOTCOMPLETE		5
 
-#define LINE_WIDTH 80
+#define LINE_WIDTH	80
 
 #ifndef O_NONBLOCK
 #define O_NONBLOCK	00004
 #endif
 
-#define NETSTAT_EMPTY 0
-#define NETSTAT_CONNECTED 1
-#define NETSTAT_IDENT 2
+#define NETSTAT_EMPTY		0
+#define NETSTAT_CONNECTED	1
+#define NETSTAT_IDENT		2
 
 typedef struct _connection {
 	int		fd;
