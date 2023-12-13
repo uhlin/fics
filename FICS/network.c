@@ -5,20 +5,21 @@
 #include "stdinclude.h"
 
 #include <sys/socket.h>
-#include <netinet/in.h>
+
 #include <arpa/inet.h>
 #include <arpa/telnet.h>
+#include <netinet/in.h>
 
-#include "ficsmain.h"
 #include "common.h"
-#include "utils.h"
-#include "playerdb.h"
-#include "network.h"
-#include "rmalloc.h"
 #include "config.h"
+#include "ficsmain.h"
+#include "network.h"
+#include "playerdb.h"
+#include "rmalloc.h"
 #ifdef TIMESEAL
 #include "timeseal.h"
 #endif
+#include "utils.h"
 
 extern int errno;
 
