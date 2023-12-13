@@ -11,6 +11,7 @@ documented in this file.
   - `stdinclude.h`
 - Fixed a `sscanf()` bug in `com_anews()`.
 - Fixed a bug in `fix_time()` (did return a local address)
+- Fixed bugs in `stored_mail_moves()`
 - Fixed comparison between pointer and integer in `com_inchannel()`.
 - Fixed implicit integers
 - Fixed _multiple_ cases of use of possibly uninitialized variables.
