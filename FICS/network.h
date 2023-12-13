@@ -50,10 +50,10 @@ typedef struct _connection {
   unsigned int fromHost;
   int status;
 #ifdef TIMESEAL
-  char user[512];   
-  char sys[512];    
-  int timeseal;    
-  int time;     
+  char user[512];
+  char sys[512];
+  int timeseal;
+  int time;
 #endif
 /* Input buffering */
   int numPending;
