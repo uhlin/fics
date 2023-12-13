@@ -15,3 +15,11 @@ RM ?= @rm -f
 
 E = @echo
 Q = @
+
+# addplayer
+AP_LDFLAGS =
+AP_LDLIBS = -lcrypt
+
+# makerank
+MR_LDFLAGS =
+MR_LDLIBS =

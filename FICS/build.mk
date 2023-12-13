@@ -33,12 +33,8 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)vers.o
 
 AP_OBJS = $(SRC_DIR)fics_addplayer.o
-AP_LDFLAGS =
-AP_LDLIBS = -lcrypt
 
 MR_OBJS = $(SRC_DIR)makerank.o
-MR_LDFLAGS =
-MR_LDLIBS =
 # dfree
 # memmove
 
