@@ -557,58 +557,73 @@ PUBLIC unsigned int net_connected_host(int fd)
   return con[which].fromHost;
 }
 
-PUBLIC void ngc2(char *com, int timeout)
+PUBLIC void
+ngc2(char *com, int timeout)
 {
-  struct sockaddr_in cli_addr;
-  int cli_len = (int) sizeof(struct sockaddr_in);
+	fd_set			 readfds;
+	int			 fd, loop, nfound, lineComplete;
+	socklen_t		 cli_len = sizeof(struct sockaddr_in);
+	struct sockaddr_in	 cli_addr;
+	struct timeval		 to;
 
-  int fd, loop, nfound, lineComplete;
-  fd_set readfds;
-  struct timeval to;
-
-  while ((fd = accept(sockfd, (struct sockaddr *) & cli_addr, &cli_len)) != -1)
-  {
-    if (net_addConnection(fd, cli_addr.sin_addr.s_addr)) {
-      fprintf(stderr, "FICS is full.  fd = %d.\n", fd);
-      psend_raw_file(fd, mess_dir, MESS_FULL);
-      close(fd);
-    } else
-      process_new_connection(fd, net_connected_host(fd));
-  }
-
-  if (errno != EWOULDBLOCK)
-    fprintf(stderr, "FICS: Problem with accept().  errno=%d\n", errno);
-
-  net_flush_all_connections();
-
-  FD_ZERO(&readfds);
-  for (loop = 0; loop < no_file; loop++)
-    if (con[loop].status != NETSTAT_EMPTY)
-      FD_SET(con[loop].fd, &readfds);
-
-  to.tv_usec = 0;
-  to.tv_sec = timeout;
-  nfound = select(no_file, &readfds, NULL, NULL, &to);
-  for (loop = 0; loop < no_file; loop++) {
-    if (con[loop].status != NETSTAT_EMPTY) {
-      fd = con[loop].fd;
-      lineComplete = readline2(com, fd);
-      if (lineComplete == 0)	/* partial line: do nothing with it */
-	continue;
-      if (lineComplete > 0) {	/* complete line: process it */
-#ifdef TIMESEAL
-        if (!(parseInput(com, &con[loop]))) continue;
-#endif
-	if (process_input(fd, com) != COM_LOGOUT) {
-	  net_flush_connection(fd);
-	  continue;
+	while ((fd = accept(sockfd, (struct sockaddr *) &cli_addr, &cli_len)) !=
+	    -1) {
+		if (net_addConnection(fd, cli_addr.sin_addr.s_addr)) {
+			fprintf(stderr, "FICS is full.  fd = %d.\n", fd);
+			psend_raw_file(fd, mess_dir, MESS_FULL);
+			close(fd);
+		} else {
+			process_new_connection(fd, net_connected_host(fd));
+		}
 	}
-      }
-      /* Disconnect anyone who gets here */
-      process_disconnection(fd);
-      net_close_connection(fd);
-    }
-  }
+
+	if (errno != EWOULDBLOCK) {
+		fprintf(stderr, "FICS: Problem with accept().  errno=%d\n",
+		    errno);
+	}
+	net_flush_all_connections();
+
+	FD_ZERO(&readfds);
+	for (loop = 0; loop < no_file; loop++) {
+		if (con[loop].status != NETSTAT_EMPTY)
+			FD_SET(con[loop].fd, &readfds);
+	}
+
+	to.tv_usec	= 0;
+	to.tv_sec	= timeout;
+
+	nfound = select(no_file, &readfds, NULL, NULL, &to);
+
+	/* XXX: unused */
+	(void) nfound;
+
+	for (loop = 0; loop < no_file; loop++) {
+		if (con[loop].status != NETSTAT_EMPTY) {
+			fd = con[loop].fd;
+
+			if ((lineComplete = readline2(com, fd)) == 0) {
+				// partial line: do nothing
+				continue;
+			}
+
+			if (lineComplete > 0) { // complete line: process it
+#ifdef TIMESEAL
+				if (!parseInput(com, &con[loop]))
+					continue;
+#endif
+				if (process_input(fd, com) != COM_LOGOUT) {
+					net_flush_connection(fd);
+					continue;
+				}
+			}
+
+			/*
+			 * Disconnect anyone who gets here
+			 */
+			process_disconnection(fd);
+			net_close_connection(fd);
+		}
+	}
 }
 
 PUBLIC int net_consize(void)
