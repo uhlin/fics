@@ -319,7 +319,7 @@ PUBLIC int readline2(char *com, int who)
 	con[who].processed = 0;
 	con[who].outPos = 0;
 	return (1);
-      } else if ((*s > (0xff - 0x20)) || (*s < 0x20)) {   
+      } else if ((*s > (0xff - 0x20)) || (*s < 0x20)) {
 	d = s;
 	state = 2;
       }
@@ -564,7 +564,7 @@ PUBLIC void ngc2(char *com, int timeout)
   int fd, loop, nfound, lineComplete;
   fd_set readfds;
   struct timeval to;
- 
+
   while ((fd = accept(sockfd, (struct sockaddr *) & cli_addr, &cli_len)) != -1)
   {
     if (net_addConnection(fd, cli_addr.sin_addr.s_addr)) {
@@ -574,7 +574,7 @@ PUBLIC void ngc2(char *com, int timeout)
     } else
       process_new_connection(fd, net_connected_host(fd));
   }
-  
+
   if (errno != EWOULDBLOCK)
     fprintf(stderr, "FICS: Problem with accept().  errno=%d\n", errno);
 
