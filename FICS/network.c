@@ -388,56 +388,68 @@ PUBLIC int readline2(char *com, int who)
   return (0);
 }
 
-PUBLIC int net_init(int port)
+PUBLIC int
+net_init(int port)
 {
-  int i;
-  int opt;
-  struct sockaddr_in serv_addr;
-  struct linger lingeropt;
+	int			 opt;
+	struct linger		 lingeropt;
+	struct sockaddr_in	 serv_addr;
 
-/* Although we have 256 descriptors to work with for opening files,
- * we can only use 126 for sockets under SunOS 4.x.x socket libs.  Using
- * glibc can get you up to 256 again.  Many OS's can do more than that!
- *  Sparky  9/20/95
- */
-  no_file = getdtablesize();
-  if (no_file > MAX_PLAYER + 6)
-    no_file = MAX_PLAYER + 6;
-  max_connections = no_file - 6;
-  for (i = 0; i < no_file; i++) {
-    con[i].status = NETSTAT_EMPTY;
-    con[i].sndbuf = NULL;
-    con[i].sndbufsize = con[i].sndbufpos = 0;
-  }
-  /* Open a TCP socket (an Internet stream socket). */
-  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-    fprintf(stderr, "FICS: can't open stream socket\n");
-    return -1;
-  }
-  /* Bind our local address so that the client can send to us */
-  memset((char *) &serv_addr, 0, sizeof(serv_addr));
-  serv_addr.sin_family = AF_INET;
-  serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  serv_addr.sin_port = htons(port);
+	/*
+	 * Although we have 256 descriptors to work with for opening
+	 * files, we can only use 126 for sockets under SunOS 4.x.x
+	 * socket libs. Using glibc can get you up to 256 again. Many
+	 * OS's can do more than that!
+	 * Sparky 9/20/95
+	 */
 
-  /** added in an attempt to allow rebinding to the port **/
+	if ((no_file = getdtablesize()) > MAX_PLAYER + 6)
+		no_file = MAX_PLAYER + 6;
+	max_connections = no_file - 6;
 
-  opt = 1;
-  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt));
-  opt = 1;
-  setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, (char *) &opt, sizeof(opt));
-  lingeropt.l_onoff = 0;
-  lingeropt.l_linger = 0;
-  setsockopt(sockfd, SOL_SOCKET, SO_LINGER, (char *) &lingeropt, sizeof(lingeropt));
+	for (int i = 0; i < no_file; i++) {
+		con[i].status = NETSTAT_EMPTY;
+		con[i].sndbuf = NULL;
+		con[i].sndbufsize = con[i].sndbufpos = 0;
+	}
 
-  if (bind(sockfd, (struct sockaddr *) & serv_addr, sizeof(serv_addr)) < 0) {
-    fprintf(stderr, "FICS: can't bind local address.  errno=%d\n", errno);
-    return -1;
-  }
-  opt = 1;
-  ioctl(sockfd, FIONBIO, &opt);
-  listen(sockfd, 5);
-  return 0;
+	/* Open a TCP socket (an Internet stream socket) */
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+		fprintf(stderr, "FICS: can't open stream socket\n");
+		return -1;
+	}
+
+	/* Bind our local address so that the client can send to us */
+	memset(&serv_addr, 0, sizeof serv_addr);
+	serv_addr.sin_family		= AF_INET;
+	serv_addr.sin_addr.s_addr	= htonl(INADDR_ANY);
+	serv_addr.sin_port		= htons(port);
+
+	/*
+	 * Attempt to allow rebinding to the port...
+	 */
+
+	opt = 1;
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof opt);
+
+	opt = 1;
+	setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, (char *) &opt, sizeof opt);
+
+	lingeropt.l_onoff	= 0;
+	lingeropt.l_linger	= 0;
+	setsockopt(sockfd, SOL_SOCKET, SO_LINGER, (char *) &lingeropt,
+	    sizeof(lingeropt));
+
+	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof serv_addr) < 0) {
+		fprintf(stderr, "FICS: can't bind local address.  errno=%d\n",
+		    errno);
+		return -1;
+	}
+
+	opt = 1;
+	ioctl(sockfd, FIONBIO, &opt);
+	listen(sockfd, 5);
+	return 0;
 }
 
 PUBLIC void
