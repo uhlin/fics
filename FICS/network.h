@@ -70,20 +70,22 @@ typedef struct _connection {
   int mypal;
 } connection;
 
-extern int no_file;
-extern int max_connections;
 extern connection con[512];
 
-extern int findConnection();
-extern int net_init(int);
-extern void net_close(void);
-extern void ngc2(char *, int);
-extern void net_close_connection(int);
-extern int net_send_string(int, char *, int);
-extern void turn_echo_on(int);
-extern void turn_echo_off(int);
-extern unsigned int net_connected_host(int);
-extern int net_addConnection(int, unsigned int);
-extern int net_consize(void);
-extern int readline2(char *, int);
-#endif				/* _NETWORK_H */
+extern int	 no_file;
+extern int	 max_connections;
+
+extern int	 findConnection();
+extern int	 net_addConnection(int, unsigned int);
+extern int	 net_consize(void);
+extern int	 net_init(int);
+extern int	 net_send_string(int, char *, int);
+extern int	 readline2(char *, int);
+extern unsigned int
+		 net_connected_host(int);
+extern void	 net_close(void);
+extern void	 net_close_connection(int);
+extern void	 ngc2(char *, int);
+extern void	 turn_echo_off(int);
+extern void	 turn_echo_on(int);
+#endif    /* _NETWORK_H */
