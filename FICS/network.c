@@ -155,23 +155,25 @@ PRIVATE void net_flush_all_connections(void)
   }
 }
 
-PRIVATE void net_flush_connection(int fd)
+PRIVATE void
+net_flush_connection(int fd)
 {
-  int which;
-  fd_set writefds;
-  struct timeval to;
+	fd_set		 writefds;
+	int		 which;
+	struct timeval	 to;
 
-  if (((which = findConnection(fd)) >= 0) && (con[which].sndbufpos)) {
-    FD_ZERO(&writefds);
-    FD_SET(con[which].outFd, &writefds);
-    to.tv_usec = 0;
-    to.tv_sec = 0;
-    select(no_file, NULL, &writefds, NULL, &to);
-    if (FD_ISSET(con[which].outFd, &writefds)) {
-      net_flushme(which);
-    }
-  }
-  return;
+	if ((which = findConnection(fd)) >= 0 && con[which].sndbufpos) {
+		FD_ZERO(&writefds);
+		FD_SET(con[which].outFd, &writefds);
+
+		to.tv_usec = 0;
+		to.tv_sec = 0;
+
+		select(no_file, NULL, &writefds, NULL, &to);
+
+		if (FD_ISSET(con[which].outFd, &writefds))
+			net_flushme(which);
+	}
 }
 
 PRIVATE int
