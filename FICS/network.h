@@ -45,29 +45,33 @@
 #define NETSTAT_IDENT 2
 
 typedef struct _connection {
-  int fd;
-  int outFd;
-  unsigned int fromHost;
-  int status;
+	int		fd;
+	int		outFd;
+	int		status;
+	unsigned int	fromHost;
+
 #ifdef TIMESEAL
-  char user[512];
-  char sys[512];
-  int timeseal;
-  int time;
+	char	sys[512];
+	char	user[512];
+	int	time;
+	int	timeseal;
 #endif
-/* Input buffering */
-  int numPending;
-  int processed;
-  unsigned char inBuf[MAX_STRING_LENGTH];
-/* Output buffering */
-  int sndbufsize;		/* size of send buffer (this changes) */
-  int sndbufpos;		/* position in send buffer */
-  char *sndbuf;			/* our send buffer, or NULL if none yet */
-  int outPos;			/* column count */
-  int state;			/* 'telnet state' */
-/* identd stuff */
-  char ident[20];
-  int mypal;
+
+	/* Input buffering */
+	int		numPending;
+	int		processed;
+	unsigned char	inBuf[MAX_STRING_LENGTH];
+
+	/* Output buffering */
+	char	*sndbuf; /* our send buffer, or NULL if none yet */
+	int	 outPos; /* column count */
+	int	 sndbufpos; /* position in send buffer */
+	int	 sndbufsize; /* size of send buffer (this changes) */
+	int	 state; /* 'telnet state' */
+
+	/* identd stuff */
+	char	ident[20];
+	int	mypal;
 } connection;
 
 extern connection con[512];
