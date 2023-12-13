@@ -125,17 +125,15 @@ LoadEntries(void)
 
 				if (GetPlayerInfo(pathInput, &e)) {
 					if ((list[n] = malloc(sizeof(ENTRY))) ==
-					    NULL) {
-						fprintf(stderr, "malloc() failed!\n");
-					} else {
-						memcpy(list[n], &e, sizeof(ENTRY));
+					    NULL)
+						err(1, "%s: malloc", __func__);
 
-						if (++n == listsize) {
-							listsize += 100;
-							list = realloc(list,
-							    listsize *
-							    sizeof(ENTRY *));
-						}
+					memcpy(list[n], &e, sizeof(ENTRY));
+
+					if (++n == listsize) {
+						listsize += 100;
+						list = realloc(list, listsize *
+						    sizeof(ENTRY *));
 					}
 				}
 			}
