@@ -211,55 +211,66 @@ PRIVATE int sendme(int which, char *str, int len)
  * Doesn't send anything unless the buffer fills, output waits until
  * flushed
 */
-PUBLIC int net_send_string(int fd, char *str, int format)
+PUBLIC int
+net_send_string(int fd, char *str, int format)
 {
-  int which, i, j;
+	int which, i, j;
 
-  if ((which = findConnection(fd)) < 0) {
-    return -1;
-  }
-  while (*str) {
-    for (i = 0; str[i] >= ' '; i++);
-    if (i) {
-      if (format && (i >= (j = LINE_WIDTH - con[which].outPos))) {	/* word wrap */
-	i = j;
-	while (i > 0 && str[i - 1] != ' ')
-	  i--;
-	while (i > 0 && str[i - 1] == ' ')
-	  i--;
-	if (i == 0)
-	  i = j - 1;
-	sendme(which, str, i);
-	sendme(which, "\n\r\\   ", 6);
-	con[which].outPos = 4;
-	while (str[i] == ' ')	/* eat the leading spaces after we wrap */
-	  i++;
-      } else {
-	sendme(which, str, i);
-	con[which].outPos += i;
-      }
-      str += i;
-    } else {			/* non-printable stuff handled here */
-      switch (*str) {
-      case '\t':
-	sendme(which, "        ", 8 - (con[which].outPos & 7));
-	con[which].outPos &= ~7;
-	if (con[which].outPos += 8 >= LINE_WIDTH)
-	  con[which].outPos = 0;
-	break;
-      case '\n':
-	sendme(which, "\n\r", 2);
-	con[which].outPos = 0;
-	break;
-      case '\033':
-	con[which].outPos -= 3;
-      default:
-	sendme(which, str, 1);
-      }
-      str++;
-    }
-  }
-  return 0;
+	if ((which = findConnection(fd)) < 0)
+		return -1;
+	while (*str) {
+		for (i = 0; str[i] >= ' '; i++) {
+			/* null */;
+		}
+
+		if (i) {
+			if (format &&
+			    (i >= (j = LINE_WIDTH - con[which].outPos))) {
+				// word wrap
+
+				i = j;
+
+				while (i > 0 && str[i - 1] != ' ')
+					i--;
+				while (i > 0 && str[i - 1] == ' ')
+					i--;
+				if (i == 0)
+					i = j - 1;
+				sendme(which, str, i);
+				sendme(which, "\n\r\\   ", 6);
+				con[which].outPos = 4;
+
+				while (str[i] == ' ') {	// eat the leading
+							// spaces after we wrap
+					i++;
+				}
+			} else {
+				sendme(which, str, i);
+				con[which].outPos += i;
+			}
+			str += i;
+		} else { // non-printable stuff handled here
+			switch (*str) {
+			case '\t':
+				sendme(which, "        ",
+				    8 - (con[which].outPos & 7));
+				con[which].outPos &= ~7;
+				if (con[which].outPos += 8 >= LINE_WIDTH)
+					con[which].outPos = 0;
+				break;
+			case '\n':
+				sendme(which, "\n\r", 2);
+				con[which].outPos = 0;
+				break;
+			case '\033':
+				con[which].outPos -= 3;
+			default:
+				sendme(which, str, 1);
+			}
+			str++;
+		}
+	}
+	return 0;
 }
 
 /*
