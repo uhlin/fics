@@ -24,23 +24,23 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
 #include "command.h"
-#include "ficsmain.h"
+#include "common.h"
+#include "comproc.h"
 #include "config.h"
-#include "playerdb.h"
+#include "eco.h"
+#include "ficsmain.h"
+#include "formula.h"
 #include "gamedb.h"
 #include "gameproc.h"
-#include "obsproc.h"
+#include "matchproc.h"
 #include "movecheck.h"
-#include "utils.h"
+#include "network.h"
+#include "obsproc.h"
+#include "playerdb.h"
 #include "ratings.h"
 #include "rmalloc.h"
-#include "comproc.h"
-#include "matchproc.h"
-#include "formula.h"
-#include "eco.h"
-#include "network.h"
+#include "utils.h"
 
 PUBLIC int GameNumFromParam(int p, int *p1, parameter *param)
 {
