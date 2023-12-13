@@ -31,64 +31,76 @@ PUBLIC connection con[512];
 PUBLIC int no_file;
 PUBLIC int max_connections;
 
-/* Index == fd, for sparse array, quick lookups! wasted memory :( */
-PUBLIC int findConnection(int fd)
+PUBLIC int
+findConnection(int fd)
 {
-  if (con[fd].status == NETSTAT_EMPTY)
-    return -1;
-  else
-    return fd;
+	if (con[fd].status == NETSTAT_EMPTY)
+		return -1;
+	return fd;
 }
 
-PUBLIC int net_addConnection(int fd, unsigned int fromHost)
+PUBLIC int
+net_addConnection(int fd, unsigned int fromHost)
 {
-  int noblock = 1;
+	int noblock = 1;
 
-  if (findConnection(fd) >= 0) {
-    fprintf(stderr, "FICS: FD already in connection table!\n");
-    return -1;
-  }
-  if (numConnections >= max_connections)
-    return -1;
-  if (ioctl(fd, FIONBIO, &noblock) == -1) {
-    fprintf(stderr, "Error setting nonblocking mode errno=%d\n", errno);
-  }
-  con[fd].fd = fd;
-  if (fd != 0)
-    con[fd].outFd = fd;
-  else
-    con[fd].outFd = 1;
-  con[fd].fromHost = fromHost;
-  con[fd].status = NETSTAT_CONNECTED;
+	if (findConnection(fd) >= 0) {
+		fprintf(stderr, "FICS: FD already in connection table!\n");
+		return -1;
+	}
+	if (numConnections >= max_connections)
+		return -1;
+	if (ioctl(fd, FIONBIO, &noblock) == -1) {
+		fprintf(stderr, "Error setting nonblocking mode errno=%d\n",
+		    errno);
+	}
+
+	con[fd].fd = fd;
+
+	if (fd != 0)
+		con[fd].outFd = fd;
+	else
+		con[fd].outFd = 1;
+
+	con[fd].fromHost	= fromHost;
+	con[fd].status		= NETSTAT_CONNECTED;
 #ifdef TIMESEAL
-  con[fd].user[0]='\0';
-  con[fd].sys[0]='\0';
-  con[fd].timeseal = 0;
-  con[fd].time = 0;
-#endif
-  con[fd].numPending = 0;
-  con[fd].processed = 0;
-  con[fd].outPos = 0;
-  if (con[fd].sndbuf == NULL) {
-#ifdef DEBUG
-    fprintf(stderr, "FICS: nac(%d) allocating sndbuf.\n", fd);
-#endif
-    con[fd].sndbufpos = 0;
-    con[fd].sndbufsize = MAX_STRING_LENGTH;
-    con[fd].sndbuf = rmalloc(MAX_STRING_LENGTH);
-  } else {
-#ifdef DEBUG
-    fprintf(stderr, "FICS: nac(%d) reusing old sndbuf size %d pos %d.\n", fd, con[fd].sndbufsize, con[fd].sndbufpos);
-#endif
-  }
-  con[fd].state = 0;
-  numConnections++;
-
-#ifdef DEBUG
-  fprintf(stderr, "FICS: fd: %d connections: %d  descriptors: %d \n", fd, numConnections, getdtablesize());	/* sparky 3/13/95 */
+	con[fd].sys[0]		= '\0';
+	con[fd].time		= 0;
+	con[fd].timeseal	= 0;
+	con[fd].user[0]		= '\0';
 #endif
 
-  return 0;
+	con[fd].numPending	= 0;
+	con[fd].outPos		= 0;
+	con[fd].processed	= 0;
+
+	if (con[fd].sndbuf == NULL) {
+#ifdef DEBUG
+		fprintf(stderr, "FICS: nac(%d) allocating sndbuf.\n", fd);
+#endif
+		con[fd].sndbufpos = 0;
+		con[fd].sndbufsize = MAX_STRING_LENGTH;
+		con[fd].sndbuf = rmalloc(MAX_STRING_LENGTH);
+	} else {
+#ifdef DEBUG
+		fprintf(stderr, "FICS: nac(%d) reusing old sndbuf "
+		    "size %d pos %d.\n", fd,
+		    con[fd].sndbufsize, con[fd].sndbufpos);
+#else
+		/* empty */;
+#endif
+	}
+	con[fd].state = 0;
+
+	numConnections++;
+
+#ifdef DEBUG
+	fprintf(stderr, "FICS: fd: %d connections: %d  descriptors: %d \n", fd,
+	    numConnections, getdtablesize()); /* sparky 3/13/95 */
+#endif
+
+	return 0;
 }
 
 PRIVATE int
