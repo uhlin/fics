@@ -4,6 +4,10 @@
 
 include options.mk
 
+LDLIBS =
+AP_LDLIBS =
+MR_LDLIBS =
+
 # common vars
 include vars.mk
 
