@@ -983,7 +983,7 @@ stored_mail_moves(int p, int mail, param_list param)
 			} else {
 				if ((param2string[0] - 'a' - 1) > MAX_JOURNAL &&
 				    parray[wp].adminLevel < ADMIN_ADMIN &&
-				    !titled_player(p,parray[wp].login)) {
+				    !titled_player(p, parray[wp].login)) {
 					pprintf(p, "%s's maximum journal entry "
 					    "is %c\n",
 					    parray[wp].name,
@@ -993,7 +993,8 @@ stored_mail_moves(int p, int mail, param_list param)
 					sprintf(fileName2, "%s/%c/%s.%c",
 					    journal_dir,
 					    name_from[0],
-					    name_from,param2string[0]);
+					    name_from,
+					    param2string[0]);
 
 					if ((fpGame = fopen(fileName2, "r")) ==
 					    NULL) {
