@@ -174,35 +174,44 @@ PRIVATE void net_flush_connection(int fd)
   return;
 }
 
-PRIVATE int sendme(int which, char *str, int len)
+PRIVATE int
+sendme(int which, char *str, int len)
 {
-  int i, count;
-  fd_set writefds;
-  struct timeval to;
-  count = len;
+	fd_set		 writefds;
+	int		 i, count;
+	struct timeval	 to;
 
-  while ((i = ((con[which].sndbufsize - con[which].sndbufpos) < len) ? (con[which].sndbufsize - con[which].sndbufpos) : len) > 0) {
-    memmove(con[which].sndbuf + con[which].sndbufpos, str, i);
-    con[which].sndbufpos += i;
-    if (con[which].sndbufpos == con[which].sndbufsize) {
+	count = len;
 
-      FD_ZERO(&writefds);
-      FD_SET(con[which].outFd, &writefds);
-      to.tv_usec = 0;
-      to.tv_sec = 0;
-      select(no_file, NULL, &writefds, NULL, &to);
-      if (FD_ISSET(con[which].outFd, &writefds)) {
-	net_flushme(which);
-      } else {
-	/* time to grow the buffer */
-	con[which].sndbufsize += MAX_STRING_LENGTH;
-	con[which].sndbuf = rrealloc(con[which].sndbuf, con[which].sndbufsize);
-      }
-    }
-    str += i;
-    len -= i;
-  }
-  return count;
+	while ((i = ((con[which].sndbufsize - con[which].sndbufpos) < len) ?
+	    (con[which].sndbufsize - con[which].sndbufpos) : len) > 0) {
+		memmove(con[which].sndbuf + con[which].sndbufpos, str, i);
+		con[which].sndbufpos += i;
+
+		if (con[which].sndbufpos == con[which].sndbufsize) {
+			FD_ZERO(&writefds);
+			FD_SET(con[which].outFd, &writefds);
+
+			to.tv_usec	= 0;
+			to.tv_sec	= 0;
+
+			select(no_file, NULL, &writefds, NULL, &to);
+
+			if (FD_ISSET(con[which].outFd, &writefds)) {
+				net_flushme(which);
+			} else {
+				// time to grow the buffer
+				con[which].sndbufsize += MAX_STRING_LENGTH;
+				con[which].sndbuf = rrealloc(con[which].sndbuf,
+				    con[which].sndbufsize);
+			}
+		}
+
+		str += i;
+		len -= i;
+	}
+
+	return count;
 }
 
 /*
