@@ -1,11 +1,12 @@
-#define COMPUTER_FILE DEFAULT_LISTS "/computer"
-#define MAX_LOGIN_NAME 21
-
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+
 #include "config.h"
+
+#define COMPUTER_FILE	DEFAULT_LISTS "/computer"
+#define MAX_LOGIN_NAME	21
 
 char *rnames[] = {"std", "blitz", "wild", "lightning"};
 
