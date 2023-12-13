@@ -23,13 +23,14 @@
 
 extern int errno;
 
-PRIVATE int sockfd = 0;		/* The socket */
-PRIVATE int numConnections = 0;
 /* Sparse array */
 PUBLIC connection con[512];
 
-PUBLIC int no_file;
-PUBLIC int max_connections;
+PUBLIC int	 no_file;
+PUBLIC int	 max_connections;
+
+PRIVATE int	 sockfd = 0;
+PRIVATE int	 numConnections = 0;
 
 PUBLIC int
 findConnection(int fd)
