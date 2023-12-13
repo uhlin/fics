@@ -14,6 +14,7 @@ ENTRY **list;
 ENTRY **sortme;
 
 char *rnames[] = {"std", "blitz", "wild", "lightning"};
+int rtype;
 
 static int
 GetPlayerInfo(char *fileName, ENTRY *e)
@@ -194,8 +195,6 @@ SetComputers(int n)
 	pclose(fpComp);
 	return 1;
 }
-
-int rtype;
 
 static int
 sortfunc(const void *i, const void *j)
