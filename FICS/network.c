@@ -134,25 +134,30 @@ PRIVATE void net_flushme(int which)
   }
 }
 
-PRIVATE void net_flush_all_connections(void)
+PRIVATE void
+net_flush_all_connections(void)
 {
-  int which;
-  fd_set writefds;
-  struct timeval to;
+	fd_set		 writefds;
+	int		 which;
+	struct timeval	 to;
 
-  FD_ZERO(&writefds);
-  for (which = 0; which < MAX_PLAYER; which++)
-    if (con[which].status == NETSTAT_CONNECTED && con[which].sndbufpos)
-      FD_SET(con[which].outFd, &writefds);
+	FD_ZERO(&writefds);
 
-  to.tv_usec = 0;
-  to.tv_sec = 0;
-  select(no_file, NULL, &writefds, NULL, &to);
-  for (which = 0; which < MAX_PLAYER; which++) {
-    if (FD_ISSET(con[which].outFd, &writefds)) {
-      net_flushme(which);
-    }
-  }
+	for (which = 0; which < MAX_PLAYER; which++) {
+		if (con[which].status == NETSTAT_CONNECTED &&
+		    con[which].sndbufpos)
+			FD_SET(con[which].outFd, &writefds);
+	}
+
+	to.tv_usec = 0;
+	to.tv_sec = 0;
+
+	select(no_file, NULL, &writefds, NULL, &to);
+
+	for (which = 0; which < MAX_PLAYER; which++) {
+		if (FD_ISSET(con[which].outFd, &writefds))
+			net_flushme(which);
+	}
 }
 
 PRIVATE void
