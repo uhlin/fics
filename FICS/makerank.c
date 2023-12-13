@@ -5,25 +5,15 @@
 #include <string.h>
 
 #include "config.h"
+#include "makerank.h"
 
 #define COMPUTER_FILE	DEFAULT_LISTS "/computer"
 #define MAX_LOGIN_NAME	21
 
-char *rnames[] = {"std", "blitz", "wild", "lightning"};
-
-typedef struct _ratings {
-  int rating;
-  int num;
-} ratings;
-
-typedef struct _Entry {
-  char name[MAX_LOGIN_NAME];
-  ratings r[4];
-  int computer;
-} ENTRY;
-
 ENTRY **list;
 ENTRY **sortme;
+
+char *rnames[] = {"std", "blitz", "wild", "lightning"};
 
 static int
 GetPlayerInfo(char *fileName, ENTRY *e)
