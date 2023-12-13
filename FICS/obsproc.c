@@ -928,110 +928,166 @@ PUBLIC int com_stored(int p, param_list param)
   return COM_OK;
 }
 
-PRIVATE void stored_mail_moves(int p, int mail, param_list param)
+PRIVATE void
+stored_mail_moves(int p, int mail, param_list param)
 {
-  int wp, wconnected, bp, bconnected, gotit = 0;
-  int g = -1;
-  char* param2string;
-  char* name_from;
-  char* fileName;
-  char fileName2[MAX_FILENAME_SIZE];
-  FILE* fpGame;
+	FILE	*fpGame;
+	char	*fileName;
+	char	*name_from;
+	char	*param2string;
+	char	 fileName2[MAX_FILENAME_SIZE];
+	int	 g = -1;
+	int	 wp, wconnected, bp, bconnected, gotit = 0;
 
- if (mail && (!parray[p].registered)) {
-    pprintf (p,"Unregistered players cannot use mailstored.\n");
-    return;
-  }
+	if (mail && (!parray[p].registered)) {
+		pprintf(p, "Unregistered players cannot use mailstored.\n");
+		return;
+	}
 
-  if (!FindPlayer(p, param[0].val.word, &wp, &wconnected))
-    return;
+	if (!FindPlayer(p, param[0].val.word, &wp, &wconnected))
+		return;
 
-  if (param[1].type == TYPE_INT) { /* look for a game from history */
-    fileName = FindHistory(p, wp, param[1].val.integer);
-    if (fileName != NULL) {
-      fpGame = fopen(fileName, "r");
-      if (fpGame == NULL) {
-        pprintf(p, "History game %d not available for %s.\n", param[1].val.integer, parray[wp].name);
-      } else {
-        g = game_new();
-        if (ReadGameAttrs(fpGame, fileName, g) < 0)
-          pprintf(p, "Gamefile is corrupt; please notify an admin.\n");
-        else
-          gotit = 1;
-        fclose(fpGame);
-      }
-    }
-  } else { /* Let's test for journal */
-    name_from = param[0].val.word;
-    param2string = param[1].val.word;
-    if ((strlen(param2string) == 1) && (isalpha(param2string[0]))) {
-      if ((parray[wp].jprivate) && (parray[p].adminLevel < ADMIN_ADMIN) && (p != wp)) {
-        pprintf (p,"Sorry, the journal from which you are trying to fetch is private.\n");
-      } else {
-        if (((param2string[0] - 'a' - 1) > MAX_JOURNAL) && (parray[wp].adminLevel < ADMIN_ADMIN) && (!titled_player(p,parray[wp].login))) {
-          pprintf (p,"%s's maximum journal entry is %c\n",parray[wp].name,toupper((char)(MAX_JOURNAL + 'A' - 1)));
-        } else {
-          sprintf(fileName2, "%s/%c/%s.%c", journal_dir, name_from[0],name_from,param2string[0]);
-          fpGame = fopen(fileName2, "r");
-          if (fpGame == NULL) {
-            pprintf(p, "Journal entry %c is not available for %s.\n", toupper(param2string[0]),
-            parray[wp].name);
-          } else {
-            g = game_new();
-            if (ReadGameAttrs(fpGame, fileName, g) < 0)
-              pprintf(p, "Journal entry is corrupt; please notify an admin.\n");
-            else
-              gotit = 1;
-            fclose(fpGame);
-          }
-        }
-      }
-    } else {
+	if (param[1].type == TYPE_INT) { /* look for a game from history */
+		if ((fileName = FindHistory(p, wp, param[1].val.integer)) !=
+		    NULL) {
+			if ((fpGame = fopen(fileName, "r")) == NULL) {
+				pprintf(p, "History game %d not available "
+				    "for %s.\n",
+				    param[1].val.integer,
+				    parray[wp].name);
+			} else {
+				g = game_new();
 
-       /* look for a stored game between the players */
+				if (ReadGameAttrs(fpGame, fileName, g) < 0)
+					pprintf(p, "Gamefile is corrupt; "
+					    "please notify an admin.\n");
+				else
+					gotit = 1;
 
-      if (FindPlayer(p, param[1].val.word, &bp, &bconnected)) {
-        g = game_new();
-        if (game_read(g, wp, bp) >= 0) {  /* look for a game white-black, */
-          gotit = 1;
-        } else if (game_read(g, bp, wp) >= 0) {   /* or black-white */
-          gotit = 1;
-        } else {
-          pprintf(p, "There is no stored game %s vs. %s\n", parray[wp].name, parray[bp].name);
-        }
-        if (!bconnected)
-          player_remove(bp);
-      }
-    }
-  }
-  if (gotit) {
-    if (strcasecmp(parray[p].name, garray[g].white_name) && strcasecmp(parray[p]
-.name, garray[g].black_name) && garray[g].private && (parray[p].adminLevel < ADMIN_ADMIN)) {
-      pprintf(p, "Sorry, that is a private game.\n");
-    } else {
-      if (mail == 1) { /*Do mailstored */
-        char subj[81];
-        if (param[1].type == TYPE_INT)
-          sprintf(subj, "FICS history game: %s %d", parray[wp].name, param[1].val.integer);
-        else
-          if ((strlen(param2string) == 1) && (isalpha(param2string[0]))) {
-            sprintf(subj, "FICS journal game %s vs %s", garray[g].white_name, garray[g].black_name);
-          } else {
-            sprintf(subj, "FICS adjourned game %s vs %s", garray[g].white_name, garray[g].black_name);
-          }
-        if (mail_string_to_user(p, subj, movesToString(g, parray[p].pgn)))
-	  pprintf(p, "Moves NOT mailed, perhaps your address is incorrect.\n");
-        else
-	  pprintf(p, "Moves mailed.\n");
-      } else {
-        pprintf(p, "%s\n", movesToString(g, 0));
-      } /* Do smoves */
-    }
-  }
-  if (!wconnected)
-    player_remove(wp);
-  if (g != -1)
-    game_remove(g);
+				fclose(fpGame);
+			}
+		}
+	} else {
+		/*
+		 * Let's test for journal
+		 */
+		name_from = param[0].val.word;
+		param2string = param[1].val.word;
+
+		if (strlen(param2string) == 1 && isalpha(param2string[0])) {
+			if (parray[wp].jprivate &&
+			    parray[p].adminLevel < ADMIN_ADMIN &&
+			    p != wp) {
+				pprintf(p, "Sorry, the journal from which you "
+				    "are trying to fetch is private.\n");
+			} else {
+				if ((param2string[0] - 'a' - 1) > MAX_JOURNAL &&
+				    parray[wp].adminLevel < ADMIN_ADMIN &&
+				    !titled_player(p,parray[wp].login)) {
+					pprintf(p, "%s's maximum journal entry "
+					    "is %c\n",
+					    parray[wp].name,
+					    toupper((char)(MAX_JOURNAL +
+					    'A' - 1)));
+				} else {
+					sprintf(fileName2, "%s/%c/%s.%c",
+					    journal_dir,
+					    name_from[0],
+					    name_from,param2string[0]);
+
+					if ((fpGame = fopen(fileName2, "r")) ==
+					    NULL) {
+						pprintf(p, "Journal entry %c "
+						    "is not available for %s.\n",
+						    toupper(param2string[0]),
+						    parray[wp].name);
+					} else {
+						g = game_new();
+
+						if (ReadGameAttrs(fpGame,
+						    fileName, g) < 0)
+							pprintf(p, "Journal "
+							    "entry is corrupt; "
+							    "please notify an "
+							    "admin.\n");
+						else
+							gotit = 1;
+
+						fclose(fpGame);
+					}
+				}
+			}
+		} else {
+			/*
+			 * look for a stored game between the players
+			 */
+
+			if (FindPlayer(p, param[1].val.word, &bp,
+			    &bconnected)) {
+				g = game_new();
+
+				if (game_read(g, wp, bp) >= 0) {
+					gotit = 1;
+				} else if (game_read(g, bp, wp) >= 0) {
+					gotit = 1;
+				} else {
+					pprintf(p, "There is no stored game "
+					    "%s vs. %s\n",
+					    parray[wp].name,
+					    parray[bp].name);
+				}
+
+				if (!bconnected)
+					player_remove(bp);
+			}
+		}
+	}
+
+	if (gotit) {
+		if (strcasecmp(parray[p].name, garray[g].white_name) &&
+		    strcasecmp(parray[p].name, garray[g].black_name) &&
+		    garray[g].private &&
+		    parray[p].adminLevel < ADMIN_ADMIN) {
+			pprintf(p, "Sorry, that is a private game.\n");
+		} else {
+			if (mail == 1) { /* Do mailstored */
+				char	subj[81];
+
+				if (param[1].type == TYPE_INT) {
+					sprintf(subj, "FICS history game: "
+					    "%s %d",
+					    parray[wp].name,
+					    param[1].val.integer);
+				} else {
+					if (strlen(param2string) == 1 &&
+					    isalpha(param2string[0])) {
+						sprintf(subj, "FICS journal "
+						    "game %s vs %s",
+						    garray[g].white_name,
+						    garray[g].black_name);
+					} else {
+						sprintf(subj, "FICS adjourned "
+						    "game %s vs %s",
+						    garray[g].white_name,
+						    garray[g].black_name);
+					}
+				if (mail_string_to_user(p, subj, movesToString
+				    (g, parray[p].pgn)))
+					pprintf(p, "Moves NOT mailed, perhaps "
+					    "your address is incorrect.\n");
+				else
+					pprintf(p, "Moves mailed.\n");
+				}
+			} else {
+				pprintf(p, "%s\n", movesToString(g, 0));
+			} /* Do smoves */
+		}
+	}
+
+	if (!wconnected)
+		player_remove(wp);
+	if (g != -1)
+		game_remove(g);
 }
 
 /* Tidied up a bit but still messy */
