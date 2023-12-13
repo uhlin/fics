@@ -650,51 +650,57 @@ ExamineScratch(int p, param_list param)
 	MakeFENpos(g, (char *)garray[g].FENstartPos);
 }
 
-PRIVATE int ExamineStored(FILE * fp, int p, char *filename)
+PRIVATE int
+ExamineStored(FILE *fp, int p, char *filename)
 {
-  int g;
-  char category[100], board[100];
-  game *gg;
+	char	 board[100];
+	char	 category[100];
+	game	*gg;
+	int	 g;
 
-  unobserveAll(p);
+	unobserveAll(p);
 
-  player_decline_offers(p, -1, PEND_MATCH);
-  player_withdraw_offers(p, -1, PEND_MATCH);
-  player_withdraw_offers(p, -1, PEND_SIMUL);
+	player_decline_offers(p, -1, PEND_MATCH);
+	player_withdraw_offers(p, -1, PEND_MATCH);
+	player_withdraw_offers(p, -1, PEND_SIMUL);
 
-  g = game_new();
-  gg = &garray[g];
-  category[0] = '\0';
-  board[0] = '\0';
-  if (board_init(&gg->game_state, category, board)) {
-    pprintf(p, "PROBLEM LOADING BOARD. Game Aborted.\n");
-    fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. Game Aborted.\n",
-	    category, board);
-    return -1;
-  }
-  gg->status = GAME_EXAMINE;
-  if (ReadGameAttrs(fp, filename, g) < 0) {
-    pprintf(p, "Gamefile is corrupt; please notify an admin.\n");
-    return -1;
-  }
-  gg->totalHalfMoves = gg->numHalfMoves;
-  gg->numHalfMoves = 0;
-  gg->revertHalfMove = 0;
-  gg->white = p;
-  gg->black = p;
-  gg->game_state.gameNum = g;
+	g	= game_new();
+	gg	= &garray[g];
 
-  gg->startTime = tenth_secs();
-  gg->lastMoveTime = gg->startTime;
-  gg->lastDecTime = gg->startTime;
+	board[0]	= '\0';
+	category[0]	= '\0';
 
-  parray[p].side = WHITE;	/* oh well... */
-  parray[p].game = g;
+	if (board_init(&gg->game_state, category, board)) {
+		pprintf(p, "PROBLEM LOADING BOARD. Game Aborted.\n");
+		fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. "
+		    "Game Aborted.\n", category, board);
+		return -1;
+	}
 
-  send_boards(g);
-  MakeFENpos(g, garray[g].FENstartPos);
+	gg->status = GAME_EXAMINE;
 
-  return g;
+	if (ReadGameAttrs(fp, filename, g) < 0) {
+		pprintf(p, "Gamefile is corrupt; please notify an admin.\n");
+		return -1;
+	}
+
+	gg->startTime = tenth_secs();
+
+	gg->black		= p;
+	gg->game_state.gameNum	= g;
+	gg->lastDecTime		= gg->startTime;
+	gg->lastMoveTime	= gg->startTime;
+	gg->numHalfMoves	= 0;
+	gg->revertHalfMove	= 0;
+	gg->totalHalfMoves	= gg->numHalfMoves;
+	gg->white		= p;
+
+	parray[p].game = g;
+	parray[p].side = WHITE;
+
+	send_boards(g);
+	MakeFENpos(g, (char *)garray[g].FENstartPos);
+	return g;
 }
 
 PRIVATE void ExamineAdjourned(int p, int p1, int p2)
