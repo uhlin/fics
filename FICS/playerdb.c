@@ -2095,42 +2095,47 @@ PUBLIC int player_show_messages(int p)
   }
 }
 
-PUBLIC int ShowMsgsBySender(int p, param_list param)
+PUBLIC int
+ShowMsgsBySender(int p, param_list param)
 {
-  textlist *Head;
-  int p1, connected;
-  int nFrom, nTo;
+	int		 nFrom, nTo;
+	int		 p1, connected;
+	textlist	*Head;
 
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return -1;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return -1;
 
-  if (!parray[p1].registered) {
-    pprintf(p, "Player \"%s\" is unregistered and cannot send or receive messages.\n",
-       parray[p1].name);
-    return -1; /* no need to disconnect */
-  }
+	if (!parray[p1].registered) {
+		pprintf(p, "Player \"%s\" is unregistered and cannot send or "
+		    "receive messages.\n", parray[p1].name);
+		return -1; /* no need to disconnect */
+	}
 
-  if (p != p1) {
-    nTo = LoadMsgs(p1, p+1, &Head);
-    if (nTo <= 0) {
-      pprintf(p, "%s has no messages from you.\n", parray[p1].name);
-    } else {
-      pprintf(p, "Messages to %s:\n", parray[p1].name);
-      ShowTextList (p, Head, 0);
-      ClearTextList(Head);
-    }
-  }
-  nFrom = LoadMsgs(p, p1+1, &Head);
-  if (nFrom <= 0) {
-    pprintf(p, "\nYou have no messages from %s.\n", parray[p1].name);
-  } else {
-    pprintf(p, "Messages from %s:\n", parray[p1].name);
-    ShowTextList (p, Head, 1);
-    ClearTextList(Head);
-  }
-  if (!connected)
-    player_remove(p1);
-  return (nFrom > 0 || nTo > 0);
+	nFrom = nTo = -1;
+
+	if (p != p1) {
+		if ((nTo = LoadMsgs(p1, p + 1, &Head)) <= 0) {
+			pprintf(p, "%s has no messages from you.\n",
+			    parray[p1].name);
+		} else {
+			pprintf(p, "Messages to %s:\n", parray[p1].name);
+			ShowTextList (p, Head, 0);
+			ClearTextList(Head);
+		}
+	}
+
+	if ((nFrom = LoadMsgs(p, p1 + 1, &Head)) <= 0) {
+		pprintf(p, "\nYou have no messages from %s.\n",
+		    parray[p1].name);
+	} else {
+		pprintf(p, "Messages from %s:\n", parray[p1].name);
+		ShowTextList (p, Head, 1);
+		ClearTextList(Head);
+	}
+
+	if (!connected)
+		player_remove(p1);
+	return (nFrom > 0 || nTo > 0);
 }
 
 PUBLIC int ShowMsgRange (int p, int start, int end)
