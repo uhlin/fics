@@ -1005,8 +1005,9 @@ stored_mail_moves(int p, int mail, param_list param)
 					} else {
 						g = game_new();
 
+						/* XXX: was 'fileName' */
 						if (ReadGameAttrs(fpGame,
-						    fileName, g) < 0)
+						    fileName2, g) < 0)
 							pprintf(p, "Journal "
 							    "entry is corrupt; "
 							    "please notify an "
