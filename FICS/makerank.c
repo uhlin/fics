@@ -1,3 +1,5 @@
+/* Revised by maxxe 23/12/14 */
+
 #include <ctype.h>
 #include <err.h>
 #include <stdio.h>
