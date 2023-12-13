@@ -2119,7 +2119,7 @@ ShowMsgsBySender(int p, param_list param)
 			    parray[p1].name);
 		} else {
 			pprintf(p, "Messages to %s:\n", parray[p1].name);
-			ShowTextList (p, Head, 0);
+			ShowTextList(p, Head, 0);
 			ClearTextList(Head);
 		}
 	}
@@ -2129,7 +2129,7 @@ ShowMsgsBySender(int p, param_list param)
 		    parray[p1].name);
 	} else {
 		pprintf(p, "Messages from %s:\n", parray[p1].name);
-		ShowTextList (p, Head, 1);
+		ShowTextList(p, Head, 1);
 		ClearTextList(Head);
 	}
 
