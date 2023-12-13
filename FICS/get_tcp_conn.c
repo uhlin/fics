@@ -14,19 +14,23 @@
 /* Uncomment the following line if you are using old socket calls */
 /* #define OLDSOCKET */
 
+#include "stdinclude.h"
 
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+#include <sys/types.h>
+
 #include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <netdb.h>
+
 #include "get_tcp_conn.h"
 #include "get_tcp_conn.proto.h"
-#include "stdinclude.h"
 
 extern int errno;
 extern int close();
