@@ -85,53 +85,66 @@ int GetPlayerInfo(char *fileName, ENTRY *e)
   return (1);
 }
 
-int LoadEntries(void)
+static int
+LoadEntries(void)
 {
-  int listsize;
-  FILE *fpPlayerList;
-  char letter1;
-  char command[90];
-  char pathInput[80];
-  ENTRY e;
-  int len, n = 0;
+	ENTRY	 e;
+	FILE	*fpPlayerList;
+	char	 command[90];
+	char	 letter1;
+	char	 pathInput[80];
+	int	 len, n = 0;
+	int	 listsize;
 
-  listsize = 100;
-  list = malloc(sizeof(ENTRY *)*listsize);
+	listsize	= 100;
+	list		= malloc(sizeof(ENTRY *)*listsize);
 
-  for (letter1 = 'a'; letter1 <= 'z'; letter1++) {
-    printf("Loading %c's.\n", letter1);
-    sprintf(pathInput, "%s/%c", DEFAULT_PLAYERS, letter1);
-    sprintf(command, "ls -1 %s", pathInput);
-    fpPlayerList = popen(command, "r");
-    if (fpPlayerList == NULL)
-      continue;
-    while (1) {
-      fgets(e.name, MAX_LOGIN_NAME, fpPlayerList);
-      if (feof(fpPlayerList))
-	break;
-      len = strlen(e.name);
-      e.name[len - 1] = '\0';
-      if (e.name[0] != letter1)
-	printf("File %c/%s:  wrong directory.\n", letter1, e.name);
-      else {
-	sprintf(pathInput, "%s/%c/%s", DEFAULT_PLAYERS, letter1, e.name);
-	if (GetPlayerInfo(pathInput, &e)) {
-	  if ((list[n] = malloc(sizeof(ENTRY))) == NULL) {
-	    fprintf(stderr, "malloc() failed!\n");
-	  } else {
-	    memcpy(list[n], &e, sizeof(ENTRY));
-	    n++;
-	    if (n == listsize) {
-	      listsize += 100;
-	      list = realloc(list, listsize*sizeof(ENTRY *));
-	    }
-	  }
-	}
-      }
-    }
-    pclose(fpPlayerList);
-  }
-  return (n);
+	for (letter1 = 'a'; letter1 <= 'z'; letter1++) {
+		printf("Loading %c's.\n", letter1);
+		sprintf(pathInput, "%s/%c", DEFAULT_PLAYERS, letter1);
+		sprintf(command, "ls -1 %s", pathInput);
+
+		if ((fpPlayerList = popen(command, "r")) == NULL)
+			continue;
+
+		while (1) {
+			fgets(e.name, MAX_LOGIN_NAME, fpPlayerList);
+
+			if (feof(fpPlayerList))
+				break;
+
+			len = strlen(e.name);
+			e.name[len - 1] = '\0';
+
+			if (e.name[0] != letter1) {
+				printf("File %c/%s: wrong directory.\n",
+				    letter1, e.name);
+			} else {
+				sprintf(pathInput, "%s/%c/%s", DEFAULT_PLAYERS,
+				    letter1, e.name);
+
+				if (GetPlayerInfo(pathInput, &e)) {
+					if ((list[n] = malloc(sizeof(ENTRY))) ==
+					    NULL) {
+						fprintf(stderr, "malloc() failed!\n");
+					} else {
+						memcpy(list[n], &e, sizeof(ENTRY));
+
+						if (++n == listsize) {
+							listsize += 100;
+							list = realloc(list,
+							    listsize *
+							    sizeof(ENTRY *));
+						}
+					}
+				}
+			}
+		} /* while (1) */
+
+		pclose(fpPlayerList);
+	} /* for */
+
+	return n;
 }
 
 static int
