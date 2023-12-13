@@ -934,7 +934,7 @@ stored_mail_moves(int p, int mail, param_list param)
 	FILE	*fpGame;
 	char	*fileName;
 	char	*name_from;
-	char	*param2string;
+	char	*param2string = NULL;
 	char	 fileName2[MAX_FILENAME_SIZE];
 	int	 g = -1;
 	int	 wp, wconnected, bp, bconnected, gotit = 0;
