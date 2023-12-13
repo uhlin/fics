@@ -134,31 +134,35 @@ int LoadEntries(void)
   return (n);
 }
 
-int SetComputers(int n)
+static int
+SetComputers(int n)
 {
-  FILE *fpComp;
-  int i = 0;
-  char line[100], comp[30];
+	FILE	*fpComp;
+	char	 comp[30];
+	char	 line[100];
+	int	 i = 0;
 
-  sprintf(line, "sort -f %s", COMPUTER_FILE);
-  fpComp = popen(line, "r");
-  if (fpComp == NULL)
-    return 0;
-  while (i < n) {
-    fgets(comp, 29, fpComp);
-    if (feof(fpComp))
-      break;
-    comp[strlen(comp) - 1] = '\0';
+	sprintf(line, "sort -f %s", COMPUTER_FILE);
 
-    while (i < n && strcasecmp(list[i]->name, comp) < 0)
-      i++;
+	if ((fpComp = popen(line, "r")) == NULL)
+		return 0;
 
-    if (i < n && strcasecmp(list[i]->name, comp) == 0) {
-      list[i++]->computer = 1;
-    }
-  }
-  pclose(fpComp);
-  return(1);
+	while (i < n) {
+		fgets(comp, 29, fpComp);
+
+		if (feof(fpComp))
+			break;
+
+		comp[strlen(comp) - 1] = '\0';
+
+		while (i < n && strcasecmp(list[i]->name, comp) < 0)
+			i++;
+		if (i < n && strcasecmp(list[i]->name, comp) == 0)
+			list[i++]->computer = 1;
+	}
+
+	pclose(fpComp);
+	return 1;
 }
 
 int rtype;
