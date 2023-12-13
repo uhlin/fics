@@ -514,7 +514,7 @@ PRIVATE int old_mail_moves(int p,int mail, param_list param)
       p1 = p;
       connected = 1;
   }
- 
+
   sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
           parray[p1].login[0], parray[p1].login, STATS_GAMES);
   fp = fopen(fname, "r"); /* old moves now looks in history to save mem - DAV */
@@ -524,7 +524,7 @@ PRIVATE int old_mail_moves(int p,int mail, param_list param)
     if (!connected)
       player_remove(p1);
     return COM_OK;
-  } 
+  }
 
   while (!feof(fp))
       fgets(tmp, 1024, fp);
@@ -539,8 +539,8 @@ PRIVATE int old_mail_moves(int p,int mail, param_list param)
    pcommand (p,"smoves %s %d",parray[p1].name,count);
 
   if (!connected)
-    player_remove(p1); 
-  
+    player_remove(p1);
+
   return COM_OK;
 }
 
@@ -766,7 +766,7 @@ PRIVATE char *FindHistory2(int p, int p1,int game,char* End)
   static char fileName[MAX_FILENAME_SIZE];
   int index;
   long when;
-  
+
   sprintf(fileName, "%s/player_data/%c/%s.%s", stats_dir,
           parray[p1].login[0], parray[p1].login, STATS_GAMES);
   fpHist = fopen(fileName, "r");
@@ -853,12 +853,12 @@ PUBLIC int com_examine(int p, param_list param)
           ExamineScratch(p, param);
           return COM_OK;
         }
-      } 
+      }
       if (!FindPlayer(p, param[0].val.word, &p1, &p1conn))
         return COM_OK;
 
     if (param[1].type == TYPE_INT)
-      ExamineHistory(p, p1, param[1].val.integer); 
+      ExamineHistory(p, p1, param[1].val.integer);
     else {
       if (param[1].type == TYPE_WORD) {
 
@@ -876,7 +876,7 @@ PUBLIC int com_examine(int p, param_list param)
             return COM_OK;
           }
         }
-      } 
+      }
       ExamineAdjourned(p, p1, p2);
       if (!p2conn)
        player_remove(p2);
@@ -937,7 +937,7 @@ PRIVATE void stored_mail_moves(int p, int mail, param_list param)
   char* fileName;
   char fileName2[MAX_FILENAME_SIZE];
   FILE* fpGame;
-  
+
  if (mail && (!parray[p].registered)) {
     pprintf (p,"Unregistered players cannot use mailstored.\n");
     return;
@@ -987,7 +987,7 @@ PRIVATE void stored_mail_moves(int p, int mail, param_list param)
         }
       }
     } else {
-  
+
        /* look for a stored game between the players */
 
       if (FindPlayer(p, param[1].val.word, &bp, &bconnected)) {
@@ -1015,7 +1015,7 @@ PRIVATE void stored_mail_moves(int p, int mail, param_list param)
           sprintf(subj, "FICS history game: %s %d", parray[wp].name, param[1].val.integer);
         else
           if ((strlen(param2string) == 1) && (isalpha(param2string[0]))) {
-            sprintf(subj, "FICS journal game %s vs %s", garray[g].white_name, garray[g].black_name); 
+            sprintf(subj, "FICS journal game %s vs %s", garray[g].white_name, garray[g].black_name);
           } else {
             sprintf(subj, "FICS adjourned game %s vs %s", garray[g].white_name, garray[g].black_name);
           }
@@ -1353,7 +1353,7 @@ PRIVATE void jsave_journalentry(int p,char save_spot,int p1,char from_spot,char*
      return;
      }
   fclose (Game);
-  
+
   sprintf(fname2, "%s/%c/%s.%c", journal_dir, name_to[0],name_to,save_spot);
   unlink (fname2); /* necessarity if cp is hard aliased to cp -i */
   sprintf(command, "cp %s %s",fname,fname2);
@@ -1483,7 +1483,7 @@ PUBLIC int com_jsave(int p, param_list param)
 
   /* grab from a history */
     sprintf (fname,"%s/player_data/%c/%s.%s",stats_dir,parray[p].login[0],parray[p].login, STATS_JOURNAL);
-    jsave_history(p, to[0], p1, param[2].val.integer,fname); 
+    jsave_history(p, to[0], p1, param[2].val.integer,fname);
 
   } else {
 
@@ -1514,7 +1514,7 @@ PUBLIC int com_jsave(int p, param_list param)
     pprintf (p,"Source and destination entries are the same.\n");
     return COM_OK;
   }
-  
+
   /* grab from a journal */
 
   sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
