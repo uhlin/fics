@@ -1133,7 +1133,6 @@ PUBLIC int showstored(int p)
   if (c != 0)
   	multicol_pprint(m,p,parray[p].d_width,2);
   multicol_end(m);
-/*  pprintf(p,"\n"); */
   return COM_OK;
 }
 
@@ -2221,17 +2220,6 @@ PUBLIC int player_search(int p, char *name)
     pprintf(p, "-- Matches: %d names --", count);
     display_directory(p, buffer, count);
     return(0);
-/*
-    char *s = buffer;
-    multicol *m = multicol_start(2000);
-    for (i = 0; i < count; i++) {
-      multicol_store(m, s);
-      s += strlen(s) + 1;
-    }
-    multicol_pprint(m, p, 78, 1);
-    multicol_end(m);
-    return 0;
-*/
   }
 ReadPlayerFromFile:
   p1 = player_new();
