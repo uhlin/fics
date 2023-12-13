@@ -262,10 +262,13 @@ PUBLIC int net_send_string(int fd, char *str, int format)
   return 0;
 }
 
-/* if we get a complete line (something terminated by \n), copy it to com
-   and return 1.
-   if we don't get a complete line, but there is no error, return 0.
-   if some error, return -1.
+/*
+ * A) if we get a complete line (something terminated by '\n'), copy it
+ * to com and return 1.
+ *
+ * B) if we don't get a complete line, but there is no error, return 0.
+ *
+ * C) if some error, return -1.
  */
 PUBLIC int
 readline2(char *com, int who)
