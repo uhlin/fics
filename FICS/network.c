@@ -440,48 +440,50 @@ PUBLIC int net_init(int port)
   return 0;
 }
 
-PUBLIC void net_close(void)
+PUBLIC void
+net_close(void)
 {
-  int i;
-  for (i = 0; i < no_file; i++) {
-    if (con[i].status != NETSTAT_EMPTY)
-      net_close_connection(con[i].fd);
-  }
+	for (int i = 0; i < no_file; i++) {
+		if (con[i].status != NETSTAT_EMPTY)
+			net_close_connection(con[i].fd);
+	}
 }
 
-PUBLIC void net_close_connection(int fd)
+PUBLIC void
+net_close_connection(int fd)
 {
-  if (con[fd].status == NETSTAT_CONNECTED)
-    net_flush_connection(fd);
-  if (!remConnection(fd)) {
-    if (fd > 2)
-      close(fd);
-  }
+	if (con[fd].status == NETSTAT_CONNECTED)
+		net_flush_connection(fd);
+	if (!remConnection(fd)) {
+		if (fd > 2)
+			close(fd);
+	}
 }
 
-PUBLIC void turn_echo_on(int fd)
+PUBLIC void
+turn_echo_on(int fd)
 {
-  static unsigned char wont_echo[] = {IAC, WONT, TELOPT_ECHO, '\0'};
-
-  send(fd, (char *) wont_echo, strlen((char *) wont_echo), 0);
+	static unsigned char wont_echo[] = { IAC, WONT, TELOPT_ECHO, '\0' };
+	send(fd, (char *) wont_echo, strlen((char *) wont_echo), 0);
 }
 
-PUBLIC void turn_echo_off(int fd)
+PUBLIC void
+turn_echo_off(int fd)
 {
-  static unsigned char will_echo[] = {IAC, WILL, TELOPT_ECHO, '\0'};
-
-  send(fd, (char *) will_echo, strlen((char *) will_echo), 0);
+	static unsigned char will_echo[] = { IAC, WILL, TELOPT_ECHO, '\0' };
+	send(fd, (char *) will_echo, strlen((char *) will_echo), 0);
 }
 
-PUBLIC unsigned int net_connected_host(int fd)
+PUBLIC unsigned int
+net_connected_host(int fd)
 {
-  int which;
+	int which;
 
-  if ((which = findConnection(fd)) < 0) {
-    fprintf(stderr, "FICS: FD not in connection table!\n");
-    return -1;
-  }
-  return con[which].fromHost;
+	if ((which = findConnection(fd)) < 0) {
+		fprintf(stderr, "FICS: FD not in connection table!\n");
+		return -1;
+	}
+	return con[which].fromHost;
 }
 
 PUBLIC void
@@ -553,13 +555,12 @@ ngc2(char *com, int timeout)
 	}
 }
 
-PUBLIC int net_consize(void)
+PUBLIC int
+net_consize(void)
 {
-  int i, total;
+	int total = sizeof con;
 
-  total = sizeof(con);
-  for (i=0; i < no_file; i++)
-    total += con[i].sndbufsize;
-
-  return(total);
+	for (int i = 0; i < no_file; i++)
+		total += con[i].sndbufsize;
+	return total;
 }
