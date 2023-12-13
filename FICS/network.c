@@ -378,7 +378,7 @@ readline2(char *com, int who)
 				state = 1;
 			} else if (*s == '\n') {
 				*s = '\0';
-				strcpy(com, start);
+				sprintf(com, "%s", start);
 				if (howmany)
 					bcopy(s + 1, start, howmany);
 				con[who].state		= 0;
@@ -416,7 +416,7 @@ readline2(char *com, int who)
 				state = 1;
 			else if (*s == '\n') {
 				*d = '\0';
-				strcpy(com, start);
+				sprintf(com, "%s", start);
 				if (howmany)
 					memmove(start, s + 1, howmany);
 				con[who].state		= 0;
@@ -454,7 +454,7 @@ readline2(char *com, int who)
 
 	if (con[who].numPending == MAX_STRING_LENGTH - 1) { // buffer full
 		*d = '\0';
-		strcpy(com, start);
+		sprintf(com, "%s", start);
 		con[who].state		= 0;
 		con[who].numPending	= 0;
 		con[who].processed	= 0;
