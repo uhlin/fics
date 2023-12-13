@@ -91,26 +91,32 @@ PUBLIC int net_addConnection(int fd, unsigned int fromHost)
   return 0;
 }
 
-PRIVATE int remConnection(int fd)
+PRIVATE int
+remConnection(int fd)
 {
-  int which;
-  if ((which = findConnection(fd)) < 0) {
-    return -1;
-  }
-  numConnections--;
-  con[fd].status = NETSTAT_EMPTY;
-  if (con[fd].sndbuf == NULL) {
-    fprintf(stderr, "FICS: remcon(%d) SNAFU, this shouldn't happen.\n", fd);
-  } else {
-    if (con[fd].sndbufsize > MAX_STRING_LENGTH) {
-      con[fd].sndbufsize = MAX_STRING_LENGTH;
-      con[fd].sndbuf = rrealloc(con[fd].sndbuf, MAX_STRING_LENGTH);
-    }
-    if (con[fd].sndbufpos) {	/* didn't send everything, bummer */
-      con[fd].sndbufpos = 0;
-    }
-  }
-  return 0;
+	int which;
+
+	if ((which = findConnection(fd)) < 0)
+		return -1;
+	numConnections--;
+
+	con[fd].status = NETSTAT_EMPTY;
+
+	if (con[fd].sndbuf == NULL) {
+		fprintf(stderr, "FICS: remcon(%d) SNAFU, "
+		    "this shouldn't happen.\n", fd);
+	} else {
+		if (con[fd].sndbufsize > MAX_STRING_LENGTH) {
+			con[fd].sndbufsize = MAX_STRING_LENGTH;
+			con[fd].sndbuf = rrealloc(con[fd].sndbuf,
+			    MAX_STRING_LENGTH);
+		}
+
+		if (con[fd].sndbufpos) // didn't send everything, bummer
+			con[fd].sndbufpos = 0;
+	}
+
+	return 0;
 }
 
 PRIVATE void
