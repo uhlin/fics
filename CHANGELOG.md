@@ -9,6 +9,7 @@ documented in this file.
 - Deleted disabled code
 - Did new revisions of the following files:
   - `fics_addplayer.c`
+  - `makerank.c`
   - `network.c`
   - `stdinclude.h`
 - Fixed a `sscanf()` bug in `com_anews()`.
