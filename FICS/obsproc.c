@@ -557,90 +557,97 @@ PUBLIC int com_mailoldmoves(int p, param_list param)
   return old_mail_moves(p , 1, param);
 }
 
-PUBLIC void ExamineScratch(int p,  param_list param)
+PUBLIC void
+ExamineScratch(int p, param_list param)
 {
-  char category[100], board[100], parsebuf[100];
-  char *val;
-  int confused = 0;
-  int g = game_new();
+	char	*val;
+	char	 board[100];
+	char	 category[100];
+	char	 parsebuf[100];
+	int	 confused = 0;
+	int	 g = game_new();
 
-  unobserveAll(p);
+	unobserveAll(p);
 
-  player_decline_offers(p, -1, PEND_MATCH);
-  player_withdraw_offers(p, -1, PEND_MATCH);
-  player_withdraw_offers(p, -1, PEND_SIMUL);
+	player_decline_offers(p, -1, PEND_MATCH);
+	player_withdraw_offers(p, -1, PEND_MATCH);
+	player_withdraw_offers(p, -1, PEND_SIMUL);
 
-  garray[g].wInitTime = garray[g].wIncrement = 0;
-  garray[g].bInitTime = garray[g].bIncrement = 0;
-  garray[g].timeOfStart = tenth_secs();
-  garray[g].wTime = garray[g].bTime = 0;
-  garray[g].rated = 0;
-  garray[g].clockStopped = 0;
-  garray[g].type = TYPE_UNTIMED;
-  garray[g].white = garray[g].black = p;
-  garray[g].status = GAME_EXAMINE;
-  garray[g].startTime = tenth_secs();
-  garray[g].lastMoveTime = garray[g].startTime;
-  garray[g].lastDecTime = garray[g].startTime;
-  garray[g].totalHalfMoves = 0;
+	garray[g].bInitTime = garray[g].bIncrement = 0;
+	garray[g].wInitTime = garray[g].wIncrement = 0;
 
-  parray[p].side = WHITE;	/* oh well... */
-  parray[p].game = g;
+	garray[g].startTime		= tenth_secs();
+	garray[g].timeOfStart		= tenth_secs();
 
-  category[0] = '\0';
-  board[0] = '\0';
+	garray[g].clockStopped		= 0;
+	garray[g].lastDecTime		= garray[g].startTime;
+	garray[g].lastMoveTime		= garray[g].startTime;
+	garray[g].rated			= 0;
+	garray[g].status		= GAME_EXAMINE;
+	garray[g].totalHalfMoves	= 0;
+	garray[g].type			= TYPE_UNTIMED;
+	garray[g].wTime			= garray[g].bTime = 0;
+	garray[g].white			= garray[g].black = p;
+	parray[p].game			= g;
+	parray[p].side			= WHITE;
 
-  if ((param[0].val.string != parray[p].name) &&
-      (param[1].type == TYPE_WORD)) {
-        strcpy(category, param[0].val.string);
-        strcpy(board, param[1].val.string);
-  } else if (param[1].type != TYPE_NULL) {
+	board[0]	= '\0';
+	category[0]	= '\0';
 
-      val = param[1].val.string;
+	if (param[0].val.string != parray[p].name &&
+	    param[1].type == TYPE_WORD) {
+		strcpy(category, param[0].val.string);
+		strcpy(board, param[1].val.string);
+	} else if (param[1].type != TYPE_NULL) {
+		val = param[1].val.string;
 
-      while (!confused && (sscanf(val, " %99s", parsebuf) == 1)) {
-        val = eatword(eatwhite(val));
-        if ((category[0] != '\0') && (board[0] == '\0'))
-          strcpy(board, parsebuf);
-        else if (isdigit(*parsebuf)) {
-          pprintf(p, "You can't specify time controls.\n");
-          return;
-        } else if (category[0] == '\0')
-          strcpy(category, parsebuf);
-        else
-          confused = 1;
-      }
-      if (confused) {
-        pprintf(p, "Can't interpret %s in match command.\n", parsebuf);
-        return;
-      }
-  }
+		while (!confused && sscanf(val, " %99s", parsebuf) == 1) {
+			val = eatword(eatwhite(val));
 
+			if (category[0] != '\0' && board[0] == '\0') {
+				strcpy(board, parsebuf);
+			} else if (isdigit(*parsebuf)) {
+				pprintf(p, "You can't specify time controls."
+				    "\n");
+				return;
+			} else if (category[0] == '\0') {
+				strcpy(category, parsebuf);
+			} else {
+				confused = 1;
+			}
+		}
 
-  if (category[0] && !board[0]) {
-    pprintf(p, "You must specify a board and a category.\n");
-    return;
-  }
+		if (confused) {
+			pprintf(p, "Can't interpret %s in match command.\n",
+			    parsebuf);
+			return;
+		}
+	}
 
-  pprintf(p, "Starting a game in examine (scratch) mode.\n");
+	if (category[0] && !board[0]) {
+		pprintf(p, "You must specify a board and a category.\n");
+		return;
+	}
 
-  if (category[0]) {
-    pprintf(p, "Loading from catagory: %s, board: %s.\n", category, board);
-  }
+	pprintf(p, "Starting a game in examine (scratch) mode.\n");
 
-  if (board_init(&garray[g].game_state, category, board)) {
-    pprintf(p, "PROBLEM LOADING BOARD. Game Aborted.\n");
-    fprintf(stderr, "FICS: PROBLEM LOADING BOARD. Game Aborted.\n");
-    return;
-  }
+	if (category[0]) {
+		pprintf(p, "Loading from catagory: %s, board: %s.\n",
+		    category,
+		    board);
+	}
+	if (board_init(&garray[g].game_state, category, board)) {
+		pprintf(p, "PROBLEM LOADING BOARD. Game Aborted.\n");
+		fprintf(stderr, "FICS: PROBLEM LOADING BOARD. Game Aborted.\n");
+		return;
+	}
 
-  garray[g].game_state.gameNum = g;
-  strcpy(garray[g].white_name, parray[p].name);
-  strcpy(garray[g].black_name, parray[p].name);
-  garray[g].white_rating = garray[g].black_rating = parray[p].s_stats.rating;
-
-  send_boards(g);
-  MakeFENpos(g, garray[g].FENstartPos);
+	garray[g].game_state.gameNum = g;
+	strcpy(garray[g].white_name, parray[p].name);
+	strcpy(garray[g].black_name, parray[p].name);
+	garray[g].white_rating = garray[g].black_rating = parray[p].s_stats.rating;
+	send_boards(g);
+	MakeFENpos(g, (char *)garray[g].FENstartPos);
 }
 
 PRIVATE int ExamineStored(FILE * fp, int p, char *filename)
