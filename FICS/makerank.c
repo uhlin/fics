@@ -10,11 +10,11 @@
 #define COMPUTER_FILE	DEFAULT_LISTS "/computer"
 #define MAX_LOGIN_NAME	21
 
-ENTRY **list;
-ENTRY **sortme;
+static ENTRY **list;
+static ENTRY **sortme;
 
-char *rnames[] = {"std", "blitz", "wild", "lightning"};
-int rtype;
+static char *rnames[] = {"std", "blitz", "wild", "lightning"};
+static int rtype;
 
 static int
 GetPlayerInfo(char *fileName, ENTRY *e)
