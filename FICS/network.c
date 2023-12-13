@@ -388,72 +388,6 @@ PUBLIC int readline2(char *com, int who)
   return (0);
 }
 
-/*
-PRIVATE int readline(int who)
-{
-  int e, fd = con[who].fd;
-  char *t = con[who].inBuf;
-  int recvCount;
-  int totalCount = 0;
-  unsigned char c;
-  static unsigned char will_tm[] = {IAC, WILL, TELOPT_TM, '\0'};
-  static unsigned char will_sga[] = {IAC, WILL, TELOPT_SGA, '\0'};
-
-  t += con[who].numPending;
-
-  while ((recvCount = recv(fd, (char *) &c, 1, 0)) == 1) {
-    totalCount += recvCount;
-    if (c == IAC) {
-      recvCount = recv(fd, (char *) &c, 1, 0);
-      if (recvCount == 1) {
-	totalCount += recvCount;
-	switch (c) {
-	case IP:
-	  c = '\3';
-	  break;
-	case DO:
-	  recvCount = recv(fd, (char *) &c, 1, 0);
-	  if (recvCount == 1) {
-	    totalCount += recvCount;
-	    if (c == TELOPT_TM) {
-	      send(fd, (char *) will_tm, strlen((char *) will_tm), 0);
-	    } else if (c == TELOPT_SGA) {
-	      send(fd, (char *) will_sga, strlen((char *) will_sga), 0);
-	    }
-	  }
-	  c = '\0';
-	  break;
-	case DONT:
-	  recvCount = recv(fd, (char *) &c, 1, 0);
-	  break;
-	  c = '\0';
-	default:
-	  recvCount = recv(fd, (char *) &c, 1, 0);
-	  c = '\0';
-	  break;
-	}
-      }
-    }
-    if (c != '\r' && c > 2) {
-      if (isprint(c) || (c == '\n')) {
-	*t++ = c;
-	con[who].numPending++;
-      }
-    }
-    if (c == '\n' || con[who].numPending >= MAX_STRING_LENGTH - 1) {
-      *--t = '\0';
-      con[who].numPending = 0;
-      con[fd].outPos = 0;
-      return 1;
-    }
-  }
-
-  *t = '\0';
-  e = ((totalCount == 0) || (errno != EWOULDBLOCK)) ? -1 : 0;
-  return (e);
-}
-*/
-
 PUBLIC int net_init(int port)
 {
   int i;
@@ -495,13 +429,6 @@ PUBLIC int net_init(int port)
   lingeropt.l_onoff = 0;
   lingeropt.l_linger = 0;
   setsockopt(sockfd, SOL_SOCKET, SO_LINGER, (char *) &lingeropt, sizeof(lingeropt));
-
-/*
-#ifdef DEBUG
-  opt = 1;
-  setsockopt(sockfd, SOL_SOCKET, SO_DEBUG, (char *)&opt, sizeof(opt));
-#endif
-*/
 
   if (bind(sockfd, (struct sockaddr *) & serv_addr, sizeof(serv_addr)) < 0) {
     fprintf(stderr, "FICS: can't bind local address.  errno=%d\n", errno);
