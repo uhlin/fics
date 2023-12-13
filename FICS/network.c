@@ -21,8 +21,6 @@
 #endif
 #include "utils.h"
 
-extern int errno;
-
 /* Sparse array */
 PUBLIC connection con[512];
 
