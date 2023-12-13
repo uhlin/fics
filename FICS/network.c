@@ -206,11 +206,13 @@ PRIVATE int sendme(int which, char *str, int len)
 }
 
 /*
- * -1 for an error other than EWOULDBLOCK.
- * Put <lf> after every <cr> and put \ at the end of overlength lines.
- * Doesn't send anything unless the buffer fills, output waits until
- * flushed
-*/
+ * Put LF after every CR and put '\' at the end of overlength lines.
+ *
+ * Doesn't send anything unless the buffer fills and output waits
+ * until flushed.
+ *
+ * '-1' for an error other than 'EWOULDBLOCK'.
+ */
 PUBLIC int
 net_send_string(int fd, char *str, int format)
 {
