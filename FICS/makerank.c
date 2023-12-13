@@ -25,64 +25,93 @@ typedef struct _Entry {
 ENTRY **list;
 ENTRY **sortme;
 
-int GetPlayerInfo(char *fileName, ENTRY *e)
+static int
+GetPlayerInfo(char *fileName, ENTRY *e)
 {
-  FILE *fp;
-  char line[100];
-  char field[20];
-  char NameWithCase[30];
-  int i, done = 0;
+	FILE	*fp;
+	char	 NameWithCase[30];
+	char	 field[20];
+	char	 line[100];
+	int	 i, done = 0;
 
-  e->computer = 0;
-  for (i = 0; i < 4; i++) {
-    e->r[i].num = 0;
-    e->r[i].rating = 0;
-  }
+	e->computer = 0;
 
-  fp = fopen(fileName, "r");
-  fgets(line, 99, fp);
-  if (feof(fp))
-    return(0);
-  if (!strcmp(line, "v 1\n")) {
-    fgets(line, 99, fp);
-    sscanf(line, "%s", e->name);
-    fgets(line, 99, fp);
-    fgets(line, 99, fp);
-    fgets(line, 99, fp);
-    if (fscanf(fp, "%u %*u %*u %*u %u %*u %*u %*u %*u %u %*u %*u %*u %u %*u %*u %*u %*u %u %*u %*u %*u %u %*u %*u %*u %*u %u %*u %*u %*u %u %*u %*u %*u %*u", &(e->r[0].num), &(e->r[0].rating), &(e->r[1].num), &(e->r[1].rating), &(e->r[2].num), &(e->r[2].rating), &(e->r[3].num), &(e->r[3].rating)) != 8)
-      fprintf(stderr, "OOPS: couldn't parse player file %s.\n", fileName);
-  } else do {
-    sscanf(line, "%s", field);
-    if (!strcmp(field, "Name:")) {
-      sscanf(line, "%*s %s", NameWithCase);
-      if (strcasecmp(e->name, NameWithCase))
-        printf("TROUBLE: %s's handle is listed as %s.\n",
-	       e->name, NameWithCase);
-      else
-        strcpy(e->name, NameWithCase);
-    } else if (!strcmp(field, "S_NUM:")) {
-      sscanf(line, "%*s %d", &(e->r[0].num));
-    } else if (!strcmp(field, "B_NUM:")) {
-      sscanf(line, "%*s %d", &(e->r[1].num));
-    } else if (!strcmp(field, "W_NUM:")) {
-      sscanf(line, "%*s %d", &(e->r[2].num));
-    } else if (!strcmp(field, "L_NUM:")) {
-      sscanf(line, "%*s %d", &(e->r[3].num));
-    } else if (!strcmp(field, "S_RATING:")) {
-      sscanf(line, "%*s %d", &(e->r[0].rating));
-    } else if (!strcmp(field, "B_RATING:")) {
-      sscanf(line, "%*s %d", &(e->r[1].rating));
-    } else if (!strcmp(field, "W_RATING:")) {
-      sscanf(line, "%*s %d", &(e->r[2].rating));
-    } else if (!strcmp(field, "L_RATING:")) {
-      sscanf(line, "%*s %d", &(e->r[3].rating));
-    } else if (!strcmp(field, "Network:")) {
-      done = 1;
-    }
-    fgets(line, 99, fp);
-  } while (!done && !feof(fp));
-  fclose(fp);
-  return (1);
+	for (i = 0; i < 4; i++) {
+		e->r[i].num	= 0;
+		e->r[i].rating	= 0;
+	}
+
+	if ((fp = fopen(fileName, "r")) == NULL)
+		return 0;
+
+	fgets(line, 99, fp);
+
+	if (feof(fp))
+		return 0;
+
+	if (!strcmp(line, "v 1\n")) {
+		fgets(line, 99, fp);
+
+		sscanf(line, "%s", e->name);
+
+		fgets(line, 99, fp);
+		fgets(line, 99, fp);
+		fgets(line, 99, fp);
+
+		if (fscanf(fp, "%u %*u %*u %*u %u %*u %*u %*u %*u %u %*u %*u "
+		    "%*u %u %*u %*u %*u %*u %u %*u %*u %*u %u %*u %*u %*u %*u "
+		    "%u %*u %*u %*u %u %*u %*u %*u %*u",
+		    &(e->r[0].num),
+		    &(e->r[0].rating),
+		    &(e->r[1].num),
+		    &(e->r[1].rating),
+		    &(e->r[2].num),
+		    &(e->r[2].rating),
+		    &(e->r[3].num),
+		    &(e->r[3].rating)) != 8) {
+			fprintf(stderr, "OOPS: couldn't parse player file %s."
+			    "\n", fileName);
+		}
+	} else {
+		do {
+			sscanf(line, "%s", field);
+
+			if (!strcmp(field, "Name:")) {
+				sscanf(line, "%*s %s", NameWithCase);
+
+				if (strcasecmp(e->name, NameWithCase)) {
+					printf("TROUBLE: %s's handle is "
+					    "listed as %s.\n", e->name,
+					    NameWithCase);
+				} else
+					strcpy(e->name, NameWithCase);
+			} else if (!strcmp(field, "S_NUM:")) {
+				sscanf(line, "%*s %d", &(e->r[0].num));
+			} else if (!strcmp(field, "B_NUM:")) {
+				sscanf(line, "%*s %d", &(e->r[1].num));
+			} else if (!strcmp(field, "W_NUM:")) {
+				sscanf(line, "%*s %d", &(e->r[2].num));
+			} else if (!strcmp(field, "L_NUM:")) {
+				sscanf(line, "%*s %d", &(e->r[3].num));
+			} else if (!strcmp(field, "S_RATING:")) {
+				sscanf(line, "%*s %d", &(e->r[0].rating));
+			} else if (!strcmp(field, "B_RATING:")) {
+				sscanf(line, "%*s %d", &(e->r[1].rating));
+			} else if (!strcmp(field, "W_RATING:")) {
+				sscanf(line, "%*s %d", &(e->r[2].rating));
+			} else if (!strcmp(field, "L_RATING:")) {
+				sscanf(line, "%*s %d", &(e->r[3].rating));
+			} else if (!strcmp(field, "Network:")) {
+				done = 1;
+			}
+
+			fgets(line, 99, fp);
+
+		} while (!done && !feof(fp));
+	}
+
+	fclose(fp);
+	return 1;
 }
 
 static int
