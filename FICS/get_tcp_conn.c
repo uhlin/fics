@@ -32,11 +32,6 @@
 #include "get_tcp_conn.h"
 #include "get_tcp_conn.proto.h"
 
-extern int errno;
-extern int close();
-
-
-
 /*
 ** Take the name of an internet host in ASCII (this may either be its
 ** official host name or internet number (with or without enclosing
