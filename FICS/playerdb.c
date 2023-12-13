@@ -38,8 +38,8 @@
 #include "talkproc.h"
 #include "utils.h"
 
-PUBLIC player parray[PARRAY_SIZE];
-PUBLIC int p_num = 0;
+PUBLIC player	 parray[PARRAY_SIZE];
+PUBLIC int	 p_num = 0;
 
 PRIVATE int get_empty_slot(void)
 {

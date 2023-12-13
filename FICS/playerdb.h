@@ -193,8 +193,9 @@ typedef struct _textlist {
 } textlist;
 
 #define PARRAY_SIZE (MAX_PLAYER + 50)
-extern player parray[PARRAY_SIZE];
-extern int p_num;
+
+extern player	 parray[PARRAY_SIZE];
+extern int	 p_num;
 
 extern void player_init(int);
 
