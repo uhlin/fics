@@ -942,7 +942,7 @@ stored_mail_moves(int p, int mail, param_list param)
 	int	 g = -1;
 	int	 wp, wconnected, bp, bconnected, gotit = 0;
 
-	if (mail && (!parray[p].registered)) {
+	if (mail && !parray[p].registered) {
 		pprintf(p, "Unregistered players cannot use mailstored.\n");
 		return;
 	}
