@@ -113,7 +113,10 @@ LoadEntries(void)
 	int	 listsize;
 
 	listsize	= 100;
-	list		= malloc(sizeof(ENTRY *)*listsize);
+	list		= malloc(sizeof(ENTRY *) * listsize);
+
+	if (list == NULL)
+		err(1, "%s: malloc", __func__);
 
 	for (letter1 = 'a'; letter1 <= 'z'; letter1++) {
 		printf("Loading %c's.\n", letter1);
