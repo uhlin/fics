@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -162,57 +163,74 @@ int SetComputers(int n)
 
 int rtype;
 
-int sortfunc(const void *i, const void *j)
+static int
+sortfunc(const void *i, const void *j)
 {
-  int n = (*(ENTRY **)j)->r[rtype].rating - (*(ENTRY **)i)->r[rtype].rating;
-  return n ? n : strcasecmp((*(ENTRY **)i)->name, (*(ENTRY **)j)->name);
+	int n =	(*(ENTRY **)j)->r[rtype].rating -
+		(*(ENTRY **)i)->r[rtype].rating;
+
+	return n ? n : strcasecmp((*(ENTRY **)i)->name, (*(ENTRY **)j)->name);
 }
 
-void makerank(void)
+static void
+makerank(void)
 {
-  int sortnum, sortmesize, i, n;
-  FILE *fp;
-  char fName[200];
+	FILE	*fp;
+	char	 fName[200];
+	int	 sortnum, sortmesize, i, n;
 
-  printf("Loading players\n");
-  n = LoadEntries();
-  printf("Found %d players.\n", n);
-  printf("Setting computers.\n");
-  SetComputers(n);
+	printf("Loading players\n");
+	n = LoadEntries();
+	printf("Found %d players.\n", n);
+	printf("Setting computers.\n");
+	SetComputers(n);
 
-  for (rtype = 0; rtype < 4; rtype++) {
-    sortnum = 0; sortmesize = 100;
-    sortme = malloc(sizeof(ENTRY *)*sortmesize);
+	for (rtype = 0; rtype < 4; rtype++) {
+		sortnum		= 0;
+		sortmesize	= 100;
+		sortme		= malloc(sizeof(ENTRY *) * sortmesize);
 
-    for (i = 0; i < n; i++) {
-      if (list[i]->r[rtype].rating) {
-        sortme[sortnum++] = list[i];
-	if (sortnum == sortmesize) {
-	  sortmesize += 100;
-	  sortme = realloc(sortme, sortmesize*sizeof(ENTRY *));
+		for (i = 0; i < n; i++) {
+			if (list[i]->r[rtype].rating) {
+				sortme[sortnum++] = list[i];
+
+				if (sortnum == sortmesize) {
+					sortmesize += 100;
+					sortme = realloc(sortme, sortmesize *
+					    sizeof(ENTRY *));
+				}
+			}
+		}
+
+		printf("Sorting %d %s.\n", sortnum, rnames[rtype]);
+		qsort(sortme, sortnum, sizeof(ENTRY *), sortfunc);
+
+		printf("Saving to file.\n");
+		sprintf(fName, "%s/rank.%s", DEFAULT_STATS, rnames[rtype]);
+
+		if ((fp = fopen(fName, "w")) == NULL)
+			err(1, "%s: fopen", __func__);
+
+		for (i = 0; i < sortnum; i++) {
+			fprintf(fp, "%s %d %d %d\n",
+			    sortme[i]->name,
+			    sortme[i]->r[rtype].rating,
+			    sortme[i]->r[rtype].num,
+			    sortme[i]->computer);
+		}
+		fclose(fp);
+		free(sortme);
 	}
-      }
-    }
-    printf("Sorting %d %s.\n", sortnum, rnames[rtype]);
-    qsort(sortme, sortnum, sizeof(ENTRY *), sortfunc);
-    printf("Saving to file.\n");
-    sprintf(fName, "%s/rank.%s", DEFAULT_STATS, rnames[rtype]);
-    fp = fopen(fName, "w");
-    for (i = 0; i < sortnum; i++)
-      fprintf(fp, "%s %d %d %d\n", sortme[i]->name, sortme[i]->r[rtype].rating, sortme[i]->r[rtype].num, sortme[i]->computer);
-    fclose(fp);
-    free(sortme);
-  }
 }
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
-  if (argc > 1) {
-    printf("usage: %s.\n", argv[0]);
-    exit(0);
-  } else {
-    makerank();
-  }
-  return (0);
-}
+	if (argc > 1) {
+		fprintf(stderr, "usage: %s.\n", argv[0]);
+		return EXIT_FAILURE;
+	}
 
+	makerank();
+	return EXIT_SUCCESS;
+}
