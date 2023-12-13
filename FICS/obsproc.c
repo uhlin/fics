@@ -1072,13 +1072,13 @@ stored_mail_moves(int p, int mail, param_list param)
 						    garray[g].white_name,
 						    garray[g].black_name);
 					}
+				}
 				if (mail_string_to_user(p, subj, movesToString
 				    (g, parray[p].pgn)))
 					pprintf(p, "Moves NOT mailed, perhaps "
 					    "your address is incorrect.\n");
 				else
 					pprintf(p, "Moves mailed.\n");
-				}
 			} else {
 				pprintf(p, "%s\n", movesToString(g, 0));
 			} /* Do smoves */
