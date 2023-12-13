@@ -24,6 +24,8 @@
 
 #include "stdinclude.h"
 
+#include <err.h>
+
 #include "command.h"
 #include "common.h"
 #include "comproc.h"
@@ -1061,6 +1063,9 @@ stored_mail_moves(int p, int mail, param_list param)
 					    parray[wp].name,
 					    param[1].val.integer);
 				} else {
+					if (param2string == NULL) /* XXX */
+						errx(1, "%s: param2string == "
+						    "NULL", __func__);
 					if (strlen(param2string) == 1 &&
 					    isalpha(param2string[0])) {
 						sprintf(subj, "FICS journal "
