@@ -4,11 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "makerank.h"
-
-#define COMPUTER_FILE	DEFAULT_LISTS "/computer"
-#define MAX_LOGIN_NAME	21
 
 static ENTRY	**list;
 static ENTRY	**sortme;
