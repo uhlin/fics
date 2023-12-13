@@ -685,22 +685,24 @@ ExamineStored(FILE *fp, int p, char *filename)
 		return -1;
 	}
 
-	gg->startTime = tenth_secs();
-
-	gg->black		= p;
-	gg->game_state.gameNum	= g;
+	gg->startTime		= tenth_secs();
 	gg->lastDecTime		= gg->startTime;
 	gg->lastMoveTime	= gg->startTime;
+
+	gg->totalHalfMoves	= gg->numHalfMoves;
 	gg->numHalfMoves	= 0;
 	gg->revertHalfMove	= 0;
-	gg->totalHalfMoves	= gg->numHalfMoves;
+
+	gg->black		= p;
 	gg->white		= p;
+	gg->game_state.gameNum	= g;
 
 	parray[p].game = g;
 	parray[p].side = WHITE;
 
 	send_boards(g);
 	MakeFENpos(g, (char *)garray[g].FENstartPos);
+
 	return g;
 }
 
