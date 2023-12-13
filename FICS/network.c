@@ -10,6 +10,8 @@
 #include <arpa/telnet.h>
 #include <netinet/in.h>
 
+#include <errno.h>
+
 #include "common.h"
 #include "config.h"
 #include "ficsmain.h"
