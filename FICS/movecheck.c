@@ -1045,7 +1045,7 @@ PUBLIC int backup_move(int g, int mode)
   if (garray[g].numHalfMoves < 1)
     return MOVE_ILLEGAL;
   gs = &garray[g].game_state;
-  m = (mode==REL_GAME) ? &garray[g].moveList[garray[g].numHalfMoves - 1] : 
+  m = (mode==REL_GAME) ? &garray[g].moveList[garray[g].numHalfMoves - 1] :
                          &garray[g].examMoveList[garray[g].numHalfMoves - 1];
   if (m->toFile < 0) {
     return MOVE_ILLEGAL;
@@ -1189,8 +1189,8 @@ cleanupMove:
 #ifdef TIMESEAL
 
       if (m->color == WHITE) {
-        if (con[parray[garray[g].white].socket].timeseal) {  /* white uses timeseal? */      
-          garray[g].wRealTime += (m->tookTime * 100); 
+        if (con[parray[garray[g].white].socket].timeseal) {  /* white uses timeseal? */
+          garray[g].wRealTime += (m->tookTime * 100);
           garray[g].wRealTime -= (garray[g].wIncrement * 100);
           garray[g].wTime = garray[g].wRealTime / 100;
           if (con[parray[garray[g].black].socket].timeseal) { /* opp uses timeseal? */
@@ -1267,7 +1267,7 @@ cleanupMove:
   ********/
 
   if (garray[g].numHalfMoves > 0) {
-    m1 = (mode==REL_GAME) ? &garray[g].moveList[garray[g].numHalfMoves - 1] : 
+    m1 = (mode==REL_GAME) ? &garray[g].moveList[garray[g].numHalfMoves - 1] :
                             &garray[g].examMoveList[garray[g].numHalfMoves - 1];
     if (piecetype(gs->board[m1->toFile][m1->toRank]) == PAWN) {
       if ((m1->toRank - m1->fromRank) == 2) {
@@ -1291,7 +1291,3 @@ cleanupMove:
   /************** and here's the end **************/
   return MOVE_OK;
 }
-
-
-
-
