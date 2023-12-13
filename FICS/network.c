@@ -113,25 +113,36 @@ PRIVATE int remConnection(int fd)
   return 0;
 }
 
-PRIVATE void net_flushme(int which)
+PRIVATE void
+net_flushme(int which)
 {
-  int sent;
+	int sent;
 
-  sent = send(con[which].outFd, con[which].sndbuf, con[which].sndbufpos, 0);
-  if (sent == -1) {
-    if (errno != EPIPE)		/* EPIPE = they've disconnected */
-      fprintf(stderr, "FICS: net_flushme(%d) couldn't send, errno=%d.\n", which, errno);
-    con[which].sndbufpos = 0;
-  } else {
-    con[which].sndbufpos -= sent;
-    if (con[which].sndbufpos)
-      memmove(con[which].sndbuf, con[which].sndbuf + sent, con[which].sndbufpos);
-  }
-  if (con[which].sndbufsize > MAX_STRING_LENGTH && con[which].sndbufpos < MAX_STRING_LENGTH) {
-    /* time to shrink the buffer */
-    con[which].sndbuf = rrealloc(con[which].sndbuf, MAX_STRING_LENGTH);
-    con[which].sndbufsize = MAX_STRING_LENGTH;
-  }
+	if ((sent = send(con[which].outFd, con[which].sndbuf,
+	    con[which].sndbufpos, 0)) == -1) {
+		if (errno != EPIPE) { // EPIPE = they've disconnected
+			fprintf(stderr, "FICS: net_flushme(%d) couldn't send, "
+			    "errno=%d.\n",
+			    which, errno);
+		}
+
+		con[which].sndbufpos = 0;
+	} else {
+		con[which].sndbufpos -= sent;
+
+		if (con[which].sndbufpos) {
+			memmove(con[which].sndbuf, con[which].sndbuf + sent,
+			    con[which].sndbufpos);
+		}
+	}
+
+	if (con[which].sndbufsize > MAX_STRING_LENGTH &&
+	    con[which].sndbufpos < MAX_STRING_LENGTH) {
+		// time to shrink the buffer...
+		con[which].sndbuf = rrealloc(con[which].sndbuf,
+		    MAX_STRING_LENGTH);
+		con[which].sndbufsize = MAX_STRING_LENGTH;
+	}
 }
 
 PRIVATE void
