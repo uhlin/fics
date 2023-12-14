@@ -654,6 +654,7 @@ PRIVATE int
 move_calculate(game_state_t *gs, move_t *mt, int promote)
 {
 	game_state_t	fakeMove;
+	int		ret, too_long;
 
 	mt->pieceCaptured	= gs->board[mt->toFile][mt->toRank];
 	mt->enPassant		= 0;	// Don't know yet,
@@ -661,12 +662,20 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 
 	if (mt->fromFile == ALG_DROP) {
 		mt->piecePromotionTo = NOPIECE;
-		sprintf(mt->moveString, "%s/%c%c-%c%d",
+		ret = snprintf(mt->moveString, sizeof mt->moveString,
+		    "%s/%c%c-%c%d",
 		    wpstring[mt->fromRank],
 		    DROP_CHAR,
 		    DROP_CHAR,
 		    mt->toFile + 'a',
 		    mt->toRank + 1);
+
+		too_long = (ret < 0 || (size_t)ret >= sizeof mt->moveString);
+
+		if (too_long) { /* XXX */
+			fprintf(stderr, "FICS: %s: warning: "
+			    "snprintf truncated\n", __func__);
+		}
 	} else {
 		if (piecetype(gs->board[mt->fromFile][mt->fromRank]) == PAWN &&
 		    (mt->toRank == 0 || mt->toRank == 7)) {
@@ -693,12 +702,20 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 		    mt->toFile == 6) {
 			sprintf(mt->moveString, "o-o");
 		} else {
-			sprintf(mt->moveString, "%s/%c%d-%c%d",
+			ret = snprintf(mt->moveString, sizeof mt->moveString,
+			    "%s/%c%d-%c%d",
 			    wpstring[piecetype(gs->board[mt->fromFile][mt->fromRank])],
 			    mt->fromFile + 'a',
 			    mt->fromRank + 1,
 			    mt->toFile + 'a',
 			    mt->toRank + 1);
+
+			too_long = (ret < 0 || (size_t)ret >= sizeof mt->moveString);
+
+			if (too_long) { /* XXX */
+				fprintf(stderr, "FICS: %s: warning: "
+				    "snprintf truncated\n", __func__);
+			}
 		}
 	}
 
