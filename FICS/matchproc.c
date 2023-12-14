@@ -49,175 +49,213 @@
 
 #include <sys/resource.h>
 
-PUBLIC int create_new_match(int white_player, int black_player,
-			     int wt, int winc, int bt, int binc,
-			     int rated, char *category, char *board,
-			     int white)
+PUBLIC int
+create_new_match(int white_player, int black_player, int wt, int winc, int bt,
+    int binc, int rated, char *category, char *board, int white)
 {
-  int g = game_new(), p;
-  char outStr[1024];
-  int reverse = 0;
+	char	outStr[1024];
+	int	g, p;
+	int	reverse = 0;
 
-  if (g < 0)
-    return COM_FAILED;
-  if (white == 0) {
-    reverse = 1;
-  } else if (white == -1) {
-    if ((wt == bt) && (winc == binc)) {
-      if (parray[white_player].lastColor == parray[black_player].lastColor) {
-	if ((parray[white_player].num_white - parray[white_player].num_black) >
-	  (parray[black_player].num_white - parray[black_player].num_black))
-	  reverse = 1;
-      } else if (parray[white_player].lastColor == WHITE)
-	reverse = 1;
-    } else
-      reverse = 1;		/* Challenger is always white in unbalanced
-				   match */
-  }
-  if (reverse) {
-    int tmp = white_player;
-    white_player = black_player;
-    black_player = tmp;
-  }
-  player_remove_request(white_player, black_player, PEND_MATCH);
-  player_remove_request(black_player, white_player, PEND_MATCH);
-  player_remove_request(white_player, black_player, PEND_SIMUL);
-  player_remove_request(black_player, white_player, PEND_SIMUL);
-  player_decline_offers(white_player, -1, PEND_MATCH);
-  player_withdraw_offers(white_player, -1, PEND_MATCH);
-  player_decline_offers(black_player, -1, PEND_MATCH);
-  player_withdraw_offers(black_player, -1, PEND_MATCH);
-  player_withdraw_offers(white_player, -1, PEND_SIMUL);
-  player_withdraw_offers(black_player, -1, PEND_SIMUL);
+	if ((g = game_new()) < 0)
+		return COM_FAILED;
 
-  wt = wt * 60;			/* To Seconds */
-  bt = bt * 60;
-  garray[g].white = white_player;
-  garray[g].black = black_player;
-  strcpy(garray[g].white_name, parray[white_player].name);
-  strcpy(garray[g].black_name, parray[black_player].name);
-  garray[g].status = GAME_ACTIVE;
-  garray[g].type = game_isblitz(wt / 60, winc, bt / 60, binc, category, board);
-  if ((garray[g].type == TYPE_UNTIMED) || (garray[g].type == TYPE_NONSTANDARD))
-    garray[g].rated = 0;
-  else
-    garray[g].rated = rated;
-  garray[g].private = parray[white_player].private ||
-    parray[black_player].private;
-  garray[g].white = white_player;
-  if (garray[g].type == TYPE_BLITZ) {
-    garray[g].white_rating = parray[white_player].b_stats.rating;
-    garray[g].black_rating = parray[black_player].b_stats.rating;
-  } else if (garray[g].type == TYPE_WILD) {
-    garray[g].white_rating = parray[white_player].w_stats.rating;
-    garray[g].black_rating = parray[black_player].w_stats.rating;
-  } else if (garray[g].type == TYPE_LIGHT) {
-    garray[g].white_rating = parray[white_player].l_stats.rating;
-    garray[g].black_rating = parray[black_player].l_stats.rating;
-  } else if (garray[g].type == TYPE_BUGHOUSE) {
-    garray[g].white_rating = parray[white_player].bug_stats.rating;
-    garray[g].black_rating = parray[black_player].bug_stats.rating;
-  } else {
-    garray[g].white_rating = parray[white_player].s_stats.rating;
-    garray[g].black_rating = parray[black_player].s_stats.rating;
-  }
-  if (board_init(&garray[g].game_state, category, board)) {
-    pprintf(white_player, "PROBLEM LOADING BOARD. Game Aborted.\n");
-    pprintf(black_player, "PROBLEM LOADING BOARD. Game Aborted.\n");
-    fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. Game Aborted.\n",
+	if (white == 0) {
+		reverse = 1;
+	} else if (white == -1) {
+		if (wt == bt && winc == binc) {
+			if (parray[white_player].lastColor ==
+			    parray[black_player].lastColor) {
+				int diff1, diff2;
+
+				diff1 = (parray[white_player].num_white -
+					 parray[white_player].num_black);
+				diff2 = (parray[black_player].num_white -
+					 parray[black_player].num_black);
+
+				if (diff1 > diff2)
+					reverse = 1;
+			} else if (parray[white_player].lastColor == WHITE)
+				reverse = 1;
+		} else
+			reverse = 1;	// Challenger is always white in
+					// unbalanced match
+	}
+
+	if (reverse) {
+		int tmp = white_player;
+
+		white_player = black_player;
+		black_player = tmp;
+	}
+
+	player_remove_request(white_player, black_player, PEND_MATCH);
+	player_remove_request(black_player, white_player, PEND_MATCH);
+	player_remove_request(white_player, black_player, PEND_SIMUL);
+	player_remove_request(black_player, white_player, PEND_SIMUL);
+	player_decline_offers(white_player, -1, PEND_MATCH);
+	player_withdraw_offers(white_player, -1, PEND_MATCH);
+	player_decline_offers(black_player, -1, PEND_MATCH);
+	player_withdraw_offers(black_player, -1, PEND_MATCH);
+	player_withdraw_offers(white_player, -1, PEND_SIMUL);
+	player_withdraw_offers(black_player, -1, PEND_SIMUL);
+
+	wt	= (wt * 60); // To Seconds
+	bt	= (bt * 60);
+
+	garray[g].white = white_player;
+	garray[g].black = black_player;
+
+	strcpy(garray[g].white_name, parray[white_player].name);
+	strcpy(garray[g].black_name, parray[black_player].name);
+
+	garray[g].status	= GAME_ACTIVE;
+	garray[g].type		= game_isblitz(wt / 60, winc, bt / 60, binc,
 	    category, board);
-  }
-  garray[g].game_state.gameNum = g;
-  garray[g].wTime = wt * 10;
-  garray[g].wInitTime = wt * 10;
-  garray[g].wIncrement = winc * 10;
-  garray[g].bTime = bt * 10;
-  if (garray[g].type != TYPE_UNTIMED) {
-    if (wt == 0)
-	garray[g].wTime = 100;
-    if (bt == 0)
-        garray[g].bTime = 100;
-  } /* 0 x games start with 10 seconds */
+
+	if (garray[g].type == TYPE_UNTIMED ||
+	    garray[g].type == TYPE_NONSTANDARD)
+		garray[g].rated = 0;
+	else
+		garray[g].rated = rated;
+
+	garray[g].private = (parray[white_player].private ||
+	    parray[black_player].private);
+	garray[g].white = white_player;
+
+	if (garray[g].type == TYPE_BLITZ) {
+		garray[g].white_rating = parray[white_player].b_stats.rating;
+		garray[g].black_rating = parray[black_player].b_stats.rating;
+	} else if (garray[g].type == TYPE_WILD) {
+		garray[g].white_rating = parray[white_player].w_stats.rating;
+		garray[g].black_rating = parray[black_player].w_stats.rating;
+	} else if (garray[g].type == TYPE_LIGHT) {
+		garray[g].white_rating = parray[white_player].l_stats.rating;
+		garray[g].black_rating = parray[black_player].l_stats.rating;
+	} else if (garray[g].type == TYPE_BUGHOUSE) {
+		garray[g].white_rating = parray[white_player].bug_stats.rating;
+		garray[g].black_rating = parray[black_player].bug_stats.rating;
+	} else {
+		garray[g].white_rating = parray[white_player].s_stats.rating;
+		garray[g].black_rating = parray[black_player].s_stats.rating;
+	}
+
+	if (board_init(&garray[g].game_state, category, board)) {
+		pprintf(white_player, "PROBLEM LOADING BOARD. Game Aborted.\n");
+		pprintf(black_player, "PROBLEM LOADING BOARD. Game Aborted.\n");
+
+		fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. "
+		    "Game Aborted.\n", category, board);
+	}
+
+	garray[g].game_state.gameNum	= g;
+	garray[g].wTime			= (wt * 10);
+	garray[g].wInitTime		= (wt * 10);
+	garray[g].wIncrement		= (winc * 10);
+	garray[g].bTime			= (bt * 10);
+
+	if (garray[g].type != TYPE_UNTIMED) {
+		if (wt == 0)
+			garray[g].wTime = 100;
+		if (bt == 0)
+			garray[g].bTime = 100;
+	} // 0 x games start with 10 seconds
 
 #ifdef TIMESEAL
-
-  garray[g].wRealTime = garray[g].wTime * 100;
-  garray[g].bRealTime = garray[g].bTime * 100;
-  garray[g].wTimeWhenReceivedMove = 0;
-  garray[g].bTimeWhenReceivedMove = 0;
-
+	garray[g].wRealTime = garray[g].wTime * 100;
+	garray[g].bRealTime = garray[g].bTime * 100;
+	garray[g].wTimeWhenReceivedMove = 0;
+	garray[g].bTimeWhenReceivedMove = 0;
 #endif
-  garray[g].bInitTime = bt * 10;
-  garray[g].bIncrement = binc * 10;
-  if (garray[g].game_state.onMove == BLACK) {	/* Start with black */
-    garray[g].numHalfMoves = 1;
-    garray[g].moveListSize = 1;
-    garray[g].moveList = (move_t *) rmalloc(sizeof(move_t));
-    garray[g].moveList[0].fromFile = -1;
-    garray[g].moveList[0].fromRank = -1;
-    garray[g].moveList[0].toFile = -1;
-    garray[g].moveList[0].toRank = -1;
-    garray[g].moveList[0].color = WHITE;
-    strcpy(garray[g].moveList[0].moveString, "NONE");
-    strcpy(garray[g].moveList[0].algString, "NONE");
-  } else {
-    garray[g].numHalfMoves = 0;
-    garray[g].moveListSize = 0;
-    garray[g].moveList = NULL;
-  }
-  garray[g].timeOfStart = tenth_secs();
-  garray[g].startTime = tenth_secs();
-  garray[g].lastMoveTime = garray[g].startTime;
-  garray[g].lastDecTime = garray[g].startTime;
-  garray[g].clockStopped = 0;
-  sprintf(outStr, "\n{Game %d (%s vs. %s) Creating %s %s match.}\n",
-	  g + 1, parray[white_player].name,
-	  parray[black_player].name,
-	  rstr[garray[g].rated],
-	  bstr[garray[g].type]);
-  pprintf(white_player, "%s", outStr);
-  pprintf(black_player, "%s", outStr);
 
-  for (p = 0; p < p_num; p++) {
-    int gnw, gnb;
-    if ((p == white_player) || (p == black_player))
-      continue;
-    if (parray[p].status != PLAYER_PROMPT)
-      continue;
-    if (parray[p].i_game)
-      pprintf_prompt(p, "%s", outStr);
-    gnw = in_list(p, L_GNOTIFY, parray[white_player].login);
-    gnb = in_list(p, L_GNOTIFY, parray[black_player].login);
-    if (gnw || gnb) {
-      pprintf(p, "Game notification: ");
-      if (gnw)
-	pprintf_highlight(p, parray[white_player].name);
-      else
-	pprintf(p, parray[white_player].name);
-      pprintf(p, " (%s) vs. ",
-	      ratstr(GetRating(&parray[white_player], garray[g].type)));
-      if (gnb)
-	pprintf_highlight(p, parray[black_player].name);
-      else
-	pprintf(p, parray[black_player].name);
-      pprintf_prompt(p, " (%s) %s %s %d %d\n",
-		     ratstr(GetRating(&parray[black_player], garray[g].type)),
-		     rstr[garray[g].rated], bstr[garray[g].type],
-		     garray[g].wInitTime/600, garray[g].wIncrement/10);
-    }
-  }
-  parray[white_player].game = g;
-  parray[white_player].opponent = black_player;
-  parray[white_player].side = WHITE;
-  parray[white_player].promote = QUEEN;
-  parray[black_player].game = g;
-  parray[black_player].opponent = white_player;
-  parray[black_player].side = BLACK;
-  parray[black_player].promote = QUEEN;
-  send_boards(g);
-  MakeFENpos(g, garray[g].FENstartPos);
+	garray[g].bInitTime = bt * 10;
+	garray[g].bIncrement = binc * 10;
 
-  return COM_OK;
+	if (garray[g].game_state.onMove == BLACK) { // Start with black
+		garray[g].numHalfMoves = 1;
+		garray[g].moveListSize = 1;
+		garray[g].moveList = rmalloc(sizeof(move_t));
+		garray[g].moveList[0].fromFile = -1;
+		garray[g].moveList[0].fromRank = -1;
+		garray[g].moveList[0].toFile = -1;
+		garray[g].moveList[0].toRank = -1;
+		garray[g].moveList[0].color = WHITE;
+
+		strcpy(garray[g].moveList[0].moveString, "NONE");
+		strcpy(garray[g].moveList[0].algString, "NONE");
+	} else {
+		garray[g].numHalfMoves = 0;
+		garray[g].moveListSize = 0;
+		garray[g].moveList = NULL;
+	}
+
+	garray[g].timeOfStart	= tenth_secs();
+	garray[g].startTime	= tenth_secs();
+	garray[g].lastMoveTime	= garray[g].startTime;
+	garray[g].lastDecTime	= garray[g].startTime;
+	garray[g].clockStopped	= 0;
+
+	sprintf(outStr, "\n{Game %d (%s vs. %s) Creating %s %s match.}\n",
+	    (g + 1),
+	    parray[white_player].name,
+	    parray[black_player].name,
+	    rstr[garray[g].rated],
+	    bstr[garray[g].type]);
+
+	pprintf(white_player, "%s", outStr);
+	pprintf(black_player, "%s", outStr);
+
+	for (p = 0; p < p_num; p++) {
+		int	gnw, gnb;
+
+		if ((p == white_player) || (p == black_player))
+			continue;
+		if (parray[p].status != PLAYER_PROMPT)
+			continue;
+		if (parray[p].i_game)
+			pprintf_prompt(p, "%s", outStr);
+
+		gnw = in_list(p, L_GNOTIFY, parray[white_player].login);
+		gnb = in_list(p, L_GNOTIFY, parray[black_player].login);
+
+		if (gnw || gnb) {
+			pprintf(p, "Game notification: ");
+
+			if (gnw)
+				pprintf_highlight(p, parray[white_player].name);
+			else
+				pprintf(p, parray[white_player].name);
+
+			pprintf(p, " (%s) vs. ",
+			    ratstr(GetRating(&parray[white_player],
+			    garray[g].type)));
+
+			if (gnb)
+				pprintf_highlight(p, parray[black_player].name);
+			else
+				pprintf(p, parray[black_player].name);
+
+			pprintf_prompt(p, " (%s) %s %s %d %d\n",
+			    ratstr(GetRating(&parray[black_player],
+			    garray[g].type)),
+			    rstr[garray[g].rated],
+			    bstr[garray[g].type],
+			    (garray[g].wInitTime / 600),
+			    (garray[g].wIncrement / 10));
+		}
+	}
+
+	parray[white_player].game	= g;
+	parray[white_player].opponent	= black_player;
+	parray[white_player].side	= WHITE;
+	parray[white_player].promote	= QUEEN;
+	parray[black_player].game	= g;
+	parray[black_player].opponent	= white_player;
+	parray[black_player].side	= BLACK;
+	parray[black_player].promote	= QUEEN;
+	send_boards(g);
+	MakeFENpos(g, (char *)garray[g].FENstartPos);
+	return COM_OK;
 }
 
 PRIVATE int accept_match(int p, int p1)
