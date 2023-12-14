@@ -27,18 +27,18 @@ struct _List {
   struct _List *next;
 };
 
-extern int com_addlist();
-extern int com_sublist();
-extern int com_showlist();
+extern int	com_addlist();
+extern int	com_showlist();
+extern int	com_sublist();
 
-extern void list_free(List *);
-extern int in_list(int, enum ListWhich, char *);
-extern int list_size(int p, enum ListWhich);
-extern int list_add(int, enum ListWhich, char *);
-extern int list_addsub (int,char*,char*,int);
-extern int list_sub(int, enum ListWhich, char *);
-extern void list_print(FILE *, int, enum ListWhich);
-extern int titled_player(int, char *);
-extern int list_channels(int,int);
+extern int	in_list(int, enum ListWhich, char *);
+extern int	list_add(int, enum ListWhich, char *);
+extern int	list_addsub(int, char *, char *, int);
+extern int	list_channels(int, int);
+extern int	list_size(int, enum ListWhich);
+extern int	list_sub(int, enum ListWhich, char *);
+extern int	titled_player(int, char *);
+extern void	list_free(List *);
+extern void	list_print(FILE *, int, enum ListWhich);
 
-#endif   /* _LISTS_H */
+#endif    /* _LISTS_H */
