@@ -415,28 +415,33 @@ PUBLIC int com_showlist(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int list_channels(int p,int p1)
+PUBLIC int
+list_channels(int p, int p1)
 {
-  List *gl;
-  int i, rights;
+	List	*gl;
+	int	 rights;
 
-    gl = list_findpartial(p1, "channel", 0);
-    if (!gl) {
-      return 1;
-    }
-    rights = ListArray[gl->which].rights;
-    /* display the list */
-    if (gl->numMembers == 0)
-      return 1;
-    {
-      multicol *m = multicol_start(gl->numMembers);
+	if ((gl = list_findpartial(p1, "channel", 0)) == NULL)
+		return 1;
 
-      for (i = 0; i < gl->numMembers; i++)
-        multicol_store_sorted(m, gl->member[i]);
-      multicol_pprint(m, p, 78, 1);
-      multicol_end(m);
-    }
-  return 0;
+	rights = ListArray[gl->which].rights;
+
+	// XXX: unused
+	(void) rights;
+
+	if (gl->numMembers == 0)
+		return 1;
+
+	{
+		multicol *m = multicol_start(gl->numMembers);
+
+		for (int i = 0; i < gl->numMembers; i++)
+			multicol_store_sorted(m, gl->member[i]);
+		multicol_pprint(m, p, 78, 1);
+		multicol_end(m);
+	}
+
+	return 0;
 }
 
 /* free the memory used by a list */
