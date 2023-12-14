@@ -177,7 +177,7 @@ PUBLIC int create_new_match(int white_player, int black_player,
 	  bstr[garray[g].type]);
   pprintf(white_player, "%s", outStr);
   pprintf(black_player, "%s", outStr);
-  
+
   for (p = 0; p < p_num; p++) {
     int gnw, gnb;
     if ((p == white_player) || (p == black_player))
@@ -769,7 +769,7 @@ PUBLIC int com_match(int p, param_list param)
 	    game_str(rated, wt * 60, winc, bt * 60, binc, category, board));
     pprintf(pp, "Your game would be ");
     pprintf_highlight(pp, "%s", parray[pp1].name);
-    pprintf_prompt(pp, " (%s) %s%s (%s) %s.\n",  
+    pprintf_prompt(pp, " (%s) %s%s (%s) %s.\n",
 	  ratstrii(GetRating(&parray[pp1], type), parray[pp1].registered),
 	  colorstr[white + 1], parray[pp].name,
 	  ratstrii(GetRating(&parray[pp], type), parray[pp].registered),
