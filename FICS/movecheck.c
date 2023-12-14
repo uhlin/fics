@@ -24,14 +24,14 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
-#include "movecheck.h"
 #include "algcheck.h"
 #include "board.h"
+#include "common.h"
 #include "gamedb.h"
-#include "utils.h"
+#include "movecheck.h"
 #include "network.h"
 #include "playerdb.h"
+#include "utils.h"
 
 /* Simply tests if the input string is a move or not. */
 /* If it matches patterns below */
