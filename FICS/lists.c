@@ -419,15 +419,12 @@ PUBLIC int
 list_channels(int p, int p1)
 {
 	List	*gl;
-	int	 rights;
+//	int	 rights;
 
 	if ((gl = list_findpartial(p1, "channel", 0)) == NULL)
 		return 1;
 
-	rights = ListArray[gl->which].rights;
-
-	// XXX: unused
-	(void) rights;
+//	rights = ListArray[gl->which].rights;
 
 	if (gl->numMembers == 0)
 		return 1;
@@ -444,27 +441,29 @@ list_channels(int p, int p1)
 	return 0;
 }
 
-/* free the memory used by a list */
-PUBLIC void list_free(List * gl)
+/*
+ * Free the memory used by a list.
+ */
+PUBLIC void
+list_free(List *gl)
 {
-  int i;
-  List *temp;
+	List *temp;
 
-  while (gl) {
-    for (i = 0; i < gl->numMembers; i++) {
-      strfree(gl->member[i]);
-    }
-    temp = gl->next;
-    rfree(gl);
-    gl = temp;
-  }
+	while (gl) {
+		for (int i = 0; i < gl->numMembers; i++)
+			strfree(gl->member[i]);
+		temp = gl->next;
+		rfree(gl);
+		gl = temp;
+	}
 }
 
-PUBLIC int titled_player(int p,char* name)
+PUBLIC int
+titled_player(int p, char *name)
 {
-  if ((in_list(p, L_FM, name)) || (in_list(p, L_IM, name)) || (in_list(p, L_GM, name))) {
-  return 1;
-  } else {
-  return 0;
-  }
+	if (in_list(p, L_FM, name) ||
+	    in_list(p, L_IM, name) ||
+	    in_list(p, L_GM, name))
+		return 1;
+	return 0;
 }
