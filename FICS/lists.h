@@ -20,11 +20,12 @@ typedef struct {enum ListPerm rights; char *name;} ListTable;
 #define MAX_GLOBAL_LIST_SIZE 200
 
 typedef struct _List List;
+
 struct _List {
-  enum ListWhich which;
-  int numMembers;
-  char *member[MAX_GLOBAL_LIST_SIZE];
-  struct _List *next;
+	enum ListWhich	 which;
+	int		 numMembers;
+	char		*member[MAX_GLOBAL_LIST_SIZE];
+	struct _List	*next;
 };
 
 extern int	com_addlist();
