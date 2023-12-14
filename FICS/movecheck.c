@@ -755,68 +755,83 @@ PUBLIC int in_check(game_state_t * gs)
   return 0;
 }
 
-PRIVATE int has_legal_move(game_state_t * gs)
+PRIVATE
+int
+has_legal_move(game_state_t *gs)
 {
-  int i;
-  int f, r;
-  int kf,kr;
-  int possiblef[500], possibler[500];
-  int numpossible = 0;
+	int f, r;
+	int i;
+	int kf, kr;
+	int numpossible = 0;
+	int possiblef[500];
+	int possibler[500];
 
-  for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
-       NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-    switch (piecetype(gs->board[f][r])) {
-    case PAWN:
-      possible_pawn_moves(gs, f, r, possiblef, possibler, &numpossible);
-      break;
-    case KNIGHT:
-      possible_knight_moves(gs, f, r, possiblef, possibler, &numpossible);
-      break;
-    case BISHOP:
-      possible_bishop_moves(gs, f, r, possiblef, possibler, &numpossible);
-      break;
-    case ROOK:
-      possible_rook_moves(gs, f, r, possiblef, possibler, &numpossible);
-      break;
-    case QUEEN:
-      possible_queen_moves(gs, f, r, possiblef, possibler, &numpossible);
-      break;
-    case KING:
-      kf = f;
-      kr = r;
-      possible_king_moves(gs, f, r, possiblef, possibler, &numpossible);
-      break;
-    }
-    if (numpossible >= 500) {
-      fprintf(stderr, "FICS: Possible move overrun\n");
-    }
-    for (i = 0; i < numpossible; i++)
-      if (legal_andcheck_move(gs, f, r, possiblef[i], possibler[i])) {
-	return 1;
-      }
-  }
-
-  /* IanO:  if we got here, then kf and kr must be set */
-  if (gs->gameNum >=0 && garray[gs->gameNum].link >= 0) {
-    /* bughouse: potential drops as check interpositions */
-    gs->holding[gs->onMove==WHITE ? 0 : 1][QUEEN - 1]++;
-    for (f=kf-1; f<=kf+1; f++) for (r=kr-1; r<=kr+1; r++) {
-      if (f>=0 && f<8 && r>=0 && r<8 && gs->board[f][r] == NOPIECE) {
-	/* try a drop next to the king */
-	if (legal_andcheck_move(gs, ALG_DROP, QUEEN, f, r)) {
-	  gs->holding[gs->onMove==WHITE ? 0 : 1][QUEEN - 1]--;
-	  return 1;
+	for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
+	     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
+		switch (piecetype(gs->board[f][r])) {
+		case PAWN:
+			possible_pawn_moves(gs, f, r, possiblef, possibler,
+			    &numpossible);
+			break;
+		case KNIGHT:
+			possible_knight_moves(gs, f, r, possiblef, possibler,
+			    &numpossible);
+			break;
+		case BISHOP:
+			possible_bishop_moves(gs, f, r, possiblef, possibler,
+			    &numpossible);
+			break;
+		case ROOK:
+			possible_rook_moves(gs, f, r, possiblef, possibler,
+			    &numpossible);
+			break;
+		case QUEEN:
+			possible_queen_moves(gs, f, r, possiblef, possibler,
+			    &numpossible);
+			break;
+		case KING:
+			kf = f;
+			kr = r;
+			possible_king_moves(gs, f, r, possiblef, possibler,
+			    &numpossible);
+			break;
+		}
+		if (numpossible >= 500)
+			fprintf(stderr, "FICS: Possible move overrun\n");
+		for (i = 0; i < numpossible; i++) {
+			if (legal_andcheck_move(gs, f, r, possiblef[i],
+			    possibler[i]))
+				return 1;
+		}
 	}
-      }
-    }
-    gs->holding[gs->onMove==WHITE ? 0 : 1][QUEEN - 1]--;
-  }
 
-/* don't think this works right... 9.30.95
-  printf("NO LEGAL MOVE!\n");
-*/
-  fprintf(stderr, "FICS: NO LEGAL MOVE!\n");
-  return 0;
+	// IanO: if we got here, then kf and kr must be set
+	if (gs->gameNum >=0 && garray[gs->gameNum].link >= 0) {
+		// bughouse: potential drops as check interpositions
+		gs->holding[gs->onMove == WHITE ? 0 : 1][QUEEN - 1]++;
+		for (f = kf - 1; f <= kf + 1; f++) {
+			for (r = kr - 1; r <= kr + 1; r++) {
+				if (f >= 0 &&
+				    f < 8 &&
+				    r >= 0 &&
+				    r < 8 &&
+				    gs->board[f][r] == NOPIECE) {
+					// try a drop next to the king
+					if (legal_andcheck_move(gs, ALG_DROP,
+					    QUEEN, f, r)) {
+						gs->holding[gs->onMove == WHITE
+						    ? 0 : 1][QUEEN - 1]--;
+						return 1;
+					}
+				}
+			}
+		}
+
+		gs->holding[gs->onMove == WHITE ? 0 : 1][QUEEN - 1]--;
+	}
+
+	fprintf(stderr, "FICS: NO LEGAL MOVE!\n");
+	return 0;
 }
 
 /* This will end up being a very complicated function */
