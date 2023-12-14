@@ -755,16 +755,16 @@ PUBLIC int in_check(game_state_t * gs)
   return 0;
 }
 
-PRIVATE
-int
+PRIVATE int
 has_legal_move(game_state_t *gs)
 {
-	int f, r;
-	int i;
-	int kf, kr;
-	int numpossible = 0;
-	int possiblef[500];
-	int possibler[500];
+	int	f, r;
+	int	i;
+	int	kf, kr;
+	int	kf_and_kr_set = 0;
+	int	numpossible = 0;
+	int	possiblef[500];
+	int	possibler[500];
 
 	for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
 	     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
@@ -792,6 +792,7 @@ has_legal_move(game_state_t *gs)
 		case KING:
 			kf = f;
 			kr = r;
+			kf_and_kr_set = 1;
 			possible_king_moves(gs, f, r, possiblef, possibler,
 			    &numpossible);
 			break;
@@ -805,8 +806,13 @@ has_legal_move(game_state_t *gs)
 		}
 	}
 
+	if (!kf_and_kr_set) {
+		fprintf(stderr, "FICS: %s: 'kf_and_kr_set' is 0\n", __func__);
+		return 0;
+	}
+
 	// IanO: if we got here, then kf and kr must be set
-	if (gs->gameNum >=0 && garray[gs->gameNum].link >= 0) {
+	if (gs->gameNum >= 0 && garray[gs->gameNum].link >= 0) {
 		// bughouse: potential drops as check interpositions
 		gs->holding[gs->onMove == WHITE ? 0 : 1][QUEEN - 1]++;
 		for (f = kf - 1; f <= kf + 1; f++) {
