@@ -22,27 +22,28 @@
 
 List *firstGlobalList = NULL;
 
-PRIVATE ListTable ListArray[] =
-{{P_HEAD, "admin"},
-{P_GOD, "removedcom"},
-{P_ADMIN, "filter"},
-{P_ADMIN, "ban"},
-{P_ADMIN, "abuser"},
-{P_ADMIN, "muzzle"},
-{P_ADMIN, "cmuzzle"},
-{P_PUBLIC, "fm"},
-{P_PUBLIC, "im"},
-{P_PUBLIC, "gm"},
-{P_PUBLIC, "blind"},
-{P_PUBLIC, "teams"},
-{P_PUBLIC, "computer"},
-{P_PUBLIC, "td"},
-{P_PERSONAL, "censor"},
-{P_PERSONAL, "gnotify"},
-{P_PERSONAL, "noplay"},
-{P_PERSONAL, "notify"},
-{P_PERSONAL, "channel"},
-{0, NULL}};
+PRIVATE ListTable ListArray[] = {
+	{P_HEAD,	"admin"},
+	{P_GOD,		"removedcom"},
+	{P_ADMIN,	"filter"},
+	{P_ADMIN,	"ban"},
+	{P_ADMIN,	"abuser"},
+	{P_ADMIN,	"muzzle"},
+	{P_ADMIN,	"cmuzzle"},
+	{P_PUBLIC,	"fm"},
+	{P_PUBLIC,	"im"},
+	{P_PUBLIC,	"gm"},
+	{P_PUBLIC,	"blind"},
+	{P_PUBLIC,	"teams"},
+	{P_PUBLIC,	"computer"},
+	{P_PUBLIC,	"td"},
+	{P_PERSONAL,	"censor"},
+	{P_PERSONAL,	"gnotify"},
+	{P_PERSONAL,	"noplay"},
+	{P_PERSONAL,	"notify"},
+	{P_PERSONAL,	"channel"},
+	{0, NULL},
+};
 
 /* find a list.  loads from disk if not in memory. */
 PRIVATE List *list_find(int p, enum ListWhich l)
