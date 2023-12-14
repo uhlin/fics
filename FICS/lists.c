@@ -10,20 +10,21 @@
 
 */
 
-#include "lists.h"
-#include "common.h"
-#include "multicol.h"
+#include "stdinclude.h"
+
+#include <string.h>
+
 #include "command.h"
-#include "utils.h"
+#include "common.h"
+#include "comproc.h"
+#include "gamedb.h"
+#include "lists.h"
+#include "multicol.h"
 #include "playerdb.h"
 #include "ratings.h"
 #include "rmalloc.h"
 #include "talkproc.h"
-#include "gamedb.h"
-#include "stdinclude.h"
-#include "comproc.h"
-
-#include <string.h>
+#include "utils.h"
 
 List *firstGlobalList = NULL;
 
