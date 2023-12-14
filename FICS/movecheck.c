@@ -646,61 +646,73 @@ PUBLIC int legal_move(game_state_t * gs,
 }
 
 
-/* This fills in the rest of the mt structure once it is determined that
- * the move is legal. Returns MOVE_ILLEGAL if move leaves you in check */
-PRIVATE int move_calculate(game_state_t * gs, move_t * mt, int promote)
+/*
+ * This fills in the rest of the mt structure once it is determined
+ * that. (Returns 'MOVE_ILLEGAL' if move leaves you in check.)
+ */
+PRIVATE int
+move_calculate(game_state_t *gs, move_t *mt, int promote)
 {
-  game_state_t fakeMove;
+	game_state_t	fakeMove;
 
-  mt->pieceCaptured = gs->board[mt->toFile][mt->toRank];
-  mt->enPassant = 0;		/* Don't know yet, let execute move take care
-				   of it */
-  if (mt->fromFile == ALG_DROP) {
-    mt->piecePromotionTo = NOPIECE;
-    sprintf(mt->moveString, "%s/%c%c-%c%d",
-	    wpstring[mt->fromRank],
-		DROP_CHAR, DROP_CHAR,
-	    mt->toFile + 'a', mt->toRank + 1);
-  } else {
-  if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == PAWN) &&
-      ((mt->toRank == 0) || (mt->toRank == 7))) {
-    mt->piecePromotionTo = promote |
-      (colorval(gs->board[mt->fromFile][mt->fromRank]));
-  } else {
-    mt->piecePromotionTo = NOPIECE;
-  }
-  if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == PAWN) &&
-   ((mt->fromRank - mt->toRank == 2) || (mt->toRank - mt->fromRank == 2))) {
-    mt->doublePawn = mt->fromFile;
-  } else {
-    mt->doublePawn = -1;
-  }
-  if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING) &&
-      (mt->fromFile == 4) && (mt->toFile == 2)) {
-    sprintf(mt->moveString, "o-o-o");
-  } else if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING) &&
-	     (mt->fromFile == 4) && (mt->toFile == 6)) {
-    sprintf(mt->moveString, "o-o");
-  } else {
-    sprintf(mt->moveString, "%s/%c%d-%c%d",
-	    wpstring[piecetype(gs->board[mt->fromFile][mt->fromRank])],
-	    mt->fromFile + 'a', mt->fromRank + 1,
-	    mt->toFile + 'a', mt->toRank + 1);
-  }
-  }
-  /* Replace this with an algabraic de-parser */
+	mt->pieceCaptured	= gs->board[mt->toFile][mt->toRank];
+	mt->enPassant		= 0;	// Don't know yet,
+					// let execute move take care of it
 
-  sprintf(mt->algString, alg_unparse(gs, mt));
-  fakeMove = *gs;
-  /* Calculates enPassant also */
-  execute_move(&fakeMove, mt, 0);
+	if (mt->fromFile == ALG_DROP) {
+		mt->piecePromotionTo = NOPIECE;
+		sprintf(mt->moveString, "%s/%c%c-%c%d",
+		    wpstring[mt->fromRank],
+		    DROP_CHAR,
+		    DROP_CHAR,
+		    mt->toFile + 'a',
+		    mt->toRank + 1);
+	} else {
+		if (piecetype(gs->board[mt->fromFile][mt->fromRank]) == PAWN &&
+		    (mt->toRank == 0 || mt->toRank == 7)) {
+			mt->piecePromotionTo = (promote |
+			    colorval(gs->board[mt->fromFile][mt->fromRank]));
+		} else {
+			mt->piecePromotionTo = NOPIECE;
+		}
 
-  /* Does making this move leave ME in check? */
-  if (in_check(&fakeMove))
-    return MOVE_ILLEGAL;
-  /* IanO: bughouse variants: drop cannot be check/checkmate */
+		if (piecetype(gs->board[mt->fromFile][mt->fromRank]) == PAWN &&
+		    (mt->fromRank - mt->toRank == 2 ||
+		    mt->toRank - mt->fromRank == 2)) {
+			mt->doublePawn = mt->fromFile;
+		} else {
+			mt->doublePawn = -1;
+		}
 
-  return MOVE_OK;
+		if (piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING &&
+		    mt->fromFile == 4 &&
+		    mt->toFile == 2) {
+			sprintf(mt->moveString, "o-o-o");
+		} else if (piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING &&
+		    mt->fromFile == 4 &&
+		    mt->toFile == 6) {
+			sprintf(mt->moveString, "o-o");
+		} else {
+			sprintf(mt->moveString, "%s/%c%d-%c%d",
+			    wpstring[piecetype(gs->board[mt->fromFile][mt->fromRank])],
+			    mt->fromFile + 'a',
+			    mt->fromRank + 1,
+			    mt->toFile + 'a',
+			    mt->toRank + 1);
+		}
+	}
+
+	// Replace this with an algabraic de-parser
+	sprintf(mt->algString, alg_unparse(gs, mt));
+	fakeMove = *gs;
+	execute_move(&fakeMove, mt, 0); // Calculates enPassant also
+
+	// Does making this move leave ME in check?
+	if (in_check(&fakeMove))
+		return MOVE_ILLEGAL;
+	// IanO: bughouse variants: drop cannot be check/checkmate
+
+	return MOVE_OK;
 }
 
 PUBLIC int legal_andcheck_move(game_state_t * gs,
