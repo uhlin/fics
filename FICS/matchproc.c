@@ -25,30 +25,30 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
-#include "talkproc.h"
-#include "comproc.h"
-#include "command.h"
-#include "utils.h"
-#include "ficsmain.h"
-#include "config.h"
-#include "playerdb.h"
-#include "network.h"
-#include "rmalloc.h"
-#include "variable.h"
-#include "gamedb.h"
-#include "gameproc.h"
-#include "obsproc.h"
-#include "board.h"
-/* #include "hostinfo.h" */
-#include "multicol.h"
-#include "ratings.h"
-#include "formula.h"
-#include "lists.h"
-#include "eco.h"
+#include <sys/resource.h>
+
 #include <string.h>
 
-#include <sys/resource.h>
+#include "board.h"
+#include "command.h"
+#include "common.h"
+#include "comproc.h"
+#include "config.h"
+#include "eco.h"
+#include "ficsmain.h"
+#include "formula.h"
+#include "gamedb.h"
+#include "gameproc.h"
+#include "lists.h"
+#include "multicol.h"
+#include "network.h"
+#include "obsproc.h"
+#include "playerdb.h"
+#include "ratings.h"
+#include "rmalloc.h"
+#include "talkproc.h"
+#include "utils.h"
+#include "variable.h"
 
 PUBLIC int
 create_new_match(int white_player, int black_player, int wt, int winc, int bt,
