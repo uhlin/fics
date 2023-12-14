@@ -379,40 +379,56 @@ PUBLIC int com_sublist(int p,param_list param)
   return list_addsub(p, param[0].val.word, param[1].val.word, 2);
 }
 
-PUBLIC int com_showlist(int p, param_list param)
+PUBLIC int
+com_showlist(int p, param_list param)
 {
-  List *gl;
-  int i, rights;
+	List	*gl;
+	char	*rightnames[] = {
+		"EDIT HEAD, READ ADMINS",
+		"EDIT GODS, READ ADMINS",
+		"READ/WRITE ADMINS",
+		"PUBLIC",
+		"PERSONAL"
+	};
+	int	 i, rights;
 
-  char *rightnames[] = {"EDIT HEAD, READ ADMINS", "EDIT GODS, READ ADMINS", "READ/WRITE ADMINS", "PUBLIC", "PERSONAL"};
+	if (param[0].type == 0) { // Show all lists
+		pprintf(p, "Lists:\n\n");
 
-  if (param[0].type == 0) {	/* Show all lists */
-    pprintf(p, "Lists:\n\n");
-    for (i = 0; ListArray[i].name != NULL; i++) {
-      rights = ListArray[i].rights;
-      if ((rights > P_ADMIN) || (parray[p].adminLevel >= ADMIN_ADMIN))
-	pprintf(p, "%-20s is %s\n", ListArray[i].name, rightnames[rights]);
-    }
-  } else {			/* find match in index */
-    gl = list_findpartial(p, param[0].val.word, 0);
-    if (!gl) {
-      return COM_OK;
-    }
-    rights = ListArray[gl->which].rights;
-    /* display the list */
-    {
-      multicol *m = multicol_start(gl->numMembers);
+		for (i = 0; ListArray[i].name != NULL; i++) {
+			if ((rights = ListArray[i].rights) > P_ADMIN ||
+			    parray[p].adminLevel >= ADMIN_ADMIN) {
+				pprintf(p, "%-20s is %s\n", ListArray[i].name,
+				    rightnames[rights]);
+			}
+		}
+	} else { // find match in index
+		if ((gl = list_findpartial(p, param[0].val.word, 0)) == NULL)
+			return COM_OK;
 
-      pprintf(p, "-- %s list: %d %s --", ListArray[gl->which].name,
-      gl->numMembers,
-      ((!(strcmp(ListArray[gl->which].name,"filter"))) ? "ips" : (!(strcmp(ListArray[gl->which].name,"removedcom"))) ? "commands" : (!(strcmp(ListArray[gl->which].name,"channel"))) ? "channels" : "names"));
-      for (i = 0; i < gl->numMembers; i++)
-	multicol_store_sorted(m, gl->member[i]);
-      multicol_pprint(m, p, 78, 2);
-      multicol_end(m);
-    }
-  }
-  return COM_OK;
+		rights = ListArray[gl->which].rights;
+
+		{ // display the list
+			multicol *m = multicol_start(gl->numMembers);
+
+			pprintf(p, "-- %s list: %d %s --",
+			    ListArray[gl->which].name,
+			    gl->numMembers,
+			    ((!strcmp(ListArray[gl->which].name, "filter"))
+			    ? "ips"
+			    : (!strcmp(ListArray[gl->which].name, "removedcom"))
+			    ? "commands"
+			    : (!strcmp(ListArray[gl->which].name, "channel"))
+			    ? "channels"
+			    : "names"));
+			for (i = 0; i < gl->numMembers; i++)
+				multicol_store_sorted(m, gl->member[i]);
+			multicol_pprint(m, p, 78, 2);
+			multicol_end(m);
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
