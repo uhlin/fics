@@ -290,7 +290,7 @@ PUBLIC int list_addsub(int p, char* list, char* who, int addsub)
      pprintf (p,"Your channel to add must be a number between 0 and %d.\n",MAX_CHANNELS - 1);
      return COM_OK;
     }
-   } 
+   }
    if (in_list(p, gl->which, member)) {
      pprintf(p, "[%s] is already on %s %s list.\n", member, yourthe, listname);
      if (loadme && !connected)
