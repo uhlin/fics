@@ -19,7 +19,8 @@
 
 /* Revision history:
    name		email			yy/mm/dd	Change
-   hersco  dhersco@stmarys-ca.edu	95/7/24		Created
+   hersco dhersco@stmarys-ca.edu        95/07/24	Created
+   Markus Uhlin                         23/12/14	Fixed compiler warnings
 */
 
 #include "stdinclude.h"
