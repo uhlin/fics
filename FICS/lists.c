@@ -370,14 +370,16 @@ PUBLIC int list_addsub(int p, char* list, char* who, int addsub)
   return COM_OK;
 }
 
-PUBLIC int com_addlist(int p, param_list param)
+PUBLIC int
+com_addlist(int p, param_list param)
 {
-  return list_addsub(p, param[0].val.word, param[1].val.word, 1);
+	return list_addsub(p, param[0].val.word, param[1].val.word, 1);
 }
 
-PUBLIC int com_sublist(int p,param_list param)
+PUBLIC int
+com_sublist(int p, param_list param)
 {
-  return list_addsub(p, param[0].val.word, param[1].val.word, 2);
+	return list_addsub(p, param[0].val.word, param[1].val.word, 2);
 }
 
 PUBLIC int
