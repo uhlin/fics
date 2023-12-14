@@ -760,7 +760,7 @@ has_legal_move(game_state_t *gs)
 {
 	int	f, r;
 	int	i;
-	int	kf, kr;
+	int	kf = 0, kr = -1;
 	int	kf_and_kr_set = 0;
 	int	numpossible = 0;
 	int	possiblef[500];
@@ -806,7 +806,7 @@ has_legal_move(game_state_t *gs)
 		}
 	}
 
-	if (!kf_and_kr_set) {
+	if (!kf_and_kr_set && kf == 0 && kr == -1) {
 		fprintf(stderr, "FICS: %s: 'kf_and_kr_set' is 0\n", __func__);
 		return 0;
 	}
