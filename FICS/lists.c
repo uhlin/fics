@@ -1,14 +1,8 @@
-/* lists.c
-
- *  New global lists code
+/* lists.c  --  new global lists code
  *
- *  Part of: FICS
- *
- *  Added by Shaney, 29 May 1995  :)
- *  sometime in Oct 1995: changed things a little (loon)
- *
-
-*/
+ * Added by Shaney, 29 May 1995.
+ * This file is part of FICS.
+ */
 
 #include "stdinclude.h"
 
