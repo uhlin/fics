@@ -19,6 +19,7 @@ documented in this file.
 - Fixed implicit integers
 - Fixed _multiple_ cases of use of possibly uninitialized variables.
 - Fixed _multiple_ possible buffer overflows
+- Fixed _multiple_ `sprintf()` format overflows
 - Fixed unused variables
 - Renamed functions in order to avoid conflicts with system
   declarations.
