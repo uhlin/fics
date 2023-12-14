@@ -419,12 +419,9 @@ PUBLIC int
 list_channels(int p, int p1)
 {
 	List	*gl;
-//	int	 rights;
 
 	if ((gl = list_findpartial(p1, "channel", 0)) == NULL)
 		return 1;
-
-//	rights = ListArray[gl->which].rights;
 
 	if (gl->numMembers == 0)
 		return 1;
