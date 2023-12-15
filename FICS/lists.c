@@ -1,6 +1,7 @@
 /* lists.c  --  new global lists code
  *
  * Added by Shaney, 29 May 1995.
+ * Revised by maxxe, 15 Dec 2023.
  * This file is part of FICS.
  */
 
@@ -45,58 +46,62 @@ PRIVATE ListTable ListArray[] = {
 	{0, NULL},
 };
 
-/* find a list.  loads from disk if not in memory. */
-PRIVATE List *list_find(int p, enum ListWhich l)
+/*
+ * find a list.
+ * loads from disk if not in memory.
+ */
+PRIVATE List *
+list_find(int p, enum ListWhich l)
 {
-  List *prev, *tempList, **starter;
-  int personal;
-  int count = 0;
+	List	*prev = NULL, *tempList, **starter;
+	int	 count = 0;
+	int	 personal;
 
-  personal = ListArray[l].rights == P_PERSONAL;
-  starter = personal ? &(parray[p].lists) : &firstGlobalList;
+	personal	= ListArray[l].rights == P_PERSONAL;
+	starter		= (personal ? &parray[p].lists : &firstGlobalList);
 
-  for (prev = NULL, tempList = *starter; tempList != NULL; tempList = tempList->next) {
-    if (l == tempList->which) {
-      if (prev != NULL) {
-	prev->next = tempList->next;
-	tempList->next = *starter;
-	*starter = tempList;
-      }
-      return tempList;
-    }
-    prev = tempList;
-  }
+	for (tempList = *starter; tempList != NULL; tempList = tempList->next) {
+		if (l == tempList->which) {
+			if (prev != NULL) {
+				prev->next	= tempList->next;
+				tempList->next	= *starter;
+				*starter	= tempList;
+			}
 
-  tempList = rmalloc(sizeof(List));
-  if (tempList == NULL)
-    return NULL;
+			return tempList;
+		}
 
-  if (!personal) {		/* now we have to load the list */
-    FILE *fp;
-    char listmember[100];
-    char filename[MAX_FILENAME_SIZE];
+		prev = tempList;
+	}
 
-    /* fprintf(stderr,"SHANEDEBUG: Adding %s list\n", ListArray[l].name); */
+	if ((tempList = rmalloc(sizeof(List))) == NULL)
+		return NULL;
+	if (!personal) { // now we have to load the list
+		FILE	*fp;
+		char	 filename[MAX_FILENAME_SIZE];
+		char	 listmember[100];
 
-    sprintf(filename, "%s/%s", lists_dir, ListArray[l].name);
-    fp = fopen(filename, "r");
-    if (!fp) {
-      rfree(tempList);
-      return NULL;
-    }
-    while (!feof(fp)) {
-      if (fgets(listmember, 100, fp) != NULL) {
-	listmember[strlen(listmember) - 1] = '\0';
-	tempList->member[count++] = xstrdup(listmember);
-      }
-    }
-    fclose(fp);
-  }
-  tempList->which = l;
-  tempList->numMembers = count;
-  tempList->next = *starter;
-  *starter = tempList;
-  return tempList;
+		sprintf(filename, "%s/%s", lists_dir, ListArray[l].name);
+
+		if ((fp = fopen(filename, "r")) == NULL) {
+			rfree(tempList);
+			return NULL;
+		}
+		while (!feof(fp)) {
+			if (fgets(listmember, 100, fp) != NULL) {
+				listmember[strlen(listmember) - 1] = '\0';
+				tempList->member[count++] = xstrdup(listmember);
+			}
+		}
+
+		fclose(fp);
+	}
+
+	tempList->which		= l;
+	tempList->numMembers	= count;
+	tempList->next		= *starter;
+	*starter		= tempList;
+	return tempList;
 }
 
 /*
