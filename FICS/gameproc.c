@@ -286,7 +286,7 @@ PUBLIC void game_ended(int g, int winner, int why)
       player_simul_over(garray[g].white, g, whiteResult);
     }
   }
-  game_finish(g); 
+  game_finish(g);
 }
 
 PRIVATE int was_promoted(game *g, int f, int r)
@@ -1742,4 +1742,3 @@ PUBLIC int com_moretime(int p, param_list param)
   }
   return COM_OK;
 }
-
