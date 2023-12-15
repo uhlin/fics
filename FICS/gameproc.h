@@ -40,7 +40,7 @@ extern int com_games();
 
 extern int com_courtesyabort();
 extern int com_courtesyadjourn();
-extern int com_load(); 
+extern int com_load();
 extern int com_stored();
 extern int com_adjourn();
 extern int com_flag();
