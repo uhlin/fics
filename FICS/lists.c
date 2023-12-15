@@ -142,26 +142,28 @@ PUBLIC int list_sub(int p, enum ListWhich l, char *s)
 }
 
 /* pretty cheesy: print each member of a list, 1 per line */
-PUBLIC void list_print(FILE * fp, int p, enum ListWhich l)
+PUBLIC void
+list_print(FILE *fp, int p, enum ListWhich l)
 {
-  int i;
-  List *gl = list_find(p, l);
+	List *gl;
 
-  if (gl) {
-    for (i = 0; i < gl->numMembers; i++)
-      fprintf(fp, "%s\n", gl->member[i]);
-  }
+	if ((gl = list_find(p, l)) != NULL) {
+		for (int i = 0; i < gl->numMembers; i++)
+			fprintf(fp, "%s\n", gl->member[i]);
+	}
 }
 
-/* return size of a list */
-PUBLIC int list_size(int p, enum ListWhich l)
+/*
+ * Return size of a list.
+ */
+PUBLIC int
+list_size(int p, enum ListWhich l)
 {
-  List *gl = list_find(p, l);
+	List *gl;
 
-  if (gl)
-    return (gl->numMembers);
-  else
-    return 0;
+	if ((gl = list_find(p, l)) != NULL)
+		return (gl->numMembers);
+	return 0;
 }
 
 /*
