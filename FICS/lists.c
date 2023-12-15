@@ -237,137 +237,167 @@ PUBLIC int in_list(int p, enum ListWhich which, char *member)
   return 0;
 }
 
-/* add or subtract something to/from a list */
-PUBLIC int list_addsub(int p, char* list, char* who, int addsub)
+/*
+ * Add or subtract something to/from a list.
+ */
+PUBLIC int
+list_addsub(int p, char *list, char *who, int addsub)
 {
-  int p1, connected, loadme, personal, ch;
-  char *listname, *member;
-  List *gl;
-  char *yourthe, *addrem;
+	List	*gl;
+	char	*listname, *member;
+	char	*yourthe, *addrem;
+	int	 p1, connected, loadme, personal, ch;
 
-  gl = list_findpartial(p, list, addsub);
-  if (!gl)
-    return COM_OK;
+	if ((gl = list_findpartial(p, list, addsub)) == NULL)
+		return COM_OK;
 
-  personal = ListArray[gl->which].rights == P_PERSONAL;
-  loadme = (gl->which != L_FILTER) && (gl->which != L_REMOVEDCOM) && (gl->which != L_CHANNEL);
-  listname = ListArray[gl->which].name;
-  yourthe = personal ? "your" : "the";
-  addrem = (addsub == 1) ? "added to" : "removed from";
+	personal	= (ListArray[gl->which].rights == P_PERSONAL);
+	loadme		= (gl->which != L_FILTER &&
+	    gl->which != L_REMOVEDCOM &&
+	    gl->which != L_CHANNEL);
+	listname	= ListArray[gl->which].name;
+	yourthe		= (personal ? "your" : "the");
+	addrem		= (addsub == 1 ? "added to" : "removed from");
 
-  if (loadme) {
-    if (!FindPlayer(p, who, &p1, &connected)) {
-      if (addsub == 1)
-        return COM_OK;
-      member = who;		/* allow sub removed/renamed player */
-      loadme = 0;
-    } else
-      member = parray[p1].name;
-  } else {
-    member = who;
-  }
+	if (loadme) {
+		if (!FindPlayer(p, who, &p1, &connected)) {
+			if (addsub == 1)
+				return COM_OK;
+			member = who; // allow sub removed/renamed player
+			loadme = 0;
+		} else
+			member = parray[p1].name;
+	} else {
+		member = who;
+	}
 
-  if (addsub == 1) {		/* add to list */
+	if (addsub == 1) { // add to list
+		if (gl->which == L_CHANNEL) {
+			if (sscanf (who,"%d",&ch) == 1) {
+				if (!in_list(p, L_ADMIN,parray[p].name) &&
+				    ch == 0) {
+					pprintf(p, "Only admins may join "
+					    "channel 0.\n");
+					return COM_OK;
+				}
 
-   if (gl->which == L_CHANNEL) {
+				if (ch > (MAX_CHANNELS - 1)) {
+					pprintf(p, "The maximum channel "
+					    "number is %d.\n",
+					    (MAX_CHANNELS - 1));
+					return COM_OK;
+				}
+			} else {
+				pprintf(p, "Your channel to add must be a "
+				    "number between 0 and %d.\n",
+				    (MAX_CHANNELS - 1));
+				return COM_OK;
+			}
+		}
 
-    if (sscanf (who,"%d",&ch) == 1) {
+		if (in_list(p, gl->which, member)) {
+			pprintf(p, "[%s] is already on %s %s list.\n", member,
+			    yourthe, listname);
 
-     if ((!in_list(p,L_ADMIN,parray[p].name)) && (ch == 0)) {
-      pprintf(p, "Only admins may join channel 0.\n");
-      return COM_OK;
-     }
+			if (loadme && !connected)
+				player_remove(p1);
+			return COM_OK;
+		}
 
-     if (ch > (MAX_CHANNELS - 1)) {
-      pprintf(p,"The maximum channel number is %d.\n",MAX_CHANNELS-1);
-      return COM_OK;
-     }
-    } else {
-     pprintf (p,"Your channel to add must be a number between 0 and %d.\n",MAX_CHANNELS - 1);
-     return COM_OK;
-    }
-   }
-   if (in_list(p, gl->which, member)) {
-     pprintf(p, "[%s] is already on %s %s list.\n", member, yourthe, listname);
-     if (loadme && !connected)
-       player_remove(p1);
-     return COM_OK;
-    }
-    if (list_add(p, gl->which, member)) {
-      pprintf(p, "Sorry, %s %s list is full.\n", yourthe, listname);
-      if (loadme && !connected)
-	player_remove(p1);
-      return COM_OK;
-    }
-  } else if (addsub == 2) {	/* subtract from list */
-    if (!in_list(p, gl->which, member)) {
-      pprintf(p, "[%s] is not in %s %s list.\n", member, yourthe, listname);
-      if (loadme && !connected)
-	player_remove(p1);
-      return COM_OK;
-    }
-    list_sub(p, gl->which, member);
-  }
-  pprintf(p, "[%s] %s %s %s list.\n", member, addrem, yourthe, listname);
+		if (list_add(p, gl->which, member)) {
+			pprintf(p, "Sorry, %s %s list is full.\n", yourthe,
+			    listname);
 
-  if (!personal) {
-    FILE *fp;
-    char filename[MAX_FILENAME_SIZE];
+			if (loadme && !connected)
+				player_remove(p1);
+			return COM_OK;
+		}
+	} else if (addsub == 2) { // subtract from list
+		if (!in_list(p, gl->which, member)) {
+			pprintf(p, "[%s] is not in %s %s list.\n", member,
+			    yourthe, listname);
 
-    switch (gl->which) {
-    case L_MUZZLE:
-    case L_CMUZZLE:
-    case L_ABUSER:
-    case L_BAN:
-      pprintf(p, "Please leave a comment to explain why %s was %s the %s list.\n", member, addrem, listname);
-      pcommand(p, "addcomment %s %s %s list.\n", member, addrem, listname);
-      break;
-    case L_COMPUTER:
-      if (parray[p1].b_stats.rating > 0)
-	UpdateRank(TYPE_BLITZ, member, &parray[p1].b_stats, member);
-      if (parray[p1].s_stats.rating > 0)
-	UpdateRank(TYPE_STAND, member, &parray[p1].s_stats, member);
-      if (parray[p1].w_stats.rating > 0)
-	UpdateRank(TYPE_WILD, member, &parray[p1].w_stats, member);
-      break;
-    case L_ADMIN:
-      if (addsub == 1) {	/* adding to list */
-	parray[p1].adminLevel = 10;
-	pprintf(p, "%s has been given an admin level of 10 - change with asetadmin.\n", member);
-      } else {
-	parray[p1].adminLevel = 0;
-      }
-      break;
-    case L_FILTER:
-      pprintf(p, "Please leave a message for filter to explain why site %s was %s filter list.\n", member, addrem);
-      break;
-    case L_REMOVEDCOM:
-      pprintf(p, "Please leave a message on anews to explain why %s was %s removedcom list.\n", member, addrem);
-      break;
-    default:
-      break;
-    }
-    if (loadme && connected) {
-      pprintf_prompt(p1, "You have been %s the %s list by %s.\n", addrem, listname, parray[p].name);
-    }
-    sprintf(filename, "%s/%s", lists_dir, listname);
-    fp = fopen(filename, "w");
-    if (fp == NULL) {
-      fprintf(stderr, "Couldn't save %s list.\n", listname);
-    } else {
-      int i;
-      for (i = 0; i < gl->numMembers; i++)
-	fprintf(fp, "%s\n", gl->member[i]);
-      fclose(fp);
-    }
-  }
-  if (loadme || (gl->which == L_ADMIN)) {
-    player_save(p1);
-  }
-  if (loadme && !connected) {
-    player_remove(p1);
-  }
-  return COM_OK;
+			if (loadme && !connected)
+				player_remove(p1);
+			return COM_OK;
+		}
+
+		list_sub(p, gl->which, member);
+	}
+
+	pprintf(p, "[%s] %s %s %s list.\n", member, addrem, yourthe, listname);
+
+	if (!personal) {
+		FILE	*fp;
+		char	 filename[MAX_FILENAME_SIZE];
+
+		switch (gl->which) {
+		case L_MUZZLE:
+		case L_CMUZZLE:
+		case L_ABUSER:
+		case L_BAN:
+			pprintf(p, "Please leave a comment to explain why %s "
+			    "was %s the %s list.\n", member, addrem, listname);
+			pcommand(p, "addcomment %s %s %s list.\n", member,
+			    addrem, listname);
+			break;
+		case L_COMPUTER:
+			if (parray[p1].b_stats.rating > 0) {
+				UpdateRank(TYPE_BLITZ, member,
+				    &parray[p1].b_stats, member);
+			}
+			if (parray[p1].s_stats.rating > 0) {
+				UpdateRank(TYPE_STAND, member,
+				    &parray[p1].s_stats, member);
+			}
+			if (parray[p1].w_stats.rating > 0) {
+				UpdateRank(TYPE_WILD, member,
+				    &parray[p1].w_stats, member);
+			}
+			break;
+		case L_ADMIN:
+			if (addsub == 1) { // adding to list
+				parray[p1].adminLevel = 10;
+				pprintf(p, "%s has been given an admin level "
+				    "of 10 - change with asetadmin.\n", member);
+			} else {
+				parray[p1].adminLevel = 0;
+			}
+			break;
+		case L_FILTER:
+			pprintf(p, "Please leave a message for filter to "
+			    "explain why site %s was %s filter list.\n", member,
+			    addrem);
+			break;
+		case L_REMOVEDCOM:
+			pprintf(p, "Please leave a message on anews to explain "
+			    "why %s was %s removedcom list.\n", member, addrem);
+			break;
+		default:
+			break;
+		}
+
+		if (loadme && connected) {
+			pprintf_prompt(p1, "You have been %s the %s list "
+			    "by %s.\n", addrem, listname, parray[p].name);
+		}
+
+		sprintf(filename, "%s/%s", lists_dir, listname);
+
+		if ((fp = fopen(filename, "w")) == NULL) {
+			fprintf(stderr, "Couldn't save %s list.\n", listname);
+		} else {
+			for (int i = 0; i < gl->numMembers; i++)
+				fprintf(fp, "%s\n", gl->member[i]);
+			fclose(fp);
+		}
+	}
+
+	if (loadme || gl->which == L_ADMIN)
+		player_save(p1);
+	if (loadme && !connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PUBLIC int
