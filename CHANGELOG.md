@@ -12,6 +12,7 @@ documented in this file.
   - `makerank.c`
   - `network.c`
   - `stdinclude.h`
+  - ...
 - Fixed a `sscanf()` bug in `com_anews()`.
 - Fixed a bug in `fix_time()` (did return a local address)
 - Fixed bugs in `stored_mail_moves()`
