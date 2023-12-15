@@ -99,46 +99,59 @@ PRIVATE List *list_find(int p, enum ListWhich l)
   return tempList;
 }
 
-/* add item to list */
-PUBLIC int list_add(int p, enum ListWhich l, char *s)
+/*
+ * Add item to list
+ */
+PUBLIC int
+list_add(int p, enum ListWhich l, char *s)
 {
-  List *gl = list_find(p, l);
+	List *gl;
 
-  if (gl) {
-    if (gl->numMembers < MAX_GLOBAL_LIST_SIZE) {
-      gl->member[gl->numMembers] = xstrdup(s);
-      gl->numMembers++;
-      return 0;
-    } else {
-      return 1;
-    }
-  } else {
-    return 1;
-  }
+	if ((gl = list_find(p, l)) != NULL) {
+		if (gl->numMembers < MAX_GLOBAL_LIST_SIZE) {
+			gl->member[gl->numMembers] = xstrdup(s);
+			gl->numMembers++;
+			return 0;
+		} else {
+			return 1;
+		}
+	} else {
+		return 1;
+	}
 }
 
-/* remove item from list */
-PUBLIC int list_sub(int p, enum ListWhich l, char *s)
+/*
+ * Remove item from list.
+ */
+PUBLIC int
+list_sub(int p, enum ListWhich l, char *s)
 {
-  List *gl = list_find(p, l);
+	List *gl;
 
-  if (gl) {
-    int i, found = -1;
-    for (i = 0; i < gl->numMembers; i++)
-      if (!strcasecmp(s, gl->member[i])) {
-	found = i;
-	break;
-      }
-    if (found == -1)
-      return 1;
-    rfree(gl->member[found]);
-    for (i = found; i < (gl->numMembers - 1); i++)
-      gl->member[i] = gl->member[i + 1];
-    gl->numMembers--;
-    return 0;
-  } else {
-    return 1;
-  }
+	if ((gl = list_find(p, l)) != NULL) {
+		int i, found = -1;
+
+		for (i = 0; i < gl->numMembers; i++) {
+			if (!strcasecmp(s, gl->member[i])) {
+				found = i;
+				break;
+			}
+		}
+
+		if (found == -1)
+			return 1;
+
+		rfree(gl->member[found]);
+
+		for (i = found; i < (gl->numMembers - 1); i++)
+			gl->member[i] = gl->member[i + 1];
+
+		gl->numMembers--;
+
+		return 0;
+	}
+
+	return 1;
 }
 
 /* pretty cheesy: print each member of a list, 1 per line */
