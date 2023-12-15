@@ -215,26 +215,28 @@ PRIVATE List *list_findpartial(int p, char *which, int gonnado)
   return gl;
 }
 
-/* see if something is in a list */
-PUBLIC int in_list(int p, enum ListWhich which, char *member)
+/*
+ * See if something is in a list
+ */
+PUBLIC int
+in_list(int p, enum ListWhich which, char *member)
 {
-  List *gl;
-  int i;
-  int filterList = (which == L_FILTER);
+	List	*gl;
+	int	 filterList = (which == L_FILTER);
 
-  gl = list_find(p, which);
-  if ((gl == NULL) || (member == NULL))
-    return 0;
-  for (i = 0; i < gl->numMembers; i++) {
-    if (filterList) {
-      if (!strncasecmp(member, gl->member[i], strlen(gl->member[i])))
-	return 1;
-    } else {
-      if (!strcasecmp(member, gl->member[i]))
-	return 1;
-    }
-  }
-  return 0;
+	if ((gl = list_find(p, which)) == NULL || member == NULL)
+		return 0;
+	for (int i = 0; i < gl->numMembers; i++) {
+		if (filterList) {
+			if (!strncasecmp(member, gl->member[i],
+			    strlen(gl->member[i])))
+				return 1;
+		} else {
+			if (!strcasecmp(member, gl->member[i]))
+				return 1;
+		}
+	}
+	return 0;
 }
 
 /*
