@@ -164,55 +164,65 @@ PUBLIC int list_size(int p, enum ListWhich l)
     return 0;
 }
 
-/* find list by name, doesn't have to be the whole name */
-PRIVATE List *list_findpartial(int p, char *which, int gonnado)
+/*
+ * Find list by name
+ * (doesn't have to be the whole name)
+ */
+PRIVATE List *
+list_findpartial(int p, char *which, int gonnado)
 {
-  List *gl;
-  int i, foundit, slen;
+	List	*gl;
+	int	 foundit, slen;
 
-  slen = strlen(which);
-  for (i = 0, foundit = -1; ListArray[i].name != NULL; i++) {
-    if (!strncasecmp(ListArray[i].name, which, slen)) {
-      if (foundit == -1)
-	foundit = i;
-      else
-	return NULL;		/* ambiguous */
-    }
-  }
+	foundit     = -1;
+	slen        = strlen(which);
 
-  if (foundit != -1) {
-    int rights = ListArray[foundit].rights;
-    int youlose = 0;
+	for (int i = 0; ListArray[i].name != NULL; i++) {
+		if (!strncasecmp(ListArray[i].name, which, slen)) {
+			if (foundit == -1)
+				foundit = i;
+			else
+				return NULL; // ambiguous
+		}
+	}
 
-    switch (rights) {		/* check rights */
-    case P_HEAD:
-      if (gonnado && !player_ishead(p))
-	youlose = 1;
-      break;
-    case P_GOD:
-      if ((gonnado && (parray[p].adminLevel < ADMIN_GOD)) ||
-	  (!gonnado && (parray[p].adminLevel < ADMIN_ADMIN)))
-	youlose = 1;
-      break;
-    case P_ADMIN:
-      if (parray[p].adminLevel < ADMIN_ADMIN)
-	youlose = 1;
-      break;
-    case P_PUBLIC:
-      if (gonnado && (parray[p].adminLevel < ADMIN_ADMIN))
-	youlose = 1;
-      break;
-    }
-    if (youlose) {
-      pprintf(p, "\"%s\" is not an appropriate list name or you have insufficient rights.\n", which);
-      return NULL;
-    }
-    gl = list_find(p, foundit);
-  } else {
-    pprintf(p, "\"%s\" does not match any list name.\n", which);
-    return NULL;
-  }
-  return gl;
+	if (foundit != -1) {
+		int	rights = ListArray[foundit].rights;
+		int	youlose = 0;
+
+		switch (rights) { // check rights
+		case P_HEAD:
+			if (gonnado && !player_ishead(p))
+				youlose = 1;
+			break;
+		case P_GOD:
+			if ((gonnado && parray[p].adminLevel < ADMIN_GOD) ||
+			    (!gonnado && parray[p].adminLevel < ADMIN_ADMIN))
+				youlose = 1;
+			break;
+		case P_ADMIN:
+			if (parray[p].adminLevel < ADMIN_ADMIN)
+				youlose = 1;
+			break;
+		case P_PUBLIC:
+			if (gonnado && (parray[p].adminLevel < ADMIN_ADMIN))
+				youlose = 1;
+			break;
+		}
+
+		if (youlose) {
+			pprintf(p, "\"%s\" is not an appropriate list name or "
+			    "you have insufficient rights.\n", which);
+			return NULL;
+		}
+
+		gl = list_find(p, foundit);
+	} else {
+		pprintf(p, "\"%s\" does not match any list name.\n", which);
+		return NULL;
+	}
+
+	return gl;
 }
 
 /*
