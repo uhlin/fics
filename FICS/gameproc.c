@@ -223,33 +223,12 @@ PUBLIC void game_ended(int g, int winner, int why)
       if (!parray[p].i_game && !player_is_observe(p, g))
 	continue;
       pprintf_noformat(p, outstr);
-/*      if (parray[p].bell)
-        pprintf (p, "\007"); removed - caused annoyance */
       pprintf_prompt(p, "");
     }
   }
   if ((garray[g].rated) && (rate_change)) {
     /* Adjust ratings */
     rating_update(g);
-#if 0
-    if (parray[garray[g].white].network_player &&
-	parray[garray[g].black].network_player) {
-      if (MailGameResult) {	/* Send to ratings server */
-	if (isDraw) {
-	  /* hostinfo_mailresults(garray[g].type == TYPE_BLITZ ? "blitz" :
-	     garray[g].type == TYPE_WILD ? "wild " : "stand", "
-	     parray[garray[g].white].name, parray[garray[g].black].name,
-	     "draw"); */
-	} else {
-/*	  hostinfo_mailresults(garray[g].type == TYPE_BLITZ ? "blitz" : garray[g].type == TYPE_WILD ? "wild " : "stand",
-			       parray[garray[g].white].name,
-			       parray[garray[g].black].name,
-			  (winner == WHITE) ? parray[garray[g].white].name :
-			       parray[garray[g].black].name); */
-	}
-      }
-    }
-#endif
 
   } else {
     if (beingplayed) {
@@ -1088,13 +1067,6 @@ PUBLIC int com_adjourn(int p, param_list param)
   }
   return COM_OK;
 }
-#if 0 /* this might as well die now */
-PUBLIC int com_load(int p, param_list param)
-{
-  pprintf(p, "Obsolete command, please use match <opponent>.\n");
-  return COM_OK;
-}
-#endif
 
 PUBLIC int com_takeback(int p, param_list param)
 {
