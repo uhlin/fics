@@ -139,25 +139,6 @@ PUBLIC int game_finish(int g)
   return 0;
 }
 
-#if 0
-PUBLIC void PosToBoardList (int g)
-{
-  if (garray[g].numHalfMoves >= garray[g].boardListSize) {
-    garray[g].boardListSize += 50;
-    if (garray[g].boardListSize <= 50)
-      garray[g].boardList =
-        (boardList_t *) rmalloc(garray[g].boardListSize * sizeof(boardList_t));
-    else
-      garray[g].boardList = (boardList_t *) rrealloc (garray[g].boardList,
-                              garray[g].boardListSize * sizeof(boardList_t));
-  }
-  if (garray[g].boardList != NULL)
-    strcpy(garray[g].boardList[garray[g].numHalfMoves], boardToFEN(g));
-  else
-    fprintf(stderr, "Board List could not be allocated for game %d.\n", g+1);
-}
-#endif
-
 PUBLIC void MakeFENpos (int g, char *FEN)
 {
   strcpy(FEN, boardToFEN(g));
@@ -343,93 +324,6 @@ PUBLIC void game_update_times()
     game_update_time(g);
   }
 }
-
-#if 0 /* oldgame is obsolete - games are stored in history */
-PRIVATE int oldGameArray[MAXOLDGAMES];
-PRIVATE int numOldGames = 0;
-
-PRIVATE int RemoveOldGame(int g)
-{
-  int i;
-
-  for (i = 0; i < numOldGames; i++) {
-    if (oldGameArray[i] == g)
-      break;
-  }
-  if (i == numOldGames)
-    return -1;			/* Not found! */
-  for (; i < numOldGames - 1; i++)
-    oldGameArray[i] = oldGameArray[i + 1];
-  numOldGames--;
-  game_remove(g);
-  return 0;
-}
-
-PRIVATE int AddOldGame(int g)
-{
-  if (numOldGames == MAXOLDGAMES)	/* Remove the oldest */
-    RemoveOldGame(oldGameArray[0]);
-  oldGameArray[numOldGames] = g;
-  numOldGames++;
-  return 0;
-}
-
-PUBLIC int FindOldGameFor(int p)
-{
-  int i;
-
-  if (p == -1)
-    return numOldGames - 1;
-  for (i = numOldGames - 1; i >= 0; i--) {
-    if (garray[oldGameArray[i]].old_white == p)
-      return oldGameArray[i];
-    if (garray[oldGameArray[i]].old_black == p)
-      return oldGameArray[i];
-  }
-  return -1;
-}
-
-/* This just removes the game if both players have new-old games */
-PUBLIC int RemoveOldGamesForPlayer(int p)
-{
-  int g;
-
-  g = FindOldGameFor(p);
-  if (g < 0)
-    return 0;
-  if (garray[g].old_white == p)
-    garray[g].old_white = -1;
-  if (garray[g].old_black == p)
-    garray[g].old_black = -1;
-  if ((garray[g].old_white == -1) && (garray[g].old_black == -1)) {
-    RemoveOldGame(g);
-  }
-  return 0;
-}
-
-/* This recycles any old games for players who disconnect */
-PUBLIC int ReallyRemoveOldGamesForPlayer(int p)
-{
-  int g;
-
-  g = FindOldGameFor(p);
-  if (g < 0)
-    return 0;
-  RemoveOldGame(g);
-  return 0;
-}
-
-PUBLIC int NewOldGame(int g)
-{
-  RemoveOldGamesForPlayer(garray[g].white);
-  RemoveOldGamesForPlayer(garray[g].black);
-  garray[g].old_white = garray[g].white;
-  garray[g].old_black = garray[g].black;
-  garray[g].status = GAME_STORED;
-  AddOldGame(g);
-  return 0;
-}
-#endif
 
 PUBLIC char *EndString(int g, int personal)
 {
@@ -805,12 +699,6 @@ PRIVATE int WriteMoves(FILE * fp, move_t *m)
   MoveInfo = (MoveInfo << 3) | useFile | useRank | check;
   fprintf(fp, "%lx %x %x\n", MoveInfo, m->tookTime, m->atTime);
 
-#if 0
-  fprintf(fp, "%d %d %d %d %d %d %d %d %d \"%s\" \"%s\" %u %u\n",
-	  m->color, m->fromFile, m->fromRank, m->toFile, m->toRank,
-	  m->pieceCaptured, m->piecePromotionTo, m->enPassant, m->doublePawn,
-	  m->moveString, m->algString, m->atTime, m->tookTime);
-#endif
   return 0;
 }
 
@@ -1266,42 +1154,6 @@ PUBLIC int game_save(int g)
     link(fname, lname);
   return 0;
 }
-
-#if 0
-PRIVATE int history_game_save(int g, char *fname)
-{
-  FILE *fp;
-  int wp, bp;
-  int i;
-
-  wp = garray[g].white;
-  bp = garray[g].black;
-  fp = fopen(fname, "w");
-  if (!fp) {
-    fprintf(stderr, "FICS: Problem openning file %s for write\n", fname);
-    return -1;
-  }
-  fprintf(fp, "W_Init: %d\n", garray[g].wInitTime);
-  fprintf(fp, "W_Inc: %d\n", garray[g].wIncrement);
-  fprintf(fp, "B_Init: %d\n", garray[g].bInitTime);
-  fprintf(fp, "B_Inc: %d\n", garray[g].bIncrement);
-  fprintf(fp, "TimeStart: %d\n", (int) garray[g].timeOfStart);
-  fprintf(fp, "W_Time: %d\n", garray[g].wTime);
-  fprintf(fp, "B_Time: %d\n", garray[g].bTime);
-  fprintf(fp, "ClockStopped: %d\n", garray[g].clockStopped);
-  fprintf(fp, "Rated: %d\n", garray[g].rated);
-  fprintf(fp, "Private: %d\n", garray[g].private);
-  fprintf(fp, "Type: %d\n", garray[g].type);
-  fprintf(fp, "HalfMoves: %d\n", garray[g].numHalfMoves);
-  for (i = 0; i < garray[g].numHalfMoves; i++) {
-    WriteMoves(fp, &garray[g].moveList[i]);
-  }
-  fprintf(fp, "GameState: IsNext\n");
-  WriteGameState(fp, &garray[g].game_state);
-  fclose(fp);
-  return 0;
-}
-#endif
 
 PRIVATE long OldestHistGame(char *login)
 {
