@@ -668,6 +668,8 @@ WriteMoves(FILE *fp, move_t *m)
 	else
 		piece = piecetype(CharToPiece(m->moveString[0]));
 
+#define ORIGINAL_CODE 0
+#if ORIGINAL_CODE
 	MoveInfo	= (MoveInfo <<= 3) | piece;
 	MoveInfo	= (MoveInfo <<= 3) | m->fromFile;
 	MoveInfo	= (MoveInfo <<= 3) | m->fromRank;
@@ -676,6 +678,31 @@ WriteMoves(FILE *fp, move_t *m)
 	MoveInfo	= (MoveInfo <<= 3) | (m->pieceCaptured & 7);
 	MoveInfo	= (MoveInfo <<= 3) | (m->piecePromotionTo & 7);
 	MoveInfo	= (MoveInfo <<= 1) | (m->enPassant != 0);
+#else
+	MoveInfo <<= 3;
+	MoveInfo |= piece;
+
+	MoveInfo <<= 3;
+	MoveInfo |= m->fromFile;
+
+	MoveInfo <<= 3;
+	MoveInfo |= m->fromRank;
+
+	MoveInfo <<= 3;
+	MoveInfo |= m->toFile;
+
+	MoveInfo <<= 3;
+	MoveInfo |= m->toRank;
+
+	MoveInfo <<= 3;
+	MoveInfo |= (m->pieceCaptured & 7);
+
+	MoveInfo <<= 3;
+	MoveInfo |= (m->piecePromotionTo & 7);
+
+	MoveInfo <<= 1;
+	MoveInfo |= (m->enPassant != 0);
+#endif
 
 	/* Are we using from-file or from-rank in 'algString'? */
 
