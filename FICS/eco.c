@@ -313,53 +313,59 @@ BookInit()
 	LONG_init();
 }
 
-char *getECO(int g)
+char *
+getECO(int g)
 {
-  static char ECO[4];
+	static char ECO[4];
 
 #ifndef IGNORE_ECO
+	int i, flag, l, r, x;
 
-  int i, flag, l = 0, r = ECO_entries - 1, x;
+	if (parray[garray[g].white].private ||
+	    parray[garray[g].black].private) {
+		strcpy(ECO, "---");
+		return ECO;
+	} else {
+		if (garray[g].type == TYPE_WILD) {
+			strcpy(ECO, "---");
+			return ECO;
+		} else if (garray[g].moveList == NULL) {
+			strcpy(ECO, "***");
+			return ECO;
+		} else {
+			strcpy(ECO, "A00");
+		}
+	}
 
+	flag	= 0;
+	i	= garray[g].numHalfMoves;
 
-  if ((parray[garray[g].white].private) || (parray[garray[g].black].private)) {
-    strcpy(ECO, "---");
-    return ECO;
-  } else {
-    if (garray[g].type == TYPE_WILD) {
-      strcpy(ECO, "---");
-      return ECO;
-    } else if (garray[g].moveList == NULL) {
-      strcpy(ECO, "***");
-      return ECO;
-    } else {
-      strcpy(ECO, "A00");
-    }
-  }
+	while (i > 0 && !flag) {
+		l = 0;
+		r = (ECO_entries - 1);
 
-  for (flag=0,i=garray[g].numHalfMoves; (i>0 && !flag); i--) {
-    l = 0;
-    r = ECO_entries - 1;
-    while ((r >= l) && !flag) {
-      x = (l+r)/2;
-      if ((strcmp(garray[g].moveList[i].FENpos, ECO_book[x]->FENpos)) < 0)
-	r = x - 1;
-      else
-	l = x + 1;
-      if (!strcmp(garray[g].moveList[i].FENpos, ECO_book[x]->FENpos)) {
-        strcpy(ECO, ECO_book[x]->ECO);
-        flag=1;
-      }
-    }
-  }
+		while ((r >= l) && !flag) {
+			x = ((l + r) / 2);
+
+			if (strcmp(garray[g].moveList[i].FENpos,
+			    ECO_book[x]->FENpos) < 0)
+				r = (x - 1);
+			else
+				l = (x + 1);
+
+			if (!strcmp(garray[g].moveList[i].FENpos,
+			    ECO_book[x]->FENpos)) {
+				strcpy(ECO, ECO_book[x]->ECO);
+				flag = 1;
+			}
+		}
+
+		i--;
+	} /* while */
 #else
-
-  strcpy(ECO, "---");
-
+	strcpy(ECO, "---");
 #endif
-
-
-  return ECO;
+	return ECO;
 }
 
 PUBLIC int
