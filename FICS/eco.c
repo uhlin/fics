@@ -144,48 +144,65 @@ char *boardToFEN(int g)
   return FENstring;
 }
 
-void ECO_init()
+void
+ECO_init()
 {
-  FILE *fp;
-  char tmp[1024];
-  char *ptmp= tmp;
-  char FENpos[73], ECO[4], onMove[2];
-  char filename[1024];
-  int i=0;
+	FILE	*fp;
+	char	 ECO[4];
+	char	 FENpos[73];
+	char	 filename[1024];
+	char	 onMove[2];
+	char	 tmp[1024];
+	char	*ptmp = tmp;
+	int	 i = 0;
 
-  sprintf(filename, "%s/eco999.idx", book_dir);
-  fp= fopen(filename, "r");
-  if (!fp) {
-    fprintf(stderr, "Could not open ECO file (%s)\n", filename);
-    exit(1);
-  }
-  while (!feof(fp)) {
-    strcpy(ptmp, "");
-    fgets(ptmp, 1024, fp);
-    if (feof(fp)) continue;
-    sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-    sprintf(FENpos, "%s %s", FENpos, onMove);
-    strcpy(ptmp, "");
-    fgets(ptmp, 1024, fp);
-    if (feof(fp)) continue;
-    sscanf(ptmp, "%[0-z]", ECO);
-    ECO_book[i]= (ECO_entry *) malloc(sizeof(ECO_entry));
-    if (ECO_book[i]==NULL) {
-      fprintf(stderr, "Cound not alloc mem for ECO entry %d.\n", i);
-      exit(1);
-    }
-    strcpy(ECO_book[i]->ECO, ECO);
-    strcpy(ECO_book[i]->FENpos, FENpos);
-    ++i;
-  }
-  fclose(fp);
-  ECO_book[i]=NULL;
-  fprintf(stderr, "%d entries in ECO book\n", i);
-  ECO_entries = i;
+	sprintf(filename, "%s/eco999.idx", book_dir);
 
-  while (--i >= 0)
-    if (ECO_book[i] == NULL)
-      fprintf(stderr, "ERROR!  ECO book position number %d is NULL.", i);
+	if ((fp = fopen(filename, "r")) == NULL) {
+		fprintf(stderr, "Could not open ECO file (%s)\n", filename);
+		exit(1);
+	}
+
+	while (!feof(fp)) {
+		strcpy(ptmp, "");
+		fgets(ptmp, 1024, fp);
+
+		if (feof(fp))
+			continue;
+
+		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
+		sprintf(FENpos, "%s %s", FENpos, onMove);
+
+		strcpy(ptmp, "");
+		fgets(ptmp, 1024, fp);
+		if (feof(fp))
+			continue;
+		sscanf(ptmp, "%[0-z]", ECO);
+
+		if ((ECO_book[i] = malloc(sizeof(ECO_entry))) == NULL) {
+			fprintf(stderr, "Cound not alloc mem for ECO "
+			    "entry %d.\n", i);
+			exit(1);
+		}
+
+		strcpy(ECO_book[i]->ECO, ECO);
+		strcpy(ECO_book[i]->FENpos, FENpos);
+
+		++i;
+	}
+
+	fclose(fp);
+	ECO_book[i] = NULL;
+
+	fprintf(stderr, "%d entries in ECO book\n", i);
+	ECO_entries = i;
+
+	while (--i >= 0) {
+		if (ECO_book[i] == NULL) {
+			fprintf(stderr, "ERROR! ECO book position number %d "
+			    "is NULL.", i);
+		}
+	}
 }
 
 void
