@@ -11,6 +11,14 @@
 #include "playerdb.h"
 #include "utils.h"
 
+#define SPACE_CHK()\
+	do {\
+		if (space > 0) {\
+			FENstring[FENcount++] = (space + '0');\
+			space = 0;\
+		}\
+	} while (0)
+
 PUBLIC char *book_dir = DEFAULT_BOOK;
 
 ECO_entry	*ECO_book[1096];
@@ -19,115 +27,85 @@ LONG_entry	*LONG_book[4096];
 
 int ECO_entries, NIC_entries, LONG_entries;
 
-char *boardToFEN(int g)
+char *
+boardToFEN(int g)
 {
-  int i,j;
-  static char FENstring[80];
-  int FENcount = 0;
-  int space = 0;
+	int		FENcount = 0;
+	int		space = 0;
+	static char	FENstring[80];
 
-  for(i=7; i>=0; i--) {
-    for(j=0; j<8; j++) {
-      switch(garray[g].game_state.board[j][i]) {
-      case W_PAWN:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='P';
-        break;
-      case W_ROOK:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='R';
-        break;
-      case W_KNIGHT:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='N';
-        break;
-      case W_BISHOP:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='B';
-        break;
-      case W_QUEEN:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='Q';
-        break;
-      case W_KING:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='K';
-        break;
-      case B_PAWN:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='p';
-        break;
-      case B_ROOK:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='r';
-        break;
-      case B_KNIGHT:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='n';
-        break;
-      case B_BISHOP:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='b';
-        break;
-      case B_QUEEN:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='q';
-        break;
-      case B_KING:
-        if (space>0) {
-          FENstring[FENcount++]=space+'0';
-          space=0;
-        }
-        FENstring[FENcount++]='k';
-        break;
-      default:
-        space++;
-        break;
-      }
-    }
-    if (space>0) {
-      FENstring[FENcount++]=space+'0';
-      space=0;
-    }
-    FENstring[FENcount++]='/';
-  }
-  FENstring[--FENcount]=' ';
-  FENstring[++FENcount]=(garray[g].game_state.onMove==WHITE) ? 'w' : 'b';
-  FENstring[++FENcount]='\0';
-  return FENstring;
+	for (int i = 7; i >= 0; i--) {
+		for (int j = 0; j < 8; j++) {
+			switch (garray[g].game_state.board[j][i]) {
+			case W_PAWN:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'P';
+				break;
+			case W_ROOK:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'R';
+				break;
+			case W_KNIGHT:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'N';
+				break;
+			case W_BISHOP:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'B';
+				break;
+			case W_QUEEN:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'Q';
+				break;
+			case W_KING:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'K';
+				break;
+			case B_PAWN:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'p';
+				break;
+			case B_ROOK:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'r';
+				break;
+			case B_KNIGHT:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'n';
+				break;
+			case B_BISHOP:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'b';
+				break;
+			case B_QUEEN:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'q';
+				break;
+			case B_KING:
+				SPACE_CHK();
+				FENstring[FENcount++] = 'k';
+				break;
+			default:
+				space++;
+				break;
+			} /* switch */
+		} /* for */
+
+		if (space > 0) {
+			FENstring[FENcount++] = (space + '0');
+			space = 0;
+		}
+
+		FENstring[FENcount++] = '/';
+	} /* for */
+
+	FENstring[--FENcount] = ' ';
+	FENstring[++FENcount] = ((garray[g].game_state.onMove == WHITE)
+				 ? 'w'
+				 : 'b');
+	FENstring[++FENcount] = '\0';
+
+	return FENstring;
 }
 
 void
