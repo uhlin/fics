@@ -560,7 +560,7 @@ PUBLIC char *movesToString(int g, int pgn)
 
   wr = garray[g].white_rating;
   br = garray[g].black_rating;
-  
+
 
   curTime = untenths(garray[g].timeOfStart);
 
@@ -646,7 +646,7 @@ PUBLIC char *movesToString(int g, int pgn)
       strcat(gameString, "Untimed ");
     }
     strcat(gameString, "match, initial time: ");
-    if ((garray[g].bInitTime != garray[g].wInitTime) || (garray[g].wIncrement != garray[g].bIncrement)) { /* different starting times */ 
+    if ((garray[g].bInitTime != garray[g].wInitTime) || (garray[g].wIncrement != garray[g].bIncrement)) { /* different starting times */
       sprintf(tmp, "%d minutes, increment: %d seconds AND %d minutes, increment: %d seconds.\n\n", garray[g].wInitTime / 600, garray[g].wIncrement / 10, garray[g].bInitTime / 600, garray[g].bIncrement / 10);
     } else {
       sprintf(tmp, "%d minutes, increment: %d seconds.\n\n", garray[g].wInitTime / 600, garray[g].wIncrement / 10);
@@ -1115,7 +1115,7 @@ PUBLIC int ReadGameAttrs(FILE * fp, char *fname, int g)
 	return -1;
       }
       fgets(line, MAX_GLINE_SIZE - 1, fp);
-    } while (!feof(fp)); 
+    } while (!feof(fp));
   if (!(garray[g].bInitTime))
      garray[g].bInitTime = garray[g].wInitTime;
   return 0;
@@ -1574,7 +1574,7 @@ PUBLIC void addjournalitem(int p,char count2,char* WhiteName2, int WhiteRating2,
     fprintf(stderr, "FICS: Problem opening file %s for write\n", fname);
     pprintf (p, "Couldn't update journal! Report this to an admin.\n");
     return;
-  } 
+  }
   fp = fopen(fname, "r");
   if (!fp) { /* Empty? */
     fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
@@ -1648,7 +1648,7 @@ PUBLIC void addjournalitem(int p,char count2,char* WhiteName2, int WhiteRating2,
   fclose(fp2);
   rename(fname2, fname);
   return;
-} 
+}
 
 PUBLIC int pjournal(int p, int p1, char *fname)
 {
@@ -1792,4 +1792,3 @@ PUBLIC int game_count(void)
     game_high = count;
   return count;
 }
-
