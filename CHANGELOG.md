@@ -8,6 +8,7 @@ documented in this file.
 - Added better handling of memory allocation errors.
 - Deleted disabled code
 - Did new revisions of the following files:
+  - `eco.c`
   - `fics_addplayer.c`
   - `makerank.c`
   - `network.c`
