@@ -287,28 +287,38 @@ PRIVATE int was_promoted(game *g, int f, int r)
   return 0;
 }
 
-PUBLIC int pIsPlaying (int p)
+PUBLIC int
+pIsPlaying(int p)
 {
-  int g = parray[p].game;
-  int p1 = parray[p].opponent;
+	int	g = parray[p].game;
+	int	p1 = parray[p].opponent;
 
-  if (g < 0 || garray[g].status == GAME_EXAMINE) {
-    pprintf (p, "You are not playing a game.\n");
-    return 0;
-  } else if (garray[g].white != p && garray[g].black != p) {
-    /* oh oh; big bad game bug. */
-    fprintf (stderr, "BUG:  Player %s playing game %d according to parray,"
-             "\n      but not according to garray.\n", parray[p].name, g+1);
-    pprintf (p, "Disconnecting you from game number %d.\n", g+1);
-    parray[p].game = -1;
-    if (p1 >= 0 && parray[p1].game == g
-        && garray[g].white != p1 && garray[g].black != p1) {
-      pprintf (p1, "Disconnecting you from game number %d.\n", g+1);
-      parray[p1].game = -1;
-    }
-    return 0;
-  }
-  else return 1;
+	if (g < 0 || garray[g].status == GAME_EXAMINE) {
+		pprintf(p, "You are not playing a game.\n");
+		return 0;
+	} else if (garray[g].white != p && garray[g].black != p) {
+		/*
+		 * oh oh; big bad game bug.
+		 */
+
+		fprintf(stderr, "BUG: Player %s playing game %d according to "
+		    "parray, but not according to garray.\n",
+		    parray[p].name, (g + 1));
+		pprintf(p, "Disconnecting you from game number %d.\n", (g + 1));
+		parray[p].game = -1;
+
+		if (p1 >= 0 &&
+		    parray[p1].game == g &&
+		    garray[g].white != p1 &&
+		    garray[g].black != p1) {
+			pprintf(p1, "Disconnecting you from game number %d.\n",
+			    (g + 1));
+			parray[p1].game = -1;
+		}
+
+		return 0;
+	} else
+		return 1;
 }
 
 PUBLIC void
@@ -330,7 +340,7 @@ process_move(int p, char *command)
 	g = parray[p].game;
 
 	if (garray[g].status != GAME_EXAMINE) {
-		if (!pIsPlaying)
+		if (!pIsPlaying(p)) // XXX
 			return;
 		if (parray[p].side != garray[g].game_state.onMove) {
 			pprintf(p, "It is not your move.\n");
@@ -401,10 +411,12 @@ process_move(int p, char *command)
 			}
 		}
 
+		now = tenth_secs();
+
 		result		= execute_move(&garray[g].game_state, &move, 1);
-		move.atTime	= now;
+		move.atTime	= now; // XXX
 		move.tookTime	= 0;
-		MakeFENpos(g, move.FENpos);
+		MakeFENpos(g, (char *)move.FENpos);
 		garray[g].examMoveList[garray[g].numHalfMoves - 1] = move;
 
 		/*
@@ -419,7 +431,8 @@ process_move(int p, char *command)
 			    (garray[g].lastDecTime - garray[g].lastMoveTime);
 		}
 
-		now = tenth_secs();
+		// XXX: 'now' was assigned here
+		// <--
 
 		if (garray[g].numHalfMoves == 0)
 			garray[g].timeOfStart = now;
@@ -607,7 +620,7 @@ process_move(int p, char *command)
 		}
 #endif
 
-		MakeFENpos(g, move.FENpos);
+		MakeFENpos(g, (char *)move.FENpos);
 		garray[g].moveList[garray[g].numHalfMoves - 1] = move;
 	}
 
@@ -730,11 +743,12 @@ int Check50MoveRule (int p, int g)
   return 0;
 }
 
-char *GetFENpos (int g, int half_move)
+char *
+GetFENpos(int g, int half_move)
 {
-  if (half_move < 0)
-    return garray[g].FENstartPos;
-  else return garray[g].moveList[half_move].FENpos;
+	if (half_move < 0)
+		return ((char *)garray[g].FENstartPos);
+	return ((char *)garray[g].moveList[half_move].FENpos);
 }
 
 int CheckRepetition (int p, int g)
