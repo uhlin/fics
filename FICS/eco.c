@@ -319,11 +319,12 @@ LONG_init()
 	LONG_entries = i;
 }
 
-void BookInit()
+void
+BookInit()
 {
-  ECO_init();
-  NIC_init();
-  LONG_init();
+	ECO_init();
+	NIC_init();
+	LONG_init();
 }
 
 char *getECO(int g)
