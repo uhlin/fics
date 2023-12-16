@@ -26,24 +26,23 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
 #include "command.h"
-#include "ficsmain.h"
+#include "common.h"
+#include "comproc.h"
 #include "config.h"
-#include "playerdb.h"
+#include "eco.h"
+#include "ficsmain.h"
 #include "gamedb.h"
 #include "gameproc.h"
-#include "obsproc.h"
+#include "lists.h"
+#include "matchproc.h"
 #include "movecheck.h"
-#include "utils.h"
+#include "network.h"
+#include "obsproc.h"
+#include "playerdb.h"
 #include "ratings.h"
 #include "rmalloc.h"
-#include "comproc.h"
-#include "matchproc.h"
-#include "eco.h"
-#include "network.h"
-#include "lists.h"
-/* #include "hostinfo.h" */
+#include "utils.h"
 
 PUBLIC void game_ended(int g, int winner, int why)
 {
