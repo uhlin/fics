@@ -188,44 +188,58 @@ void ECO_init()
       fprintf(stderr, "ERROR!  ECO book position number %d is NULL.", i);
 }
 
-void NIC_init()
+void
+NIC_init()
 {
-  FILE *fp;
-  char tmp[1024];
-  char *ptmp= tmp;
-  char FENpos[73], NIC[6], onMove[2];
-  char filename[1024];
-  int i=0;
+	FILE	*fp;
+	char	*ptmp = tmp;
+	char	 FENpos[73];
+	char	 NIC[6];
+	char	 filename[1024];
+	char	 onMove[2];
+	char	 tmp[1024];
+	int	 i = 0;
 
-  sprintf(filename, "%s/nic999.idx", book_dir);
-  fp= fopen(filename, "r");
-  if (!fp) {
-    fprintf(stderr, "Could not open NIC file\n");
-    exit(1);
-  }
-  while (!feof(fp)) {
-    strcpy(ptmp, "");
-    fgets(ptmp, 1024, fp);
-    if (feof(fp)) continue;
-    sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-    sprintf(FENpos, "%s %s", FENpos, onMove);
-    strcpy(ptmp, "");
-    fgets(ptmp, 1024, fp);
-    if (feof(fp)) continue;
-    sscanf(ptmp, "%[.-z]", NIC);
-    NIC_book[i]= (NIC_entry *) malloc(sizeof(NIC_entry));
-    if (NIC_book[i]==NULL) {
-      fprintf(stderr, "Cound not alloc mem for NIC entry %d.\n", i);
-      exit(1);
-    }
-    strcpy(NIC_book[i]->NIC, NIC);
-    strcpy(NIC_book[i]->FENpos, FENpos);
-    ++i;
-  }
-  fclose(fp);
-  NIC_book[i]=NULL;
-  fprintf(stderr, "%d entries in NIC book\n", i);
-  NIC_entries = i;
+	sprintf(filename, "%s/nic999.idx", book_dir);
+
+	if ((fp = fopen(filename, "r")) == NULL) {
+		fprintf(stderr, "Could not open NIC file\n");
+		exit(1);
+	}
+
+	while (!feof(fp)) {
+		strcpy(ptmp, "");
+		fgets(ptmp, 1024, fp);
+
+		if (feof(fp))
+			continue;
+
+		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
+		sprintf(FENpos, "%s %s", FENpos, onMove);
+
+		strcpy(ptmp, "");
+		fgets(ptmp, 1024, fp);
+		if (feof(fp))
+			continue;
+		sscanf(ptmp, "%[.-z]", NIC);
+
+		if ((NIC_book[i] = malloc(sizeof(NIC_entry))) == NULL) {
+			fprintf(stderr, "Cound not alloc mem for NIC "
+			    "entry %d.\n", i);
+			exit(1);
+		}
+
+		strcpy(NIC_book[i]->NIC, NIC);
+		strcpy(NIC_book[i]->FENpos, FENpos);
+
+		++i;
+	}
+
+	fclose(fp);
+	NIC_book[i] = NULL;
+
+	fprintf(stderr, "%d entries in NIC book\n", i);
+	NIC_entries = i;
 }
 
 void
