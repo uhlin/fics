@@ -938,13 +938,24 @@ ReadOneV1Move(FILE *fp, move_t *m)
 		}
 	}
 
-	if (m->algString[0] != 'O')
-		sprintf(m->moveString, "%c/%c%d-%c%d",
+	if (m->algString[0] != 'O') {
+		int ret, too_long;
+
+		ret = snprintf(m->moveString, sizeof m->moveString,
+		    "%c/%c%d-%c%d",
 		    PieceChar,
 		    ('a' + m->fromFile),
 		    (m->fromRank + 1),
 		    ('a' + m->toFile),
 		    (m->toRank + 1));
+
+		too_long = (ret < 0 || (size_t)ret >= sizeof m->moveString);
+
+		if (too_long) {
+			fprintf(stderr, "FICS: %s: warning: "
+			    "snprintf truncated\n", __func__);
+		}
+	}
 	if (check)
 		strcat(m->algString, "+");
 }
