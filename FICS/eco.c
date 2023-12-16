@@ -4,6 +4,7 @@
 #include "command.h"
 #include "common.h"
 #include "config.h"
+#include "eco.h"
 #include "gamedb.h"
 #include "gameproc.h"
 #include "obsproc.h"
@@ -11,21 +12,6 @@
 #include "utils.h"
 
 PUBLIC char *book_dir = DEFAULT_BOOK;
-
-typedef struct {
-  char ECO[4];
-  char FENpos[80];
-} ECO_entry;
-
-typedef struct {
-  char NIC[6];
-  char FENpos[80];
-} NIC_entry;
-
-typedef struct {
-  char LONG[80];
-  char FENpos[80];
-} LONG_entry;
 
 ECO_entry *ECO_book[1096];
 NIC_entry *NIC_book[1096];
