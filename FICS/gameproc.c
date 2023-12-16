@@ -311,287 +311,368 @@ PUBLIC int pIsPlaying (int p)
   else return 1;
 }
 
-PUBLIC void process_move(int p, char *command)
+PUBLIC void
+process_move(int p, char *command)
 {
-  int g;
-  move_t move;
-  int result;
-  unsigned now;
-  int len;			/* loon: for lame promotion hack */
-  int i;
+	int		 g;
+	int		 i;
+	int		 len;
+	int		 result;
+	move_t		 move;
+	unsigned int	 now;
 
-  if (parray[p].game < 0) {
-    pprintf(p, "You are not playing or examining a game.\n");
-    return;
-  }
-  player_decline_offers(p, -1, -PEND_SIMUL);
-  g = parray[p].game;
+	if (parray[p].game < 0) {
+		pprintf(p, "You are not playing or examining a game.\n");
+		return;
+	}
 
-  if (garray[g].status != GAME_EXAMINE) {
-    if (!pIsPlaying) return;
+	player_decline_offers(p, -1, -PEND_SIMUL);
+	g = parray[p].game;
 
-    if (parray[p].side != garray[g].game_state.onMove) {
-      pprintf(p, "It is not your move.\n");
-      return;
-    }
-    if (garray[g].clockStopped) {
-      pprintf(p, "Game clock is paused, use \"unpause\" to resume.\n");
-      return;
-    }
-  }
-  if ((len = strlen(command)) > 1) {
-    if (command[len - 2] == '=') {
-      switch (tolower(command[strlen(command) - 1])) {
-      case 'n':
-	parray[p].promote = KNIGHT;
-	break;
-      case 'b':
-	parray[p].promote = BISHOP;
-	break;
-      case 'r':
-	parray[p].promote = ROOK;
-	break;
-      case 'q':
-	parray[p].promote = QUEEN;
-	break;
-      default:
-	pprintf(p, "Don't understand that move.\n");
-	return;
-	break;
-      }
-    }
-  }
-  switch (parse_move(command, &garray[g].game_state, &move, parray[p].promote)) {
-  case MOVE_ILLEGAL:
-    pprintf(p, "Illegal move.\n");
-    return;
-    break;
-  case MOVE_AMBIGUOUS:
-    pprintf(p, "Ambiguous move.\n");
-    return;
-    break;
-  default:
-    break;
-  }
+	if (garray[g].status != GAME_EXAMINE) {
+		if (!pIsPlaying)
+			return;
+		if (parray[p].side != garray[g].game_state.onMove) {
+			pprintf(p, "It is not your move.\n");
+			return;
+		}
+		if (garray[g].clockStopped) {
+			pprintf(p, "Game clock is paused, use \"unpause\" "
+			    "to resume.\n");
+			return;
+		}
+	}
 
-  if (garray[g].status == GAME_EXAMINE) {
-    garray[g].numHalfMoves++;
-    if (garray[g].numHalfMoves > garray[g].examMoveListSize) {
-      garray[g].examMoveListSize += 20;	/* Allocate 20 moves at a time */
-      if (!garray[g].examMoveList) {
-	garray[g].examMoveList = (move_t *) rmalloc(sizeof(move_t) * garray[g].examMoveListSize);
-      } else {
-	garray[g].examMoveList = (move_t *) rrealloc(garray[g].examMoveList, sizeof(move_t) * garray[g].examMoveListSize);
-      }
-    }
-    result = execute_move(&garray[g].game_state, &move, 1);
-    move.atTime = now;
-    move.tookTime = 0;
-    MakeFENpos(g, move.FENpos);
-    garray[g].examMoveList[garray[g].numHalfMoves - 1] = move;
-    /* roll back time */
-    if (garray[g].game_state.onMove == WHITE) {
-      garray[g].wTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-    } else {
-      garray[g].bTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-    }
-    now = tenth_secs();
-    if (garray[g].numHalfMoves == 0)
-      garray[g].timeOfStart = now;
-    garray[g].lastMoveTime = now;
-    garray[g].lastDecTime = now;
+	if ((len = strlen(command)) > 1) {
+		if (command[len - 2] == '=') {
+			switch (tolower(command[strlen(command) - 1])) {
+			case 'n':
+				parray[p].promote = KNIGHT;
+				break;
+			case 'b':
+				parray[p].promote = BISHOP;
+				break;
+			case 'r':
+				parray[p].promote = ROOK;
+				break;
+			case 'q':
+				parray[p].promote = QUEEN;
+				break;
+			default:
+				pprintf(p, "Don't understand that move.\n");
+				return;
+				break;
+			}
+		}
+	}
 
-  } else {			/* real game */
-    i = parray[p].opponent;
-    if (parray[i].simul_info.numBoards &&
-	(parray[i].simul_info.boards[parray[i].simul_info.onBoard] != g)) {
-      pprintf(p, "It isn't your turn: wait until the simul giver is at your board.\n");
-      return;
-    }
+	switch (parse_move(command, &garray[g].game_state, &move,
+			   parray[p].promote)) {
+	case MOVE_ILLEGAL:
+		pprintf(p, "Illegal move.\n");
+		return;
+		break;
+	case MOVE_AMBIGUOUS:
+		pprintf(p, "Ambiguous move.\n");
+		return;
+		break;
+	default:
+		break;
+	}
+
+	if (garray[g].status == GAME_EXAMINE) {
+		garray[g].numHalfMoves++;
+
+		if (garray[g].numHalfMoves > garray[g].examMoveListSize) {
+			size_t size;
+
+			garray[g].examMoveListSize += 20;	// Allocate 20
+								// moves at a
+								// time
+			size = (sizeof(move_t) * garray[g].examMoveListSize);
+
+			if (!garray[g].examMoveList) {
+				garray[g].examMoveList = rmalloc(size);
+			} else {
+				garray[g].examMoveList =
+				    rrealloc(garray[g].examMoveList,
+				    (sizeof(move_t) *
+				    garray[g].examMoveListSize));
+			}
+		}
+
+		result		= execute_move(&garray[g].game_state, &move, 1);
+		move.atTime	= now;
+		move.tookTime	= 0;
+		MakeFENpos(g, move.FENpos);
+		garray[g].examMoveList[garray[g].numHalfMoves - 1] = move;
+
+		/*
+		 * roll back time
+		 */
+
+		if (garray[g].game_state.onMove == WHITE) {
+			garray[g].wTime +=
+			    (garray[g].lastDecTime - garray[g].lastMoveTime);
+		} else {
+			garray[g].bTime +=
+			    (garray[g].lastDecTime - garray[g].lastMoveTime);
+		}
+
+		now = tenth_secs();
+
+		if (garray[g].numHalfMoves == 0)
+			garray[g].timeOfStart = now;
+
+		garray[g].lastMoveTime = now;
+		garray[g].lastDecTime = now;
+	} else { // real game
+		i = parray[p].opponent;
+
+		if (parray[i].simul_info.numBoards &&
+		    parray[i].simul_info.boards[parray[i].simul_info.onBoard] !=
+		    g) {
+			pprintf(p, "It isn't your turn: wait until the simul "
+			    "giver is at your board.\n");
+			return;
+		}
+
 #ifdef TIMESEAL
+		if (con[parray[p].socket].timeseal) { // Does he use timeseal?
+			if (parray[p].side == WHITE) {
+				int diff;
 
-    if (con[parray[p].socket].timeseal) {	/* does he use timeseal? */
-      if (parray[p].side == WHITE) {
-	garray[g].wLastRealTime = garray[g].wRealTime;
-	garray[g].wTimeWhenMoved = con[parray[p].socket].time;
-	if (((garray[g].wTimeWhenMoved - garray[g].wTimeWhenReceivedMove) < 0) ||
-	    (garray[g].wTimeWhenReceivedMove == 0)) {
-	  /* might seem weird - but could be caused by a person moving BEFORE
-	     he receives the board pos (this is possible due to lag) but it's
-	     safe to say he moved in 0 secs :-) */
-	  garray[g].wTimeWhenReceivedMove = garray[g].wTimeWhenMoved;
-	} else {
-	  garray[g].wRealTime -= garray[g].wTimeWhenMoved - garray[g].wTimeWhenReceivedMove;
-	}
-      } else if (parray[p].side == BLACK) {
-	garray[g].bLastRealTime = garray[g].bRealTime;
-	garray[g].bTimeWhenMoved = con[parray[p].socket].time;
-	if (((garray[g].bTimeWhenMoved - garray[g].bTimeWhenReceivedMove) < 0) ||
-	    (garray[g].bTimeWhenReceivedMove == 0)) {
-	  /* might seem weird - but could be caused by a person moving BEFORE
-	     he receives the board pos (this is possible due to lag) but it's
-	     safe to say he moved in 0 secs :-) */
-	  garray[g].bTimeWhenReceivedMove = garray[g].bTimeWhenMoved;
-	} else {
-	  garray[g].bRealTime -= garray[g].bTimeWhenMoved - garray[g].bTimeWhenReceivedMove;
-	}
-      }
-    }
-    /* we need to reset the opp's time for receiving the board since the
-       timeseal decoder only alters the time if it's 0 Otherwise the time
-       would be changed if the player did a refresh which would screw up
-       the timings */
-    if (parray[p].side == WHITE) {
-      garray[g].bTimeWhenReceivedMove = 0;
-    } else {
-      garray[g].wTimeWhenReceivedMove = 0;
-    }
+				garray[g].wLastRealTime = garray[g].wRealTime;
+				garray[g].wTimeWhenMoved =
+				    con[parray[p].socket].time;
 
+				diff = (garray[g].wTimeWhenMoved -
+					garray[g].wTimeWhenReceivedMove);
+
+				if (diff < 0 ||
+				    garray[g].wTimeWhenReceivedMove == 0) {
+					/*
+					 * Might seem weird - but
+					 * could be caused by a person
+					 * moving BEFORE he receives
+					 * the board pos (this is
+					 * possible due to lag) but
+					 * it's safe to say he moved
+					 * in 0 secs.
+					 */
+					garray[g].wTimeWhenReceivedMove =
+					    garray[g].wTimeWhenMoved;
+				} else {
+					garray[g].wRealTime -=
+					    (garray[g].wTimeWhenMoved -
+					    garray[g].wTimeWhenReceivedMove);
+				}
+			} else if (parray[p].side == BLACK) {
+				int diff;
+
+				garray[g].bLastRealTime = garray[g].bRealTime;
+				garray[g].bTimeWhenMoved =
+				    con[parray[p].socket].time;
+
+				diff = (garray[g].bTimeWhenMoved -
+					garray[g].bTimeWhenReceivedMove);
+
+				if (diff < 0 ||
+				    garray[g].bTimeWhenReceivedMove == 0) {
+					/*
+					 * Might seem weird - but
+					 * could be caused by a person
+					 * moving BEFORE he receives
+					 * the board pos (this is
+					 * possible due to lag) but
+					 * it's safe to say he moved
+					 * in 0 secs.
+					 */
+					garray[g].bTimeWhenReceivedMove =
+					    garray[g].bTimeWhenMoved;
+				} else {
+					garray[g].bRealTime -=
+					    (garray[g].bTimeWhenMoved -
+					    garray[g].bTimeWhenReceivedMove);
+				}
+			}
+		}
+
+		/*
+		 * We need to reset the opp's time for receiving the
+		 * board since the timeseal decoder only alters the
+		 * time if it's 0. Otherwise the time would be changed
+		 * if the player did a refresh which would screw up
+		 * the timings.
+		 */
+		if (parray[p].side == WHITE)
+			garray[g].bTimeWhenReceivedMove = 0;
+		else
+			garray[g].wTimeWhenReceivedMove = 0;
 #endif
 
-    game_update_time(g);
+		game_update_time(g);
 
-    /* maybe add autoflag here in the future? */
+		/*
+		 * XXX: Maybe add autoflag here in the future?
+		 */
 
 #ifdef TIMESEAL
-
-    if (con[parray[p].socket].timeseal) {	/* does he use timeseal? */
-      if (parray[p].side == WHITE) {
-	garray[g].wRealTime += garray[g].wIncrement * 100;
-	garray[g].wTime = garray[g].wRealTime / 100;	/* remember to conv to
-							   tenth secs */
-      } else if (parray[p].side == BLACK) {
-	garray[g].bRealTime += garray[g].bIncrement * 100;	/* conv to ms */
-	garray[g].bTime = garray[g].bRealTime / 100;	/* remember to conv to
-							   tenth secs */
-      }
-    } else {
-      if (garray[g].game_state.onMove == BLACK) {
-	garray[g].bTime += garray[g].bIncrement;
-      }
-      if (garray[g].game_state.onMove == WHITE) {
-	garray[g].wTime += garray[g].wIncrement;
-      }
-    }
-
+		if (con[parray[p].socket].timeseal) {  // Does he use timeseal?
+			if (parray[p].side == WHITE) {
+				garray[g].wRealTime +=
+				    (garray[g].wIncrement * 100);
+				garray[g].wTime = (garray[g].wRealTime / 100);
+			} else if (parray[p].side == BLACK) {
+				garray[g].bRealTime +=
+				    (garray[g].bIncrement * 100);
+				garray[g].bTime = (garray[g].bRealTime / 100);
+			}
+		} else {
+			if (garray[g].game_state.onMove == BLACK)
+				garray[g].bTime += garray[g].bIncrement;
+			if (garray[g].game_state.onMove == WHITE)
+				garray[g].wTime += garray[g].wIncrement;
+		}
 #else
-
-    if (garray[g].game_state.onMove == BLACK) {
-      garray[g].bTime += garray[g].bIncrement;
-    }
-    if (garray[g].game_state.onMove == WHITE) {
-      garray[g].wTime += garray[g].wIncrement;
-    }
+		if (garray[g].game_state.onMove == BLACK)
+			garray[g].bTime += garray[g].bIncrement;
+		if (garray[g].game_state.onMove == WHITE)
+			garray[g].wTime += garray[g].wIncrement;
 #endif
 
-    /* Do the move */
-    garray[g].numHalfMoves++;
-    if (garray[g].numHalfMoves > garray[g].moveListSize) {
-      garray[g].moveListSize += 20;	/* Allocate 20 moves at a time */
-      if (!garray[g].moveList) {
-	garray[g].moveList = (move_t *) rmalloc(sizeof(move_t) * garray[g].moveListSize);
-      } else {
-	garray[g].moveList = (move_t *) rrealloc(garray[g].moveList, sizeof(move_t) * garray[g].moveListSize);
-      }
-    }
-    result = execute_move(&garray[g].game_state, &move, 1);
-    if (result == MOVE_OK && garray[g].link >= 0 && move.pieceCaptured != NOPIECE) {
-      /* transfer captured piece to partner */
-      /* check if piece reverts to a pawn */
-      if (was_promoted(&garray[g], move.toFile, move.toRank))
-        update_holding(garray[g].link, colorval(move.pieceCaptured) | PAWN);
-      else
-        update_holding(garray[g].link, move.pieceCaptured);
-    }
-    now = tenth_secs();
-    move.atTime = now;
-    if (garray[g].numHalfMoves > 1) {
-      move.tookTime = move.atTime - garray[g].lastMoveTime;
-    } else {
-      move.tookTime = move.atTime - garray[g].startTime;
-    }
-    garray[g].lastMoveTime = now;
-    garray[g].lastDecTime = now;
+		/*
+		 * Do the move.
+		 */
+
+		garray[g].numHalfMoves++;
+
+		if (garray[g].numHalfMoves > garray[g].moveListSize) {
+			garray[g].moveListSize += 20;	// Allocate 20 moves at
+							// a time
+
+			if (!garray[g].moveList) {
+				garray[g].moveList =
+				    rmalloc(sizeof(move_t) *
+				    garray[g].moveListSize);
+			} else {
+				garray[g].moveList =
+				    rrealloc(garray[g].moveList,
+				    (sizeof(move_t) * garray[g].moveListSize));
+			}
+		}
+
+		result = execute_move(&garray[g].game_state, &move, 1);
+
+		if (result == MOVE_OK &&
+		    garray[g].link >= 0 &&
+		    move.pieceCaptured != NOPIECE) {
+			/*
+			 * Transfer captured piece to partner.
+			 * Check if piece reverts to a pawn.
+			 */
+			if (was_promoted(&garray[g], move.toFile, move.toRank)) {
+				update_holding(garray[g].link,
+				    colorval(move.pieceCaptured) | PAWN);
+			} else {
+				update_holding(garray[g].link,
+				    move.pieceCaptured);
+			}
+		}
+
+		now = tenth_secs();
+		move.atTime = now;
+
+		if (garray[g].numHalfMoves > 1)
+			move.tookTime = (move.atTime - garray[g].lastMoveTime);
+		else
+			move.tookTime = (move.atTime - garray[g].startTime);
+
+		garray[g].lastMoveTime = now;
+		garray[g].lastDecTime = now;
 
 #ifdef TIMESEAL
-
-    if (con[parray[p].socket].timeseal) {	/* does he use timeseal? */
-      if (parray[p].side == WHITE) {
-	move.tookTime = (garray[parray[p].game].wTimeWhenMoved -
-			 garray[parray[p].game].wTimeWhenReceivedMove) / 100;
-      } else {
-	move.tookTime = (garray[parray[p].game].bTimeWhenMoved -
-			 garray[parray[p].game].bTimeWhenReceivedMove) / 100;
-      }
-    }
+		if (con[parray[p].socket].timeseal) { // Does he use timeseal?
+			if (parray[p].side == WHITE) {
+				move.tookTime =
+				    ((garray[parray[p].game].wTimeWhenMoved -
+				    garray[parray[p].game].wTimeWhenReceivedMove) /
+				    100);
+			} else {
+				move.tookTime =
+				    ((garray[parray[p].game].bTimeWhenMoved -
+				    garray[parray[p].game].bTimeWhenReceivedMove) /
+				    100);
+			}
+		}
 #endif
 
-    MakeFENpos(g, move.FENpos);
-    garray[g].moveList[garray[g].numHalfMoves - 1] = move;
-  }
-
-  send_boards(g);
-
-  if (result == MOVE_ILLEGAL) {
-    pprintf(p, "Internal error, illegal move accepted!\n");
-  }
-  if ((result == MOVE_OK) && (garray[g].status == GAME_EXAMINE)) {
-    int p1;
-
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p1].status != PLAYER_PROMPT)
-	continue;
-      if (player_is_observe(p1, g) || parray[p1].game == g) {
-	pprintf_prompt(p1, "%s moves: %s\n", parray[p].name, move.algString);
-      }
-    }
-  }
-  if (result == MOVE_CHECKMATE) {
-    if (garray[g].status == GAME_EXAMINE) {
-      int p1;
-
-      for (p1 = 0; p1 < p_num; p1++) {
-	if (parray[p1].status != PLAYER_PROMPT)
-	  continue;
-	if (player_is_observe(p1, g) || parray[p1].game == g) {
-	  pprintf(p1, "%s has been checkmated.\n",
-		  (CToggle(garray[g].game_state.onMove) == BLACK) ? "White" : "Black");
+		MakeFENpos(g, move.FENpos);
+		garray[g].moveList[garray[g].numHalfMoves - 1] = move;
 	}
-      }
-    } else {
-      game_ended(g, CToggle(garray[g].game_state.onMove), END_CHECKMATE);
-    }
-  }
-  if (result == MOVE_STALEMATE) {
-    if (garray[g].status == GAME_EXAMINE) {
-      int p1;
 
-      for (p1 = 0; p1 < p_num; p1++) {
-	if (parray[p1].status != PLAYER_PROMPT)
-	  continue;
-	if (player_is_observe(p1, g) || parray[p1].game == g) {
-	  pprintf(p1, "Stalemate.\n");
-	}
-      }
-    } else {
-      game_ended(g, CToggle(garray[g].game_state.onMove), END_STALEMATE);
-    }
-  }
-  if (result == MOVE_NOMATERIAL) {
-    if (garray[g].status == GAME_EXAMINE) {
-      int p1;
+	send_boards(g);
 
-      for (p1 = 0; p1 < p_num; p1++) {
-	if (parray[p1].status != PLAYER_PROMPT)
-	  continue;
-	if (player_is_observe(p1, g) || parray[p1].game == g) {
-	  pprintf(p1, "No mating material.\n");
+	if (result == MOVE_ILLEGAL)
+		pprintf(p, "Internal error, illegal move accepted!\n");
+	if (result == MOVE_OK && garray[g].status == GAME_EXAMINE) {
+		for (int p1 = 0; p1 < p_num; p1++) {
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+			if (player_is_observe(p1, g) || parray[p1].game == g) {
+				pprintf_prompt(p1, "%s moves: %s\n",
+				    parray[p].name, move.algString);
+			}
+		}
 	}
-      }
-    } else {
-      game_ended(g, CToggle(garray[g].game_state.onMove), END_NOMATERIAL);
-    }
-  }
+
+	if (result == MOVE_CHECKMATE) {
+		if (garray[g].status == GAME_EXAMINE) {
+			for (int p1 = 0; p1 < p_num; p1++) {
+				if (parray[p1].status != PLAYER_PROMPT)
+					continue;
+				if (player_is_observe(p1, g) ||
+				    parray[p1].game == g) {
+					pprintf(p1, "%s has been checkmated.\n",
+					    (CToggle(garray[g].game_state.onMove)
+					    == BLACK ? "White" : "Black"));
+				}
+			}
+		} else {
+			game_ended(g, CToggle(garray[g].game_state.onMove),
+			    END_CHECKMATE);
+		}
+	}
+
+	if (result == MOVE_STALEMATE) {
+		if (garray[g].status == GAME_EXAMINE) {
+			for (int p1 = 0; p1 < p_num; p1++) {
+				if (parray[p1].status != PLAYER_PROMPT)
+					continue;
+				if (player_is_observe(p1, g) ||
+				    parray[p1].game == g)
+					pprintf(p1, "Stalemate.\n");
+			}
+		} else {
+			game_ended(g, CToggle(garray[g].game_state.onMove),
+			    END_STALEMATE);
+		}
+	}
+
+	if (result == MOVE_NOMATERIAL) {
+		if (garray[g].status == GAME_EXAMINE) {
+			for (int p1 = 0; p1 < p_num; p1++) {
+				if (parray[p1].status != PLAYER_PROMPT)
+					continue;
+				if (player_is_observe(p1, g) ||
+				    parray[p1].game == g)
+					pprintf(p1, "No mating material.\n");
+			}
+		} else {
+			game_ended(g, CToggle(garray[g].game_state.onMove),
+			    END_NOMATERIAL);
+		}
+	}
 }
 
 PUBLIC int com_resign(int p, param_list param)
