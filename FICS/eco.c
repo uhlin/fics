@@ -36,7 +36,7 @@ char *boardToFEN(int g)
 {
   int i,j;
   static char FENstring[80];
-  int FENcount = 0;  
+  int FENcount = 0;
   int space = 0;
 
   for(i=7; i>=0; i--) {
@@ -44,84 +44,84 @@ char *boardToFEN(int g)
       switch(garray[g].game_state.board[j][i]) {
       case W_PAWN:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='P';
         break;
       case W_ROOK:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='R';
         break;
       case W_KNIGHT:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='N';
         break;
       case W_BISHOP:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='B';
         break;
       case W_QUEEN:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='Q';
         break;
       case W_KING:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='K';
         break;
       case B_PAWN:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='p';
         break;
       case B_ROOK:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='r';
         break;
       case B_KNIGHT:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='n';
         break;
       case B_BISHOP:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='b';
         break;
       case B_QUEEN:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='q';
         break;
       case B_KING:
         if (space>0) {
-          FENstring[FENcount++]=space+'0'; 
+          FENstring[FENcount++]=space+'0';
           space=0;
         }
         FENstring[FENcount++]='k';
@@ -132,7 +132,7 @@ char *boardToFEN(int g)
       }
     }
     if (space>0) {
-      FENstring[FENcount++]=space+'0'; 
+      FENstring[FENcount++]=space+'0';
       space=0;
     }
     FENstring[FENcount++]='/';
@@ -181,7 +181,7 @@ void ECO_init()
   ECO_book[i]=NULL;
   fprintf(stderr, "%d entries in ECO book\n", i);
   ECO_entries = i;
-  
+
   while (--i >= 0)
     if (ECO_book[i] == NULL)
       fprintf(stderr, "ERROR!  ECO book position number %d is NULL.", i);
@@ -192,7 +192,7 @@ void NIC_init()
   FILE *fp;
   char tmp[1024];
   char *ptmp= tmp;
-  char FENpos[73], NIC[6], onMove[2];  
+  char FENpos[73], NIC[6], onMove[2];
   char filename[1024];
   int i=0;
 
@@ -232,7 +232,7 @@ void LONG_init()
   FILE *fp;
   char tmp[1024];
   char *ptmp= tmp;
-  char FENpos[73], LONG[256], onMove[2];  
+  char FENpos[73], LONG[256], onMove[2];
   char filename[1024];
   int i=0;
 
@@ -270,8 +270,8 @@ void LONG_init()
 void BookInit()
 {
   ECO_init();
-  NIC_init(); 
-  LONG_init(); 
+  NIC_init();
+  LONG_init();
 }
 
 char *getECO(int g)
@@ -350,7 +350,7 @@ PUBLIC int com_eco(int p, param_list param)
     }
   }
 
-  if ((((parray[garray[g1].white].private) || 
+  if ((((parray[garray[g1].white].private) ||
        (parray[garray[g1].black].private))) &&
        (parray[p].adminLevel==0)) {
     pprintf(p, "Sorry - that game is private.\n");
@@ -358,12 +358,12 @@ PUBLIC int com_eco(int p, param_list param)
   } else {
     if (garray[g1].type == TYPE_WILD) {
       pprintf(p, "That game is a wild game.\n");
-      return COM_OK;      
+      return COM_OK;
     }
   }
-      
-  pprintf(p, "Info about game %d: \"%s vs. %s\"\n\n", g1+1, 
-              garray[g1].white_name,    
+
+  pprintf(p, "Info about game %d: \"%s vs. %s\"\n\n", g1+1,
+              garray[g1].white_name,
               garray[g1].black_name);
 
   if (garray[g1].moveList==NULL) {
