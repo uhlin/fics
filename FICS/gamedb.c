@@ -653,54 +653,62 @@ PUBLIC int PieceToChar(int piece)
 }
 
 /* One line has everything on it */
-PRIVATE int WriteMoves(FILE * fp, move_t *m)
+PRIVATE int
+WriteMoves(FILE *fp, move_t *m)
 {
-  unsigned long MoveInfo = (m->color == BLACK);
-  int piece, castle;
-  int useFile = 0, useRank = 0, check = 0;
-  int i;
+	int		 i;
+	int		 piece, castle;
+	int		 useFile = 0, useRank = 0, check = 0;
+	unsigned long	 MoveInfo = (m->color == BLACK);
 
-  castle = (m->moveString[0] == 'o');
-  if (castle)
-    piece = KING;
-  else
-    piece = piecetype(CharToPiece(m->moveString[0]));
+	castle = (m->moveString[0] == 'o');
 
-  MoveInfo = (MoveInfo <<= 3) | piece;
-  MoveInfo = (MoveInfo <<= 3) | m->fromFile;
-  MoveInfo = (MoveInfo <<= 3) | m->fromRank;
-  MoveInfo = (MoveInfo <<= 3) | m->toFile;
-  MoveInfo = (MoveInfo <<= 3) | m->toRank;
-  MoveInfo = (MoveInfo <<= 3) | (m->pieceCaptured & 7);
-  MoveInfo = (MoveInfo <<= 3) | (m->piecePromotionTo & 7);
-  MoveInfo = (MoveInfo <<= 1) | (m->enPassant != 0);
+	if (castle)
+		piece = KING;
+	else
+		piece = piecetype(CharToPiece(m->moveString[0]));
 
-  /* Are we using from-file or from-rank in algString? */
-  i = strlen(m->algString) - 1;
-  if (m->algString[i] == '+') {
-    check = 1;
-    i--;
-  }
-  if (piece != PAWN && !castle) {
-    i -= 2;
-    if (i < 0)
-      return -1;
-    if (m->algString[i] == 'x')
-      i--;
-    if (i < 0)
-      return -1;
-    if (isdigit(m->algString[i])) {
-      useRank = 2;
-      i--;
-    }
-    if (i < 0)
-      return -1;
-    useFile = (islower(m->algString[i]) ? 4 : 0);
-  }
-  MoveInfo = (MoveInfo << 3) | useFile | useRank | check;
-  fprintf(fp, "%lx %x %x\n", MoveInfo, m->tookTime, m->atTime);
+	MoveInfo	= (MoveInfo <<= 3) | piece;
+	MoveInfo	= (MoveInfo <<= 3) | m->fromFile;
+	MoveInfo	= (MoveInfo <<= 3) | m->fromRank;
+	MoveInfo	= (MoveInfo <<= 3) | m->toFile;
+	MoveInfo	= (MoveInfo <<= 3) | m->toRank;
+	MoveInfo	= (MoveInfo <<= 3) | (m->pieceCaptured & 7);
+	MoveInfo	= (MoveInfo <<= 3) | (m->piecePromotionTo & 7);
+	MoveInfo	= (MoveInfo <<= 1) | (m->enPassant != 0);
 
-  return 0;
+	/* Are we using from-file or from-rank in 'algString'? */
+
+	i = strlen(m->algString) - 1;
+
+	if (m->algString[i] == '+') {
+		check = 1;
+		i--;
+	}
+
+	if (piece != PAWN && !castle) {
+		i -= 2;
+
+		if (i < 0)
+			return -1;
+		if (m->algString[i] == 'x')
+			i--;
+		if (i < 0)
+			return -1;
+		if (isdigit(m->algString[i])) {
+			useRank = 2;
+			i--;
+		}
+		if (i < 0)
+			return -1;
+
+		useFile = (islower(m->algString[i]) ? 4 : 0);
+	}
+
+	MoveInfo = ((MoveInfo << 3) | useFile | useRank | check);
+
+	fprintf(fp, "%lx %x %x\n", MoveInfo, m->tookTime, m->atTime);
+	return 0;
 }
 
 PRIVATE int ReadMove(FILE * fp, move_t *m)
