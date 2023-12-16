@@ -192,12 +192,12 @@ void
 NIC_init()
 {
 	FILE	*fp;
-	char	*ptmp = tmp;
 	char	 FENpos[73];
 	char	 NIC[6];
 	char	 filename[1024];
 	char	 onMove[2];
 	char	 tmp[1024];
+	char	*ptmp = tmp;
 	int	 i = 0;
 
 	sprintf(filename, "%s/nic999.idx", book_dir);
@@ -215,7 +215,8 @@ NIC_init()
 			continue;
 
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-		sprintf(FENpos, "%s %s", FENpos, onMove);
+		strcat(FENpos, " ");
+		strcat(FENpos, onMove);
 
 		strcpy(ptmp, "");
 		fgets(ptmp, 1024, fp);
