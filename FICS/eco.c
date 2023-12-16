@@ -362,106 +362,145 @@ char *getECO(int g)
   return ECO;
 }
 
-PUBLIC int com_eco(int p, param_list param)
+PUBLIC int
+com_eco(int p, param_list param)
 {
-
 #ifndef IGNORE_ECO
+	int	g1, p1;
+	int	i, flag = 0, x, l, r;
 
-  int i, flag = 0, x, l, r;
-  int g1, p1;
+	if (param[0].type == TYPE_NULL) {    // own game
+		if (parray[p].game < 0) {
+			pprintf(p, "You are not playing or examining a game."
+			    "\n");
+			return COM_OK;
+		}
 
+		g1 = parray[p].game;
 
-  if (param[0].type == TYPE_NULL) {  /* own game */
-    if (parray[p].game < 0) {
-      pprintf(p, "You are not playing or examining a game.\n");
-      return COM_OK;
-    }
-    g1=parray[p].game;
-    if (garray[g1].status != GAME_EXAMINE && !pIsPlaying(p))
-      return COM_OK;
-  } else {
-    g1 = GameNumFromParam (p, &p1, &param[0]);
-    if (g1 < 0) return COM_OK;
-    if ((g1 >= g_num) || ((garray[g1].status != GAME_ACTIVE) &&
-        (garray[g1].status != GAME_EXAMINE))) {
-      pprintf(p, "There is no such game.\n");
-      return COM_OK;
-    }
-  }
+		if (garray[g1].status != GAME_EXAMINE && !pIsPlaying(p))
+			return COM_OK;
+	} else {
+		if ((g1 = GameNumFromParam (p, &p1, &param[0])) < 0)
+			return COM_OK;
+		if (g1 >= g_num ||
+		    (garray[g1].status != GAME_ACTIVE &&
+		    garray[g1].status != GAME_EXAMINE)) {
+			pprintf(p, "There is no such game.\n");
+			return COM_OK;
+		}
+	}
 
-  if ((((parray[garray[g1].white].private) ||
-       (parray[garray[g1].black].private))) &&
-       (parray[p].adminLevel==0)) {
-    pprintf(p, "Sorry - that game is private.\n");
-    return COM_OK;
-  } else {
-    if (garray[g1].type == TYPE_WILD) {
-      pprintf(p, "That game is a wild game.\n");
-      return COM_OK;
-    }
-  }
+	if ((parray[garray[g1].white].private ||
+	    parray[garray[g1].black].private) &&
+	    parray[p].adminLevel == 0) {
+		pprintf(p, "Sorry - that game is private.\n");
+		return COM_OK;
+	} else {
+		if (garray[g1].type == TYPE_WILD) {
+			pprintf(p, "That game is a wild game.\n");
+			return COM_OK;
+		}
+	}
 
-  pprintf(p, "Info about game %d: \"%s vs. %s\"\n\n", g1+1,
-              garray[g1].white_name,
-              garray[g1].black_name);
+	pprintf(p, "Info about game %d: \"%s vs. %s\"\n\n", (g1 + 1),
+	    garray[g1].white_name,
+	    garray[g1].black_name);
 
-  if (garray[g1].moveList==NULL) {
-    return COM_OK;
-  }
+	if (garray[g1].moveList == NULL)
+		return COM_OK;
 
-  for (flag=0,i=garray[g1].numHalfMoves; (i>0 && !flag); i--) {
-    l = 0;
-    r = ECO_entries - 1;
-    while ((r >= l) && !flag) {
-      x = (l+r)/2;
-      if ((strcmp(garray[g1].moveList[i].FENpos, ECO_book[x]->FENpos)) < 0)
-	r = x - 1;
-      else
-	l = x + 1;
-      if (!strcmp(garray[g1].moveList[i].FENpos, ECO_book[x]->FENpos)) {
-        pprintf(p, "  ECO[%3d]: %s\n", i, ECO_book[x]->ECO);
-        flag=1;
-      }
-    }
-  }
+	/*
+	 * ECO
+	 */
+	flag	= 0;
+	i	= garray[g1].numHalfMoves;
 
-  for (flag=0, i=garray[g1].numHalfMoves; ((i>0) && (!flag)); i--) {
-    l = 0;
-    r = NIC_entries - 1;
-    while ((r >=l) && !flag) {
-      x = (l+r)/2;
-      if ((strcmp(garray[g1].moveList[i].FENpos, NIC_book[x]->FENpos)) < 0)
-	r = x - 1;
-      else
-	l = x + 1;
-      if (!strcmp(garray[g1].moveList[i].FENpos, NIC_book[x]->FENpos)) {
-        pprintf(p, "  NIC[%3d]: %s\n", i, NIC_book[x]->NIC);
-        flag=1;
-      }
-    }
-  }
+	while (i > 0 && !flag) {
+		l = 0;
+		r = (ECO_entries - 1);
 
-  for (flag=0, i=garray[g1].numHalfMoves; ((i>0) && (!flag)); i--) {
-    l = 0;
-    r = LONG_entries - 1;
-    while ((r >=l) && !flag) {
-      x = (l+r)/2;
-      if ((strcmp(garray[g1].moveList[i].FENpos, LONG_book[x]->FENpos)) < 0)
-	r = x - 1;
-      else
-	l = x + 1;
-      if (!strcmp(garray[g1].moveList[i].FENpos, LONG_book[x]->FENpos)) {
-        pprintf(p, " LONG[%3d]: %s\n", i, LONG_book[x]->LONG);
-        flag=1;
-      }
-    }
-  }
+		while (r >= l && !flag) {
+			x = ((l + r) / 2);
 
+			if (strcmp(garray[g1].moveList[i].FENpos,
+			    ECO_book[x]->FENpos) < 0)
+				r = (x - 1);
+			else
+				l = (x + 1);
+
+			if (!strcmp(garray[g1].moveList[i].FENpos,
+			    ECO_book[x]->FENpos)) {
+				pprintf(p, "  ECO[%3d]: %s\n", i,
+				    ECO_book[x]->ECO);
+				flag = 1;
+			}
+		}
+
+		i--;
+	} /* while */
+
+	/*
+	 * NIC
+	 */
+	flag	= 0;
+	i	= garray[g1].numHalfMoves;
+
+	while (i > 0 && !flag) {
+		l = 0;
+		r = (NIC_entries - 1);
+
+		while (r >= l && !flag) {
+			x = ((l + r) / 2);
+
+			if (strcmp(garray[g1].moveList[i].FENpos,
+			    NIC_book[x]->FENpos) < 0)
+				r = (x - 1);
+			else
+				l = (x + 1);
+
+			if (!strcmp(garray[g1].moveList[i].FENpos,
+			    NIC_book[x]->FENpos)) {
+				pprintf(p, "  NIC[%3d]: %s\n", i,
+				    NIC_book[x]->NIC);
+				flag = 1;
+			}
+		}
+
+		i--;
+	} /* while */
+
+	/*
+	 * LONG
+	 */
+	flag	= 0;
+	i	= garray[g1].numHalfMoves;
+
+	while (i > 0 && !flag) {
+		l = 0;
+		r = (LONG_entries - 1);
+
+		while (r >= l && !flag) {
+			x = ((l + r) / 2);
+
+			if (strcmp(garray[g1].moveList[i].FENpos,
+			    LONG_book[x]->FENpos) < 0)
+				r = (x - 1);
+			else
+				l = (x + 1);
+
+			if (!strcmp(garray[g1].moveList[i].FENpos,
+				    LONG_book[x]->FENpos)) {
+				pprintf(p, " LONG[%3d]: %s\n", i,
+				    LONG_book[x]->LONG);
+				flag = 1;
+			}
+		}
+
+		i--;
+	} /* while */
 #else
-
-  pprintf(p, "ECO not available...  out of service!.\n");
-
+	pprintf(p, "ECO not available...  out of service!.\n");
 #endif
-
-  return COM_OK;
+	return COM_OK;
 }
