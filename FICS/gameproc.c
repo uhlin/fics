@@ -19,9 +19,10 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash	              	93/10/22	Created
+   Richard Nash			93/10/22	Created
    Dave Herscovici		95/11/26	Split into two files;
-						Second is obsproc.c.
+   						Second is 'obsproc.c'.
+   Markus Uhlin			23/12/16	Fixed compiler warnings
 */
 
 #include "stdinclude.h"
