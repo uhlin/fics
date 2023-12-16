@@ -827,93 +827,126 @@ PUBLIC int got_attr_value(int g, char *attr, char *value, FILE * fp, char *file)
   return 0;
 }
 
-void ReadOneV1Move(FILE * fp, move_t *m)
+void
+ReadOneV1Move(FILE *fp, move_t *m)
 {
-  int i;
-  char PieceChar;
-  int useFile, useRank, check, piece;
-  unsigned long MoveInfo;
+	char		 PieceChar;
+	int		 i;
+	int		 useFile, useRank, check, piece;
+	unsigned long	 MoveInfo;
 
-  fscanf(fp, "%lx %x %x", &MoveInfo, &m->tookTime, &m->atTime);
-  check = MoveInfo & 1;
-  useRank = MoveInfo & 2;
-  useFile = MoveInfo & 4;
-  MoveInfo >>= 3;
-  m->enPassant = MoveInfo & 1;	/* may have to negate later. */
-  MoveInfo >>= 1;
-  m->piecePromotionTo = MoveInfo & 7;	/* may have to change color. */
-  MoveInfo >>= 3;
-  m->pieceCaptured = MoveInfo & 7;	/* may have to change color. */
-  MoveInfo >>= 3;
-  m->toRank = MoveInfo & 7;
-  MoveInfo >>= 3;
-  m->toFile = MoveInfo & 7;
-  MoveInfo >>= 3;
-  m->fromRank = MoveInfo & 7;
-  MoveInfo >>= 3;
-  m->fromFile = MoveInfo & 7;
-  MoveInfo >>= 3;
-  piece = MoveInfo & 7;
-  m->color = (MoveInfo & 8) ? BLACK : WHITE;
-  if (m->pieceCaptured != NOPIECE) {
-    if (m->color == BLACK)
-      m->pieceCaptured |= WHITE;
-    else
-      m->pieceCaptured |= BLACK;
-  }
-  if (piece == PAWN) {
-    PieceChar = 'P';
-    if ((m->toRank == 3 && m->fromRank == 1)
-	|| (m->toRank == 4 && m->fromRank == 6))
-      m->doublePawn = m->toFile;
-    else
-      m->doublePawn = -1;
-    if (m->pieceCaptured)
-      sprintf(m->algString, "%cx%c%d", 'a' + m->fromFile,
-	      'a' + m->toFile, m->toRank + 1);
-    else
-      sprintf(m->algString, "%c%d", 'a' + m->toFile, m->toRank + 1);
-    if (m->piecePromotionTo != 0) {
-      if (m->piecePromotionTo == KNIGHT)
-	strcat(m->algString, "=N");
-      else if (m->piecePromotionTo == BISHOP)
-	strcat(m->algString, "=B");
-      else if (m->piecePromotionTo == ROOK)
-	strcat(m->algString, "=R");
-      else if (m->piecePromotionTo == QUEEN)
-	strcat(m->algString, "=Q");
-      m->piecePromotionTo |= m->color;
-    }
-    if (m->enPassant)
-      m->enPassant = m->toFile - m->fromFile;
-  } else {
-    m->doublePawn = -1;
-    PieceChar = PieceToChar(piecetype(piece) | WHITE);
-    if (PieceChar == 'K' && m->fromFile == 4 && m->toFile == 6) {
-      strcpy(m->algString, "O-O");
-      strcpy(m->moveString, "o-o");
-    } else if (PieceChar == 'K' && m->fromFile == 4 && m->toFile == 2) {
-      strcpy(m->algString, "O-O-O");
-      strcpy(m->moveString, "o-o-o");
-    } else {
-      i = 0;
-      m->algString[i++] = PieceChar;
-      if (useFile)
-	m->algString[i++] = 'a' + m->fromFile;
-      if (useRank)
-	m->algString[i++] = '1' + m->fromRank;
-      if (m->pieceCaptured != 0)
-	m->algString[i++] = 'x';
-      m->algString[i++] = 'a' + m->toFile;
-      m->algString[i++] = '1' + m->toRank;
-      m->algString[i] = '\0';
-    }
-  }
-  if (m->algString[0] != 'O')
-    sprintf(m->moveString, "%c/%c%d-%c%d", PieceChar, 'a' + m->fromFile,
-	    m->fromRank + 1, 'a' + m->toFile, m->toRank + 1);
-  if (check)
-    strcat(m->algString, "+");
+	fscanf(fp, "%lx %x %x", &MoveInfo, &m->tookTime, &m->atTime);
+
+	check = MoveInfo & 1;
+	useRank = MoveInfo & 2;
+	useFile = MoveInfo & 4;
+
+	MoveInfo >>= 3;
+	m->enPassant = (MoveInfo & 1);		// May have to negate later.
+
+	MoveInfo >>= 1;
+	m->piecePromotionTo = (MoveInfo & 7);	// May have to change color.
+
+	MoveInfo >>= 3;
+	m->pieceCaptured = (MoveInfo & 7);	// May have to change color.
+
+	MoveInfo >>= 3;
+	m->toRank = (MoveInfo & 7);
+
+	MoveInfo >>= 3;
+	m->toFile = (MoveInfo & 7);
+
+	MoveInfo >>= 3;
+	m->fromRank = (MoveInfo & 7);
+
+	MoveInfo >>= 3;
+	m->fromFile = (MoveInfo & 7);
+
+	MoveInfo >>= 3;
+	piece = (MoveInfo & 7);
+
+	m->color = ((MoveInfo & 8) ? BLACK : WHITE);
+
+	if (m->pieceCaptured != NOPIECE) {
+		if (m->color == BLACK)
+			m->pieceCaptured |= WHITE;
+		else
+			m->pieceCaptured |= BLACK;
+	}
+
+	if (piece == PAWN) {
+		PieceChar = 'P';
+
+		if ((m->toRank == 3 && m->fromRank == 1) ||
+		    (m->toRank == 4 && m->fromRank == 6))
+			m->doublePawn = m->toFile;
+		else
+			m->doublePawn = -1;
+
+		if (m->pieceCaptured) {
+			sprintf(m->algString, "%cx%c%d",
+			    ('a' + m->fromFile),
+			    ('a' + m->toFile),
+			    (m->toRank + 1));
+		} else {
+			sprintf(m->algString, "%c%d",
+			    ('a' + m->toFile),
+			    (m->toRank + 1));
+		}
+
+		if (m->piecePromotionTo != 0) {
+			if (m->piecePromotionTo == KNIGHT)
+				strcat(m->algString, "=N");
+			else if (m->piecePromotionTo == BISHOP)
+				strcat(m->algString, "=B");
+			else if (m->piecePromotionTo == ROOK)
+				strcat(m->algString, "=R");
+			else if (m->piecePromotionTo == QUEEN)
+				strcat(m->algString, "=Q");
+
+			m->piecePromotionTo |= m->color;
+		}
+
+		if (m->enPassant)
+			m->enPassant = (m->toFile - m->fromFile);
+	} else {
+		m->doublePawn	= -1;
+		PieceChar	= PieceToChar(piecetype(piece) | WHITE);
+
+		if (PieceChar == 'K' && m->fromFile == 4 && m->toFile == 6) {
+			strcpy(m->algString, "O-O");
+			strcpy(m->moveString, "o-o");
+		} else if (PieceChar == 'K' &&
+		    m->fromFile == 4 &&
+		    m->toFile == 2) {
+			strcpy(m->algString, "O-O-O");
+			strcpy(m->moveString, "o-o-o");
+		} else {
+			i = 0;
+			m->algString[i++] = PieceChar;
+
+			if (useFile)
+				m->algString[i++] = 'a' + m->fromFile;
+			if (useRank)
+				m->algString[i++] = '1' + m->fromRank;
+			if (m->pieceCaptured != 0)
+				m->algString[i++] = 'x';
+
+			m->algString[i++]	= ('a' + m->toFile);
+			m->algString[i++]	= ('1' + m->toRank);
+			m->algString[i]		= '\0';
+		}
+	}
+
+	if (m->algString[0] != 'O')
+		sprintf(m->moveString, "%c/%c%d-%c%d",
+		    PieceChar,
+		    ('a' + m->fromFile),
+		    (m->fromRank + 1),
+		    ('a' + m->toFile),
+		    (m->toRank + 1));
+	if (check)
+		strcat(m->algString, "+");
 }
 
 int ReadV1Moves(game *g, FILE * fp)
