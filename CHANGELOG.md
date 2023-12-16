@@ -15,6 +15,7 @@ documented in this file.
   - ...
 - Fixed a `sscanf()` bug in `com_anews()`.
 - Fixed a bug in `fix_time()` (did return a local address)
+- Fixed bugs in `process_move()`
 - Fixed bugs in `stored_mail_moves()`
 - Fixed comparison between pointer and integer in `com_inchannel()`.
 - Fixed implicit integers
