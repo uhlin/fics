@@ -228,44 +228,59 @@ void NIC_init()
   NIC_entries = i;
 }
 
-void LONG_init()
+void
+LONG_init()
 {
-  FILE *fp;
-  char tmp[1024];
-  char *ptmp= tmp;
-  char FENpos[73], LONG[256], onMove[2];
-  char filename[1024];
-  int i=0;
+	FILE	*fp;
+	char	 FENpos[73];
+	char	 LONG[256];
+	char	 filename[1024];
+	char	 onMove[2];
+	char	 tmp[1024];
+	char	*ptmp = tmp;
+	int	 i = 0;
 
-  sprintf(filename, "%s/long999.idx", book_dir);
-  fp= fopen(filename, "r");
-  if (!fp) {
-    fprintf(stderr, "Could not open LONG file\n");
-    exit(1);
-  }
-  while (!feof(fp)) {
-    strcpy(ptmp, "");
-    fgets(ptmp, 1024, fp);
-    if (feof(fp)) continue;
-    sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-    sprintf(FENpos, "%s %s", FENpos, onMove);
-    strcpy(ptmp, "");
-    fgets(ptmp, 1024, fp);
-    if (feof(fp)) continue;
-    sscanf(ptmp, "%[^*\n]", LONG);
-    LONG_book[i]= (LONG_entry *) malloc(sizeof(LONG_entry));
-    if (LONG_book[i]==NULL) {
-      fprintf(stderr, "Cound not alloc mem for LONG entry %d.\n", i);
-      exit(1);
-    }
-    strcpy(LONG_book[i]->LONG, LONG);
-    strcpy(LONG_book[i]->FENpos, FENpos);
-    ++i;
-  }
-  fclose(fp);
-  LONG_book[i]=NULL;
-  fprintf(stderr, "%d entries in LONG book\n", i);
-  LONG_entries = i;
+	sprintf(filename, "%s/long999.idx", book_dir);
+
+	if ((fp = fopen(filename, "r")) == NULL) {
+		fprintf(stderr, "Could not open LONG file\n");
+		exit(1);
+	}
+
+	while (!feof(fp)) {
+		strcpy(ptmp, "");
+		fgets(ptmp, 1024, fp);
+
+		if (feof(fp))
+			continue;
+
+		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
+		sprintf(FENpos, "%s %s", FENpos, onMove);
+
+		strcpy(ptmp, "");
+		fgets(ptmp, 1024, fp);
+		if (feof(fp))
+			continue;
+		sscanf(ptmp, "%[^*\n]", LONG);
+
+		LONG_book[i] = malloc(sizeof(LONG_entry));
+		if (LONG_book[i] == NULL) {
+			fprintf(stderr, "Cound not alloc mem for "
+			    "LONG entry %d.\n", i);
+			exit(1);
+		}
+
+		strcpy(LONG_book[i]->LONG, LONG);
+		strcpy(LONG_book[i]->FENpos, FENpos);
+
+		++i;
+	}
+
+	fclose(fp);
+	LONG_book[i] = NULL;
+
+	fprintf(stderr, "%d entries in LONG book\n", i);
+	LONG_entries = i;
 }
 
 void BookInit()
