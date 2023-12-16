@@ -170,8 +170,10 @@ ECO_init()
 		if (feof(fp))
 			continue;
 
+		/* XXX */
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-		sprintf(FENpos, "%s %s", FENpos, onMove);
+		strcat(FENpos, " ");
+		strcat(FENpos, onMove);
 
 		strcpy(ptmp, "");
 		fgets(ptmp, 1024, fp);
