@@ -1,13 +1,14 @@
 #include "stdinclude.h"
+
 #include "board.h"
-#include "gamedb.h"
 #include "command.h"
-#include "playerdb.h"
-#include "gameproc.h"
-#include "obsproc.h"
-#include "utils.h"
 #include "common.h"
 #include "config.h"
+#include "gamedb.h"
+#include "gameproc.h"
+#include "obsproc.h"
+#include "playerdb.h"
+#include "utils.h"
 
 PUBLIC char *book_dir = DEFAULT_BOOK;
 
