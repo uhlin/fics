@@ -24,17 +24,17 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
-#include "ficsmain.h"
-#include "config.h"
-#include "gamedb.h"
-#include "playerdb.h"
-#include "gameproc.h"
 #include "command.h"
-#include "utils.h"
-#include "rmalloc.h"
+#include "common.h"
+#include "config.h"
 #include "eco.h"
+#include "ficsmain.h"
+#include "gamedb.h"
+#include "gameproc.h"
 #include "network.h"
+#include "playerdb.h"
+#include "rmalloc.h"
+#include "utils.h"
 
 PUBLIC game *garray = NULL;
 PUBLIC int g_num = 0;
