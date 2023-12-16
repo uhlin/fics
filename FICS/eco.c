@@ -13,9 +13,9 @@
 
 PUBLIC char *book_dir = DEFAULT_BOOK;
 
-ECO_entry *ECO_book[1096];
-NIC_entry *NIC_book[1096];
-LONG_entry *LONG_book[4096];
+ECO_entry	*ECO_book[1096];
+NIC_entry	*NIC_book[1096];
+LONG_entry	*LONG_book[4096];
 
 int ECO_entries, NIC_entries, LONG_entries;
 
