@@ -84,7 +84,7 @@
 
 /* Where the standard ucb mail program is */
 
-#define MAILPROGRAM       "/usr/ucb/mail"
+#define MAILPROGRAM       "/usr/bin/mail"
 
 /* SENDMAILPROG is a faster and more reliable means of sending mail if
    defined.  Make sure your system mailer agent is defined here properly
