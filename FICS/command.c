@@ -900,72 +900,76 @@ PUBLIC int process_disconnection(int fd)
 }
 
 /* Called every few seconds */
-PUBLIC int process_heartbeat(int *fd)
+PUBLIC int
+process_heartbeat(int *fd)
 {
-  static int last_space = 0;
-  static int last_comfile = 0;
-/*  static int last_ratings = 0; */
-  static int lastcalled = 0;
-  int time_since_last;
-  int p;
-/*  static int rpid = 0; */
-  int now = time(0);
+	int		 now = time(0);
+//	int		 p;
+	int		 time_since_last;
+	static int	 last_comfile = 0;
+	static int	 last_space = 0;
+	static int	 lastcalled = 0;
 
-/*  game_update_times(); */
+	if (lastcalled == 0)
+		time_since_last = 0;
+	else
+		time_since_last = now - lastcalled;
+	lastcalled = now;
 
-  if (lastcalled == 0)
-    time_since_last = 0;
-  else
-    time_since_last = now - lastcalled;
-  lastcalled = now;
+	/*
+	 * Check for timed out connections
+	 */
 
-  /* Check for timed out connections */
-  for (p = 0; p < p_num; p++) {
-    if (((parray[p].status == PLAYER_LOGIN) ||
-	 (parray[p].status == PLAYER_PASSWORD)) &&
-	(player_idle(p) > MAX_LOGIN_IDLE)) {
-      pprintf(p, "\n**** LOGIN TIMEOUT ****\n");
-      *fd = parray[p].socket;
-      return COM_LOGOUT;
-    }
-    if ((parray[p].status == PLAYER_PROMPT) &&
-	(player_idle(p) > MAX_IDLE_TIME) &&
-	(parray[p].adminLevel == 0) &&
-	(!in_list(p, L_TD, parray[p].name))) {
-      pprintf(p, "\n**** Auto-logout because you were idle "
-	      "more than one hour. ****\n");
-      *fd = parray[p].socket;
-      return COM_LOGOUT;
-    }
-  }
+	for (int p = 0; p < p_num; p++) {
+		if ((parray[p].status == PLAYER_LOGIN ||
+		    parray[p].status == PLAYER_PASSWORD) &&
+		    player_idle(p) > MAX_LOGIN_IDLE) {
+			pprintf(p, "\n**** LOGIN TIMEOUT ****\n");
+			*fd = parray[p].socket;
+			return COM_LOGOUT;
+		}
 
-  /* Check for the communication file from mail updates every 10 minutes */
-  /* That is probably too often, but who cares */
-  if (MailGameResult) {
-    if (last_comfile == 0)
-      last_comfile = now;
-    else {
-      if (last_comfile + 10 * 60 < now) {
-	last_comfile = now;
-	/* Check for com file */
-/*	hostinfo_checkcomfile(); */
-      }
-    }
-  }
-  if (last_space == 0)
-    last_space = now;
-  else {
-    if (last_space + 60 < now) {/* Check the disk space every minute */
-      last_space = now;
-      if (available_space() < 1000000) {
-	server_shutdown(60, "    **** Disk space is dangerously low!!! ****\n");
-      }
-      /* Check for com file */
-      /* hostinfo_checkcomfile(); */
-    }
-  }
-  ShutHeartBeat();
-  return COM_OK;
+		if (parray[p].status == PLAYER_PROMPT &&
+		    player_idle(p) > MAX_IDLE_TIME &&
+		    parray[p].adminLevel == 0 &&
+		    !in_list(p, L_TD, parray[p].name)) {
+			pprintf(p, "\n**** Auto-logout because you were idle "
+			    "more than one hour. ****\n");
+			*fd = parray[p].socket;
+			return COM_LOGOUT;
+		}
+	}
+
+	/*
+	 * Check for the communication file from mail updates every 10
+	 * minutes. (That is probably too often, but who cares.)
+	 */
+
+	if (MailGameResult) {
+		if (last_comfile == 0) {
+			last_comfile = now;
+		} else {
+			if ((last_comfile + 10 * 60) < now)
+				last_comfile = now;
+		}
+	}
+
+	if (last_space == 0) {
+		last_space = now;
+	} else {
+		if ((last_space + 60) < now) {	// Check the disk space every
+						// minute
+			last_space = now;
+
+			if (available_space() < 1000000) {
+				server_shutdown(60, "    **** Disk space is "
+				    "dangerously low!!! ****\n");
+			}
+		}
+	}
+
+	ShutHeartBeat();
+	return COM_OK;
 }
 
 PUBLIC void commands_init()
