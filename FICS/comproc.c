@@ -277,163 +277,224 @@ PRIVATE void com_stats_rating(char *hdr, statistics * stats, char *dest)
   return;
 }
 
-PUBLIC int com_stats(int p, param_list param)
+PUBLIC int
+com_stats(int p, param_list param)
 {
-  int g, i, t;
-  int p1, connected;
-  char line[255], tmp[255];
-  int numbers[MAX_OBSERVE > MAX_SIMUL ? MAX_OBSERVE : MAX_SIMUL];
-  int onTime;
+#define NUMBERS_SIZE \
+	(MAX_OBSERVE > MAX_SIMUL ? MAX_OBSERVE : MAX_SIMUL)
+	char		 line[255];
+	char		 tmp[255];
+	int		 g, i, t;
+	int		 numbers[NUMBERS_SIZE];
+	int		 onTime;
+	int		 p1, connected;
 
-   if (param[0].type == TYPE_WORD) {
-    if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-      return COM_OK;
-  } else {
-      p1 = p;
-      connected = 1;
-  }
+	if (param[0].type == TYPE_WORD) {
+		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+			return COM_OK;
+	} else {
+		p1 = p;
+		connected = 1;
+	}
 
-  sprintf(line, "\nStatistics for %-11s ", parray[p1].name);
-  if ((connected) && (parray[p1].status == PLAYER_PROMPT)) {
-    sprintf(tmp, "On for: %s", hms_desc(player_ontime(p1)));
-    strcat(line, tmp);
-    sprintf(tmp, "   Idle: %s\n", hms_desc(player_idle(p1)));
-  } else {
-    if ((t = player_lastdisconnect(p1)))
-      sprintf(tmp, "(Last disconnected %s):\n", strltime(&t));
-    else
-      sprintf(tmp, "(Never connected.)\n");
-  }
-  strcat(line, tmp);
-  pprintf(p, "%s", line);
-  if (parray[p1].simul_info.numBoards) {
-    for (i = 0, t = 0; i < parray[p1].simul_info.numBoards; i++) {
-      if ((numbers[t] = parray[p1].simul_info.boards[i] + 1) != 0)
-	t++;
-    }
-    pprintf(p, "%s is giving a simul: game%s ", parray[p1].name, ((t > 1) ? "s" : ""));
-    com_stats_andify(numbers, t, tmp);
-    pprintf(p, tmp);
-  } else if (parray[p1].game >= 0) {
-    g = parray[p1].game;
-    if (garray[g].status == GAME_EXAMINE) {
-      pprintf(p, "(Examining game %d: %s vs. %s)\n", g + 1,
-            garray[g].white_name, garray[g].black_name);
-    } else {
-      pprintf(p, "(playing game %d: %s vs. %s)\n", g + 1,
-	    parray[garray[g].white].name, parray[garray[g].black].name);
-      if (garray[g].link >= 0) {
-	pprintf(p, "(partner is playing game %d: %s vs. %s)\n", garray[g].link + 1,
-	    parray[garray[garray[g].link].white].name,
-	    parray[garray[garray[g].link].black].name);
-      }
-    }
-  }
-  if (parray[p1].num_observe) {
-    for (i = 0, t = 0; i < parray[p1].num_observe; i++) {
-      g = parray[p1].observe_list[i];
-      if ((g != -1) && ((parray[p].adminLevel >= ADMIN_ADMIN) || (garray[g].private == 0)))
-	numbers[t++] = g + 1;
-    }
-    if (t) {
-      pprintf(p, "%s is observing game%s ", parray[p1].name, ((t > 1) ? "s" : ""));
-      com_stats_andify(numbers, t, tmp);
-      pprintf(p, tmp);
-    }
-  }
-  if (parray[p1].busy[0]) {
-    pprintf(p, "(%s %s)\n", parray[p1].name, parray[p1].busy);
-  }
-  if (!parray[p1].registered) {
-    pprintf(p, "%s is NOT a registered player.\n\n", parray[p1].name);
-  } else {
-    pprintf(p, "\n         rating     RD     win   loss   draw  total   best\n");
-    com_stats_rating("Blitz", &parray[p1].b_stats, tmp);
-    pprintf(p, tmp);
-    com_stats_rating("Standard", &parray[p1].s_stats, tmp);
-    pprintf(p, tmp);
-    com_stats_rating("Lightning", &parray[p1].l_stats, tmp);
-    pprintf(p, tmp);
-    com_stats_rating("Wild", &parray[p1].w_stats, tmp);
-    pprintf(p, tmp);
-  }
-  pprintf(p, "\n");
-  if (parray[p1].adminLevel > 0) {
-    pprintf(p, "Admin Level: ");
-    switch (parray[p1].adminLevel) {
-    case 5:
-      pprintf(p, "Authorized Helper Person\n");
-      break;
-    case 10:
-      pprintf(p, "Administrator\n");
-      break;
-    case 15:
-      pprintf(p, "Help File Librarian/Administrator\n");
-      break;
-    case 20:
-      pprintf(p, "Master Administrator\n");
-      break;
-    case 50:
-      pprintf(p, "Master Help File Librarian/Administrator\n");
-      break;
-    case 60:
-      pprintf(p, "Assistant Super User\n");
-      break;
-    case 100:
-      pprintf(p, "Super User\n");
-      break;
-    default:
-      pprintf(p, "%d\n", parray[p1].adminLevel);
-      break;
-    }
-  }
-  if (parray[p].adminLevel > 0)
-    pprintf(p, "Full Name  : %s\n", (parray[p1].fullName ? parray[p1].fullName : "(none)"));
-  if (((p1 == p) && (parray[p1].registered)) || (parray[p].adminLevel > 0))
-    pprintf(p, "Address    : %s\n", (parray[p1].emailAddress ? parray[p1].emailAddress : "(none)"));
-  if (parray[p].adminLevel > 0) {
-    pprintf(p, "Host       : %s\n",
-	    dotQuad(connected ? parray[p1].thisHost : parray[p1].lastHost));
-  }
-  if ((parray[p].adminLevel > 0) && (parray[p1].registered))
-    if (parray[p1].num_comments)
-      pprintf(p, "Comments   : %d\n", parray[p1].num_comments);
+	sprintf(line, "\nStatistics for %-11s ", parray[p1].name);
 
-  if (connected && parray[p1].registered && (p==p1 ||
-     (parray[p].adminLevel > 0))) {
-    char *timeToStr = ctime((time_t *) &parray[p1].timeOfReg);
+	if (connected && parray[p1].status == PLAYER_PROMPT) {
+		sprintf(tmp, "On for: %s", hms_desc(player_ontime(p1)));
+		strcat(line, tmp);
+		sprintf(tmp, "   Idle: %s\n", hms_desc(player_idle(p1)));
+	} else {
+		if ((t = player_lastdisconnect(p1)))
+			sprintf(tmp, "(Last disconnected %s):\n", strltime(&t));
+		else
+			sprintf(tmp, "(Never connected.)\n");
+	}
 
-    timeToStr[strlen(timeToStr)-1]='\0';
-    pprintf(p, "\n");
-    onTime = (time(0) - parray[p1].logon_time) + parray[p1].totalTime;
+	strcat(line, tmp);
+	pprintf(p, "%s", line);
 
-    pprintf(p, "Total time on-line: %s\n", hms_desc(onTime) );
-    pprintf(p, "%% of life on-line:  %3.1f  (since %s)\n",
-           (double)((onTime*100)/(double)(time(0)-parray[p1].timeOfReg)),
-           timeToStr);
-  }
+	if (parray[p1].simul_info.numBoards) {
+		t = 0;
+		i = 0;
+
+		while (i < parray[p1].simul_info.numBoards) {
+			if ((numbers[t] = parray[p1].simul_info.boards[i] + 1) != 0)
+				t++;
+			i++;
+		}
+		pprintf(p, "%s is giving a simul: game%s ", parray[p1].name,
+		    (t > 1 ? "s" : ""));
+		com_stats_andify(numbers, t, tmp);
+		pprintf(p, tmp);
+	} else if (parray[p1].game >= 0) {
+		g = parray[p1].game;
+
+		if (garray[g].status == GAME_EXAMINE) {
+			pprintf(p, "(Examining game %d: %s vs. %s)\n", (g + 1),
+			    garray[g].white_name,
+			    garray[g].black_name);
+		} else {
+			pprintf(p, "(playing game %d: %s vs. %s)\n", (g + 1),
+			    parray[garray[g].white].name,
+			    parray[garray[g].black].name);
+
+			if (garray[g].link >= 0) {
+				pprintf(p, "(partner is playing game %d: "
+				    "%s vs. %s)\n",
+				    (garray[g].link + 1),
+				    parray[garray[garray[g].link].white].name,
+				    parray[garray[garray[g].link].black].name);
+			}
+		}
+	}
+
+	if (parray[p1].num_observe) {
+		t = 0;
+		i = 0;
+
+		while (i < parray[p1].num_observe) {
+			if ((g = parray[p1].observe_list[i]) != -1 &&
+			    (parray[p].adminLevel >= ADMIN_ADMIN ||
+			    garray[g].private == 0))
+				numbers[t++] = (g + 1);
+			i++;
+		}
+
+		if (t) {
+			pprintf(p, "%s is observing game%s ", parray[p1].name,
+			    (t > 1 ? "s" : ""));
+			com_stats_andify(numbers, t, tmp);
+			pprintf(p, tmp);
+		}
+	}
+
+	if (parray[p1].busy[0])
+		pprintf(p, "(%s %s)\n", parray[p1].name, parray[p1].busy);
+
+	if (!parray[p1].registered) {
+		pprintf(p, "%s is NOT a registered player.\n\n",
+		    parray[p1].name);
+	} else {
+		pprintf(p, "\n         rating     RD     win   loss   draw  "
+		    "total   best\n");
+
+		com_stats_rating("Blitz", &parray[p1].b_stats, tmp);
+		pprintf(p, tmp);
+		com_stats_rating("Standard", &parray[p1].s_stats, tmp);
+		pprintf(p, tmp);
+		com_stats_rating("Lightning", &parray[p1].l_stats, tmp);
+		pprintf(p, tmp);
+		com_stats_rating("Wild", &parray[p1].w_stats, tmp);
+		pprintf(p, tmp);
+	}
+
+	pprintf(p, "\n");
+
+	if (parray[p1].adminLevel > 0) {
+		pprintf(p, "Admin Level: ");
+
+		switch (parray[p1].adminLevel) {
+		case 5:
+			pprintf(p, "Authorized Helper Person\n");
+			break;
+		case 10:
+			pprintf(p, "Administrator\n");
+			break;
+		case 15:
+			pprintf(p, "Help File Librarian/Administrator\n");
+			break;
+		case 20:
+			pprintf(p, "Master Administrator\n");
+			break;
+		case 50:
+			pprintf(p, "Master Help File Librarian/Administrator"
+			    "\n");
+			break;
+		case 60:
+			pprintf(p, "Assistant Super User\n");
+			break;
+		case 100:
+			pprintf(p, "Super User\n");
+			break;
+		default:
+			pprintf(p, "%d\n", parray[p1].adminLevel);
+			break;
+		}
+	}
+
+	// Full Name
+	if (parray[p].adminLevel > 0) {
+		pprintf(p, "Full Name  : %s\n", (parray[p1].fullName ?
+		    parray[p1].fullName : "(none)"));
+	}
+
+	// Address
+	if ((p1 == p && parray[p1].registered) || parray[p].adminLevel > 0) {
+		pprintf(p, "Address    : %s\n", (parray[p1].emailAddress ?
+		    parray[p1].emailAddress : "(none)"));
+	}
+
+	// Host
+	if (parray[p].adminLevel > 0) {
+		pprintf(p, "Host       : %s\n", dotQuad(connected ?
+		    parray[p1].thisHost : parray[p1].lastHost));
+	}
+
+	// Comments
+	if (parray[p].adminLevel > 0 && parray[p1].registered) {
+		if (parray[p1].num_comments) {
+			pprintf(p, "Comments   : %d\n",
+			    parray[p1].num_comments);
+		}
+	}
+
+	if (connected &&
+	    parray[p1].registered &&
+	    (p == p1 || parray[p].adminLevel > 0)) {
+		char *timeToStr = ctime((time_t *) &parray[p1].timeOfReg);
+
+		timeToStr[strlen(timeToStr) - 1] = '\0';
+		pprintf(p, "\n");
+
+		onTime = ((time(0) - parray[p1].logon_time) +
+		    parray[p1].totalTime);
+
+		pprintf(p, "Total time on-line: %s\n", hms_desc(onTime) );
+		pprintf(p, "%% of life on-line:  %3.1f  (since %s)\n", // XXX
+		    (double) ((onTime * 100) / (double) (time(0) -
+		    parray[p1].timeOfReg)),
+		    timeToStr);
+	}
 
 #ifdef TIMESEAL
-  if (connected)
-    pprintf(p, "\nTimeseal   : %s\n",
-	    (con[parray[p1].socket].timeseal) ? "On" : "Off");
-  if ((parray[p].adminLevel > 0) && (connected)) {
-    if (findConnection(parray[p1].socket) && con[parray[p1].socket].timeseal) {
-      pprintf(p, "Unix acc   : %s\nSystem/OS  : %s\n",
-             con[parray[p1].socket].user,
-             con[parray[p1].socket].sys);
-    }
-  }
+	if (connected) {
+		pprintf(p, "\nTimeseal   : %s\n",
+		    (con[parray[p1].socket].timeseal ? "On" : "Off"));
+	}
+	if (parray[p].adminLevel > 0 && connected) {
+		if (findConnection(parray[p1].socket) &&
+		    con[parray[p1].socket].timeseal) {
+			pprintf(p, "Unix acc   : %s\nSystem/OS  : %s\n",
+			    con[parray[p1].socket].user,
+			    con[parray[p1].socket].sys);
+		}
+	}
 #endif
 
-  if (parray[p1].num_plan) {
-    pprintf(p, "\n");
-    for (i = 0; i < parray[p1].num_plan; i++)
-      pprintf(p, "%2d: %s\n", i + 1, (parray[p1].planLines[i] != NULL) ? parray[p1].planLines[i] : "");
-  }
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (parray[p1].num_plan) {
+		pprintf(p, "\n");
+
+		for (i = 0; i < parray[p1].num_plan; i++) {
+			pprintf(p, "%2d: %s\n", (i + 1),
+			    (parray[p1].planLines[i] != NULL
+			    ? parray[p1].planLines[i]
+			    : ""));
+		}
+	}
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PUBLIC int com_password(int p, param_list param)
