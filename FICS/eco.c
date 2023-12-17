@@ -19,7 +19,7 @@ LONG_entry	*LONG_book[4096];
 
 int ECO_entries, NIC_entries, LONG_entries;
 
-PRIVATE int
+PRIVATE inline int
 fencmp(const unsigned char *pos1, const char *pos2)
 {
 	return strcmp((const char *)pos1, pos2);
