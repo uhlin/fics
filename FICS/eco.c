@@ -19,6 +19,12 @@ LONG_entry	*LONG_book[4096];
 
 int ECO_entries, NIC_entries, LONG_entries;
 
+PRIVATE int
+fencmp(const unsigned char *pos1, const char *pos2)
+{
+	return strcmp((const char *)pos1, pos2);
+}
+
 PUBLIC char *
 boardToFEN(int g)
 {
@@ -317,13 +323,13 @@ getECO(int g)
 		while ((r >= l) && !flag) {
 			x = ((l + r) / 2);
 
-			if (strcmp(garray[g].moveList[i].FENpos,
+			if (fencmp(garray[g].moveList[i].FENpos,
 			    ECO_book[x]->FENpos) < 0)
 				r = (x - 1);
 			else
 				l = (x + 1);
 
-			if (!strcmp(garray[g].moveList[i].FENpos,
+			if (!fencmp(garray[g].moveList[i].FENpos,
 			    ECO_book[x]->FENpos)) {
 				strcpy(ECO, ECO_book[x]->ECO);
 				flag = 1;
@@ -399,13 +405,13 @@ com_eco(int p, param_list param)
 		while (r >= l && !flag) {
 			x = ((l + r) / 2);
 
-			if (strcmp(garray[g1].moveList[i].FENpos,
+			if (fencmp(garray[g1].moveList[i].FENpos,
 			    ECO_book[x]->FENpos) < 0)
 				r = (x - 1);
 			else
 				l = (x + 1);
 
-			if (!strcmp(garray[g1].moveList[i].FENpos,
+			if (!fencmp(garray[g1].moveList[i].FENpos,
 			    ECO_book[x]->FENpos)) {
 				pprintf(p, "  ECO[%3d]: %s\n", i,
 				    ECO_book[x]->ECO);
@@ -429,13 +435,13 @@ com_eco(int p, param_list param)
 		while (r >= l && !flag) {
 			x = ((l + r) / 2);
 
-			if (strcmp(garray[g1].moveList[i].FENpos,
+			if (fencmp(garray[g1].moveList[i].FENpos,
 			    NIC_book[x]->FENpos) < 0)
 				r = (x - 1);
 			else
 				l = (x + 1);
 
-			if (!strcmp(garray[g1].moveList[i].FENpos,
+			if (!fencmp(garray[g1].moveList[i].FENpos,
 			    NIC_book[x]->FENpos)) {
 				pprintf(p, "  NIC[%3d]: %s\n", i,
 				    NIC_book[x]->NIC);
@@ -459,13 +465,13 @@ com_eco(int p, param_list param)
 		while (r >= l && !flag) {
 			x = ((l + r) / 2);
 
-			if (strcmp(garray[g1].moveList[i].FENpos,
+			if (fencmp(garray[g1].moveList[i].FENpos,
 			    LONG_book[x]->FENpos) < 0)
 				r = (x - 1);
 			else
 				l = (x + 1);
 
-			if (!strcmp(garray[g1].moveList[i].FENpos,
+			if (!fencmp(garray[g1].moveList[i].FENpos,
 				    LONG_book[x]->FENpos)) {
 				pprintf(p, " LONG[%3d]: %s\n", i,
 				    LONG_book[x]->LONG);
