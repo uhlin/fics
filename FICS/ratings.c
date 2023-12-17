@@ -22,16 +22,16 @@
 */
 
 #include "stdinclude.h"
-
 #include "common.h"
-#include "playerdb.h"
-#include "ratings.h"
-#include "gamedb.h"
+
 #include "command.h"
 #include "comproc.h"
-#include "lists.h"
-#include "ficsmain.h"
 #include "config.h"
+#include "ficsmain.h"
+#include "gamedb.h"
+#include "lists.h"
+#include "playerdb.h"
+#include "ratings.h"
 #include "utils.h"
 
 /* grimm */
