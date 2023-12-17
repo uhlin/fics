@@ -22,6 +22,7 @@
    Richard Nash			93/10/22	Created
    Markus Uhlin			23/12/10	Renamed strdup() to xstrdup()
    Markus Uhlin			23/12/10	Deleted check_emailaddr()
+   Markus Uhlin			23/12/17	Added argument lists
 */
 
 #ifndef _UTILS_H
@@ -87,8 +88,8 @@ extern char *xstrdup(const char *);
 
 extern char *hms_desc();
 extern char *hms();
-extern char *strltime();
-extern char *strgtime();
+extern char *strltime(time_t *);
+extern char *strgtime(time_t *);
 extern unsigned tenth_secs();
 extern char *tenth_str();
 extern int untenths();
