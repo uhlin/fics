@@ -1555,10 +1555,10 @@ com_mailhelp(int p, param_list param)
 	if (count == 0) {
 		pprintf(p, "Found no help file matching \"%s\".\n", iwant);
 	} else if (count == 1 || !strcmp(*buffer, iwant)) {
-		sprintf(subj, "FICS help file from server %s: %s",
+		snprintf(subj, sizeof subj, "FICS help file from server %s: %s",
 		    fics_hostname,
 		    *buffer);
-		sprintf(fname, "%s/%s",
+		snprintf(fname, sizeof fname, "%s/%s",
 		    help_dir[lang],
 		    *buffer);
 
