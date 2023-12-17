@@ -720,7 +720,8 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 	}
 
 	// Replace this with an algabraic de-parser
-	sprintf(mt->algString, alg_unparse(gs, mt));
+	snprintf(mt->algString, sizeof mt->algString, "%s",
+	    alg_unparse(gs, mt));
 	fakeMove = *gs;
 	execute_move(&fakeMove, mt, 0); // Calculates enPassant also
 
