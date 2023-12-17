@@ -1022,7 +1022,7 @@ ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 	if ((version < 3) && (!(g->bInitTime)))
 		g->bInitTime = g->wInitTime;
 
-	fscanf(fp, "%lx", &g->timeOfStart);
+	fscanf(fp, "%llx", &g->timeOfStart);
 	fscanf(fp, "%d %d", &g->wTime, &g->bTime);
 
 	if (version > 1)
@@ -1176,7 +1176,7 @@ WriteGameFile(FILE *fp, int g)
 	fprintf(fp, "%d %d\n", gg->white_rating, gg->black_rating);
 	fprintf(fp, "%d %d %d %d\n", gg->wInitTime, gg->wIncrement,
 	    gg->bInitTime, gg->bIncrement);
-	fprintf(fp, "%lx\n", gg->timeOfStart);
+	fprintf(fp, "%llx\n", gg->timeOfStart);
 
 #ifdef TIMESEAL
 	fprintf(fp, "%d %d\n",
