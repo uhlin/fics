@@ -17,8 +17,9 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash	              	93/10/22	Created
-   vek   leeds@math.gatech.edu  95/04/05        Glicko system, with sterr
+   Richard Nash                 93/10/22	Created
+   vek leeds@math.gatech.edu    95/04/05	Glicko system, with sterr
+   Markus Uhlin                 23/12/17	Fixed the includes
 */
 
 #include "stdinclude.h"
