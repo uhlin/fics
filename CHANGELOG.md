@@ -23,6 +23,8 @@ documented in this file.
 - Fixed _multiple_ cases of use of possibly uninitialized variables.
 - Fixed _multiple_ possible buffer overflows
 - Fixed _multiple_ `sprintf()` format overflows
+- Fixed the type of the variable passed to `strgtime()` and
+  `strltime()`. Multiple occurrences.
 - Fixed unused variables
 - Renamed functions in order to avoid conflicts with system
   declarations.
