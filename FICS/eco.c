@@ -19,7 +19,7 @@ LONG_entry	*LONG_book[4096];
 
 int ECO_entries, NIC_entries, LONG_entries;
 
-char *
+PUBLIC char *
 boardToFEN(int g)
 {
 	int		FENcount = 0;
@@ -100,8 +100,8 @@ boardToFEN(int g)
 	return FENstring;
 }
 
-void
-ECO_init()
+PUBLIC void
+ECO_init(void)
 {
 	FILE	*fp;
 	char	 ECO[4];
@@ -163,8 +163,8 @@ ECO_init()
 	}
 }
 
-void
-NIC_init()
+PUBLIC void
+NIC_init(void)
 {
 	FILE	*fp;
 	char	 FENpos[73];
@@ -218,8 +218,8 @@ NIC_init()
 	NIC_entries = i;
 }
 
-void
-LONG_init()
+PUBLIC void
+LONG_init(void)
 {
 	FILE	*fp;
 	char	 FENpos[73];
@@ -275,15 +275,15 @@ LONG_init()
 	LONG_entries = i;
 }
 
-void
-BookInit()
+PUBLIC void
+BookInit(void)
 {
 	ECO_init();
 	NIC_init();
 	LONG_init();
 }
 
-char *
+PUBLIC char *
 getECO(int g)
 {
 	static char ECO[4];
