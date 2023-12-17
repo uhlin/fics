@@ -14,29 +14,38 @@ PRIVATE int shutdownStartTime;
 PRIVATE char downer[1024];
 PRIVATE char reason[1024];
 
-PUBLIC void output_shut_mess()
+PUBLIC void
+output_shut_mess()
 {
-  int shuttime = time(0);
-  fprintf(stderr, "FICS: Shutting down at %s\n", strltime(&shuttime));
+	time_t shuttime = time(NULL);
+
+	fprintf(stderr, "FICS: Shutting down at %s\n", strltime(&shuttime));
 }
 
-PUBLIC void ShutDown(void)
+PUBLIC void
+ShutDown(void)
 {
-  int p1;
-  int shuttime = time(0);
+	time_t shuttime = time(NULL);
 
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    pprintf(p1, "\n\n    **** Server shutdown ordered by %s. ****\n", downer);
-    if (reason[0] != '\0')
-      pprintf(p1, "\n    **** We are going down because: %s. ****\n", reason);
-  }
-  TerminateCleanup();
-  fprintf(stderr, "FICS: Shut down ordered at %s by %s.\n", strltime(&shuttime), downer);
-  output_shut_mess();
-  net_close();
-  exit(0);
+	for (int p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+
+		pprintf(p1, "\n\n    **** Server shutdown ordered by %s. "
+		    "****\n", downer);
+
+		if (reason[0] != '\0') {
+			pprintf(p1, "\n    **** We are going down because: "
+			    "%s. ****\n", reason);
+		}
+	}
+
+	TerminateCleanup();
+	fprintf(stderr, "FICS: Shut down ordered at %s by %s.\n",
+	    strltime(&shuttime), downer);
+	output_shut_mess();
+	net_close();
+	exit(0);
 }
 
 PUBLIC void ShutHeartBeat(void)
