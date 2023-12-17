@@ -652,67 +652,89 @@ PUBLIC int style11(game_state_t *b, move_t *ml)
   return 0;
 }
 
-/* Similar to style 10.  See the "style12" help file for information */
-PUBLIC int style12(game_state_t *b, move_t *ml)
+/*
+ * Similar to style 10. See the "style12" help file for information.
+ */
+PUBLIC int
+style12(game_state_t *b, move_t *ml)
 {
-  int f, r;
-  char tmp[80];
-  int ws, bs;
+	char	 tmp[80];
+	int	 f, r;
+	int	 ws, bs;
 
-  board_calc_strength(b, &ws, &bs);
-  sprintf(bstring, "<12> ");
-  for (r = 7; r >= 0; r--) {
-    for (f = 0; f < 8; f++) {
-      if (b->board[f][r] == NOPIECE) {
-	strcat(bstring, "-");
-      } else {
-	if (colorval(b->board[f][r]) == WHITE)
-	  strcat(bstring, wpstring[piecetype(b->board[f][r])]);
-	else
-	  strcat(bstring, bpstring[piecetype(b->board[f][r])]);
-      }
-    }
-    strcat(bstring, " ");
-  }
-  strcat(bstring, (b->onMove == WHITE) ? "W " : "B ");
-  if (garray[b->gameNum].numHalfMoves) {
-    sprintf(tmp, "%d ",
-	    ml[garray[b->gameNum].numHalfMoves - 1].doublePawn);
-  } else {
-    sprintf(tmp, "-1 ");
-  }
-  strcat(bstring, tmp);
-  sprintf(tmp, "%d %d %d %d %d ",
-	  !(b->wkmoved || b->wkrmoved),
-	  !(b->wkmoved || b->wqrmoved),
-	  !(b->bkmoved || b->bkrmoved),
-	  !(b->bkmoved || b->bqrmoved),
-	  (garray[b->gameNum].numHalfMoves - ((b->lastIrreversable == -1) ? 0 : b->lastIrreversable)));
-  strcat(bstring, tmp);
-  sprintf(tmp, "%d %s %s %d %d %d %d %d %d %d %d %s (%s) %s %d\n",
-	  b->gameNum + 1,
-	  garray[b->gameNum].white_name,
-	  garray[b->gameNum].black_name,
-	  myTurn,
-	  garray[b->gameNum].wInitTime / 600,
-	  garray[b->gameNum].wIncrement / 10,
-	  ws,
-	  bs,
-	  (wTime + 5) / 10,
-	  (bTime + 5) / 10,
-	  garray[b->gameNum].numHalfMoves / 2 + 1,
-	  garray[b->gameNum].numHalfMoves ?
-	  ml[garray[b->gameNum].numHalfMoves - 1].moveString :
-	  "none",
-	  garray[b->gameNum].numHalfMoves ?
-	  tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0) :
-	  "0:00",
-	  garray[b->gameNum].numHalfMoves ?
-	  ml[garray[b->gameNum].numHalfMoves - 1].algString :
-	  "none", (orient == WHITE) ? 0 : 1);
+	board_calc_strength(b, &ws, &bs);
+	sprintf(bstring, "<12> ");
 
-  strcat(bstring, tmp);
-  return 0;
+	for (r = 7; r >= 0; r--) {
+		for (f = 0; f < 8; f++) {
+			if (b->board[f][r] == NOPIECE) {
+				strcat(bstring, "-");
+			} else {
+				if (colorval(b->board[f][r]) == WHITE) {
+					strcat(bstring, wpstring
+					    [piecetype(b->board[f][r])]);
+				} else {
+					strcat(bstring, bpstring
+					    [piecetype(b->board[f][r])]);
+				}
+			}
+		}
+
+		strcat(bstring, " ");
+	}
+
+	strcat(bstring, (b->onMove == WHITE ? "W " : "B "));
+
+	if (garray[b->gameNum].numHalfMoves) {
+		sprintf(tmp, "%d ",
+		    ml[garray[b->gameNum].numHalfMoves - 1].doublePawn);
+	} else {
+		sprintf(tmp, "-1 ");
+	}
+
+	strcat(bstring, tmp);
+
+	sprintf(tmp, "%d %d %d %d %d ",
+	    !(b->wkmoved || b->wkrmoved),
+	    !(b->wkmoved || b->wqrmoved),
+	    !(b->bkmoved || b->bkrmoved),
+	    !(b->bkmoved || b->bqrmoved),
+
+	    (garray[b->gameNum].numHalfMoves -
+	    (b->lastIrreversable == -1
+	    ? 0
+	    : b->lastIrreversable)));
+	strcat(bstring, tmp);
+
+	sprintf(tmp, "%d %s %s %d %d %d %d %d %d %d %d %s (%s) %s %d\n",
+	    (b->gameNum + 1),
+	    garray[b->gameNum].white_name,
+	    garray[b->gameNum].black_name,
+	    myTurn,
+	    (garray[b->gameNum].wInitTime / 600),
+	    (garray[b->gameNum].wIncrement / 10),
+	    ws,
+	    bs,
+	    ((wTime + 5) / 10),
+	    ((bTime + 5) / 10),
+	    (garray[b->gameNum].numHalfMoves / 2 + 1),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? ml[garray[b->gameNum].numHalfMoves - 1].moveString
+	    : "none"),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0)
+	    : "0:00"),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? ml[garray[b->gameNum].numHalfMoves - 1].algString
+	    : "none"),
+
+	    (orient == WHITE ? 0 : 1));
+	strcat(bstring, tmp);
+
+	return 0;
 }
 
 PUBLIC int board_read_file(char *category, char *gname, game_state_t *gs)
