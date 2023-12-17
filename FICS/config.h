@@ -102,6 +102,6 @@
 
 /* Registration mail address */
 
-#define REGMAIL           "AdminGuy@this.place"
+#define REGMAIL           "maxxe@rpblc.net"
 
 #endif    /* _CONFIG_H */
