@@ -510,12 +510,15 @@ PUBLIC int com_uptime(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_date(int p, param_list param)
+PUBLIC int
+com_date(int p, param_list param)
 {
-  int t = time(0);
-  pprintf(p, "Local time     - %s\n", strltime(&t));
-  pprintf(p, "Greenwich time - %s\n", strgtime(&t));
-  return COM_OK;
+	time_t t = time(NULL);
+
+	pprintf(p, "Local time     - %s\n", strltime(&t));
+	pprintf(p, "Greenwich time - %s\n", strgtime(&t));
+
+	return COM_OK;
 }
 
 char *inout_string[] = {
