@@ -521,36 +521,43 @@ char *inout_string[] = {
   "login", "logout"
 };
 
-PRIVATE int plogins(p, fname)
-int p;
-char *fname;
+PRIVATE int
+plogins(int p, char *fname)
 {
-  FILE *fp;
-  int inout, thetime, registered;
-  char loginName[MAX_LOGIN_NAME + 1];
-  char ipstr[20];
+	FILE		*fp;
+	char		 ipstr[20];
+	char		 loginName[MAX_LOGIN_NAME + 1];
+	int		 inout, registered;
+	long int	 lval;
+	time_t		 tval;
 
-  fp = fopen(fname, "r");
-  if (!fp) {
-    pprintf(p, "Sorry, no login information available.\n");
-    return COM_OK;
-  }
-  while (!feof(fp)) {
-    if (fscanf(fp, "%d %s %d %d %s\n", &inout, loginName, &thetime,
-	       &registered, ipstr) != 5) {
-      fprintf(stderr, "FICS: Error in login info format. %s\n", fname);
-      fclose(fp);
-      return COM_OK;
-    }
-    pprintf(p, "%s: %-17s %-6s", strltime(&thetime), loginName,
-	    inout_string[inout]);
-    if (parray[p].adminLevel > 0) {
-      pprintf(p, " from %s\n", ipstr);
-    } else
-      pprintf(p, "\n");
-  }
-  fclose(fp);
-  return COM_OK;
+	if ((fp = fopen(fname, "r")) == NULL) {
+		pprintf(p, "Sorry, no login information available.\n");
+		return COM_OK;
+	}
+
+	while (!feof(fp)) {
+		if (fscanf(fp, "%d %s %ld %d %s\n", &inout, loginName, &lval,
+		    &registered, ipstr) != 5) {
+			fprintf(stderr, "FICS: Error in login info format. "
+			    "%s\n", fname);
+			fclose(fp);
+			return COM_OK;
+		}
+
+		tval = lval;
+
+		pprintf(p, "%s: %-17s %-6s", strltime(&tval), loginName,
+		    inout_string[inout]);
+
+		if (parray[p].adminLevel > 0)
+			pprintf(p, " from %s\n", ipstr);
+		else
+			pprintf(p, "\n");
+	}
+
+	fclose(fp);
+	return COM_OK;
 }
 
 PUBLIC int com_llogons(int p, param_list param)
