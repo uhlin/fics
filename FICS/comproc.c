@@ -23,6 +23,7 @@
    foxbat			95/03/11	Added filters in cmatch
    Markus Uhlin			23/12/09	Fixed implicit ints
    Markus Uhlin			23/12/17	Fixed compiler warnings
+   Markus Uhlin			23/12/17	Usage of 'time_t'
 */
 
 #include "stdinclude.h"
