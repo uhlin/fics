@@ -24,12 +24,12 @@ typedef struct {
 	char	FENpos[80];
 } LONG_entry;
 
-extern char	*boardToFEN();
-extern char	*getECO();
-extern int	 com_eco();
-extern void	 BookInit();
-extern void	 ECO_init();
-extern void	 LONG_init();
-extern void	 NIC_init();
+extern char	*boardToFEN(int);
+extern char	*getECO(int);
+extern int	 com_eco(int, param_list);
+extern void	 BookInit(void);
+extern void	 ECO_init(void);
+extern void	 LONG_init(void);
+extern void	 NIC_init(void);
 
 #endif
