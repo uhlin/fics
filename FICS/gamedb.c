@@ -1164,32 +1164,35 @@ PUBLIC int game_delete(int wp, int bp)
   return 0;
 }
 
-void WriteGameFile(FILE * fp, int g)
+void
+WriteGameFile(FILE *fp, int g)
 {
-  int i;
-  game *gg = &garray[g];
-  player *wp = &parray[gg->white], *bp = &parray[gg->black];
+	game	*gg = &garray[g];
+	player	*bp = &parray[gg->black];
+	player	*wp = &parray[gg->white];
 
-  fprintf(fp, "v %d\n", GAMEFILE_VERSION);
-  fprintf(fp, "%s %s\n", wp->name, bp->name);
-  fprintf(fp, "%d %d\n", gg->white_rating, gg->black_rating);
-  fprintf(fp, "%d %d %d %d\n", gg->wInitTime, gg->wIncrement,
-	  gg->bInitTime, gg->bIncrement);
-  fprintf(fp, "%lx\n", gg->timeOfStart);
-/*  fprintf(fp, "%d %d\n", gg->wTime, gg->bTime); */
+	fprintf(fp, "v %d\n", GAMEFILE_VERSION);
+	fprintf(fp, "%s %s\n", wp->name, bp->name);
+	fprintf(fp, "%d %d\n", gg->white_rating, gg->black_rating);
+	fprintf(fp, "%d %d %d %d\n", gg->wInitTime, gg->wIncrement,
+	    gg->bInitTime, gg->bIncrement);
+	fprintf(fp, "%lx\n", gg->timeOfStart);
+
 #ifdef TIMESEAL
-  fprintf(fp, "%d %d\n",
-    (con[wp->socket].timeseal ? gg->wRealTime/100 : gg->wTime),
-    (con[bp->socket].timeseal ? gg->bRealTime/100 : gg->bTime));
+	fprintf(fp, "%d %d\n",
+	    (con[wp->socket].timeseal ? (gg->wRealTime / 100) : gg->wTime),
+	    (con[bp->socket].timeseal ? (gg->bRealTime / 100) : gg->bTime));
 #endif
-  fprintf(fp, "%d %d\n", gg->result, gg->winner);
-  fprintf(fp, "%d %d %d %d\n", gg->private, gg->type,
-	  gg->rated, gg->clockStopped);
-  fprintf(fp, "%d\n", gg->numHalfMoves);
-  for (i = 0; i < garray[g].numHalfMoves; i++) {
-    WriteMoves(fp, &garray[g].moveList[i]);
-  }
-  WriteGameState(fp, &garray[g].game_state);
+
+	fprintf(fp, "%d %d\n", gg->result, gg->winner);
+	fprintf(fp, "%d %d %d %d\n", gg->private, gg->type, gg->rated,
+	    gg->clockStopped);
+	fprintf(fp, "%d\n", gg->numHalfMoves);
+
+	for (int i = 0; i < garray[g].numHalfMoves; i++)
+		WriteMoves(fp, &garray[g].moveList[i]);
+
+	WriteGameState(fp, &garray[g].game_state);
 }
 
 PUBLIC int game_save(int g)
