@@ -541,72 +541,94 @@ PUBLIC int style9(game_state_t *b, move_t *ml)
   return 0;
 }
 
-/* Sleator's 'new and improved' raw dump format... */
-PUBLIC int style10(game_state_t *b, move_t *ml)
+/*
+ * Sleator's 'new and improved' raw dump format...
+ */
+PUBLIC int
+style10(game_state_t *b, move_t *ml)
 {
-  int f, r;
-  char tmp[80];
-  int ws, bs;
+	char	 tmp[80];
+	int	 f, r;
+	int	 ws, bs;
 
-  board_calc_strength(b, &ws, &bs);
-  sprintf(tmp, "<10>\n");
-  strcat(bstring, tmp);
-  for (r = 7; r >= 0; r--) {
-    strcat(bstring, "|");
-    for (f = 0; f < 8; f++) {
-      if (b->board[f][r] == NOPIECE) {
-	strcat(bstring, " ");
-      } else {
-	if (colorval(b->board[f][r]) == WHITE)
-	  strcat(bstring, wpstring[piecetype(b->board[f][r])]);
-	else
-	  strcat(bstring, bpstring[piecetype(b->board[f][r])]);
-      }
-    }
-    strcat(bstring, "|\n");
-  }
-  strcat(bstring, (b->onMove == WHITE) ? "W " : "B ");
-  if (garray[b->gameNum].numHalfMoves) {
-    sprintf(tmp, "%d ",
-	    ml[garray[b->gameNum].numHalfMoves - 1].doublePawn);
-  } else {
-    sprintf(tmp, "-1 ");
-  }
-  strcat(bstring, tmp);
-  sprintf(tmp, "%d %d %d %d %d\n",
-	  !(b->wkmoved || b->wkrmoved),
-	  !(b->wkmoved || b->wqrmoved),
-	  !(b->bkmoved || b->bkrmoved),
-	  !(b->bkmoved || b->bqrmoved),
-       (garray[b->gameNum].numHalfMoves - ((b->lastIrreversable == -1) ? 0 :
-					   b->lastIrreversable)));
-  strcat(bstring, tmp);
-  sprintf(tmp, "%d %s %s %d %d %d %d %d %d %d %d %s (%s) %s %d\n",
-	  b->gameNum,
-	  garray[b->gameNum].white_name,
-	  garray[b->gameNum].black_name,
-	  myTurn,
-	  garray[b->gameNum].wInitTime / 600,
-	  garray[b->gameNum].wIncrement / 10,
-	  ws,
-	  bs,
-	  (wTime + 5) / 10,
-	  (bTime + 5) / 10,
-	  garray[b->gameNum].numHalfMoves / 2 + 1,
-	  garray[b->gameNum].numHalfMoves ?
-	  ml[garray[b->gameNum].numHalfMoves - 1].moveString :
-	  "none",
-	  garray[b->gameNum].numHalfMoves ?
-	  tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0) :
-	  "0:00",
-	  garray[b->gameNum].numHalfMoves ?
-	  ml[garray[b->gameNum].numHalfMoves - 1].algString :
-	  "none",
-	  (orient == WHITE) ? 0 : 1);
-  strcat(bstring, tmp);
-  sprintf(tmp, ">10<\n");
-  strcat(bstring, tmp);
-  return 0;
+	board_calc_strength(b, &ws, &bs);
+	sprintf(tmp, "<10>\n");
+	strcat(bstring, tmp);
+
+	for (r = 7; r >= 0; r--) {
+		strcat(bstring, "|");
+
+		for (f = 0; f < 8; f++) {
+			if (b->board[f][r] == NOPIECE) {
+				strcat(bstring, " ");
+			} else {
+				if (colorval(b->board[f][r]) == WHITE) {
+					strcat(bstring, wpstring
+					    [piecetype(b->board[f][r])]);
+				} else {
+					strcat(bstring, bpstring
+					    [piecetype(b->board[f][r])]);
+				}
+			}
+		}
+
+		strcat(bstring, "|\n");
+	}
+
+	strcat(bstring, (b->onMove == WHITE ? "W " : "B "));
+
+	if (garray[b->gameNum].numHalfMoves) {
+		sprintf(tmp, "%d ",
+		    ml[garray[b->gameNum].numHalfMoves - 1].doublePawn);
+	} else {
+		sprintf(tmp, "-1 ");
+	}
+
+	strcat(bstring, tmp);
+
+	sprintf(tmp, "%d %d %d %d %d\n",
+	    !(b->wkmoved || b->wkrmoved),
+	    !(b->wkmoved || b->wqrmoved),
+	    !(b->bkmoved || b->bkrmoved),
+	    !(b->bkmoved || b->bqrmoved),
+
+	    (garray[b->gameNum].numHalfMoves -
+	    (b->lastIrreversable == -1 ? 0 : b->lastIrreversable)));
+
+	strcat(bstring, tmp);
+
+	sprintf(tmp, "%d %s %s %d %d %d %d %d %d %d %d %s (%s) %s %d\n",
+	    b->gameNum,
+	    garray[b->gameNum].white_name,
+	    garray[b->gameNum].black_name,
+	    myTurn,
+	    (garray[b->gameNum].wInitTime / 600),
+	    (garray[b->gameNum].wIncrement / 10),
+	    ws,
+	    bs,
+	    ((wTime + 5) / 10),
+	    ((bTime + 5) / 10),
+	    (garray[b->gameNum].numHalfMoves / 2 + 1),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? ml[garray[b->gameNum].numHalfMoves - 1].moveString
+	    : "none"),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0)
+	    : "0:00"),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? ml[garray[b->gameNum].numHalfMoves - 1].algString
+	    : "none"),
+
+	    (orient == WHITE ? 0 : 1));
+	strcat(bstring, tmp);
+
+	sprintf(tmp, ">10<\n");
+	strcat(bstring, tmp);
+
+	return 0;
 }
 
 /* Same as 8, but with verbose moves ("P/e3-e4", instead of "e4") */
