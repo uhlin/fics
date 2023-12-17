@@ -904,7 +904,6 @@ PUBLIC int
 process_heartbeat(int *fd)
 {
 	int		 now = time(0);
-//	int		 p;
 	int		 time_since_last;
 	static int	 last_comfile = 0;
 	static int	 last_space = 0;
@@ -915,6 +914,9 @@ process_heartbeat(int *fd)
 	else
 		time_since_last = now - lastcalled;
 	lastcalled = now;
+
+	// XXX: unused
+	(void) time_since_last;
 
 	/*
 	 * Check for timed out connections
