@@ -23,11 +23,11 @@
 */
 
 #include "stdinclude.h"
-
 #include "common.h"
+
 #include "board.h"
-#include "playerdb.h"
 #include "gamedb.h"
+#include "playerdb.h"
 #include "utils.h"
 
 extern int style1();
