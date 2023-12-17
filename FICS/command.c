@@ -24,27 +24,24 @@
 
 #include "stdinclude.h"
 
-#include "common.h"
-#include "rmalloc.h"
+#include <sys/param.h>
+
 #include "command.h"
 #include "command_list.h"
-#include "movecheck.h"
-#include "ficsmain.h"
+#include "common.h"
 #include "config.h"
-#include "utils.h"
-#include "playerdb.h"
+#include "ficsmain.h"
 #include "gamedb.h"
 #include "gameproc.h"
-#include "obsproc.h"
-#include "ratings.h"
-#include "vers.h"
+#include "movecheck.h"
 #include "network.h"
+#include "obsproc.h"
+#include "playerdb.h"
+#include "ratings.h"
+#include "rmalloc.h"
 #include "shutdown.h"
-#include <sys/param.h>
-#ifdef TIMESEAL
-#include "timeseal.h"
-#endif
-/*#include "hostinfo.h" */
+#include "utils.h"
+#include "vers.h"
 
 PUBLIC char *mess_dir = DEFAULT_MESS;
 PUBLIC char *index_dir = DEFAULT_INDEX;
