@@ -617,111 +617,142 @@ PRIVATE void check_news(int p, int admin)
   fclose(fp);
 }
 
-PRIVATE int process_password(int p, char *password)
+PRIVATE int
+process_password(int p, char *password)
 {
-  int p1;
-  char salt[3];
-  int fd;
-  unsigned int fromHost;
-  int messnum;
-/*
-  struct hostent *hp;
-*/
-  int dummy; /* (to hold a return value) */
+	char		 salt[3];
+	int		 dummy;    // to hold a return value
+	int		 fd;
+	int		 messnum;
+	int		 p1;
+	unsigned int	 fromHost;
 
-  turn_echo_on(parray[p].socket);
+	turn_echo_on(parray[p].socket);
 
-/*  if (password[0] == '\n') {
-    parray[p].status = PLAYER_LOGIN;
-    return 0;
-  }*/
+	if (parray[p].passwd && parray[p].registered) {
+		salt[0] = parray[p].passwd[0];
+		salt[1] = parray[p].passwd[1];
+		salt[2] = '\0';
 
-  if (parray[p].passwd && parray[p].registered) {
-    salt[0] = parray[p].passwd[0];
-    salt[1] = parray[p].passwd[1];
-    salt[2] = '\0';
-    if (strcmp(crypt(password, salt), parray[p].passwd)) {
-      fd = parray[p].socket;
-      fromHost = parray[p].thisHost;
-      player_clear(p);
-      parray[p].logon_time = parray[p].last_command_time = time(0);
-      parray[p].status = PLAYER_LOGIN;
-      parray[p].socket = fd;
-      parray[p].thisHost = fromHost;
-      if (*password)
-	pprintf(p, "\n\n**** Invalid password! ****\n\n");
-      return COM_LOGOUT;
-    }
-  }
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].name != NULL) {
-      if ((!strcasecmp(parray[p].name, parray[p1].name)) && (p != p1)) {
-	if (parray[p].registered == 0) {
-	  pprintf(p, "\n*** Sorry %s is already logged in ***\n", parray[p].name);
-	  return COM_LOGOUT;
+		if (strcmp(crypt(password, salt), parray[p].passwd)) {
+			fd		= parray[p].socket;
+			fromHost	= parray[p].thisHost;
+
+			player_clear(p);
+			parray[p].logon_time = parray[p].last_command_time =
+			    time(0);
+			parray[p].status = PLAYER_LOGIN;
+			parray[p].socket = fd;
+			parray[p].thisHost = fromHost;
+
+			if (*password) {
+				pprintf(p, "\n\n**** Invalid password! ****"
+				    "\n\n");
+			}
+			return COM_LOGOUT;
+		}
 	}
-	boot_out(p, p1);
-      }
-    }
-  }
-  if (parray[p].adminLevel > 0) {
-    psend_raw_file(p, mess_dir, MESS_ADMOTD);
-  } else {
-    psend_raw_file(p, mess_dir, MESS_MOTD);
-  }
-  if (!parray[p].passwd && parray[p].registered)
-    pprintf(p, "\n*** You have no password. Please set one with the password command.");
-  if (!parray[p].registered)
-    psend_raw_file(p, mess_dir, MESS_UNREGISTERED);
-  parray[p].status = PLAYER_PROMPT;
-  player_write_login(p);
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (p1 == p)
-      continue;
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    if (!parray[p1].i_login)
-      continue;
-    if (parray[p1].adminLevel > 0) {
-      pprintf_prompt(p1, "\n[%s (%s: %s) has connected.]\n", parray[p].name,
-		     (parray[p].registered ? "R" : "U"),
-		     dotQuad(parray[p].thisHost));
-    } else {
-      pprintf_prompt(p1, "\n[%s has connected.]\n", parray[p].name);
-    }
-  }
-  parray[p].num_comments = player_num_comments(p);
-  messnum = player_num_messages(p);
 
-/* loon: don't send unreg any news.  when you change this, feel free to
-   put all the news junk in one source file:)  no reason for identical code
-   in command.c and comproc.c */
-  if (parray[p].registered) {
-    check_news(p, 0);
-    if (parray[p].adminLevel > 0) {
-      pprintf(p, "\n");
-      check_news(p, 1);
-    }
-  }
-  if (messnum) {
-    pprintf(p, "\nYou have %d messages.\nUse \"messages\" to display them, or \"clearmessages\" to remove them.\n", messnum);
-  }
-  player_notify_present(p);
-  player_notify(p, "arrived", "arrival");
-  showstored(p);
-  if (parray[p].registered && (parray[p].lastHost != 0) &&
-      (parray[p].lastHost != parray[p].thisHost)) {
-    pprintf(p, "\nPlayer %s: Last login: %s ", parray[p].name,
-	    dotQuad(parray[p].lastHost));
-    pprintf(p, "This login: %s", dotQuad(parray[p].thisHost));
-  }
-  parray[p].lastHost = parray[p].thisHost;
-  if (parray[p].registered && !parray[p].timeOfReg)
-    parray[p].timeOfReg = time(0);
-  parray[p].logon_time = parray[p].last_command_time = time(0);
-  dummy = check_and_print_shutdown(p); /*Tells the user if we are going to shutdown */
-  pprintf(p, "\n%s", parray[p].prompt);
-  return 0;
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].name != NULL) {
+			if (!strcasecmp(parray[p].name, parray[p1].name) &&
+			    p != p1) {
+				if (parray[p].registered == 0) {
+					pprintf(p, "\n*** Sorry %s is already "
+					    "logged in ***\n", parray[p].name);
+					return COM_LOGOUT;
+				}
+				boot_out(p, p1);
+			}
+		}
+	}
+
+	if (parray[p].adminLevel > 0) {
+		psend_raw_file(p, mess_dir, MESS_ADMOTD);
+	} else {
+		psend_raw_file(p, mess_dir, MESS_MOTD);
+	}
+
+	if (!parray[p].passwd && parray[p].registered) {
+		pprintf(p, "\n*** You have no password. Please set one with "
+		    "the password command.");
+	}
+	if (!parray[p].registered)
+		psend_raw_file(p, mess_dir, MESS_UNREGISTERED);
+
+	parray[p].status = PLAYER_PROMPT;
+	player_write_login(p);
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (p1 == p)
+			continue;
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+		if (!parray[p1].i_login)
+			continue;
+
+		if (parray[p1].adminLevel > 0) {
+			pprintf_prompt(p1, "\n[%s (%s: %s) has connected.]\n",
+			    parray[p].name,
+			    (parray[p].registered ? "R" : "U"),
+			    dotQuad(parray[p].thisHost));
+		} else {
+			pprintf_prompt(p1, "\n[%s has connected.]\n",
+			    parray[p].name);
+		}
+	}
+
+	parray[p].num_comments = player_num_comments(p);
+	messnum = player_num_messages(p);
+
+	/*
+	 * Don't send unreg any news. When you change this, feel free
+	 * to put all the news junk in one source file. No reason for
+	 * identical code in 'command.c' and 'comproc.c'.
+	 */
+
+	if (parray[p].registered) {
+		check_news(p, 0);
+
+		if (parray[p].adminLevel > 0) {
+			pprintf(p, "\n");
+			check_news(p, 1);
+		}
+	}
+
+	if (messnum) {
+		pprintf(p, "\nYou have %d messages.\nUse \"messages\" to "
+		    "display them, or \"clearmessages\" to remove them.\n",
+		    messnum);
+	}
+
+	player_notify_present(p);
+	player_notify(p, "arrived", "arrival");
+	showstored(p);
+
+	if (parray[p].registered &&
+	    parray[p].lastHost != 0 &&
+	    parray[p].lastHost != parray[p].thisHost) {
+		pprintf(p, "\nPlayer %s: Last login: %s ", parray[p].name,
+		    dotQuad(parray[p].lastHost));
+		pprintf(p, "This login: %s", dotQuad(parray[p].thisHost));
+	}
+
+	parray[p].lastHost = parray[p].thisHost;
+
+	if (parray[p].registered && !parray[p].timeOfReg)
+		parray[p].timeOfReg = time(0);
+
+	parray[p].logon_time = parray[p].last_command_time = time(0);
+
+	dummy = check_and_print_shutdown(p);	// Tells the user if we are
+						// going to shutdown
+
+	// XXX: unused
+	(void) dummy;
+
+	pprintf(p, "\n%s", parray[p].prompt);
+	return 0;
 }
 
 PRIVATE int process_prompt(int p, char *command)
