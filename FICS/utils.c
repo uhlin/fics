@@ -645,16 +645,20 @@ fix_time(char *old_time)
 	return &new_time[0];
 }
 
-PUBLIC char *strltime(time_t *clock)
+PUBLIC char *
+strltime(time_t *clock)
 {
-  struct tm *stm = localtime(clock);
-  return strtime(stm);
+	struct tm *stm = localtime(clock);
+
+	return strtime(stm);
 }
 
-PUBLIC char *strgtime(time_t *clock)
+PUBLIC char *
+strgtime(time_t *clock)
 {
-  struct tm *stm = gmtime(clock);
-  return strtime(stm);
+	struct tm *stm = gmtime(clock);
+
+	return strtime(stm);
 }
 
 /* This is used only for relative timeing since it reports seconds since
