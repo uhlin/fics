@@ -50,7 +50,7 @@ extern char *usage_dir[NUM_LANGS];
 
 extern char *hadmin_handle;
 
-extern int startuptime;
+extern time_t startuptime;
 extern char fics_hostname[81];
 extern int player_high;
 extern int game_high;

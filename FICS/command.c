@@ -67,7 +67,7 @@ PUBLIC char *hadmin_handle = HADMINHANDLE;
 char *hadmin_email = HADMINEMAIL;
 char *reg_addr = REGMAIL;
 
-PUBLIC int startuptime;
+PUBLIC time_t startuptime;
 PUBLIC char fics_hostname[81];
 PUBLIC int player_high;
 PUBLIC int game_high;
