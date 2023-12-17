@@ -344,8 +344,8 @@ PRIVATE void printusage(int p, char *command_str)
       /* no need to print 'system' usage - should never happen */
     }
    return;
-  } 
- } 
+  }
+ }
 
   /* print the default 'system' usage files (which aren't much help!) */
 
@@ -527,12 +527,12 @@ PUBLIC void rscan_news(FILE *fp, int p, int lc) {
   char junk[MAX_LINE_SIZE], count[10];
   int crtime;
   char *junkp;
-  
+
   fgets(junk, MAX_LINE_SIZE, fp);
   if (feof(fp))
     return;
   sscanf(junk, "%d %s", &crtime, count);
-  
+
   if (crtime - lc < 0)
     return;
   else {
@@ -542,7 +542,7 @@ PUBLIC void rscan_news(FILE *fp, int p, int lc) {
     junkp = nextword(junkp);
     pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
   }
-}    
+}
 
 PRIVATE void check_news(int p, int admin)
 {
@@ -550,7 +550,7 @@ PRIVATE void check_news(int p, int admin)
   char filename[MAX_FILENAME_SIZE];
   char junk[MAX_LINE_SIZE];
   char *junkp;
-  int crtime; 
+  int crtime;
   int lc = player_lastconnect(p);
   char count[10];
 
@@ -562,7 +562,7 @@ PRIVATE void check_news(int p, int admin)
       fprintf(stderr, "Can't find admin news index.\n");
       return;
     }
-    
+
     if (num_anews == -1) {
       num_anews = count_lines(fp);
       fclose(fp);
@@ -584,7 +584,7 @@ PRIVATE void check_news(int p, int admin)
       pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
       pprintf(p, "(\"anews %d\" will display the most recent admin news file)\n", num_anews);
     }
-  
+
   } else {
 
     sprintf(filename, "%s/newnews.index", news_dir);
@@ -618,7 +618,7 @@ PRIVATE void check_news(int p, int admin)
   }
 
   fclose(fp);
-}  
+}
 
 PRIVATE int process_password(int p, char *password)
 {
@@ -630,7 +630,7 @@ PRIVATE int process_password(int p, char *password)
 /*
   struct hostent *hp;
 */
-  int dummy; /* (to hold a return value) */ 
+  int dummy; /* (to hold a return value) */
 
   turn_echo_on(parray[p].socket);
 
