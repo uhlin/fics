@@ -1521,7 +1521,7 @@ com_mailhelp(int p, param_list param)
 	char		*buffer[1000];
 	char		*iwant;
 	char		 fname[MAX_FILENAME_SIZE];
-	char		 subj[81];
+	char		 subj[120];
 	int		 count;
 	int		 lang = parray[p].language;
 	static char	 nullify = '\0';
