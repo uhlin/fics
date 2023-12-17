@@ -569,7 +569,7 @@ rating_recalc(void)
 
 	save_ratings();
 
-	t = time(0);
+	t = time(NULL);
 	fprintf(stderr, "FICS: Finished at %s\n", strltime(&t));
 }
 
