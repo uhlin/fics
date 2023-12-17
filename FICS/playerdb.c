@@ -2336,23 +2336,26 @@ PUBLIC int player_num_comments(int p)
   return lines_file(fname);
 }
 
-PUBLIC int player_add_comment(int p_by, int p_to, char *comment)
+PUBLIC int
+player_add_comment(int p_by, int p_to, char *comment)
 {
-  char fname[MAX_FILENAME_SIZE];
-  FILE *fp;
-  int t = time(0);
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
+	time_t	 t = time(NULL);
 
-  if (!parray[p_to].registered)
-    return -1;
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p_to].login[0],
-	  parray[p_to].login, "comments");
-  fp = fopen(fname, "a");
-  if (!fp)
-    return -1;
-  fprintf(fp, "%s at %s: %s\n", parray[p_by].name, strltime(&t), comment);
-  fclose(fp);
-  parray[p_to].num_comments = player_num_comments(p_to);
-  return 0;
+	if (!parray[p_to].registered)
+		return -1;
+
+	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
+	    parray[p_to].login[0], parray[p_to].login, "comments");
+
+	if ((fp = fopen(fname, "a")) == NULL)
+		return -1;
+
+	fprintf(fp, "%s at %s: %s\n", parray[p_by].name, strltime(&t), comment);
+	fclose(fp);
+	parray[p_to].num_comments = player_num_comments(p_to);
+	return 0;
 }
 
 PUBLIC int player_show_comments(int p, int p1)
