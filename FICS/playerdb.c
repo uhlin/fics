@@ -1872,36 +1872,45 @@ PUBLIC int player_num_messages(int p)
   return lines_file(fname);
 }
 
-PUBLIC int player_add_message(int top, int fromp, char *message)
+PUBLIC int
+player_add_message(int top, int fromp, char *message)
 {
-/*  char command[MAX_FILENAME_SIZE]; */
-  char fname[MAX_FILENAME_SIZE];
-  FILE *fp;
-  char subj[256];
-  char messbody[1024];
-  int t = time(0);
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 messbody[1024];
+	char	 subj[256];
+	time_t	 t = time(NULL);
 
-  if (!parray[top].registered)
-    return -1;
-  if (!parray[fromp].registered)
-    return -1;
-  GetMsgFile (top, fname);
-  if ((lines_file(fname) >= MAX_MESSAGES) && (parray[top].adminLevel == 0))
-    return -1;
-  fp = fopen(fname, "a");
-  if (!fp)
-    return -1;
-  fprintf(fp, "%s at %s: %s\n", parray[fromp].name, strltime(&t), message);
-  fclose(fp);
-  pprintf(fromp, "\nThe following message was sent ");
-  if (parray[top].i_mailmess) {
-      sprintf(subj, "FICS message from %s at FICS %s (Do not reply by mail)", parray[fromp].name, fics_hostname);
-      sprintf(messbody, "%s at %s: %s\n", parray[fromp].name, strltime(&t), message);
-      mail_string_to_user(top, subj, messbody);
-      pprintf(fromp, "(and emailed) ");
-  }
-  pprintf(fromp, "to %s: \n   %s\n", parray[top].name, message);
-  return 0;
+	if (!parray[top].registered)
+		return -1;
+	if (!parray[fromp].registered)
+		return -1;
+
+	GetMsgFile(top, fname);
+
+	if (lines_file(fname) >= MAX_MESSAGES && parray[top].adminLevel == 0)
+		return -1;
+
+	if ((fp = fopen(fname, "a")) == NULL)
+		return -1;
+	fprintf(fp, "%s at %s: %s\n", parray[fromp].name, strltime(&t),
+	    message);
+	fclose(fp);
+
+	pprintf(fromp, "\nThe following message was sent ");
+
+	if (parray[top].i_mailmess) {
+		sprintf(subj, "FICS message from %s at FICS %s "
+		    "(Do not reply by mail)", parray[fromp].name,
+		    fics_hostname);
+		sprintf(messbody, "%s at %s: %s\n", parray[fromp].name,
+		    strltime(&t), message);
+		mail_string_to_user(top, subj, messbody);
+		pprintf(fromp, "(and emailed) ");
+	}
+
+	pprintf(fromp, "to %s: \n   %s\n", parray[top].name, message);
+	return 0;
 }
 
 PUBLIC void SaveTextListEntry(textlist **Entry, char *string, int n)
