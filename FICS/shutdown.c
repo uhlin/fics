@@ -1,17 +1,11 @@
-/* shutdown.c
-
-  Contains stuff related to shutdowns
-
-							*/
- /* 12/9/95 - added reason to shutdown - DAV */
-
 #include "stdinclude.h"
 #include "common.h"
-#include "shutdown.h"
+
 #include "command.h"
 #include "ficsmain.h"
 #include "network.h"
 #include "playerdb.h"
+#include "shutdown.h"
 #include "utils.h"
 
 PRIVATE int shutdownTime = 0;
