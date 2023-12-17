@@ -149,7 +149,7 @@ main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	startuptime = time(0);
+	startuptime = time(NULL);
 	strcpy(fics_hostname, SERVER_HOSTNAME);
 	game_high = 0;
 	player_high = 0;
