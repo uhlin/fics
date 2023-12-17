@@ -1,6 +1,8 @@
 #ifndef _ECO_H
 #define _ECO_H
 
+#include "command.h" /* param_list */
+
 #define SPACE_CHK()\
 	do {\
 		if (space > 0) {\
