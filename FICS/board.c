@@ -549,6 +549,7 @@ style10(game_state_t *b, move_t *ml)
 {
 	char	 tmp[80];
 	int	 f, r;
+	int	 ret, too_long;
 	int	 ws, bs;
 
 	board_calc_strength(b, &ws, &bs);
@@ -597,7 +598,8 @@ style10(game_state_t *b, move_t *ml)
 
 	strcat(bstring, tmp);
 
-	sprintf(tmp, "%d %s %s %d %d %d %d %d %d %d %d %s (%s) %s %d\n",
+	ret = snprintf(tmp, sizeof tmp, "%d %s %s %d %d %d %d %d %d %d %d %s "
+	    "(%s) %s %d\n",
 	    b->gameNum,
 	    garray[b->gameNum].white_name,
 	    garray[b->gameNum].black_name,
@@ -623,6 +625,11 @@ style10(game_state_t *b, move_t *ml)
 	    : "none"),
 
 	    (orient == WHITE ? 0 : 1));
+	too_long = (ret < 0 || (size_t)ret >= sizeof tmp);
+	if (too_long) {
+		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		    __func__);
+	}
 	strcat(bstring, tmp);
 
 	sprintf(tmp, ">10<\n");
@@ -724,9 +731,7 @@ style12(game_state_t *b, move_t *ml)
 	    !(b->bkmoved || b->bqrmoved),
 
 	    (garray[b->gameNum].numHalfMoves -
-	    (b->lastIrreversable == -1
-	    ? 0
-	    : b->lastIrreversable)));
+	    (b->lastIrreversable == -1 ? 0 : b->lastIrreversable)));
 	strcat(bstring, tmp);
 
 	ret = snprintf(tmp, sizeof tmp, "%d %s %s %d %d %d %d %d %d %d %d %s "
