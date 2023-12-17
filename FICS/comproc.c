@@ -1494,10 +1494,11 @@ com_mailsource(int p, param_list param)
 	if ((count = search_directory(source_dir, iwant, buffer, 1000)) == 0) {
 		pprintf(p, "Found no source file matching \"%s\".\n", iwant);
 	} else if ((count == 1) || !strcmp(iwant, *buffer)) {
-		sprintf(subj, "FICS source file from server %s: %s",
+		snprintf(subj, sizeof subj, "FICS source file from server "
+		    "%s: %s",
 		    fics_hostname,
 		    *buffer);
-		sprintf(fname, "%s/%s",
+		snprintf(fname, sizeof fname, "%s/%s",
 		    source_dir,
 		    *buffer);
 
