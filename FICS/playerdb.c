@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/13	Fixed compiler warnings
+   Markus Uhlin                 23/12/17	Usage of 'time_t'
 */
 
 #include "stdinclude.h"
