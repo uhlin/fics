@@ -97,8 +97,8 @@
 
 /* Details of the head admin */
 
-#define HADMINHANDLE      "AdminGuy"
-#define HADMINEMAIL       "AdminGuy@this.place"
+#define HADMINHANDLE      "maxxe"
+#define HADMINEMAIL       "maxxe@rpblc.net"
 
 /* Registration mail address */
 
