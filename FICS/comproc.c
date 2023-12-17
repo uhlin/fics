@@ -1515,46 +1515,63 @@ PUBLIC int com_mailsource(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_mailhelp(int p, param_list param)
-{				/* Sparky  */
-  char subj[81], fname[MAX_FILENAME_SIZE];
-  char *iwant, *buffer[1000];
+PUBLIC int
+com_mailhelp(int p, param_list param)
+{
+	char		*buffer[1000];
+	char		*iwant;
+	char		 fname[MAX_FILENAME_SIZE];
+	char		 subj[81];
+	int		 count;
+	int		 lang = parray[p].language;
+	static char	 nullify = '\0';
 
-  int lang = parray[p].language;
-  int count;
-  static char nullify = '\0';
+	if (!parray[p].registered) {
+		pprintf(p, "Only registered people can use the mailhelp "
+		    "command.\n");
+		return COM_OK;
+	}
 
-  if (!parray[p].registered) {
-    pprintf(p, "Only registered people can use the mailhelp command.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL)
-    iwant = &nullify;
-  else
-    iwant = param[0].val.word;
+	if (param[0].type == TYPE_NULL)
+		iwant = &nullify;
+	else
+		iwant = param[0].val.word;
 
-  count = search_directory(help_dir[lang], iwant, buffer, 1000);
-  if (count == 0 && lang != LANG_DEFAULT) {
-    count += search_directory(help_dir[LANG_DEFAULT], iwant, buffer, 1000);
-    if (count > 0) {
-      pprintf(p, "No help available in %s; using %s instead.\n",
-              Language(lang), Language(LANG_DEFAULT));
-      lang = LANG_DEFAULT;
-    }
-  }
-  if (count == 0) {
-    pprintf(p, "Found no help file matching \"%s\".\n", iwant);
-  } else if (count == 1 || !strcmp(*buffer, iwant)) {
-    sprintf(subj, "FICS help file from server %s: %s", fics_hostname, *buffer);
-    sprintf(fname, "%s/%s",help_dir[lang], *buffer);
-    mail_file_to_user (p, subj, fname);
-    pprintf(p, "Help file %s sent to %s\n", *buffer, parray[p].emailAddress);
-  } else {
-    pprintf(p, "Found %d helpfiles matching that:\n", count);
-    display_directory(p, buffer, count);
-  }
+	count = search_directory(help_dir[lang], iwant, buffer, 1000);
 
-  return COM_OK;
+	if (count == 0 && lang != LANG_DEFAULT) {
+		count += search_directory(help_dir[LANG_DEFAULT], iwant, buffer,
+		    1000);
+
+		if (count > 0) {
+			pprintf(p, "No help available in %s; "
+			    "using %s instead.\n",
+			    Language(lang),
+			    Language(LANG_DEFAULT));
+			lang = LANG_DEFAULT;
+		}
+	}
+
+	if (count == 0) {
+		pprintf(p, "Found no help file matching \"%s\".\n", iwant);
+	} else if (count == 1 || !strcmp(*buffer, iwant)) {
+		sprintf(subj, "FICS help file from server %s: %s",
+		    fics_hostname,
+		    *buffer);
+		sprintf(fname, "%s/%s",
+		    help_dir[lang],
+		    *buffer);
+
+		mail_file_to_user(p, subj, fname);
+
+		pprintf(p, "Help file %s sent to %s\n", *buffer,
+		    parray[p].emailAddress);
+	} else {
+		pprintf(p, "Found %d helpfiles matching that:\n", count);
+		display_directory(p, buffer, count);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int com_handles(int p, param_list param)
