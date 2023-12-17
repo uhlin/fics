@@ -26,6 +26,7 @@ documented in this file.
 - Fixed the type of the variable passed to `strgtime()` and
   `strltime()`. Multiple occurrences.
 - Fixed unused variables
+- Reformatted code according to OpenBSD's KNF.
 - Renamed functions in order to avoid conflicts with system
   declarations.
 
