@@ -680,18 +680,9 @@ PRIVATE int process_password(int p, char *password)
       continue;
     if (parray[p1].status != PLAYER_PROMPT)
       continue;
-#if 0				/* deleted by mann */
-    if (parray[p1].thisHost == parray[p].thisHost) {
-      fprintf(stderr, "FICS: Players %s and %s - same host: %s\n",
-	      parray[p].name, parray[p1].name, dotQuad(parray[p].thisHost));
-    }
-#endif
     if (!parray[p1].i_login)
       continue;
     if (parray[p1].adminLevel > 0) {
-/*
-      hp = gethostbyaddr((const char*)&(parray[p].thisHost), sizeof(parray[p].thisHost), AF_INET);
-*/
       pprintf_prompt(p1, "\n[%s (%s: %s) has connected.]\n", parray[p].name,
 		     (parray[p].registered ? "R" : "U"),
 		     dotQuad(parray[p].thisHost));
@@ -720,11 +711,6 @@ PRIVATE int process_password(int p, char *password)
   showstored(p);
   if (parray[p].registered && (parray[p].lastHost != 0) &&
       (parray[p].lastHost != parray[p].thisHost)) {
-#if 0 /* removed by DAV - we don't need to know this rubbish */
-    fprintf(stderr, "FICS: Player %s: Last login: %s ", parray[p].name,
-	    dotQuad(parray[p].lastHost));
-    fprintf(stderr, "This login: %s\n", dotQuad(parray[p].thisHost));
-#endif
     pprintf(p, "\nPlayer %s: Last login: %s ", parray[p].name,
 	    dotQuad(parray[p].lastHost));
     pprintf(p, "This login: %s", dotQuad(parray[p].thisHost));
@@ -952,40 +938,7 @@ PUBLIC int process_heartbeat(int *fd)
       return COM_LOGOUT;
     }
   }
-/* loon: turning this fork off temporarily (28 Oct) for lag */
-#if 0
-  if (rpid) {			/* Rating calculating going on */
-    int statusp;
 
-    if (wait3(&statusp, WNOHANG, NULL) == rpid) {
-      fprintf(stderr, "FICS: Reinitting statistics.\n");
-      rating_init();		/* Child finished, get the results. */
-      rpid = 0;
-    }
-  }
-  /* Recalc ratings every 3 hours */
-  /* This is done because the ratings stats and players can get out of sync
-     if there is a system crash. */
-  /* This is done as a child process and read results when complete */
-  if (last_ratings == 0)
-    last_ratings = (now - (5 * 60 * 60)) + 120;	/* Do one in 2 minutes */
-  else {
-    if (last_ratings + 6 * 60 * 60 < now) {
-      last_ratings = now;
-      rpid = fork();
-      if (rpid < 0) {
-	fprintf(stderr, "FICS: Couldn't fork\n");
-      } else {
-	if (rpid == 0) {	/* The child */
-	  rating_recalc();
-	  exit(0);
-	  fprintf(stderr, "Recalc process should never get here!\n");
-	  ASSERT(0);
-	}
-      }
-    }
-  }
-#endif
   /* Check for the communication file from mail updates every 10 minutes */
   /* That is probably too often, but who cares */
   if (MailGameResult) {
