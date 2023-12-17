@@ -86,10 +86,10 @@
 
 #define MAILPROGRAM       "/usr/ucb/mail"
 
-/* SENDMAILPROG is a faster and more reliable means of sending mail if 
-   defined.  Make sure your system mailer agent is defined here properly 
-   for your system with respect to name, location and options.  These may 
-   differ significatly depending on the type of system and what mailer is 
+/* SENDMAILPROG is a faster and more reliable means of sending mail if
+   defined.  Make sure your system mailer agent is defined here properly
+   for your system with respect to name, location and options.  These may
+   differ significatly depending on the type of system and what mailer is
    installed  */
 /* The floowing works fine for SunOS4.1.X with berkeley sendmail  */
 
@@ -104,4 +104,4 @@
 
 #define REGMAIL           "AdminGuy@this.place"
 
-#endif /* _CONFIG_H */
+#endif    /* _CONFIG_H */
