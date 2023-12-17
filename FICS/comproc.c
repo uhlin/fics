@@ -666,6 +666,7 @@ who_verbose(int p, int num, int plist[])
 	char	 playerLine[255];
 	char	 tmp[255];
 	int	 p1;
+	int	 ret, too_long;
 
 	pprintf(p, " +---------------------------------------------------------------+\n");
 	pprintf(p, " |      User              Standard    Blitz        On for   Idle |\n");
@@ -708,7 +709,12 @@ who_verbose(int p, int num, int plist[])
 			psprintf_highlight(p, tmp + strlen(tmp), "%-17s",
 			    p1WithAttrs);
 		} else {
-			sprintf(tmp, " %-17s", p1WithAttrs);
+			ret = snprintf(tmp, sizeof tmp, " %-17s", p1WithAttrs);
+			too_long = (ret < 0 || (size_t)ret >= sizeof tmp);
+			if (too_long) {
+				fprintf(stderr, "FICS: %s: warning: "
+				    "snprintf truncated\n", __func__);
+			}
 		}
 
 		strcat(playerLine, tmp);
