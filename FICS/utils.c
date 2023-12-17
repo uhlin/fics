@@ -22,6 +22,7 @@
    Richard Nash			93/10/22	Created
    Markus Uhlin			23/12/10	Fixed compiler warnings (plus more)
    Markus Uhlin			23/12/10	Deleted check_emailaddr()
+   Markus Uhlin			23/12/17	Reformatted functions
 */
 
 #include "stdinclude.h"
