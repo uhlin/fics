@@ -34,14 +34,6 @@
 #include "ratings.h"
 #include "utils.h"
 
-/* grimm */
-#if defined(SGI)
-#else
-/* int system(char *arg); */
-/* int rewind(FILE *stream); */
-#endif
-
-
 PUBLIC double Ratings_B_Average;
 PUBLIC double Ratings_B_StdDev;
 
