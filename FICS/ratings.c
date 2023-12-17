@@ -471,86 +471,106 @@ PUBLIC void rating_init(void)
   load_ratings();
 }
 
-/* This recalculates the rating info from the player data, it can take
-   a long time! */
-PUBLIC void rating_recalc(void)
+/*
+ * This recalculates the rating info from the player data. (Which can
+ * take a long time!)
+ */
+PUBLIC void
+rating_recalc(void)
 {
-  char dname[MAX_FILENAME_SIZE];
-  int p1;
-  int c;
-  int t = time(0);
-  DIR *dirp;
+	DIR		*dirp;
+	char		 dname[MAX_FILENAME_SIZE];
+	int		 c;
+	int		 p1;
 #if USE_DIRENT
-  struct dirent *dp;
+	struct dirent	*dp;
 #else
-  struct direct *dp;
+	struct direct	*dp;
 #endif
+	time_t		 t = time(NULL);
 
-  fprintf(stderr, "FICS: Recalculating ratings at %s\n", strltime(&t));
-  zero_stats();
-  for (c = 'a'; c <= 'z'; c++) {
-    /* Never done as ratings server */
-    sprintf(dname, "%s/%c", player_dir, c);
-    dirp = opendir(dname);
-    if (!dirp)
-      continue;
-    for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
-      if (dp->d_name[0] != '.') {
-	p1 = player_new();
-	if (player_read(p1, dp->d_name)) {
-	  player_remove(p1);
-	  fprintf(stderr, "FICS: Problem reading player %s.\n", dp->d_name);
-	  continue;
+	fprintf(stderr, "FICS: Recalculating ratings at %s\n", strltime(&t));
+	zero_stats();
+
+	for (c = 'a'; c <= 'z'; c++) {
+		sprintf(dname, "%s/%c", player_dir, c);
+
+		if ((dirp = opendir(dname)) == NULL)
+			continue;
+
+		for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
+			if (dp->d_name[0] != '.') {
+				p1 = player_new();
+
+				if (player_read(p1, dp->d_name)) {
+					player_remove(p1);
+
+					fprintf(stderr, "FICS: Problem reading "
+					    "player %s.\n", dp->d_name);
+
+					continue;
+				}
+
+				if (parray[p1].b_stats.rating > 0) {
+					rating_add(parray[p1].b_stats.rating,
+					    TYPE_BLITZ);
+				}
+				if (parray[p1].s_stats.rating > 0) {
+					rating_add(parray[p1].s_stats.rating,
+					    TYPE_STAND);
+				}
+				if (parray[p1].l_stats.rating > 0) {
+					rating_add(parray[p1].l_stats.rating,
+					    TYPE_LIGHT);
+				}
+
+				// insert bughouse stuff here
+
+				if (parray[p1].w_stats.rating > 0) {
+					rating_add(parray[p1].w_stats.rating,
+					    TYPE_WILD);
+				}
+
+				player_remove(p1);
+			}
+		} /* for */
+
+		closedir(dirp);
+	} /* for */
+
+	if (Rs_count) {
+		Ratings_S_StdDev	= sqrt(Rs_S / Rs_count);
+		Ratings_S_Average	= (Rs_total / (double)Rs_count);
+	} else {
+		Ratings_S_StdDev	= 0;
+		Ratings_S_Average	= 0;
 	}
-	if (parray[p1].b_stats.rating > 0) {
-	  rating_add(parray[p1].b_stats.rating, TYPE_BLITZ);
+	if (Rb_count) {
+		Ratings_B_StdDev	= sqrt(Rb_S / Rb_count);
+		Ratings_B_Average	= (Rb_total / (double)Rb_count);
+	} else {
+		Ratings_B_StdDev	= 0;
+		Ratings_B_Average	= 0;
 	}
-	if (parray[p1].s_stats.rating > 0) {
-	  rating_add(parray[p1].s_stats.rating, TYPE_STAND);
+	if (Rl_count) {
+		Ratings_L_StdDev	= sqrt(Rl_S / Rl_count);
+		Ratings_L_Average	= (Rl_total / (double)Rl_count);
+	} else {
+		Ratings_L_StdDev	= 0;
+		Ratings_L_Average	= 0;
 	}
-        if (parray[p1].l_stats.rating > 0) {
-          rating_add(parray[p1].l_stats.rating, TYPE_LIGHT);
-        }
-/* insert bughouse stuff here */
-	if (parray[p1].w_stats.rating > 0) {
-	  rating_add(parray[p1].w_stats.rating, TYPE_WILD);
+	if (Rw_count) {
+		Ratings_W_StdDev	= sqrt(Rw_S / Rw_count);
+		Ratings_W_Average	= (Rw_total / (double)Rw_count);
+	} else {
+		Ratings_W_StdDev	= 0;
+		Ratings_W_Average	= 0;
 	}
-	player_remove(p1);
-      }
-    }
-    closedir(dirp);
-  }
-  if (Rs_count) {
-    Ratings_S_StdDev = sqrt(Rs_S / Rs_count);
-    Ratings_S_Average = Rs_total / (double) Rs_count;
-  } else {
-    Ratings_S_StdDev = 0;
-    Ratings_S_Average = 0;
-  }
-  if (Rb_count) {
-    Ratings_B_StdDev = sqrt(Rb_S / Rb_count);
-    Ratings_B_Average = Rb_total / (double) Rb_count;
-  } else {
-    Ratings_B_StdDev = 0;
-    Ratings_B_Average = 0;
-  }
-  if (Rl_count) {
-    Ratings_L_StdDev = sqrt(Rl_S / Rl_count);
-    Ratings_L_Average = Rl_total / (double) Rl_count;
-  } else {
-    Ratings_L_StdDev = 0;
-    Ratings_L_Average = 0;
-  }
-  if (Rw_count) {
-    Ratings_W_StdDev = sqrt(Rw_S / Rw_count);
-    Ratings_W_Average = Rw_total / (double) Rw_count;
-  } else {
-    Ratings_W_StdDev = 0;
-    Ratings_W_Average = 0;
-  }
-  save_ratings();
-  t = time(0);
-  fprintf(stderr, "FICS: Finished at %s\n", strltime(&t));
+
+	save_ratings();
+
+	t = time(0);
+	fprintf(stderr, "FICS: Finished at %s\n", strltime(&t));
 }
 
 PRIVATE int Round (double x)
