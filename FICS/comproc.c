@@ -1470,49 +1470,64 @@ PUBLIC int com_adhelp(int p, param_list param)
   return FindAndShowFile (p, param, adhelp_dir);
 }
 
-PUBLIC int com_mailsource(int p, param_list param)
+PUBLIC int
+com_mailsource(int p, param_list param)
 {
-  static char nullify = '\0';
-  char *iwant, *buffer[1000];
-  char subj[81], fname[MAX_FILENAME_SIZE];
-  int count;
+	char		*buffer[1000];
+	char		*iwant;
+	char		 fname[MAX_FILENAME_SIZE];
+	char		 subj[81];
+	int		 count;
+	static char	 nullify = '\0';
 
-  if (!parray[p].registered) {
-    pprintf(p, "Only registered people can use the mailsource command.\n");
-    return COM_OK;
-  }
+	if (!parray[p].registered) {
+		pprintf(p, "Only registered people can use the mailsource "
+		    "command.\n");
+		return COM_OK;
+	}
 
-  if (param[0].type == TYPE_NULL) {
-    iwant = &nullify;
-  } else {
-    iwant = param[0].val.word;
-  }
+	if (param[0].type == TYPE_NULL)
+		iwant = &nullify;
+	else
+		iwant = param[0].val.word;
 
-  count = search_directory(source_dir, iwant, buffer, 1000);
-  if (count == 0) {
-    pprintf(p, "Found no source file matching \"%s\".\n", iwant);
-  } else if ((count == 1) || !strcmp(iwant, *buffer)) {
-    sprintf(subj, "FICS source file from server %s: %s",fics_hostname,*buffer);
-    sprintf(fname, "%s/%s",source_dir, *buffer);
-    mail_file_to_user (p, subj, fname);
-    pprintf(p, "Source file %s sent to %s\n", *buffer, parray[p].emailAddress);
-  } else {
-    pprintf(p, "Found %d source files matching that:\n", count);
-    if (*iwant)
-      display_directory(p, buffer, count);
-    else {		/* this junk is to get *.c *.h */
-      multicol *m = multicol_start(count);
-      char *s;
-      int i;
-      for (i=0; i < count; i++) {
-        if (((s = buffer[i] + strlen(buffer[i]) - 2) >= buffer[i]) && (!strcmp(s, ".c") || !strcmp(s, ".h")))
-	  multicol_store(m, buffer[i]);
-      }
-      multicol_pprint(m, p, 78, 1);
-      multicol_end(m);
-    }
-  }
-  return COM_OK;
+	if ((count = search_directory(source_dir, iwant, buffer, 1000)) == 0) {
+		pprintf(p, "Found no source file matching \"%s\".\n", iwant);
+	} else if ((count == 1) || !strcmp(iwant, *buffer)) {
+		sprintf(subj, "FICS source file from server %s: %s",
+		    fics_hostname,
+		    *buffer);
+		sprintf(fname, "%s/%s",
+		    source_dir,
+		    *buffer);
+
+		mail_file_to_user(p, subj, fname);
+
+		pprintf(p, "Source file %s sent to %s\n", *buffer,
+		    parray[p].emailAddress);
+	} else {
+		pprintf(p, "Found %d source files matching that:\n", count);
+
+		if (*iwant) {
+			display_directory(p, buffer, count);
+		} else { // this junk is to get *.c *.h
+			char		*s;
+			multicol	*m = multicol_start(count);
+
+			for (int i = 0; i < count; i++) {
+				s = (buffer[i] + strlen(buffer[i]) - 2);
+
+				if (s >= buffer[i] &&
+				    (!strcmp(s, ".c") || !strcmp(s, ".h")))
+					multicol_store(m, buffer[i]);
+			}
+
+			multicol_pprint(m, p, 78, 1);
+			multicol_end(m);
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
