@@ -23,12 +23,12 @@
 */
 
 #include "stdinclude.h"
+#include "common.h"
 
 #include <sys/param.h>
 
 #include "command.h"
 #include "command_list.h"
-#include "common.h"
 #include "config.h"
 #include "ficsmain.h"
 #include "gamedb.h"
