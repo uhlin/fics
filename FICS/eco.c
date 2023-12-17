@@ -11,14 +11,6 @@
 #include "playerdb.h"
 #include "utils.h"
 
-#define SPACE_CHK()\
-	do {\
-		if (space > 0) {\
-			FENstring[FENcount++] = (space + '0');\
-			space = 0;\
-		}\
-	} while (0)
-
 PUBLIC char *book_dir = DEFAULT_BOOK;
 
 ECO_entry	*ECO_book[1096];

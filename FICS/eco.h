@@ -1,6 +1,14 @@
 #ifndef _ECO_H
 #define _ECO_H
 
+#define SPACE_CHK()\
+	do {\
+		if (space > 0) {\
+			FENstring[FENcount++] = (space + '0');\
+			space = 0;\
+		}\
+	} while (0)
+
 typedef struct {
 	char	ECO[4];
 	char	FENpos[80];
