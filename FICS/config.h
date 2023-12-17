@@ -22,31 +22,33 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-/* CONFIGURE THIS: The port on which the server binds */
-
+/*
+ * The port on which the server binds
+ */
 #define DEFAULT_PORT      5000
 
-/* Must be a dns recognisable host name */
+/*
+ * Must be a dns recognisable host name
+ */
+#define SERVER_HOSTNAME   "jujube.rpblc.net"
 
-#define SERVER_HOSTNAME   "fics.somewhere.domain"
-
-/* At AFICS we just use 'fics' but for your server you might want to change this
-     eg to BICS, EICS, DICS   etc */
-
+/*
+ * At AFICS we just use 'fics'. But for your server you might want to
+ * change this e.g. to BICS, EICS, DICS etc.
+ */
 #define SERVER_NAME       "Xfics" /* for pgn output */
 
-#define SERVER_LOCATION   "Unconfigured City, Country"   /* for pgn output */
+#define SERVER_LOCATION   "Las Vegas, USA" /* for pgn output */
 
-
-/* Which is the default language for help files, see variable.h for the
-    current available settings */
-
+/*
+ * Which is the default language for help files? See 'variable.h' for
+ * the currently available settings.
+ */
 #define LANG_DEFAULT      LANG_ENGLISH
 
-/* CONFIGURE THESE: Locations of the data, players, and games directories */
-/* These must be absolute paths because some mail daemons may be called */
-/* from outside the pwd */
-
+/*
+ * Locations of the data, players and games directories.
+ */
 #define DEFAULT_MESS      "/usr/home/fics/FICS.DIST/data/messages"
 #define DEFAULT_INDEX     "/usr/home/fics/FICS.DIST/data/index"
 #define DEFAULT_HELP      "/usr/home/fics/FICS.DIST/data/help"
@@ -75,27 +77,29 @@
 #define USAGE_FRENCH      "/usr/home/fics/FICS.DIST/data/usage_french"
 #define USAGE_DANISH      "/usr/home/fics/FICS.DIST/data/usage_danish"
 
-
-/* Where the standard ucb mail program is */
-
+/*
+ * Where the standard ucb mail program is
+ */
 #define MAILPROGRAM       "/usr/bin/mail"
 
-/* SENDMAILPROG is a faster and more reliable means of sending mail if
-   defined.  Make sure your system mailer agent is defined here properly
-   for your system with respect to name, location and options.  These may
-   differ significatly depending on the type of system and what mailer is
-   installed  */
-/* The floowing works fine for SunOS4.1.X with berkeley sendmail  */
+/*
+ * 'SENDMAILPROG' is a faster and more reliable means of sending mail
+ * if defined. Make sure your system mailer agent is defined here
+ * properly for your system with respect to name, location and
+ * options. These may differ significantly depending on the type of
+ * system and what mailer is installed.
+ */
+#define SENDMAILPROG "/usr/sbin/sendmail -t"
 
-/* #define SENDMAILPROG   "/usr/lib/sendmail -t" */
-
-/* Details of the head admin */
-
+/*
+ * Details of the head admin
+ */
 #define HADMINHANDLE      "maxxe"
 #define HADMINEMAIL       "maxxe@rpblc.net"
 
-/* Registration mail address */
-
+/*
+ * Registration mail address
+ */
 #define REGMAIL           "maxxe@rpblc.net"
 
 #endif    /* _CONFIG_H */
