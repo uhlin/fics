@@ -1,9 +1,3 @@
-/* config.h
- *
- */
-
-/* Configure file locations in this include file. */
-
 /*
     fics - An internet chess server.
     Copyright (C) 1993  Richard V. Nash
