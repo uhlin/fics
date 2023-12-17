@@ -659,91 +659,81 @@ PRIVATE void who_terse(int p, int num, int *plist, int type)
   pprintf(p, "\n %d players displayed (of %d). (*) indicates system administrator.\n", num, player_count(1));
 }
 
-PRIVATE void who_verbose(p, num, plist)
-int p;
-int num;
-int plist[];
+PRIVATE void
+who_verbose(int p, int num, int plist[])
 {
-  int i, p1;
-  char playerLine[255], tmp[255];	/* +8 for highlight */
-  char p1WithAttrs[255];
+	char	 p1WithAttrs[255];
+	char	 playerLine[255];
+	char	 tmp[255];
+	int	 p1;
 
-  pprintf(p,
-      " +---------------------------------------------------------------+\n"
-    );
-  pprintf(p,
-      " |      User              Standard    Blitz        On for   Idle |\n"
-    );
-  pprintf(p,
-      " +---------------------------------------------------------------+\n"
-    );
+	pprintf(p, " +---------------------------------------------------------------+\n");
+	pprintf(p, " |      User              Standard    Blitz        On for   Idle |\n");
+	pprintf(p, " +---------------------------------------------------------------+\n");
 
-  for (i = 0; i < num; i++) {
-    p1 = plist[i];
+	for (int i = 0; i < num; i++) {
+		p1 = plist[i];
+		strcpy(playerLine, " |");
 
-    strcpy(playerLine, " |");
+		if (parray[p1].game >= 0)
+			sprintf(tmp, "%3d", parray[p1].game + 1);
+		else
+			sprintf(tmp, "   ");
 
-    if (parray[p1].game >= 0)
-      sprintf(tmp, "%3d", parray[p1].game + 1);
-    else
-      sprintf(tmp, "   ");
-    strcat(playerLine, tmp);
+		strcat(playerLine, tmp);
 
-    if (!parray[p1].open)
-      sprintf(tmp, "X");
-    else
-      sprintf(tmp, " ");
-    strcat(playerLine, tmp);
+		if (!parray[p1].open)
+			sprintf(tmp, "X");
+		else
+			sprintf(tmp, " ");
 
-    if (parray[p1].registered)
-      if (parray[p1].rated) {
-	sprintf(tmp, " ");
-      } else {
-	sprintf(tmp, "u");
-      }
-    else
-      sprintf(tmp, "U");
-    strcat(playerLine, tmp);
+		strcat(playerLine, tmp);
 
-    /* Modified by hersco to include lists in 'who v.' */
-    strcpy (p1WithAttrs, parray[p1].name);
-    AddPlayerLists(p1, p1WithAttrs);
-    p1WithAttrs[17] = '\0';
+		if (parray[p1].registered) {
+			if (parray[p1].rated)
+				sprintf(tmp, " ");
+			else
+				sprintf(tmp, "u");
+		} else {
+			sprintf(tmp, "U");
+		}
 
-    /* Modified by DAV 3/15/95 */
-    if (p == p1) {
-      strcpy(tmp, " ");
-      psprintf_highlight(p, tmp + strlen(tmp), "%-17s", p1WithAttrs);
-    } else {
-      sprintf(tmp, " %-17s", p1WithAttrs);
-    }
-    strcat(playerLine, tmp);
+		strcat(playerLine, tmp);
+		strcpy(p1WithAttrs, parray[p1].name);
+		AddPlayerLists(p1, p1WithAttrs);
+		p1WithAttrs[17] = '\0';
 
-    sprintf(tmp, " %4s        %-4s        %5s  ",
-	    ratstrii(parray[p1].s_stats.rating, parray[p1].registered),
-	    ratstrii(parray[p1].b_stats.rating, parray[p1].registered),
-	    hms(player_ontime(p1), 0, 0, 0));
-    strcat(playerLine, tmp);
+		if (p == p1) {
+			strcpy(tmp, " ");
+			psprintf_highlight(p, tmp + strlen(tmp), "%-17s",
+			    p1WithAttrs);
+		} else {
+			sprintf(tmp, " %-17s", p1WithAttrs);
+		}
 
-    if (player_idle(p1) >= 60) {
-      sprintf(tmp, "%5s   |\n", hms(player_idle(p1), 0, 0, 0));
-    } else {
-      sprintf(tmp, "        |\n");
-    }
-    strcat(playerLine, tmp);
-    pprintf(p, "%s", playerLine);
-  }
+		strcat(playerLine, tmp);
+		sprintf(tmp, " %4s        %-4s        %5s  ",
+		    ratstrii(parray[p1].s_stats.rating,
+		    parray[p1].registered),
+		    ratstrii(parray[p1].b_stats.rating,
+		    parray[p1].registered),
+		    hms(player_ontime(p1), 0, 0, 0));
+		strcat(playerLine, tmp);
 
-  pprintf(p,
-      " |                                                               |\n"
-    );
-  pprintf(p,
-     " |    %3d Players Displayed                                      |\n",
-	  num
-    );
-  pprintf(p,
-      " +---------------------------------------------------------------+\n"
-    );
+		if (player_idle(p1) >= 60) {
+			sprintf(tmp, "%5s   |\n",
+			    hms(player_idle(p1), 0, 0, 0));
+		} else {
+			sprintf(tmp, "        |\n");
+		}
+
+		strcat(playerLine, tmp);
+		pprintf(p, "%s", playerLine);
+	}
+
+	pprintf(p, " |                                                               |\n");
+	pprintf(p, " |    %3d Players Displayed                                      |\n", num);
+	pprintf(p, " +---------------------------------------------------------------+\n");
 }
 
 PRIVATE void who_winloss(p, num, plist)
