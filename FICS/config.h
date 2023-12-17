@@ -15,8 +15,9 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash	              	94/03/08	Created
-   Sparky                       95/12/30	Beautified.
+   Richard Nash                 94/03/08	Created
+   Sparky                       95/12/30	Beautified
+   Markus Uhlin                 23/12/17	Revised
 */
 
 #ifndef _CONFIG_H
