@@ -1008,34 +1008,42 @@ int ReadV1Moves(game *g, FILE * fp)
   return 0;
 }
 
-int ReadV1GameFmt(game *g, FILE * fp, char *file, int version)
+int
+ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 {
-  fscanf(fp, "%s %s", g->white_name, g->black_name);
-  fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
-  fscanf(fp, "%d %d %d %d", &g->wInitTime, &g->wIncrement,
-	 &g->bInitTime, &g->bIncrement);
-  if ((version < 3) && (!(g->bInitTime)))
-    g->bInitTime = g->wInitTime;
-                       /*PRE-V3 assumed bInitTime was 0 if balanced clocks*/
-  fscanf(fp, "%lx", &g->timeOfStart);
-  fscanf(fp, "%d %d", &g->wTime, &g->bTime);
+	fscanf(fp, "%s %s", g->white_name, g->black_name);
+	fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
+	fscanf(fp, "%d %d %d %d",
+	    &g->wInitTime,
+	    &g->wIncrement,
+	    &g->bInitTime,
+	    &g->bIncrement);
 
-/* fixing an (apparently) old bug: winner not saved */
-  if (version > 1)
-    fscanf(fp, "%d %d", &g->result, &g->winner);
-  else
-    fscanf(fp, "%d", &g->result);
+	if ((version < 3) && (!(g->bInitTime)))
+		g->bInitTime = g->wInitTime;
 
-  fscanf(fp, "%d %d %d %d", &g->private, &g->type,
-	 &g->rated, &g->clockStopped);
-  fscanf(fp, "%d", &g->numHalfMoves);
-  ReadV1Moves(g, fp);
-  if (g->status != GAME_EXAMINE
-      && ReadGameState(fp, &g->game_state, version)) {
-    fprintf(stderr, "FICS: Trouble reading game state from %s.\n", file);
-    return -1;
-  }
-  return 0;
+	fscanf(fp, "%lx", &g->timeOfStart);
+	fscanf(fp, "%d %d", &g->wTime, &g->bTime);
+
+	if (version > 1)
+		fscanf(fp, "%d %d", &g->result, &g->winner);
+	else
+		fscanf(fp, "%d", &g->result);
+
+	fscanf(fp, "%d %d %d %d", &g->private, &g->type, &g->rated,
+	    &g->clockStopped);
+	fscanf(fp, "%d", &g->numHalfMoves);
+
+	ReadV1Moves(g, fp);
+
+	if (g->status != GAME_EXAMINE &&
+	    ReadGameState(fp, &g->game_state, version)) {
+		fprintf(stderr, "FICS: Trouble reading game state from %s.\n",
+		    file);
+		return -1;
+	}
+
+	return 0;
 }
 
 PUBLIC int ReadGameAttrs(FILE * fp, char *fname, int g)
