@@ -18,6 +18,7 @@
    Richard Nash                 94/03/08	Created
    Sparky                       95/12/30	Beautified
    Markus Uhlin                 23/12/17	Revised
+   Markus Uhlin                 23/12/18	Include 'ficspaths.h'
 */
 
 #ifndef _CONFIG_H
