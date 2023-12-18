@@ -5,6 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added a new build system (and deleted the old).
+- Added argument lists to many function declarations.
 - Added better handling of memory allocation errors.
 - Deleted disabled code
 - Did new revisions of the following files:
