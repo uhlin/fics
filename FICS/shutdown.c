@@ -59,8 +59,8 @@ ShutHeartBeat(void)
 {
 	int	crossing = 0;
 	int	p1;
-	time_t	t = time(NULL);
 	int	timeLeft;
+	time_t	t = time(NULL);
 
 	if (!shutdownTime)
 		return;
