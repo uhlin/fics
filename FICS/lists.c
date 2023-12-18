@@ -305,7 +305,7 @@ list_addsub(int p, char *list, char *who, int addsub)
 
 	if (addsub == 1) { // add to list
 		if (gl->which == L_CHANNEL) {
-			if (sscanf (who,"%d",&ch) == 1) {
+			if (sscanf(who, "%d", &ch) == 1) {
 				if (!in_list(p, L_ADMIN, parray[p].name) &&
 				    ch == 0) {
 					pprintf(p, "Only admins may join "
