@@ -1240,30 +1240,38 @@ PUBLIC int player_lastconnect(int p)
   return last;
 }
 
-PUBLIC int player_lastdisconnect(int p)
+PUBLIC time_t
+player_lastdisconnect(int p)
 {
-  char fname[MAX_FILENAME_SIZE];
-  FILE *fp;
-  int inout, thetime, registered;
-  int last = 0;
-  char ipstr[20];
-  char loginName[MAX_LOGIN_NAME];
+	FILE		*fp;
+	char		 fname[MAX_FILENAME_SIZE];
+	char		 ipstr[20];
+	char		 loginName[MAX_LOGIN_NAME];
+	int		 inout, registered;
+	long int	 lval;
+	time_t		 last = 0;
 
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0], parray[p].login, STATS_LOGONS);
-  fp = fopen(fname, "r");
-  if (!fp)
-    return 0;
-  while (!feof(fp)) {
-    if (fscanf(fp, "%d %s %d %d %s\n", &inout, loginName, &thetime, &registered, ipstr) != 5) {
-      fprintf(stderr, "FICS: Error in login info format. %s\n", fname);
-      fclose(fp);
-      return 0;
-    }
-    if (inout == P_LOGOUT)
-      last = thetime;
-  }
-  fclose(fp);
-  return last;
+	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
+	    parray[p].login, STATS_LOGONS);
+
+	if ((fp = fopen(fname, "r")) == NULL)
+		return 0;
+
+	while (!feof(fp)) {
+		if (fscanf(fp, "%d %s %ld %d %s\n", &inout, loginName, &lval,
+		    &registered, ipstr) != 5) {
+			fprintf(stderr, "FICS: Error in login info format. %s"
+			    "\n", fname);
+			fclose(fp);
+			return 0;
+		}
+
+		if (inout == P_LOGOUT)
+			last = lval;
+	}
+
+	fclose(fp);
+	return last;
 }
 
 PUBLIC void player_pend_print(int p, pending *pend)
