@@ -102,30 +102,31 @@ PUBLIC void ShutHeartBeat(void)
   }
 }
 
-PUBLIC int check_and_print_shutdown(int p)
-
- /* Tells a user if they is to be a shutdown */
- /* returns 0 if there is not to be one, 1 if there is to be one */
- /* for whenshut command */
-
+/*
+ * Tells a user about a shutdown. Returns 1 if there is to be one, and
+ * 0 otherwise. (For 'whenshut' command.)
+ */
+PUBLIC int
+check_and_print_shutdown(int p)
 {
+	int	timeLeft;
+	time_t	t = time(NULL);
 
+	if (!shutdownTime)
+		return 0;     // no shutdown
 
-  int timeLeft;
-  int t = time(0);
+	timeLeft = shutdownTime - (t - shutdownStartTime);
 
-  if (!shutdownTime)
-    return 0; /* no shut down */
+	pprintf(p, "\n    **** Server going down in %d minutes and %d seconds. "
+	    "****\n",
+	    (timeLeft / 60),
+	    timeLeft - ((timeLeft / 60) * 60));
 
-  timeLeft = shutdownTime - (t - shutdownStartTime);
-
-  pprintf(p,
-                     "\n    **** Server going down in %d minutes and %d seconds. ****\n",
-                     timeLeft / 60,
-                     timeLeft - ((timeLeft / 60) * 60));
-  if (reason[0] != '\0')
-    pprintf(p, "\n    **** We are going down because: %s. ****\n", reason);
-  return 1;
+	if (reason[0] != '\0') {
+		pprintf(p, "\n    **** We are going down because: %s. ****\n",
+		    reason);
+	}
+	return 1;
 }
 
 
