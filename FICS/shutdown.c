@@ -254,12 +254,10 @@ PUBLIC int server_shutdown(int secs, char *why)
   return 0;
 }
 
-PUBLIC int com_whenshut(int p, param_list param)
-
+PUBLIC int
+com_whenshut(int p, param_list param)
 {
- int result = check_and_print_shutdown(p);
- if (result == 0) {
-   pprintf (p,"No shutdown currently in progress\n");
- }
- return COM_OK;
+	if (check_and_print_shutdown(p) == 0)
+		pprintf(p, "No shutdown currently in progress\n");
+	return COM_OK;
 }
