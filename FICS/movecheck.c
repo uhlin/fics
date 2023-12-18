@@ -668,8 +668,8 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 		    wpstring[mt->fromRank],
 		    DROP_CHAR,
 		    DROP_CHAR,
-		    mt->toFile + 'a',
-		    mt->toRank + 1);
+		    (mt->toFile + 'a'),
+		    (mt->toRank + 1));
 
 		too_long = (ret < 0 || (size_t)ret >= sizeof mt->moveString);
 
@@ -706,10 +706,10 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 			ret = snprintf(mt->moveString, sizeof mt->moveString,
 			    "%s/%c%d-%c%d",
 			    wpstring[piecetype(gs->board[mt->fromFile][mt->fromRank])],
-			    mt->fromFile + 'a',
-			    mt->fromRank + 1,
-			    mt->toFile + 'a',
-			    mt->toRank + 1);
+			    (mt->fromFile + 'a'),
+			    (mt->fromRank + 1),
+			    (mt->toFile + 'a'),
+			    (mt->toRank + 1));
 
 			too_long = (ret < 0 || (size_t)ret >= sizeof mt->moveString);
 
