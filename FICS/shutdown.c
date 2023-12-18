@@ -48,58 +48,70 @@ ShutDown(void)
 	exit(0);
 }
 
-PUBLIC void ShutHeartBeat(void)
+PUBLIC void
+ShutHeartBeat(void)
 {
-  int t = time(0);
-  int p1;
-  int timeLeft;
-  int crossing = 0;
+	int	crossing = 0;
+	int	p1;
+	time_t	t = time(NULL);
+	int	timeLeft;
 
-  if (!shutdownTime)
-    return;
-  if (!lastTimeLeft)
-    lastTimeLeft = shutdownTime;
-  timeLeft = shutdownTime - (t - shutdownStartTime);
-  if ((lastTimeLeft > 3600) && (timeLeft <= 3600))
-    crossing = 1;
-  if ((lastTimeLeft > 2400) && (timeLeft <= 2400))
-    crossing = 1;
-  if ((lastTimeLeft > 1200) && (timeLeft <= 1200))
-    crossing = 1;
-  if ((lastTimeLeft > 600) && (timeLeft <= 600))
-    crossing = 1;
-  if ((lastTimeLeft > 300) && (timeLeft <= 300))
-    crossing = 1;
-  if ((lastTimeLeft > 120) && (timeLeft <= 120))
-    crossing = 1;
-  if ((lastTimeLeft > 60) && (timeLeft <= 60))
-    crossing = 1;
-  if ((lastTimeLeft > 10) && (timeLeft <= 10))
-    crossing = 1;
-  if (crossing) {
-    fprintf(stderr,
-    "FICS:   **** Server going down in %d minutes and %d seconds. ****\n\n",
-            timeLeft / 60,
-            timeLeft - ((timeLeft / 60) * 60));
-    if (reason[0] != '\0')
-      fprintf(stderr,"FICS: We are going down because: %s.\n",reason);
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p1].status != PLAYER_PROMPT)
-        continue;
-      pprintf(p1,
-                     "\n\n    **** Server going down in %d minutes and %d seconds. ****\n",
-                     timeLeft / 60,
-                     timeLeft - ((timeLeft / 60) * 60));
-      if (reason[0] != '\0')
-        pprintf_prompt(p1,"\n    **** We are going down because: %s. ****\n",reason);
-      else
-        pprintf_prompt(p1,"\n");
-    }
-  }
-  lastTimeLeft = timeLeft;
-  if (timeLeft <= 0) {
-    ShutDown();
-  }
+	if (!shutdownTime)
+		return;
+	if (!lastTimeLeft)
+		lastTimeLeft = shutdownTime;
+
+	timeLeft = shutdownTime - (t - shutdownStartTime);
+
+	if (lastTimeLeft > 3600 && timeLeft <= 3600)
+		crossing = 1;
+	if (lastTimeLeft > 2400 && timeLeft <= 2400)
+		crossing = 1;
+	if (lastTimeLeft > 1200 && timeLeft <= 1200)
+		crossing = 1;
+	if (lastTimeLeft > 600 && timeLeft <= 600)
+		crossing = 1;
+	if (lastTimeLeft > 300 && timeLeft <= 300)
+		crossing = 1;
+	if (lastTimeLeft > 120 && timeLeft <= 120)
+		crossing = 1;
+	if (lastTimeLeft > 60 && timeLeft <= 60)
+		crossing = 1;
+	if (lastTimeLeft > 10 && timeLeft <= 10)
+		crossing = 1;
+
+	if (crossing) {
+		fprintf(stderr, "FICS:   **** Server going down in %d minutes "
+		    "and %d seconds. ****\n\n",
+		    (timeLeft / 60),
+		    timeLeft - ((timeLeft / 60) * 60));
+
+		if (reason[0] != '\0') {
+			fprintf(stderr,"FICS: We are going down because: %s.\n",
+			    reason);
+		}
+
+		for (p1 = 0; p1 < p_num; p1++) {
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+
+			pprintf(p1, "\n\n    **** Server going down in %d "
+			    "minutes and %d seconds. ****\n",
+			    (timeLeft / 60),
+			    timeLeft - ((timeLeft / 60) * 60));
+
+			if (reason[0] != '\0') {
+				pprintf_prompt(p1, "\n    **** We are going "
+				    "down because: %s. ****\n", reason);
+			} else
+				pprintf_prompt(p1, "\n");
+		}
+	}
+
+	lastTimeLeft = timeLeft;
+
+	if (timeLeft <= 0)
+		ShutDown();
 }
 
 /*
