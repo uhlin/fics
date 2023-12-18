@@ -285,10 +285,11 @@ com_stats(int p, param_list param)
 	(MAX_OBSERVE > MAX_SIMUL ? MAX_OBSERVE : MAX_SIMUL)
 	char		 line[255];
 	char		 tmp[255];
-	int		 g, i, t;
+	int		 g, i;
 	int		 numbers[NUMBERS_SIZE];
 	int		 onTime;
 	int		 p1, connected;
+	time_t		 t;
 
 	if (param[0].type == TYPE_WORD) {
 		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
