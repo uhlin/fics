@@ -12,6 +12,7 @@ documented in this file.
   - `fics_addplayer.c`
   - `makerank.c`
   - `network.c`
+  - `shutdown.c`
   - `stdinclude.h`
   - ...
 - Fixed a `sscanf()` bug in `com_anews()`.
