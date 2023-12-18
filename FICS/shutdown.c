@@ -130,102 +130,124 @@ PUBLIC int check_and_print_shutdown(int p)
 
 
 /*
- * shutdown
- *
  * Usage: shutdown [now,cancel,time]
  *
- *   This command shutsdown the server.  If the parameter is omitted or
- *   is 'now' then the server is immediately halted cleanly.  If a time is
- *   given then a countdown commences and the server is halted when time is
- *   up.  If 'cancel' is given then the countdown is stopped.
+ * This command shuts down the server. If the parameter is omitted or
+ * is 'now' then the server is immediately halted cleanly. If a time
+ * is given then a countdown commences and the server is halted when
+ * time is up. If 'cancel' is given then the countdown is stopped.
  */
-PUBLIC int com_shutdown(int p, param_list param)
+PUBLIC int
+com_shutdown(int p, param_list param)
 {
-  char *ptr;
-  int p1, secs;
+	char	*ptr;
+	int	 p1, secs;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  strcpy(downer, parray[p].name);
-  shutdownStartTime = time(0);
-  if (shutdownTime) {           /* Cancel any pending shutdowns */
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p1].status != PLAYER_PROMPT)
-        continue;
-      pprintf(p1, "\n\n    **** Server shutdown canceled by %s. ****\n", downer);
-    }
-    shutdownTime = 0;
-    if (param[0].type == TYPE_NULL)
-      return COM_OK;
-  }
-  /* Work out how soon to shut down */
-  if (param[0].type == TYPE_NULL)
-    shutdownTime = 300;
-  else {
-    if (!strcmp(param[0].val.word, "now"))
-      shutdownTime = 0;
-    else if (!strcmp(param[0].val.word, "die")) {
-      fprintf (stderr,"%s salutes FICS and presses the self-destruct button.\n",
-        parray[p].name);
-      output_shut_mess();
-      abort();
-    } else if (!strcmp(param[0].val.word, "cancel"))
-      return COM_OK;
-    else {
-      ptr = param[0].val.word;
-      shutdownTime = secs = 0;
-      p1 = 2;
-      while (*ptr) {
-        switch (*ptr) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-          secs = secs * 10 + *ptr - '0';
-          break;
-        case ':':
-          if (p1--) {
-            shutdownTime = shutdownTime * 60 + secs;
-            secs = 0;
-            break;
-          }
-        default:
-          shutdownTime = 0;
-          pprintf(p, "I don't know what you mean by %s\n", param[0].val.word);
-          return COM_OK;
-        }
-        ptr++;
-      }
-      shutdownTime = shutdownTime * 60 + secs;
-    }
-  }
-  if (shutdownTime <= 0)
-    ShutDown();
-  if (param[1].type == TYPE_STRING)
-    strcpy (reason,param[1].val.string);
-  else
-    reason[0] = '\0'; /* No reason - perhaps admin is in a bad mood? :) */
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    pprintf(p1, "\n\n    **** Server shutdown ordered by %s. ****\n", downer);
-    if (reason[0] != '\0')
-       pprintf(p1, "    **** We are going down because: %s. ****\n",reason);
-    pprintf(p1,
-        "    **** Server going down in %d minutes and %d seconds. ****\n",
-                   shutdownTime / 60, shutdownTime % 60);
-    if (p != p1)  /* fix double prompt - DAV */
-      pprintf_prompt (p1,"\n");
-    else
-      pprintf (p1,"\n");
-  }
-  lastTimeLeft = 0;
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	strcpy(downer, parray[p].name);
+	shutdownStartTime = time(0);
+
+	if (shutdownTime) {   // Cancel any pending shutdowns
+		for (p1 = 0; p1 < p_num; p1++) {
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+			pprintf(p1, "\n\n    **** Server shutdown canceled by "
+			    "%s. ****\n", downer);
+		}
+
+		shutdownTime = 0;
+
+		if (param[0].type == TYPE_NULL)
+			return COM_OK;
+	}
+
+	/*
+	 * Work out how soon to shut down
+	 */
+	if (param[0].type == TYPE_NULL) {
+		shutdownTime = 300;
+	} else {
+		if (!strcmp(param[0].val.word, "now")) {
+			shutdownTime = 0;
+		} else if (!strcmp(param[0].val.word, "die")) {
+			fprintf(stderr,"%s salutes FICS and presses the "
+			    "self-destruct button.\n", parray[p].name);
+			output_shut_mess();
+			abort();
+		} else if (!strcmp(param[0].val.word, "cancel")) {
+			return COM_OK;
+		} else {
+			ptr = param[0].val.word;
+			shutdownTime = secs = 0;
+			p1 = 2;
+
+			while (*ptr) {
+				switch (*ptr) {
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+					secs = (secs * 10 + *ptr - '0');
+					break;
+				case ':':
+					if (p1--) {
+						shutdownTime = (shutdownTime *
+						    60 + secs);
+						secs = 0;
+						break;
+					}
+				default:
+					shutdownTime = 0;
+					pprintf(p, "I don't know what you mean "
+					    "by %s\n", param[0].val.word);
+					return COM_OK;
+				}
+
+				ptr++;
+			}
+
+			shutdownTime = (shutdownTime * 60 + secs);
+		}
+	}
+
+	if (shutdownTime <= 0)
+		ShutDown();
+	if (param[1].type == TYPE_STRING)
+		strcpy(reason, param[1].val.string);
+	else
+		reason[0] = '\0';	// No reason - perhaps admin is in a
+					// bad mood? :)
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+
+		pprintf(p1, "\n\n    **** Server shutdown ordered by %s. "
+		    "****\n", downer);
+
+		if (reason[0] != '\0') {
+			pprintf(p1, "    **** We are going down because: "
+			    "%s. ****\n", reason);
+		}
+
+		pprintf(p1, "    **** Server going down in %d minutes and %d "
+		    "seconds. ****\n",
+		    (shutdownTime / 60),
+		    (shutdownTime % 60));
+		if (p != p1)  // fix double prompt - DAV
+			pprintf_prompt(p1, "\n");
+		else
+			pprintf(p1, "\n");
+	}
+
+	lastTimeLeft = 0;
+	return COM_OK;
 }
 
 PUBLIC int
