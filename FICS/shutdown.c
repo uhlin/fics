@@ -1,3 +1,8 @@
+/*
+ * Revised by maxxe <maxxe@rpblc.net>,
+ * 18 Dec 2023.
+ */
+
 #include "stdinclude.h"
 #include "common.h"
 
