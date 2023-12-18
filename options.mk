@@ -1,6 +1,8 @@
 # options.mk
 
+# Locations of the data, players and games directories.
 FICS_HOME ?= /home/_fics
+
 PREFIX ?= /usr/local
 
 CC ?= cc
