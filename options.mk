@@ -1,5 +1,8 @@
 # options.mk
 
+FICS_HOME ?= /home/_fics
+PREFIX ?= /usr/local
+
 CC ?= cc
 CFLAGS = -O2 -Wall -pipe -std=c11
 
