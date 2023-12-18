@@ -228,30 +228,34 @@ PUBLIC int com_shutdown(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int server_shutdown(int secs, char *why)
+PUBLIC int
+server_shutdown(int secs, char *why)
 {
-  int p1;
+	if (shutdownTime && shutdownTime <= secs) {
+		/*
+		 * Server is already shutting down
+		 */
+		return 0;
+	}
 
-  if (shutdownTime && (shutdownTime <= secs)) {
-    /* Server is already shutting down, I'll let it go */
-    return 0;
-  }
-  strcpy(downer, "Automatic");
-  shutdownTime = secs;
-  shutdownStartTime = time(0);
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    pprintf(p1, "\n\n    **** Automatic Server shutdown. ****\n");
-    pprintf(p1, "%s\n", why);
-    pprintf_prompt(p1,
-        "    **** Server going down in %d minutes and %d seconds. ****\n\n",
-                   shutdownTime / 60,
-                   shutdownTime - ((shutdownTime / 60) * 60));
-  }
-  fprintf(stderr, "FICS:    **** Automatic Server shutdown. ****\n");
-  fprintf(stderr, "FICS: %s\n", why);
-  return 0;
+	strcpy(downer, "Automatic");
+	shutdownTime = secs;
+	shutdownStartTime = time(NULL);
+
+	for (int p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+		pprintf(p1, "\n\n    **** Automatic Server shutdown. ****\n");
+		pprintf(p1, "%s\n", why);
+		pprintf_prompt(p1, "    **** Server going down in %d minutes "
+		    "and %d seconds. ****\n\n",
+		    (shutdownTime / 60),
+		    shutdownTime - ((shutdownTime / 60) * 60));
+	}
+
+	fprintf(stderr, "FICS:    **** Automatic Server shutdown. ****\n");
+	fprintf(stderr, "FICS: %s\n", why);
+	return 0;
 }
 
 PUBLIC int
