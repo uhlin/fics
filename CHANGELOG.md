@@ -7,6 +7,8 @@ documented in this file.
 - Added a new build system (and deleted the old).
 - Added argument lists to many function declarations.
 - Added better handling of memory allocation errors.
+- Added usage of the `time_t` typedef in multiple places. This instead
+  of `int`.
 - Deleted disabled code
 - Did new revisions of the following files:
   - `eco.c`
