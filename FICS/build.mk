@@ -38,15 +38,17 @@ MR_OBJS = $(SRC_DIR)makerank.o
 # dfree
 # memmove
 
-fics: $(OBJS)
+$(INCLUDE_DIR)ficspaths.h:
+	$(ROOT)ficspaths.sh "$(FICS_HOME)"
+fics: $(INCLUDE_DIR)ficspaths.h $(OBJS)
 	$(E) "  LINK    " $@
 	$(Q) $(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDFLAGS) $(LDLIBS)
-fics_addplayer: $(OBJS) $(AP_OBJS)
+fics_addplayer: $(INCLUDE_DIR)ficspaths.h $(OBJS) $(AP_OBJS)
 	strip --strip-symbol=main $(SRC_DIR)ficsmain.o
 	$(E) "  LINK    " $@
 	$(Q) $(CXX) $(CXXFLAGS) -o $@ $(OBJS) \
 	    $(AP_OBJS) $(AP_LDFLAGS) $(AP_LDLIBS)
-makerank: $(MR_OBJS)
+makerank: $(INCLUDE_DIR)ficspaths.h $(MR_OBJS)
 	$(E) "  LINK    " $@
 	$(Q) $(CXX) $(CXXFLAGS) -o $@ $(MR_OBJS) $(MR_LDFLAGS) $(MR_LDLIBS)
 # EOF
