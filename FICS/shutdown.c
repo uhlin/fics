@@ -21,7 +21,7 @@ PRIVATE int	 shutdownStartTime;
 PRIVATE int	 shutdownTime = 0;
 
 PUBLIC void
-output_shut_mess()
+output_shut_mess(void)
 {
 	time_t shuttime = time(NULL);
 
