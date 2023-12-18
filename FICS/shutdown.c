@@ -8,11 +8,12 @@
 #include "shutdown.h"
 #include "utils.h"
 
-PRIVATE char downer[1024];
-PRIVATE char reason[1024];
-PRIVATE int lastTimeLeft;
-PRIVATE int shutdownStartTime;
-PRIVATE int shutdownTime = 0;
+PRIVATE char	 downer[1024];
+PRIVATE char	 reason[1024];
+
+PRIVATE int	 lastTimeLeft;
+PRIVATE int	 shutdownStartTime;
+PRIVATE int	 shutdownTime = 0;
 
 PUBLIC void
 output_shut_mess()
