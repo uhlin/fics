@@ -54,3 +54,5 @@ if [ ! -r ${HDRPATH} ]; then
 	echo "fatal: error creating ${HDRPATH}"
 	exit 1
 fi
+
+echo "created ${HDRPATH}"
