@@ -29,10 +29,12 @@
 */
 
 #include "stdinclude.h"
+#include "common.h"
+
+#include <sys/resource.h>
 
 #include "board.h"
 #include "command.h"
-#include "common.h"
 #include "comproc.h"
 #include "config.h"
 #include "eco.h"
@@ -51,8 +53,6 @@
 #include "talkproc.h"
 #include "utils.h"
 #include "variable.h"
-
-#include <sys/resource.h>
 
 const int none = 0;
 const int blitz_rat = 1;
