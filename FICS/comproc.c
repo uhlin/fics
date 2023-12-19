@@ -60,6 +60,7 @@ const int std_rat = 2;
 const int wild_rat = 3;
 const int light_rat = 4;
 
+PUBLIC int num_news = -1;
 
 PUBLIC int
 com_rating_recalc(int p, param_list param)
@@ -75,8 +76,6 @@ com_more(int p, param_list param)
 	pmore_file(p);
 	return COM_OK;
 }
-
-PUBLIC int num_news = -1;
 
 PUBLIC void
 rscan_news2(FILE *fp, int p, int num)
