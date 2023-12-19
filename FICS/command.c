@@ -542,80 +542,96 @@ PUBLIC void rscan_news(FILE *fp, int p, int lc) {
   }
 }
 
-PRIVATE void check_news(int p, int admin)
+PRIVATE void
+check_news(int p, int admin)
 {
-  FILE *fp;
-  char filename[MAX_FILENAME_SIZE];
-  char junk[MAX_LINE_SIZE];
-  char *junkp;
-  int crtime;
-  int lc = player_lastconnect(p);
-  char count[10];
+	FILE		*fp;
+	char		 count[10];
+	char		 filename[MAX_FILENAME_SIZE];
+	char		 junk[MAX_LINE_SIZE];
+	char		*junkp;
+	long int	 lval;
+	time_t		 crtime;
+	time_t		 lc = player_lastconnect(p);
 
-  if (admin) {
+	if (admin) {
+		sprintf(filename, "%s/newadminnews.index", news_dir);
 
-    sprintf(filename, "%s/newadminnews.index", news_dir);
-    fp = fopen(filename, "r");
-    if (!fp) {
-      fprintf(stderr, "Can't find admin news index.\n");
-      return;
-    }
+		if ((fp = fopen(filename, "r")) == NULL) {
+			fprintf(stderr, "Can't find admin news index.\n");
+			return;
+		}
 
-    if (num_anews == -1) {
-      num_anews = count_lines(fp);
-      fclose(fp);
-      fp = fopen(filename, "r");
-    }
+		if (num_anews == -1) {
+			num_anews = count_lines(fp);
+			fclose(fp);
+			fp = fopen(filename, "r");
+		}
 
-    fgets(junk, MAX_LINE_SIZE, fp);
-    sscanf(junk, "%d %s", &crtime, count);
-    if ((crtime - lc) < 0) {
-      pprintf(p, "There are no new admin news items since your last login.\n\n");
-      fclose(fp);
-      return;
-    } else {
-      pprintf(p, "Index of new admin news items:\n");
-      rscan_news(fp, p, lc);
-      junkp = junk;
-      junkp = nextword(junkp);
-      junkp = nextword(junkp);
-      pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-      pprintf(p, "(\"anews %d\" will display the most recent admin news file)\n", num_anews);
-    }
+		fgets(junk, MAX_LINE_SIZE, fp);
+		sscanf(junk, "%ld %s", &lval, count);
+		crtime = lval;
 
-  } else {
+		if ((crtime - lc) < 0) {
+			pprintf(p, "There are no new admin news items since "
+			    "your last login.\n\n");
+			fclose(fp);
+			return;
+		} else {
+			pprintf(p, "Index of new admin news items:\n");
+			rscan_news(fp, p, lc);
 
-    sprintf(filename, "%s/newnews.index", news_dir);
-    fp = fopen(filename, "r");
-    if (!fp) {
-      fprintf(stderr, "Can't find news index.\n");
-      return;
-    }
+			junkp = junk;
+			junkp = nextword(junkp);
+			junkp = nextword(junkp);
 
-    if (num_news == -1) {
-      num_news = count_lines(fp);
-      fclose(fp);
-      fp = fopen(filename, "r");
-    }
+			pprintf(p, "%3s (%s) %s", count,
+			    fix_time(strltime(&crtime)), junkp);
+			pprintf(p, "(\"anews %d\" will display the most recent "
+			    "admin news file)\n", num_anews);
+		}
+	} else {
+		sprintf(filename, "%s/newnews.index", news_dir);
 
-    fgets(junk, MAX_LINE_SIZE, fp);
-    sscanf(junk, "%d %s", &crtime, count);
-    if ((crtime - lc) < 0) {
-      pprintf(p, "There are no new news items since your last login (%s).\n", strltime(&lc));
-      fclose(fp);
-      return;
-    } else {
-      pprintf(p, "Index of new news items:\n");
-      rscan_news(fp, p, lc);
-      junkp = junk;
-      junkp = nextword(junkp);
-      junkp = nextword(junkp);
-      pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-      pprintf(p, "(\"news %d\" will display the most recent admin news file)\n", num_news);
-    }
-  }
+		if ((fp = fopen(filename, "r")) == NULL) {
+			fprintf(stderr, "Can't find news index.\n");
+			return;
+		}
 
-  fclose(fp);
+		if (num_news == -1) {
+			num_news = count_lines(fp);
+			fclose(fp);
+			if ((fp = fopen(filename, "r")) == NULL) {
+				fprintf(stderr, "Can't find news index.\n");
+				return;
+			}
+		}
+
+		fgets(junk, MAX_LINE_SIZE, fp);
+		sscanf(junk, "%ld %s", &lval, count);
+		crtime = lval;
+
+		if ((crtime - lc) < 0) {
+			pprintf(p, "There are no new news items since your "
+			    "last login (%s).\n", strltime(&lc));
+			fclose(fp);
+			return;
+		} else {
+			pprintf(p, "Index of new news items:\n");
+			rscan_news(fp, p, lc);
+
+			junkp = junk;
+			junkp = nextword(junkp);
+			junkp = nextword(junkp);
+
+			pprintf(p, "%3s (%s) %s", count,
+			    fix_time(strltime(&crtime)), junkp);
+			pprintf(p, "(\"news %d\" will display the most recent "
+			    "admin news file)\n", num_news);
+		}
+	}
+
+	fclose(fp);
 }
 
 PRIVATE int
