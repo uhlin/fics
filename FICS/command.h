@@ -28,25 +28,25 @@
 #include "variable.h"
 #include "stdinclude.h"
 
-extern char *mess_dir;
-extern char *index_dir;
-extern char *help_dir[NUM_LANGS];
-extern char *comhelp_dir;
-extern char *info_dir;
 extern char *adhelp_dir;
-extern char *uscf_dir;
-extern char *stats_dir;
-extern char *config_dir;
-extern char *player_dir;
 extern char *adj_dir;
-extern char *hist_dir;
-extern char *journal_dir;
 extern char *board_dir;
+extern char *comhelp_dir;
+extern char *config_dir;
 extern char *def_prompt;
-extern char *source_dir;
+extern char *help_dir[NUM_LANGS];
+extern char *hist_dir;
+extern char *index_dir;
+extern char *info_dir;
+extern char *journal_dir;
 extern char *lists_dir;
+extern char *mess_dir;
 extern char *news_dir;
+extern char *player_dir;
+extern char *source_dir;
+extern char *stats_dir;
 extern char *usage_dir[NUM_LANGS];
+extern char *uscf_dir;
 
 extern char *hadmin_handle;
 
