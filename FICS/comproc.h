@@ -32,11 +32,15 @@ extern const int	std_rat;
 extern const int	wild_rat;
 extern const int	light_rat;
 
+/*
+ * The number of news items in the index file.
+ */
+extern int num_news;
+
 extern int com_rating_recalc();
 extern int com_more();
 extern void rscan_news(FILE *, int, int);
 extern void rscan_news2(FILE *, int, int);
-extern int num_news;  /* The number of news items in the index file. */
 
 extern int com_quit();
 extern int com_index();
