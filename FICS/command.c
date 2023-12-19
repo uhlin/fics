@@ -125,14 +125,16 @@ alias_lookup(char *tmp, alias_type *alias_list, int numalias)
 	return -1; /* not found */
 }
 
-PUBLIC int alias_count(alias_type *alias_list)
+PUBLIC int
+alias_count(alias_type *alias_list)
 {
-  int i;
+	int i;
 
-  for (i = 0; alias_list[i].comm_name; i++);
-  return i;
+	for (i = 0; alias_list[i].comm_name; i++) {
+		/* null */;
+	}
+	return i;
 }
-
 
 /* Puts alias substitution into alias_string */
 PRIVATE void alias_substitute(alias_type *alias_list, int num_alias,
