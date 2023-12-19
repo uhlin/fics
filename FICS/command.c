@@ -84,7 +84,10 @@ PUBLIC int	 game_high;
 PUBLIC int	 player_high;
 PUBLIC time_t	 startuptime;
 
-PUBLIC int commanding_player = -1;	/* The player whose command your in */
+/*
+ * The player whose command you're in
+ */
+PUBLIC int commanding_player = -1;
 
 PRIVATE int lastCommandFound = -1;
 
