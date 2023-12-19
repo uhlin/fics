@@ -92,24 +92,24 @@ PRIVATE int lastCommandFound = -1;
 int player_notify_departure(int p);
 /* added for warnings */
 
-/* Copies command into comm, and returns pointer to parameters in
- * parameters
+/*
+ * Copies command into 'comm'.
  */
-PRIVATE int parse_command(char *com_string,
-			   char **comm,
-			   char **parameters)
+PRIVATE int
+parse_command(char *com_string, char **comm, char **parameters)
 {
-  *comm = com_string;
-  *parameters = eatword(com_string);
-  if (**parameters != '\0') {
-    **parameters = '\0';
-    (*parameters)++;
-    *parameters = eatwhite(*parameters);
-  }
-  if (strlen(*comm) >= MAX_COM_LENGTH) {
-    return COM_BADCOMMAND;
-  }
-  return COM_OK;
+	*comm = com_string;
+	*parameters = eatword(com_string);
+
+	if (**parameters != '\0') {
+		**parameters = '\0';
+		(*parameters)++;
+		*parameters = eatwhite(*parameters);
+	}
+
+	if (strlen(*comm) >= MAX_COM_LENGTH)
+		return COM_BADCOMMAND;
+	return COM_OK;
 }
 
 PUBLIC int alias_lookup(char *tmp, alias_type *alias_list, int numalias)
