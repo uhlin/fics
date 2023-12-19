@@ -19,10 +19,12 @@
       adminproc.c - All administrative commands and related functions    */
 
 #include "stdinclude.h"
+#include "common.h"
+
+#include <sys/param.h>
 
 #include "adminproc.h"
 #include "command.h"
-#include "common.h"
 #include "comproc.h"
 #include "gamedb.h"
 #include "gameproc.h"
@@ -34,8 +36,6 @@
 #include "rmalloc.h"
 #include "talkproc.h"
 #include "utils.h"
-
-#include <sys/param.h>
 
 #define PASSLEN 4
 
