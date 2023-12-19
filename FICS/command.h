@@ -50,11 +50,11 @@ extern char *uscf_dir;
 
 extern char *hadmin_handle;
 
-extern time_t startuptime;
-extern char fics_hostname[81];
-extern int player_high;
-extern int game_high;
-extern int MailGameResult;
+extern char	 fics_hostname[81];
+extern int	 MailGameResult;
+extern int	 game_high;
+extern int	 player_high;
+extern time_t	 startuptime;
 
 /* Maximum length of a login name */
 #define MAX_LOGIN_NAME 20

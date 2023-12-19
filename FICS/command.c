@@ -78,11 +78,11 @@ PUBLIC char *hadmin_handle = HADMINHANDLE;
 char *hadmin_email = HADMINEMAIL;
 char *reg_addr = REGMAIL;
 
-PUBLIC time_t startuptime;
-PUBLIC char fics_hostname[81];
-PUBLIC int player_high;
-PUBLIC int game_high;
-PUBLIC int MailGameResult;
+PUBLIC char	 fics_hostname[81];
+PUBLIC int	 MailGameResult;
+PUBLIC int	 game_high;
+PUBLIC int	 player_high;
+PUBLIC time_t	 startuptime;
 
 PUBLIC int commanding_player = -1;	/* The player whose command your in */
 
