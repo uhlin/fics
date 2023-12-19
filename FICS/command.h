@@ -113,7 +113,10 @@ typedef struct s_alias_type {
   char *alias;
 } alias_type;
 
-extern int commanding_player; /* The player whose command you're in */
+/*
+ * The player whose command you're in
+ */
+extern int commanding_player;
 
 extern int process_input(int, char *);
 extern int process_new_connection(int, unsigned int);
