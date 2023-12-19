@@ -524,121 +524,178 @@ PUBLIC int com_checkTIMESEAL(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_checkGAME (int p,param_list param)
+PUBLIC int
+com_checkGAME(int p,param_list param)
 {
- int p1,g,link;
- char tmp[10 + 1 + 7]; /* enough to store number 'black: ' and \0 */
- int startTime;
- multicol *m;
- int found = 0;
+	char		 tmp[10 + 1 + 7];	// enough to store number
+						// 'black: ' and '\0'
+	int		 found = 0;
+	int		 p1, g, link;
+	int		 startTime;
+	multicol	*m;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
- if (g_num == 0) {
-  pprintf (p,"No games are currently linked into the garray structure.\n");
-  return COM_OK;
- }
+	if (g_num == 0) {
+		pprintf(p, "No games are currently linked into the 'garray' "
+		    "structure.\n");
+		return COM_OK;
+	}
 
- if (param[0].type == TYPE_WORD) { /* a player name */
-   if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
-     pprintf(p, "%s doesn't appear to be logged in.\n", param[0].val.word);
-     pprintf(p,"Searching through garray to find matching game numbers.\n");
-     pprintf(p,"Use chkgame <number> to view the results.\n");
-     m = multicol_start(g_num*2); /* Obviously no more than that */
-     for (g = 0; g < g_num; g++) {
-     multicol_store(m,tmp);
-       if (!(strcasecmp (garray[g].white_name,param[0].val.word)))  {
-         sprintf (tmp,"White: %d",g);
-         multicol_store(m,tmp);
-         found = 1;
-       }
-       if (!(strcasecmp (garray[g].black_name,param[0].val.word)))  {
-         sprintf (tmp,"Black: %d",g);
-         multicol_store(m,tmp);
-         found = 1;
-       }
-     }
-     if (found)
-       multicol_pprint(m,p,parray[p].d_width,2);
-     else
-       pprintf(p,"No matching games were found.\n");
-     multicol_end(m);
-     return COM_OK;
-   }
+	if (param[0].type == TYPE_WORD) {    // a player name
+		if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
+			pprintf(p, "%s doesn't appear to be logged in.\n",
+			    param[0].val.word);
+			pprintf(p, "Searching through garray to find matching "
+			    "game numbers.\n");
+			pprintf(p, "Use chkgame <number> to view the results."
+			    "\n");
 
-   if ((g = parray[p1].game) < 0) {
-     pprintf(p,"%s doesn't appear to be playing a game.\n",parray[p1].name);
-     pprintf(p,"Searching through garray to find matching game numbers.\n");
-     pprintf(p,"Use chkgame <number> to view the results.\n");
-     m = multicol_start(g_num*2); /* Obviously no more than that */
-     for (g = 0; g < g_num; g++) {
-       if ((garray[g].white) == p1) {
-         sprintf (tmp,"White: %d",g);
-         multicol_store(m,tmp);
-         found = 1;
-       }
-       if ((garray[g].black) == p1) {
-         sprintf (tmp,"Black: %d",g);
-         multicol_store(m,tmp);
-         found = 1;
-       }
-     }
-     if (found)
-       multicol_pprint(m,p,parray[p].d_width,2);
-     else
-       pprintf (p,"No matching games were found.\n");
-     multicol_end(m);
-     return COM_OK;
-   }
- } else {
-   if (((g = param[0].val.integer - 1) < 0) || (g >= g_num)) {
-     pprintf (p, "The current range of game numbers is 1 to %d.\n",g_num);
-     return COM_OK;
-   }
- }
- startTime = untenths(garray[g].timeOfStart);
- pprintf (p,"Current stored info for game %d (garray[%d]):\n",g+1,g);
- pprintf (p,"Initial white time: %d    Initial white increment %d\n",
-    garray[g].wInitTime/600,garray[g].wIncrement/10);
- pprintf (p,"Initial black time: %d    Initial black increment %d\n",
-    garray[g].bInitTime/600,garray[g].bIncrement/10);
- pprintf (p,"Time of starting: %s\n",strltime (&startTime));
- pprintf (p,"Game is: %s (%d) vs. %s (%d)\n",garray[g].white_name,garray[g].white_rating,
-         garray[g].black_name,garray[g].black_rating);
- pprintf (p,"White parray entry: %d    Black parray entry %d\n",garray[g].white,garray[g].black);
- if ((link = garray[g].link) >= 0) {
-   pprintf (p,"Bughouse linked to game: %d\n",garray[g].link + 1);
-   pprintf (p,"Partner is playing game: %s (%d) vs. %s (%d)\n",garray[link].white_name,garray[link].white_rating,
-         garray[link].black_name,garray[link].black_rating);
- } else
-   pprintf (p,"Game is not bughouse or link to partner's game not found.\n");
- pprintf (p,"Game is %s\n",(garray[g].rated) ? "rated" : "unrated");
- pprintf (p,"Game is %s\n",(garray[g].private) ? "private" : "not private");
- pprintf (p,"Games is of type %s\n",
-  garray[g].type == TYPE_UNTIMED ? "untimed" :
-  garray[g].type == TYPE_BLITZ ? "blitz" :
-  garray[g].type == TYPE_STAND ? "standard" :
-  garray[g].type == TYPE_NONSTANDARD ? "non-standard" :
-  garray[g].type == TYPE_WILD ? "wild" :
-  garray[g].type == TYPE_LIGHT ? "lightning" :
-  garray[g].type == TYPE_BUGHOUSE ? "bughouse" :
-  "Unknown - Error!");
- pprintf (p,"%d halfmove(s) have been made\n",garray[g].numHalfMoves);
- if (garray[g].status == GAME_ACTIVE)
-   game_update_time(g);
- pprintf (p,"White's time %s    Black's time ",
-  tenth_str((garray[g].wTime > 0 ? garray[g].wTime : 0), 0));
- pprintf (p,"%s\n",
-  tenth_str((garray[g].bTime > 0 ? garray[g].bTime : 0), 0));
- pprintf (p,"The clock is%sticking\n",
-  (garray[g].clockStopped || (garray[g].status != GAME_ACTIVE)) ? " not " : " ");
- pprintf (p,"Game status: %s\n",
-  garray[g].status == GAME_EMPTY ? "GAME_EMPTY" :
-  garray[g].status == GAME_NEW ? "GAME_NEW" :
-  garray[g].status == GAME_ACTIVE ? "GAME_ACTIVE" :
-  garray[g].status == GAME_EXAMINE ? "GAME_EXAMINE" :
-  "Unknown - Error!");
- return COM_OK;
+			m = multicol_start(g_num * 2);	// Obviously no more
+							// than that
+
+			for (g = 0; g < g_num; g++) {
+				multicol_store(m, tmp);
+
+				if (!strcasecmp(garray[g].white_name,param[0].val.word))  {
+					sprintf(tmp, "White: %d", g);
+					multicol_store(m, tmp);
+					found = 1;
+				}
+				if (!strcasecmp(garray[g].black_name,param[0].val.word))  {
+					sprintf(tmp, "Black: %d", g);
+					multicol_store(m, tmp);
+					found = 1;
+				}
+			}
+
+			if (found)
+				multicol_pprint(m, p, parray[p].d_width, 2);
+			else
+				pprintf(p,"No matching games were found.\n");
+			multicol_end(m);
+
+			return COM_OK;
+		}
+
+		if ((g = parray[p1].game) < 0) {
+			pprintf(p, "%s doesn't appear to be playing a game.\n",
+			    parray[p1].name);
+			pprintf(p, "Searching through garray to find matching "
+			    "game numbers.\n");
+			pprintf(p, "Use chkgame <number> to view the results."
+			    "\n");
+
+			m = multicol_start(g_num * 2);	// Obviously no more
+							// than that
+
+			for (g = 0; g < g_num; g++) {
+				if (garray[g].white == p1) {
+					sprintf(tmp, "White: %d", g);
+					multicol_store(m, tmp);
+					found = 1;
+				}
+
+				if (garray[g].black == p1) {
+					sprintf(tmp, "Black: %d", g);
+					multicol_store(m,tmp);
+					found = 1;
+				}
+			}
+
+			if (found)
+				multicol_pprint(m, p, parray[p].d_width, 2);
+			else
+				pprintf(p, "No matching games were found.\n");
+			multicol_end(m);
+
+			return COM_OK;
+		}
+	} else {
+		if ((g = param[0].val.integer - 1) < 0 || g >= g_num) {
+			pprintf(p, "The current range of game numbers is 1 to "
+			    "%d.\n", g_num);
+			return COM_OK;
+		}
+	}
+
+	startTime = untenths(garray[g].timeOfStart);
+
+	pprintf(p, "Current stored info for game %d (garray[%d]):\n", (g + 1),
+	    g);
+	pprintf(p, "Initial white time: %d    Initial white increment %d\n",
+	    (garray[g].wInitTime / 600),
+	    (garray[g].wIncrement / 10));
+	pprintf(p, "Initial black time: %d    Initial black increment %d\n",
+	    (garray[g].bInitTime / 600),
+	    (garray[g].bIncrement / 10));
+	pprintf(p, "Time of starting: %s\n", strltime(&startTime));
+	pprintf(p, "Game is: %s (%d) vs. %s (%d)\n",
+	    garray[g].white_name,
+	    garray[g].white_rating,
+	    garray[g].black_name,
+	    garray[g].black_rating);
+	pprintf(p, "White parray entry: %d    Black parray entry %d\n",
+	    garray[g].white,
+	    garray[g].black);
+
+	if ((link = garray[g].link) >= 0) {
+		pprintf(p, "Bughouse linked to game: %d\n",
+		    (garray[g].link + 1));
+		pprintf(p, "Partner is playing game: %s (%d) vs. %s (%d)\n",
+		    garray[link].white_name,
+		    garray[link].white_rating,
+		    garray[link].black_name,
+		    garray[link].black_rating);
+	} else {
+		pprintf(p, "Game is not bughouse or link to partner's game not "
+		    "found.\n");
+	}
+
+	pprintf(p, "Game is %s\n", (garray[g].rated ? "rated" : "unrated"));
+	pprintf(p, "Game is %s\n", (garray[g].private ? "private" :
+	    "not private"));
+
+	if (garray[g].type == TYPE_UNTIMED)
+		pprintf(p, "Games is of type: untimed\n");
+	else if (garray[g].type == TYPE_BLITZ)
+		pprintf(p, "Games is of type: blitz\n");
+	else if (garray[g].type == TYPE_STAND)
+		pprintf(p, "Games is of type: standard\n");
+	else if (garray[g].type == TYPE_NONSTANDARD)
+		pprintf(p, "Games is of type: non-standard\n");
+	else if (garray[g].type == TYPE_WILD)
+		pprintf(p, "Games is of type: wild\n");
+	else if (garray[g].type == TYPE_LIGHT)
+		pprintf(p, "Games is of type: lightning\n");
+	else if (garray[g].type == TYPE_BUGHOUSE)
+		pprintf(p, "Games is of type: bughouse\n");
+	else
+		pprintf(p, "Games is of type: Unknown - Error!\n");
+
+	pprintf(p, "%d halfmove(s) have been made\n", garray[g].numHalfMoves);
+
+	if (garray[g].status == GAME_ACTIVE)
+		game_update_time(g);
+
+	pprintf(p, "White's time %s    Black's time ",
+	    tenth_str((garray[g].wTime > 0 ? garray[g].wTime : 0), 0));
+	pprintf(p, "%s\n",
+	    tenth_str((garray[g].bTime > 0 ? garray[g].bTime : 0), 0));
+	pprintf(p, "The clock is%sticking\n", ((garray[g].clockStopped ||
+	    garray[g].status != GAME_ACTIVE) ? " not " : " "));
+
+	if (garray[g].status == GAME_EMPTY)
+		pprintf(p, "Game status: GAME_EMPTY\n");
+	else if (garray[g].status == GAME_NEW)
+		pprintf(p, "Game status: GAME_NEW\n");
+	else if (garray[g].status == GAME_ACTIVE)
+		pprintf(p, "Game status: GAME_ACTIVE\n");
+	else if (garray[g].status == GAME_EXAMINE)
+		pprintf(p, "Game status: GAME_EXAMINE\n");
+	else
+		pprintf(p, "Game status: Unknown - Error!\n");
+	return COM_OK;
 }
 
 /*
