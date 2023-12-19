@@ -118,14 +118,14 @@ typedef struct s_alias_type {
  */
 extern int commanding_player;
 
-extern int alias_lookup();
-extern int gethostname();
-extern int process_command(int, char *, char **);
-extern int process_disconnection(int);
-extern int process_heartbeat(int *);
-extern int process_input(int, char *);
-extern int process_new_connection(int, unsigned int);
-extern void TerminateCleanup(void);
-extern void commands_init(void);
+extern int	 alias_lookup();
+extern int	 gethostname();
+extern int	 process_command(int, char *, char **);
+extern int	 process_disconnection(int);
+extern int	 process_heartbeat(int *);
+extern int	 process_input(int, char *);
+extern int	 process_new_connection(int, unsigned int);
+extern void	 TerminateCleanup(void);
+extern void	 commands_init(void);
 
 #endif /* _COMMAND_H */
