@@ -75,24 +75,32 @@ PUBLIC int com_more(int p, param_list param)
 
 PUBLIC int num_news = -1;
 
-PUBLIC void rscan_news2(FILE *fp, int p, int num)
+PUBLIC void
+rscan_news2(FILE *fp, int p, int num)
 {
-  char junk[MAX_LINE_SIZE], count[10];
-  int crtime;
-  char *junkp;
+	char		*junkp;
+	char		 count[10];
+	char		 junk[MAX_LINE_SIZE];
+	long int	 lval;
+	time_t		 crtime;
 
-  if (num == 0)
-    return;
+	if (num == 0)
+		return;
 
-  fgets(junk, MAX_LINE_SIZE, fp);
-  if (feof(fp))
-    return;
-  sscanf(junk, "%d %s", &crtime, count);
-  rscan_news2(fp, p, num - 1);
-  junkp = junk;
-  junkp = nextword(junkp);
-  junkp = nextword(junkp);
-  pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
+	fgets(junk, MAX_LINE_SIZE, fp);
+
+	if (feof(fp))
+		return;
+
+	sscanf(junk, "%ld %s", &lval, count);
+	rscan_news2(fp, p, num - 1);
+
+	junkp = junk;
+	junkp = nextword(junkp);
+	junkp = nextword(junkp);
+
+	crtime = lval;
+	pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
 }
 
 PUBLIC int
