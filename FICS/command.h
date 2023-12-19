@@ -58,31 +58,31 @@
 #define ADMIN_GOD	100
 
 #define TYPE_NULL 0
-/*#define TYPE_NULL NULL  <-- this is WRONG WRONG WRONG!  --mann 5/10/95 */
 #define TYPE_WORD 1
 #define TYPE_STRING 2
 #define TYPE_INT 3
 typedef struct u_parameter {
-  int type;
-  union {
-    char *word;
-    char *string;
-    int integer;
-  } val;
+	int type;
+
+	union {
+		char	*word;
+		char	*string;
+		int	 integer;
+	} val;
 } parameter;
 
 typedef parameter param_list[MAXNUMPARAMS];
 
 typedef struct s_command_type {
-  char *comm_name;
-  char *param_string;
-  int (*comm_func)();
-  int adminLevel;
+	char *comm_name;
+	char *param_string;
+	int (*comm_func)();
+	int adminLevel;
 } command_type;
 
 typedef struct s_alias_type {
-  char *comm_name;
-  char *alias;
+	char	*comm_name;
+	char	*alias;
 } alias_type;
 
 extern char	*adhelp_dir;
