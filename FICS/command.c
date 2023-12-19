@@ -74,9 +74,9 @@ PUBLIC char	*usage_dir[NUM_LANGS] = {
 };
 PUBLIC char	*uscf_dir	= DEFAULT_USCF;
 
-PUBLIC char *hadmin_handle = HADMINHANDLE;
-char *hadmin_email = HADMINEMAIL;
-char *reg_addr = REGMAIL;
+PUBLIC char	*hadmin_handle = HADMINHANDLE;
+PRIVATE char	*hadmin_email = HADMINEMAIL;
+PRIVATE char	*reg_addr = REGMAIL;
 
 PUBLIC char	 fics_hostname[81];
 PUBLIC int	 MailGameResult;
