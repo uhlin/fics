@@ -28,39 +28,47 @@
 #include "variable.h"
 #include "stdinclude.h"
 
-/* Maximum length of a login name */
+/*
+ * Maximum length of a login name
+ */
 #define MAX_LOGIN_NAME 20
 
-/* Maximum number of parameters per command */
+/*
+ * Maximum number of parameters per command
+ */
 #define MAXNUMPARAMS 10
 
-/* Maximum string length of a single command word */
+/*
+ * Maximum string length of a single command word
+ */
 #define MAX_COM_LENGTH 50
 
-/* Maximum string length of the whole command line */
+/*
+ * Maximum string length of the whole command line
+ */
 #define MAX_STRING_LENGTH 1024
 
-#define COM_OK 0
-#define COM_FAILED 1
-#define COM_ISMOVE 2
-#define COM_AMBIGUOUS 3
-#define COM_BADPARAMETERS 4
-#define COM_BADCOMMAND 5
-#define COM_LOGOUT 6
-#define COM_FLUSHINPUT 7
-#define COM_RIGHTS 8
-#define COM_OK_NOPROMPT 9
+#define COM_OK                0
+#define COM_FAILED            1
+#define COM_ISMOVE            2
+#define COM_AMBIGUOUS         3
+#define COM_BADPARAMETERS     4
+#define COM_BADCOMMAND        5
+#define COM_LOGOUT            6
+#define COM_FLUSHINPUT        7
+#define COM_RIGHTS            8
+#define COM_OK_NOPROMPT       9
 
 #define ADMIN_USER	0
 #define ADMIN_ADMIN	10
 #define ADMIN_MASTER	20
-#define ADMIN_DEMIGOD   60
+#define ADMIN_DEMIGOD	60
 #define ADMIN_GOD	100
 
-#define TYPE_NULL 0
-#define TYPE_WORD 1
-#define TYPE_STRING 2
-#define TYPE_INT 3
+#define TYPE_NULL	0
+#define TYPE_WORD	1
+#define TYPE_STRING	2
+#define TYPE_INT	3
 typedef struct u_parameter {
 	int type;
 
