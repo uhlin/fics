@@ -531,8 +531,8 @@ com_checkGAME(int p,param_list param)
 						// 'black: ' and '\0'
 	int		 found = 0;
 	int		 p1, g, link;
-	int		 startTime;
 	multicol	*m;
+	time_t		 startTime;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
