@@ -28,34 +28,6 @@
 #include "variable.h"
 #include "stdinclude.h"
 
-extern char *adhelp_dir;
-extern char *adj_dir;
-extern char *board_dir;
-extern char *comhelp_dir;
-extern char *config_dir;
-extern char *def_prompt;
-extern char *help_dir[NUM_LANGS];
-extern char *hist_dir;
-extern char *index_dir;
-extern char *info_dir;
-extern char *journal_dir;
-extern char *lists_dir;
-extern char *mess_dir;
-extern char *news_dir;
-extern char *player_dir;
-extern char *source_dir;
-extern char *stats_dir;
-extern char *usage_dir[NUM_LANGS];
-extern char *uscf_dir;
-
-extern char *hadmin_handle;
-
-extern char	 fics_hostname[81];
-extern int	 MailGameResult;
-extern int	 game_high;
-extern int	 player_high;
-extern time_t	 startuptime;
-
 /* Maximum length of a login name */
 #define MAX_LOGIN_NAME 20
 
@@ -112,6 +84,34 @@ typedef struct s_alias_type {
   char *comm_name;
   char *alias;
 } alias_type;
+
+extern char *adhelp_dir;
+extern char *adj_dir;
+extern char *board_dir;
+extern char *comhelp_dir;
+extern char *config_dir;
+extern char *def_prompt;
+extern char *help_dir[NUM_LANGS];
+extern char *hist_dir;
+extern char *index_dir;
+extern char *info_dir;
+extern char *journal_dir;
+extern char *lists_dir;
+extern char *mess_dir;
+extern char *news_dir;
+extern char *player_dir;
+extern char *source_dir;
+extern char *stats_dir;
+extern char *usage_dir[NUM_LANGS];
+extern char *uscf_dir;
+
+extern char *hadmin_handle;
+
+extern char	 fics_hostname[81];
+extern int	 MailGameResult;
+extern int	 game_high;
+extern int	 player_high;
+extern time_t	 startuptime;
 
 /*
  * The player whose command you're in
