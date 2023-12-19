@@ -534,26 +534,35 @@ void boot_out(int p, int p1)
   net_close_connection(fd);
 }
 
-PUBLIC void rscan_news(FILE *fp, int p, int lc) {
+PUBLIC void
+rscan_news(FILE *fp, int p, int lc)
+{
+	char		*junkp;
+	char		 count[10];
+	char		 junk[MAX_LINE_SIZE];
+	long int	 lval;
+	time_t		 crtime;
 
-  char junk[MAX_LINE_SIZE], count[10];
-  int crtime;
-  char *junkp;
+	fgets(junk, MAX_LINE_SIZE, fp);
 
-  fgets(junk, MAX_LINE_SIZE, fp);
-  if (feof(fp))
-    return;
-  sscanf(junk, "%d %s", &crtime, count);
+	if (feof(fp))
+		return;
 
-  if (crtime - lc < 0)
-    return;
-  else {
-    rscan_news(fp, p, lc);
-    junkp = junk;
-    junkp = nextword(junkp);
-    junkp = nextword(junkp);
-    pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-  }
+	sscanf(junk, "%ld %s", &lval, count);
+	crtime = lval;
+
+	if ((crtime - lc) < 0)
+		return;
+	else {
+		rscan_news(fp, p, lc);
+
+		junkp = junk;
+		junkp = nextword(junkp);
+		junkp = nextword(junkp);
+
+		pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)),
+		    junkp);
+	}
 }
 
 PRIVATE void
