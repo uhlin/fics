@@ -115,16 +115,14 @@ parse_command(char *com_string, char **comm, char **parameters)
 	return COM_OK;
 }
 
-PUBLIC int alias_lookup(char *tmp, alias_type *alias_list, int numalias)
-/* numalias is the maximum number to search through */
+PUBLIC int
+alias_lookup(char *tmp, alias_type *alias_list, int numalias)
 {
-  int i;
-
-  for (i = 0; (alias_list[i].comm_name && i < numalias); i++) {
-    if (!strcmp(tmp, alias_list[i].comm_name))
-      return i;
-  }
-  return -1;			/* not found */
+	for (int i = 0; (alias_list[i].comm_name && i < numalias); i++) {
+		if (!strcmp(tmp, alias_list[i].comm_name))
+			return i;
+	}
+	return -1; /* not found */
 }
 
 PUBLIC int alias_count(alias_type *alias_list)
