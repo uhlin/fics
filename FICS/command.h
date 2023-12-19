@@ -129,15 +129,7 @@ extern void commands_init(void);
 extern void TerminateCleanup(void);
 extern int process_command(int, char *, char **);
 
-
 extern int alias_lookup();
 extern int gethostname();
-
-#if defined(SGI) || defined(NETBSD)
-#else
-extern int wait3();
-/* extern char tolower(); */
-/* extern int sscanf(); */
-#endif
 
 #endif /* _COMMAND_H */
