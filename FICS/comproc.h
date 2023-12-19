@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash			93/10/22	Created
    Markus Uhlin			23/12/09	Fixed implicit ints
+   Markus Uhlin			23/12/19	Sorted declarations
 */
 
 #ifndef _COMPROC_H
