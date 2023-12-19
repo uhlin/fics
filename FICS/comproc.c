@@ -25,6 +25,7 @@
    Markus Uhlin			23/12/17	Fixed compiler warnings
    Markus Uhlin			23/12/17	Usage of 'time_t'
    Markus Uhlin			23/12/17	Reformatted com_stats()
+   Markus Uhlin			23/12/19	Usage of 'time_t'
 */
 
 #include "stdinclude.h"
