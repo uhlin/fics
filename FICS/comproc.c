@@ -54,11 +54,11 @@
 #include "utils.h"
 #include "variable.h"
 
-PUBLIC const int none = 0;
-PUBLIC const int blitz_rat = 1;
-PUBLIC const int std_rat = 2;
-PUBLIC const int wild_rat = 3;
-PUBLIC const int light_rat = 4;
+PUBLIC const int	none = 0;
+PUBLIC const int	blitz_rat = 1;
+PUBLIC const int	std_rat = 2;
+PUBLIC const int	wild_rat = 3;
+PUBLIC const int	light_rat = 4;
 
 PUBLIC int num_news = -1;
 
