@@ -225,7 +225,7 @@ extern int player_clear(int);
 
 extern void player_write_login(int);
 extern void player_write_logout(int);
-extern int player_lastconnect(int);
+extern time_t player_lastconnect(int);
 extern time_t player_lastdisconnect(int);
 
 extern void player_pend_print(int, pending *);
