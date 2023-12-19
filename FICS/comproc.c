@@ -61,17 +61,19 @@ const int wild_rat = 3;
 const int light_rat = 4;
 
 
-PUBLIC int com_rating_recalc(int p, param_list param)
+PUBLIC int
+com_rating_recalc(int p, param_list param)
 {
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  rating_recalc();
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	rating_recalc();
+	return COM_OK;
 }
 
-PUBLIC int com_more(int p, param_list param)
+PUBLIC int
+com_more(int p, param_list param)
 {
-  pmore_file(p);
-  return COM_OK;
+	pmore_file(p);
+	return COM_OK;
 }
 
 PUBLIC int num_news = -1;
