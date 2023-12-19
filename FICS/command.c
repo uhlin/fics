@@ -45,24 +45,34 @@
 #include "utils.h"
 #include "vers.h"
 
-PUBLIC char *mess_dir = DEFAULT_MESS;
-PUBLIC char *index_dir = DEFAULT_INDEX;
-PUBLIC char *help_dir[NUM_LANGS] = {DEFAULT_HELP, HELP_SPANISH, HELP_FRENCH, HELP_DANISH};
-PUBLIC char *comhelp_dir = DEFAULT_COMHELP;
-PUBLIC char *info_dir = DEFAULT_INFO;
-PUBLIC char *adhelp_dir = DEFAULT_ADHELP;
-PUBLIC char *uscf_dir = DEFAULT_USCF;
-PUBLIC char *stats_dir = DEFAULT_STATS;
-PUBLIC char *player_dir = DEFAULT_PLAYERS;
-PUBLIC char *adj_dir = DEFAULT_ADJOURNED;
-PUBLIC char *hist_dir = DEFAULT_HISTORY;
-PUBLIC char *journal_dir = DEFAULT_JOURNAL;
-PUBLIC char *board_dir = DEFAULT_BOARDS;
-PUBLIC char *def_prompt = DEFAULT_PROMPT;
-PUBLIC char *source_dir = DEFAULT_SOURCE;
-PUBLIC char *lists_dir = DEFAULT_LISTS;
-PUBLIC char *news_dir = DEFAULT_NEWS;
-PUBLIC char *usage_dir[NUM_LANGS] = {DEFAULT_USAGE, USAGE_SPANISH, USAGE_FRENCH, USAGE_DANISH};
+PUBLIC char	*adhelp_dir	= DEFAULT_ADHELP;
+PUBLIC char	*adj_dir	= DEFAULT_ADJOURNED;
+PUBLIC char	*board_dir	= DEFAULT_BOARDS;
+PUBLIC char	*comhelp_dir	= DEFAULT_COMHELP;
+PUBLIC char	*def_prompt	= DEFAULT_PROMPT;
+PUBLIC char	*help_dir[NUM_LANGS] = {
+	DEFAULT_HELP,
+	HELP_SPANISH,
+	HELP_FRENCH,
+	HELP_DANISH
+};
+PUBLIC char	*hist_dir	= DEFAULT_HISTORY;
+PUBLIC char	*index_dir	= DEFAULT_INDEX;
+PUBLIC char	*info_dir	= DEFAULT_INFO;
+PUBLIC char	*journal_dir	= DEFAULT_JOURNAL;
+PUBLIC char	*lists_dir	= DEFAULT_LISTS;
+PUBLIC char	*mess_dir	= DEFAULT_MESS;
+PUBLIC char	*news_dir	= DEFAULT_NEWS;
+PUBLIC char	*player_dir	= DEFAULT_PLAYERS;
+PUBLIC char	*source_dir	= DEFAULT_SOURCE;
+PUBLIC char	*stats_dir	= DEFAULT_STATS;
+PUBLIC char	*usage_dir[NUM_LANGS] = {
+	DEFAULT_USAGE,
+	USAGE_SPANISH,
+	USAGE_FRENCH,
+	USAGE_DANISH
+};
+PUBLIC char	*uscf_dir	= DEFAULT_USCF;
 
 PUBLIC char *hadmin_handle = HADMINHANDLE;
 char *hadmin_email = HADMINEMAIL;
