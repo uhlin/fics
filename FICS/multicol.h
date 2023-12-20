@@ -32,10 +32,10 @@ typedef struct _multicol
   char **strArray;
 } multicol;
 
-extern int multicol_end(multicol *);
-extern int multicol_pprint(multicol *, int, int, int);
-extern int multicol_store(multicol *, char *);
-extern int multicol_store_sorted(multicol *, char *);
-extern multicol *multicol_start(int);
+extern int	 multicol_end(multicol *);
+extern int	 multicol_pprint(multicol *, int, int, int);
+extern int	 multicol_store(multicol *, char *);
+extern int	 multicol_store_sorted(multicol *, char *);
+extern multicol	*multicol_start(int);
 
 #endif /* _MULTICOL_H */
