@@ -25,10 +25,12 @@
 */
 
 #include "stdinclude.h"
+#include "common.h"
+
+#include <sys/param.h>
 
 #include "board.h"
 #include "command.h"
-#include "common.h"
 #include "comproc.h"
 #include "config.h"
 #ifndef IGNORE_ECO
@@ -41,8 +43,6 @@
 #include "shutdown.h"
 #include "talkproc.h"
 #include "utils.h"
-
-#include <sys/param.h>
 
 /* Arguments */
 PUBLIC int	port;
