@@ -31,57 +31,65 @@ PUBLIC unsigned int allocated_size = 0;
 PUBLIC unsigned int malloc_count = 0;
 PUBLIC unsigned int free_count = 0;
 
-PUBLIC void *rmalloc(int byteSize)
+PUBLIC void *
+rmalloc(int byteSize)
 {
-  void *newptr;
+	void *newptr;
+
 #ifdef HASMALLOCSIZE
-  allocated_size += byteSize;
+	allocated_size += byteSize;
 #endif
-  malloc_count++;
-  newptr = malloc(byteSize);
-  if (newptr == NULL) {
-      fprintf(stderr, "Out of memory in malloc!\n");
-      abort();
-  }
-  return newptr;
+
+	malloc_count++;
+
+	if ((newptr = malloc(byteSize)) == NULL) {
+		fprintf(stderr, "Out of memory in malloc!\n");
+		abort();
+	}
+
+	return newptr;
 }
 
-PUBLIC void *rrealloc(void *ptr, int byteSize)
+PUBLIC void *
+rrealloc(void *ptr, int byteSize)
 {
 #ifdef HASMALLOCSIZE
-  allocated_size += (byteSize - malloc_size(ptr));
+	allocated_size += (byteSize - malloc_size(ptr));
 #endif
-  if (ptr == NULL) {		/* Sparky  3/16/95  */
-    fprintf(stderr, "Hoser!  Null ptr passed to rrealloc!!\n");
-    return NULL;
-  } else {
-    void *newptr = realloc(ptr, byteSize);
-    if (newptr == NULL) {
-	fprintf(stderr, "Out of memory in rrealloc!\n");
-	abort();
-    }
-    return newptr;
-  }
+
+	if (ptr == NULL) {
+		fprintf(stderr, "Hoser! Null ptr passed to rrealloc!\n");
+		return NULL;
+	} else {
+		void *newptr;
+
+		if ((newptr = realloc(ptr, byteSize)) == NULL) {
+			fprintf(stderr, "Out of memory in rrealloc!\n");
+			abort();
+		}
+
+		return newptr;
+	}
 }
 
-PUBLIC void rfree(void *ptr)
+PUBLIC void
+rfree(void *ptr)
 {
 #ifdef HASMALLOCSIZE
-  allocated_size = allocated_size - malloc_size(ptr);
+	allocated_size = (allocated_size - malloc_size(ptr));
 #endif
-  if (ptr == NULL) {		/* Sparky  3/16/95  */
-    fprintf(stderr, "Hoser!  Null ptr passed to rfree!!\n");
-  } else {
-    free_count++;
-    free(ptr);
-  }
+
+	if (ptr == NULL) {
+		fprintf(stderr, "Hoser! Null ptr passed to rfree!\n");
+	} else {
+		free_count++;
+		free(ptr);
+	}
 }
 
-PUBLIC void strfree (char *string)
+PUBLIC void
+strfree(char *string)
 {
-  /* This routine is often called on strings that are either
-     a rmalloc'd value or NULL.  So it's not an error to see
-     a NULL here.  --mann
-  */
-  if (string != NULL) rfree (string);
+	if (string != NULL)
+		rfree(string);
 }
