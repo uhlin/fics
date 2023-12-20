@@ -22,6 +22,8 @@ install:
 	install -d $(DESTDIR)$(FICS_HOME)/data/com_help
 	install -m 0644 $(ROOT)data/commands $(DESTDIR)$(FICS_HOME)/data
 	install -d $(DESTDIR)$(FICS_HOME)/data/help
+	$(ROOT)scripts/i-data-help.sh $(ROOT)data/help \
+	    $(DESTDIR)$(FICS_HOME)/data/help
 	install -d $(DESTDIR)$(FICS_HOME)/data/index
 	install -d $(DESTDIR)$(FICS_HOME)/data/info
 	install -d $(DESTDIR)$(FICS_HOME)/data/lists
