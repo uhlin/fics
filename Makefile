@@ -21,3 +21,4 @@ include common.mk
 .PHONY: clean
 
 include $(TARGETS_DIR)clean.mk
+include $(TARGETS_DIR)install.mk
