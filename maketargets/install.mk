@@ -15,3 +15,17 @@ install:
 	install -d $(DESTDIR)$(FICS_HOME)/data/admin
 	$(ROOT)scripts/i-data-admin.sh $(ROOT)data/admin \
 	    $(DESTDIR)$(FICS_HOME)/data/admin
+	install -d $(DESTDIR)$(FICS_HOME)/data/boards
+	install -d $(DESTDIR)$(FICS_HOME)/data/book
+	install -d $(DESTDIR)$(FICS_HOME)/data/com_help
+	install -m 0644 $(ROOT)data/commands $(DESTDIR)$(FICS_HOME)/data
+	install -d $(DESTDIR)$(FICS_HOME)/data/help
+	install -d $(DESTDIR)$(FICS_HOME)/data/index
+	install -d $(DESTDIR)$(FICS_HOME)/data/info
+	install -d $(DESTDIR)$(FICS_HOME)/data/lists
+	install -d $(DESTDIR)$(FICS_HOME)/data/messages
+	install -d $(DESTDIR)$(FICS_HOME)/data/news
+	install -d $(DESTDIR)$(FICS_HOME)/data/Spanish
+	install -d $(DESTDIR)$(FICS_HOME)/data/stats
+	install -d $(DESTDIR)$(FICS_HOME)/data/usage
+	install -d $(DESTDIR)$(FICS_HOME)/data/uscf
