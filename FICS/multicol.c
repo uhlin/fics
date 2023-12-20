@@ -135,12 +135,12 @@ PUBLIC int multicol_pprint(multicol * m, int player, int cols, int space)
   return 0;
 }
 
-PUBLIC int multicol_end(multicol * m)
+PUBLIC int
+multicol_end(multicol *m)
 {
-  int i;
-  for (i = 0; i < m->num; i++)
-    rfree(m->strArray[i]);
-  rfree(m->strArray);
-  rfree(m);
-  return 0;
+	for (int i = 0; i < m->num; i++)
+		rfree(m->strArray[i]);
+	rfree(m->strArray);
+	rfree(m);
+	return 0;
 }
