@@ -38,8 +38,8 @@
 #include "rmalloc.h"
 #include "utils.h"
 
-PUBLIC game *garray = NULL;
-PUBLIC int g_num = 0;
+PUBLIC game	*garray = NULL;
+PUBLIC int	 g_num = 0;
 
 PRIVATE int get_empty_slot()
 /* this method is awful! how about allocation as we need it and freeing
