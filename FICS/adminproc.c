@@ -934,21 +934,12 @@ PUBLIC int com_addplayer(int p, param_list param)
     parray[p1].passwd = xstrdup(password);
   }
   parray[p1].registered = 1;
-/*  parray[p1].network_player = 0; */
   parray[p1].rated = 1;
   player_add_comment(p, p1, "Player added by addplayer.");
   player_save(p1);
   player_remove(p1);
   pprintf(p, "Added: >%s< >%s< >%s< >%s<\n", newplayer, newname, newemail, password);
   if (strcmp(newemail, "none")) {
-/*
-    sprintf(text, "\nYou have been added as a local player.\n\nLogin Name: "
-	    "%s\nFull Name: %s\nEmail Address: %s\nInitial Password: "
-	    "%s\n\nIf any of this information is incorrect, please "
-	    "contact the administrator\nto get it corrected.\n\n"
-	"Please write down your password.\n\nRegards,\n\nThe FICS admins\n",
-	    newplayer, newname, newemail, password);
-*/
 
    sprintf(text, "\nYour player account has been created.\n\n"
    "Login Name: %s\nFull Name: %s\nEmail Address: %s\nInitial Password: %s\n\n"
@@ -1389,10 +1380,6 @@ PRIVATE void SetRating(int p1, param_list param, statistics *s)
   s->num = s->win + s->los + s->dra;
   if (s->num == 0) {
     s->ltime = 0L;
-#if 0
-    s->dra = 1;
-    s->num = 1;
-#endif
   } else {
     s->ltime = time(0);
   }
