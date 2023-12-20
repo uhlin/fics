@@ -144,46 +144,39 @@ typedef struct _game {
 extern game *garray;
 extern int g_num;
 
-extern int game_new(void);
-extern int game_zero(int);
-extern int game_free(int);
-extern int game_clear(int);
-extern int game_remove(int);
-extern int game_finish(int);
-extern void MakeFENpos (int, char *);
-
-extern char *game_time_str(int, int, int, int);
-extern char *game_str(int, int, int, int, int, char *, char *);
-extern int game_isblitz(int, int, int, int, char *, char *);
-
-extern void send_board_to(int, int);
-extern void send_boards(int);
-extern void game_update_time(int);
-extern void game_update_times(void);
-
-extern char *movesToString(int, int);
-extern char *EndSym(int);
-extern char *EndString(int, int);
-
-extern void game_disconnect(int, int);
-
-extern int CharToPiece(char);
-extern int PieceToChar(int);
-extern int got_attr_value();
-extern int ReadGameAttrs();
-extern int game_read(int, int, int);
-extern int game_delete(int, int);
-extern int game_save(int);
-extern void RemHist (char *);
-
-extern int journal_get_info(int,char,char*,int*,
- char*,int*,char*,int*,int*,char*,
- char*,char*,char*);
-extern void addjournalitem(int,char,char*,int,char*,int,char*,int,int,
-              char*, char*, char* ,char*);
-extern int pgames(int, int, char *);
-extern int pjournal(int, int, char *);
-extern void game_write_complete(int, int, char *);
-extern int game_count(void);
+extern char	*EndString(int, int);
+extern char	*EndSym(int);
+extern char	*game_str(int, int, int, int, int, char *, char *);
+extern char	*game_time_str(int, int, int, int);
+extern char	*movesToString(int, int);
+extern int	 CharToPiece(char);
+extern int	 PieceToChar(int);
+extern int	 ReadGameAttrs();
+extern int	 game_clear(int);
+extern int	 game_count(void);
+extern int	 game_delete(int, int);
+extern int	 game_finish(int);
+extern int	 game_free(int);
+extern int	 game_isblitz(int, int, int, int, char *, char *);
+extern int	 game_new(void);
+extern int	 game_read(int, int, int);
+extern int	 game_remove(int);
+extern int	 game_save(int);
+extern int	 game_zero(int);
+extern int	 got_attr_value();
+extern int	 journal_get_info(int, char, char *, int *, char *, int *,
+		     char *, int *, int *, char *, char *, char *, char *);
+extern int	 pgames(int, int, char *);
+extern int	 pjournal(int, int, char *);
+extern void	 MakeFENpos(int, char *);
+extern void	 RemHist(char *);
+extern void	 addjournalitem(int, char, char *, int, char *, int, char *,
+		     int, int, char *, char *, char *, char *);
+extern void	 game_disconnect(int, int);
+extern void	 game_update_time(int);
+extern void	 game_update_times(void);
+extern void	 game_write_complete(int, int, char *);
+extern void	 send_board_to(int, int);
+extern void	 send_boards(int);
 
 #endif
