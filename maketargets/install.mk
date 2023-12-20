@@ -17,6 +17,10 @@ install:
 	    $(DESTDIR)$(FICS_HOME)/data/admin
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards/standard
+	install -m 0644 $(ROOT)data/boards/standard/standard \
+	    $(DESTDIR)$(FICS_HOME)/data/boards/standard
+	install -m 0644 $(ROOT)data/boards/std.board \
+	    $(DESTDIR)$(FICS_HOME)/data/boards
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards/wild
 	install -d $(DESTDIR)$(FICS_HOME)/data/book
 	$(ROOT)scripts/i-data-book.sh $(ROOT)data/book \
