@@ -44,11 +44,6 @@ extern char *rstr[];
 #define GAME_ACTIVE 2
 #define GAME_EXAMINE 3 /* examine is now 3 */
 
-/*
-#define GAME_STORED 3
-#define GAME_EXAMINE 4
-*/
-
 #define TYPE_UNTIMED 0
 #define TYPE_BLITZ 1
 #define TYPE_STAND 2
@@ -83,10 +78,6 @@ extern char *rstr[];
 #define END_ADJWIN 16
 #define END_ADJABORT 17
 #define END_COURTESYADJOURN 18
-
-#if 0
-typedef unsigned char boardList_t[74];
-#endif
 
 typedef struct _game {
   /* Saved in the game file */
@@ -170,14 +161,6 @@ extern void send_boards(int);
 extern void game_update_time(int);
 extern void game_update_times(void);
 
-/* #define MAXOLDGAMES 50 
-
-extern int FindOldGameFor(int);
-extern int RemoveOldGamesForPlayer(int);
-extern int ReallyRemoveOldGamesForPlayer(int);
-extern int NewOldGame(int);
-Kill this oldgame rubbish - wastes memory - DAV */
-
 extern char *movesToString(int, int);
 extern char *EndSym(int);
 extern char *EndString(int, int);
@@ -203,7 +186,4 @@ extern int pjournal(int, int, char *);
 extern void game_write_complete(int, int, char *);
 extern int game_count(void);
 
-/* extern time_t time(); */
-
 #endif
-
