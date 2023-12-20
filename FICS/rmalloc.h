@@ -25,14 +25,13 @@
 #ifndef _RMALLOC_H
 #define _RMALLOC_H
 
-extern unsigned int allocated_size;
-extern unsigned int malloc_count;
-extern unsigned int free_count;
+extern unsigned int	allocated_size;
+extern unsigned int	malloc_count;
+extern unsigned int	free_count;
 
-extern void *rmalloc(int);
-extern void *rrealloc(void *, int);
-extern void rfree(void *);
-extern void strfree(char *);
+extern void	*rmalloc(int);
+extern void	*rrealloc(void *, int);
+extern void	 rfree(void *);
+extern void	 strfree(char *);
 
 #endif /* _RMALLOC_H */
-
