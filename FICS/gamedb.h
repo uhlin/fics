@@ -48,8 +48,8 @@ extern char	*rstr[];
 #define TYPE_UNTIMED     0
 #define TYPE_BLITZ       1
 #define TYPE_STAND       2
-#define TYPE_NONSTANDARD 3 
-#define TYPE_WILD        4 
+#define TYPE_NONSTANDARD 3
+#define TYPE_WILD        4
 #define TYPE_LIGHT       5
 #define TYPE_BUGHOUSE    6
 
@@ -81,65 +81,64 @@ extern char	*rstr[];
 #define END_COURTESYADJOURN   18
 
 typedef struct _game {
-  /* Saved in the game file */
-  int wInitTime, wIncrement;
-  int bInitTime, bIncrement;
-  time_t timeOfStart;
+	/*
+	 * Saved in the game file.
+	 */
+	int	 wInitTime, wIncrement;
+	int	 bInitTime, bIncrement;
+	time_t	 timeOfStart;
+
 #ifdef TIMESEAL
-  int wLastRealTime;
-  int wRealTime;
-  int wTimeWhenReceivedMove;
-  int wTimeWhenMoved;
-  int bLastRealTime;
-  int bRealTime;
-  int bTimeWhenReceivedMove;
-  int bTimeWhenMoved;
-  int flag_pending;
-  unsigned long flag_check_time;
+	int		 bLastRealTime;
+	int		 bRealTime;
+	int		 bTimeWhenMoved;
+	int		 bTimeWhenReceivedMove;
+	int		 flag_pending;
+	int		 wLastRealTime;
+	int		 wRealTime;
+	int		 wTimeWhenMoved;
+	int		 wTimeWhenReceivedMove;
+	unsigned long	 flag_check_time;
 #endif
-  int wTime;
-  int bTime;
-  int clockStopped;
-  int rated;
-  int private;
-  int type;
-  int passes; /* For simul's */
-  int numHalfMoves;
-  move_t *moveList;       /* primary movelist */
-  unsigned char FENstartPos[74];    /* Save the starting position. */
-  game_state_t game_state;
-/* This is now in moveList, and FENstartPos.  -- hersco */
-/*
-  int boardListSize;
-  boardList_t *boardList;
-  boardList_t boardList[500];    
-*/
-  char white_name[18];    /* to hold the playername even after he disconnects */        
-  char black_name[18];    
-  int white_rating;
-  int black_rating;
 
-  /* Not saved in game file */
-  int revertHalfMove;
-  int totalHalfMoves;
-  int white;
-  int black;
-  /* int old_white; */ /* Contains the old game player number */
-  /* int old_black; */ /* Contains the old game player number */
-  int link;
-  int status;
-  int moveListSize; /* Total allocated in *moveList */
-  int examHalfMoves;
-  move_t *examMoveList;     /* extra movelist for examine */
-  int examMoveListSize;  
+	int		 wTime;
+	int		 bTime;
+	int		 clockStopped;
+	int		 rated;
+	int		 private;
+	int		 type;
+	int		 passes;		// For simul's
+	int		 numHalfMoves;
+	move_t		*moveList;		// Primary movelist
+	unsigned char	 FENstartPos[74];	// Save the starting position
+	game_state_t	 game_state;
+	char		 white_name[18];	// To hold the playername even
+						// after he disconnects
+	char		 black_name[18];
+	int		 white_rating;
+	int		 black_rating;
 
-  unsigned startTime;    /* The relative time the game started  */
-  unsigned lastMoveTime; /* Last time a move was made */
-  unsigned lastDecTime;  /* Last time a players clock was decremented */
+	/*
+	 * Not saved in game file
+	 */
+	int	 revertHalfMove;
+	int	 totalHalfMoves;
+	int	 white;
+	int	 black;
+	int	 link;
+	int	 status;
+	int	 moveListSize;     // Total allocated in '*moveList'
+	int	 examHalfMoves;
+	move_t	*examMoveList;     // Extra movelist for examine
+	int	 examMoveListSize;
 
-  int result;
-  int winner;
+	unsigned int startTime;		// The relative time the game started
+	unsigned int lastMoveTime;	// Last time a move was made
+	unsigned int lastDecTime;	// Last time a players clock was
+					// decremented
 
+	int result;
+	int winner;
 } game;
 
 extern game	*garray;
