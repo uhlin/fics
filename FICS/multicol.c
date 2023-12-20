@@ -77,62 +77,78 @@ PUBLIC int multicol_store_sorted(multicol * m, char *str)
   return 0;
 }
 
-PUBLIC int multicol_pprint(multicol * m, int player, int cols, int space)
+PUBLIC int
+multicol_pprint(multicol *m, int player, int cols, int space)
 {
-  int i;
-  int maxWidth = 0;
-  int numPerLine;
-  int numLines;
-  int on, theone, len;
-  int done;
-  int temp;
-  char *tempptr;
+	char	*tempptr;
+	int	 done;
+	int	 i;
+	int	 maxWidth = 0;
+	int	 numLines;
+	int	 numPerLine;
+	int	 on, theone, len;
+	int	 temp;
 
-  pprintf(player, "\n");
-  for (i = 0; i < m->num; i++) {
-    tempptr = m->strArray[i];
-    temp = strlen(tempptr);	/* loon: yes, this is pathetic */
-    for (; *tempptr; tempptr++) {
-      if (*tempptr == '\033')
-	temp -= 4;
-    }
-    if (temp > maxWidth)
-      maxWidth = temp;
-  }
-  maxWidth += space;
-  numPerLine = cols / maxWidth;
-  numLines = m->num / numPerLine;
-  if (numLines * numPerLine < m->num)
-    numLines++;
-  on = 0;
-  done = 0;
-  while (!done) {
-    for (i = 0; i < numPerLine; i++) {
-      theone = on + numLines * i;
-      if (theone >= m->num) {
-	break;
-      }
-      tempptr = m->strArray[theone];
-      temp = strlen(tempptr);	/* loon: yes, still pathetic */
-      for (; *tempptr; tempptr++) {
-	if (*tempptr == '\033')
-	  temp -= 4;
-      }
-      len = maxWidth - temp;
-      if (i == numPerLine - 1)
-	len -= space;
-      pprintf(player, "%s", m->strArray[theone]);
-      while (len) {
-	pprintf(player, " ");
-	len--;
-      }
-    }
-    pprintf(player, "\n");
-    on += 1;
-    if (on >= numLines)
-      break;
-  }
-  return 0;
+	pprintf(player, "\n");
+
+	for (i = 0; i < m->num; i++) {
+		tempptr = m->strArray[i];
+		temp = strlen(tempptr); // loon: yes, this is pathetic
+
+		for (; *tempptr; tempptr++) {
+			if (*tempptr == '\033')
+				temp -= 4;
+		}
+
+		if (temp > maxWidth)
+			maxWidth = temp;
+	}
+
+	maxWidth += space;
+
+	numPerLine	= (cols / maxWidth);
+	numLines	= (m->num / numPerLine);
+
+	if ((numLines * numPerLine) < m->num)
+		numLines++;
+
+	on = 0;
+	done = 0;
+
+	while (!done) {
+		for (i = 0; i < numPerLine; i++) {
+			if ((theone = on + numLines * i) >= m->num)
+				break;
+
+			tempptr = m->strArray[theone];
+			temp = strlen(tempptr);   // loon: yes, still pathetic
+
+			for (; *tempptr; tempptr++) {
+				if (*tempptr == '\033')
+					temp -= 4;
+			}
+
+			len = maxWidth - temp;
+
+			if (i == (numPerLine - 1))
+				len -= space;
+
+			pprintf(player, "%s", m->strArray[theone]);
+
+			while (len) {
+				pprintf(player, " ");
+				len--;
+			}
+		}
+
+		pprintf(player, "\n");
+		on += 1;
+
+		if (on >= numLines)
+			break;
+	}
+
+	return 0;
 }
 
 PUBLIC int
