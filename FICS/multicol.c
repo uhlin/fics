@@ -29,18 +29,19 @@
 #include "rmalloc.h"
 #include "utils.h"
 
-PUBLIC multicol *multicol_start(int maxArray)
+PUBLIC multicol *
+multicol_start(int maxArray)
 {
-  int i;
-  multicol *m;
+	multicol *m;
 
-  m = (multicol *) rmalloc(sizeof(multicol));
-  m->arraySize = maxArray;
-  m->num = 0;
-  m->strArray = (char **) rmalloc(sizeof(char *) * m->arraySize);
-  for (i = 0; i < m->arraySize; i++)
-    m->strArray[i] = NULL;
-  return m;
+	m = rmalloc(sizeof(multicol));
+	m->arraySize	= maxArray;
+	m->num		= 0;
+	m->strArray	= rmalloc(sizeof(char *) * m->arraySize);
+
+	for (int i = 0; i < m->arraySize; i++)
+		m->strArray[i] = NULL;
+	return m;
 }
 
 PUBLIC int
