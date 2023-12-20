@@ -25,11 +25,10 @@
 #ifndef _MULTICOL_H
 #define _MULTICOL_H
 
-typedef struct _multicol
-{
-  int arraySize;
-  int num;
-  char **strArray;
+typedef struct _multicol {
+	int	arraySize;
+	int	num;
+	char**	strArray;
 } multicol;
 
 extern int	 multicol_end(multicol *);
