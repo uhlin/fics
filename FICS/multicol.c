@@ -23,11 +23,11 @@
 */
 
 #include "stdinclude.h"
-
 #include "common.h"
+
 #include "multicol.h"
-#include "utils.h"
 #include "rmalloc.h"
+#include "utils.h"
 
 PUBLIC multicol *multicol_start(int maxArray)
 {
