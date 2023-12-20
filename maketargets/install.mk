@@ -17,6 +17,8 @@ install:
 	    $(DESTDIR)$(FICS_HOME)/data/admin
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards
 	install -d $(DESTDIR)$(FICS_HOME)/data/book
+	$(ROOT)scripts/i-data-book.sh $(ROOT)data/book \
+	    $(DESTDIR)$(FICS_HOME)/data/book
 	install -d $(DESTDIR)$(FICS_HOME)/data/com_help
 	install -m 0644 $(ROOT)data/commands $(DESTDIR)$(FICS_HOME)/data
 	install -d $(DESTDIR)$(FICS_HOME)/data/help
