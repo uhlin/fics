@@ -54,27 +54,28 @@ PUBLIC int multicol_store(multicol * m, char *str)
   return 0;
 }
 
-PUBLIC int multicol_store_sorted(multicol * m, char *str)
-/* use this instead of milticol_store to print a list sorted */
-{
-  int i;
-  int found = 0;
-  if (m->num >= m->arraySize)
-    return -1;
-  if (!str)
-    return -1;
-  for (i = m->num; (i > 0) && (!found); i--) {
-    if (strcasecmp(str, m->strArray[i - 1]) >= 0) {
-      found = 1;
-      m->strArray[i] = xstrdup(str);
-    } else {
-      m->strArray[i] = m->strArray[i - 1];
-    }
-  }
-  if (!found)
-    m->strArray[0] = xstrdup(str);
-  m->num++;
-  return 0;
+PUBLIC int
+multicol_store_sorted(multicol *m, char *str)
+{	// Use this instead of multicol_store() to print a list sorted.
+	int found = 0;
+
+	if (m == NULL || str == NULL || m->num >= m->arraySize)
+		return -1;
+
+	for (int i = m->num; i > 0 && !found; i--) {
+		if (strcasecmp(str, m->strArray[i - 1]) >= 0) {
+			found = 1;
+			m->strArray[i] = xstrdup(str);
+		} else {
+			m->strArray[i] = m->strArray[i - 1];
+		}
+	}
+
+	if (!found)
+		m->strArray[0] = xstrdup(str);
+
+	m->num++;
+	return 0;
 }
 
 PUBLIC int
