@@ -27,9 +27,9 @@
 
 #include "common.h"
 
-PUBLIC unsigned int allocated_size = 0;
-PUBLIC unsigned int malloc_count = 0;
-PUBLIC unsigned int free_count = 0;
+PUBLIC unsigned int	allocated_size = 0;
+PUBLIC unsigned int	malloc_count = 0;
+PUBLIC unsigned int	free_count = 0;
 
 PUBLIC void *
 rmalloc(int byteSize)
