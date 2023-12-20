@@ -29,13 +29,6 @@
 #include "utils.h"
 #include "rmalloc.h"
 
-/* grimm */
-#if defined(SGI)
-#else
-/* char *strchr( char *s, int c); */
-#endif
-/* added for warning */
-
 PUBLIC multicol *multicol_start(int maxArray)
 {
   int i;
