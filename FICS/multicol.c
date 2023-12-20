@@ -43,15 +43,14 @@ PUBLIC multicol *multicol_start(int maxArray)
   return m;
 }
 
-PUBLIC int multicol_store(multicol * m, char *str)
+PUBLIC int
+multicol_store(multicol *m, char *str)
 {
-  if (m->num >= m->arraySize)
-    return -1;
-  if (!str)
-    return -1;
-  m->strArray[m->num] = xstrdup(str);
-  m->num++;
-  return 0;
+	if (m == NULL || str == NULL || m->num >= m->arraySize)
+		return -1;
+	m->strArray[m->num] = xstrdup(str);
+	m->num++;
+	return 0;
 }
 
 PUBLIC int
