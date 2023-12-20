@@ -28,6 +28,8 @@ install:
 	install -d $(DESTDIR)$(FICS_HOME)/data/info
 	install -d $(DESTDIR)$(FICS_HOME)/data/lists
 	install -d $(DESTDIR)$(FICS_HOME)/data/messages
+	$(ROOT)scripts/i-data-messages.sh $(ROOT)data/messages \
+	    $(DESTDIR)$(FICS_HOME)/data/messages
 	install -d $(DESTDIR)$(FICS_HOME)/data/news
 	install -d $(DESTDIR)$(FICS_HOME)/data/Spanish
 	install -d $(DESTDIR)$(FICS_HOME)/data/stats
