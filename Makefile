@@ -18,7 +18,7 @@ include FICS/build.mk
 # common rules
 include common.mk
 
-.PHONY: clean
+.PHONY: clean install
 
 include $(TARGETS_DIR)clean.mk
 include $(TARGETS_DIR)install.mk
