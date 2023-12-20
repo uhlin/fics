@@ -288,85 +288,113 @@ PUBLIC int com_canewsf(int p, param_list param)
  *   all" will display all items.
  *
  */
-PUBLIC int com_anews(int p, param_list param)
+PUBLIC int
+com_anews(int p, param_list param)
 {
-  FILE *fp;
-  char filename[MAX_FILENAME_SIZE];
-  char junk[MAX_LINE_SIZE];
-  char *junkp;
-  int crtime, found = 0;
-  char count[10];
+	FILE		*fp;
+	char		*junkp;
+	char		 count[10];
+	char		 filename[MAX_FILENAME_SIZE];
+	char		 junk[MAX_LINE_SIZE];
+	int		 found = 0;
+	long int	 lval;
+	time_t		 crtime;
 
-  sprintf(filename, "%s/newadminnews.index", news_dir);
-  fp = fopen(filename, "r");
-  if (!fp) {
-    fprintf(stderr, "Cant find news index.\n");
-    return COM_OK;
-  }
+	sprintf(filename, "%s/newadminnews.index", news_dir);
 
-  if (param[0].type == 0) {
+	if ((fp = fopen(filename, "r")) == NULL) {
+		fprintf(stderr, "Cant find news index.\n");
+		return COM_OK;
+	}
 
-    /* no params - then just display index over news */
-    sprintf(filename, "%s/newadminnews.index", news_dir);
-    pprintf(p, "Index of recent admin news items:\n");
-    fgets(junk, MAX_LINE_SIZE, fp);
-    sscanf(junk, "%d %s", &crtime, count);
-    rscan_news2(fp, p, 9);
-    junkp = junk;
-    junkp = nextword(junkp);
-    junkp = nextword(junkp);
-    pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-    fclose(fp);
+	if (param[0].type == 0) {
+		/*
+		 * No params - then just display index over news.
+		 */
 
-  } else if ((param[0].type == TYPE_WORD) && !strcmp(param[0].val.word, "all")) {
-    /* param all - displays all news items */
-    pprintf(p, "Index of all admin news items:\n");
-    fgets(junk, MAX_LINE_SIZE, fp);
-    sscanf(junk, "%d %s", &crtime, count);
-    rscan_news(fp, p, 0);
-    junkp = junk;
-    junkp = nextword(junkp);
-    junkp = nextword(junkp);
-    pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)), junkp);
-    fclose(fp);
+		sprintf(filename, "%s/newadminnews.index", news_dir);
 
-  } else {
+		pprintf(p, "Index of recent admin news items:\n");
+		fgets(junk, MAX_LINE_SIZE, fp);
+		sscanf(junk, "%ld %s", &lval, count);
+		rscan_news2(fp, p, 9);
 
-    while (!feof(fp) && !found) {
-      junkp = junk;
-      fgets(junk, MAX_LINE_SIZE, fp);
-      if (feof(fp))
-        break;
-      if (strlen(junk) > 1) {
-        sscanf(junkp, "%d %s", &crtime, count);
-        if (!strcmp(count, param[0].val.word)) {
-          found = 1;
-          junkp = nextword(junkp);
-          junkp = nextword(junkp);
-          pprintf(p, "ANEWS %3s (%s) %s\n", count, fix_time(strltime(&crtime)),
-		  junkp);
-        }
-      }
-    }
-    fclose(fp);
-    if (!found) {
-      pprintf(p, "Bad index number!\n");
-      return COM_OK;
-    }
-    /* file exists - show it */
-    sprintf(filename, "%s/adminnews.%s", news_dir, param[0].val.word);
-    fp = fopen(filename, "r");
-    if (!fp) {
-      pprintf(p, "No more info.\n");
-      return COM_OK;
-    }
-    fclose(fp);
-    sprintf(filename, "adminnews.%s", param[0].val.word);
-    if (psend_file(p, news_dir, filename) < 0) {
-      pprintf(p, "Internal error - couldn't send news file!\n");
-    }
-  }
-  return COM_OK;
+		junkp = junk;
+		junkp = nextword(junkp);
+		junkp = nextword(junkp);
+
+		crtime = lval;
+		pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)),
+		    junkp);
+		fclose(fp);
+	} else if (param[0].type == TYPE_WORD &&
+	    !strcmp(param[0].val.word, "all")) {
+		/*
+		 * Param all - displays all news items.
+		 */
+
+		pprintf(p, "Index of all admin news items:\n");
+		fgets(junk, MAX_LINE_SIZE, fp);
+		sscanf(junk, "%ld %s", &lval, count);
+		rscan_news(fp, p, 0);
+
+		junkp = junk;
+		junkp = nextword(junkp);
+		junkp = nextword(junkp);
+
+		crtime = lval;
+		pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)),
+		    junkp);
+		fclose(fp);
+	} else {
+		while (!feof(fp) && !found) {
+			junkp = junk;
+			fgets(junk, MAX_LINE_SIZE, fp);
+
+			if (feof(fp))
+				break;
+
+			if (strlen(junk) > 1) {
+				sscanf(junkp, "%ld %s", &lval, count);
+				crtime = lval;
+
+				if (!strcmp(count, param[0].val.word)) {
+					found = 1;
+
+					junkp = nextword(junkp);
+					junkp = nextword(junkp);
+
+					pprintf(p, "ANEWS %3s (%s) %s\n", count,
+					    fix_time(strltime(&crtime)), junkp);
+				}
+			}
+		}
+
+		fclose(fp);
+
+		if (!found) {
+			pprintf(p, "Bad index number!\n");
+			return COM_OK;
+		}
+
+		sprintf(filename, "%s/adminnews.%s", news_dir,
+		    param[0].val.word);
+
+		if ((fp = fopen(filename, "r")) == NULL) {
+			pprintf(p, "No more info.\n");
+			return COM_OK;
+		}
+
+		fclose(fp);
+		sprintf(filename, "adminnews.%s", param[0].val.word);
+
+		if (psend_file(p, news_dir, filename) < 0) {
+			pprintf(p, "Internal error - couldn't send news file!"
+			    "\n");
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int strcmpwild(char *mainstr, char *searchstr)
