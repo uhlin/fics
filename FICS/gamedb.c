@@ -1020,7 +1020,7 @@ ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 	    &g->bInitTime,
 	    &g->bIncrement);
 
-	if ((version < 3) && (!(g->bInitTime)))
+	if (version < 3 && !g->bInitTime)
 		g->bInitTime = g->wInitTime;
 
 	fscanf(fp, "%lx", &g->timeOfStart);
