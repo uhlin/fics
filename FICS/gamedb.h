@@ -141,8 +141,8 @@ typedef struct _game {
 
 } game;
 
-extern game *garray;
-extern int g_num;
+extern game	*garray;
+extern int	 g_num;
 
 extern char	*EndString(int, int);
 extern char	*EndSym(int);
