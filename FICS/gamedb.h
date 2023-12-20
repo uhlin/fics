@@ -26,58 +26,59 @@
 #define _GAMEDB_H
 
 #include <time.h>
+
 #include "board.h"
 
-extern char *bstr[];
-extern char *rstr[];
+extern char	*bstr[];
+extern char	*rstr[];
 
-#define GAMEFILE_VERSION 3
-#define MAX_GLINE_SIZE 1024
+#define GAMEFILE_VERSION	3
+#define MAX_GLINE_SIZE		1024
 
-#define REL_GAME 0
-#define REL_SPOS 1
-#define REL_REFRESH 2
-#define REL_EXAMINE 3
+#define REL_GAME         0
+#define REL_SPOS         1
+#define REL_REFRESH      2
+#define REL_EXAMINE      3
 
-#define GAME_EMPTY 0
-#define GAME_NEW 1
-#define GAME_ACTIVE 2
-#define GAME_EXAMINE 3 /* examine is now 3 */
+#define GAME_EMPTY       0
+#define GAME_NEW         1
+#define GAME_ACTIVE      2
+#define GAME_EXAMINE     3
 
-#define TYPE_UNTIMED 0
-#define TYPE_BLITZ 1
-#define TYPE_STAND 2
+#define TYPE_UNTIMED     0
+#define TYPE_BLITZ       1
+#define TYPE_STAND       2
 #define TYPE_NONSTANDARD 3 
-#define TYPE_WILD 4 
-#define TYPE_LIGHT 5
-#define TYPE_BUGHOUSE 6
+#define TYPE_WILD        4 
+#define TYPE_LIGHT       5
+#define TYPE_BUGHOUSE    6
 
 #ifdef TIMESEAL
-#define FLAG_CHECKING -1
-#define FLAG_NONE 0
-#define FLAG_CALLED 1
-#define FLAG_ABORT 2
+#define FLAG_CHECKING	-1
+#define FLAG_NONE	0
+#define FLAG_CALLED	1
+#define FLAG_ABORT	2
 #endif
 
-#define END_CHECKMATE 0
-#define END_RESIGN 1
-#define END_FLAG 2
-#define END_AGREEDDRAW 3
-#define END_REPETITION 4
-#define END_50MOVERULE 5
-#define END_ADJOURN 6
-#define END_LOSTCONNECTION 7
-#define END_ABORT 8
-#define END_STALEMATE 9
-#define END_NOTENDED 10
-#define END_COURTESY 11
-#define END_BOTHFLAG 12
-#define END_NOMATERIAL 13
-#define END_FLAGNOMATERIAL 14
-#define END_ADJDRAW 15
-#define END_ADJWIN 16
-#define END_ADJABORT 17
-#define END_COURTESYADJOURN 18
+#define END_CHECKMATE         0
+#define END_RESIGN            1
+#define END_FLAG              2
+#define END_AGREEDDRAW        3
+#define END_REPETITION        4
+#define END_50MOVERULE        5
+#define END_ADJOURN           6
+#define END_LOSTCONNECTION    7
+#define END_ABORT             8
+#define END_STALEMATE         9
+#define END_NOTENDED          10
+#define END_COURTESY          11
+#define END_BOTHFLAG          12
+#define END_NOMATERIAL        13
+#define END_FLAGNOMATERIAL    14
+#define END_ADJDRAW           15
+#define END_ADJWIN            16
+#define END_ADJABORT          17
+#define END_COURTESYADJOURN   18
 
 typedef struct _game {
   /* Saved in the game file */
