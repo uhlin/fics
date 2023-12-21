@@ -44,3 +44,4 @@ install:
 	install -d $(DESTDIR)$(FICS_HOME)/games
 	install -d $(DESTDIR)$(FICS_HOME)/games/adjourned
 	install -d $(DESTDIR)$(FICS_HOME)/players
+	$(ROOT)scripts/i-players.sh $(DESTDIR)$(FICS_HOME)/players
