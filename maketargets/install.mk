@@ -41,3 +41,6 @@ install:
 	install -d $(DESTDIR)$(FICS_HOME)/data/stats
 	install -d $(DESTDIR)$(FICS_HOME)/data/usage
 	install -d $(DESTDIR)$(FICS_HOME)/data/uscf
+	install -d $(DESTDIR)$(FICS_HOME)/games
+	install -d $(DESTDIR)$(FICS_HOME)/games/adjourned
+	install -d $(DESTDIR)$(FICS_HOME)/players
