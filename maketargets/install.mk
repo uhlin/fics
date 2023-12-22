@@ -17,6 +17,8 @@ install:
 	    $(DESTDIR)$(FICS_HOME)/data/admin
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards/openings
+	$(ROOT)scripts/i-data-boards-openings.sh $(ROOT)data/boards/openings \
+	    $(DESTDIR)$(FICS_HOME)/data/boards/openings
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards/standard
 	install -m 0644 $(ROOT)data/boards/standard/standard \
 	    $(DESTDIR)$(FICS_HOME)/data/boards/standard
