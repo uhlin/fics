@@ -16,6 +16,7 @@ install:
 	$(ROOT)scripts/i-data-admin.sh $(ROOT)data/admin \
 	    $(DESTDIR)$(FICS_HOME)/data/admin
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards
+	install -d $(DESTDIR)$(FICS_HOME)/data/boards/openings
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards/standard
 	install -m 0644 $(ROOT)data/boards/standard/standard \
 	    $(DESTDIR)$(FICS_HOME)/data/boards/standard
