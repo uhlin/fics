@@ -10,6 +10,7 @@ i_data_stats () {
 logons.log
 newratingsV2_data
 rank.blitz
+rank.lightning
 rank.std
 rank.wild
 "
