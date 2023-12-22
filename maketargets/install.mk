@@ -45,6 +45,7 @@ install:
 	install -d $(DESTDIR)$(FICS_HOME)/data/news
 	install -d $(DESTDIR)$(FICS_HOME)/data/Spanish
 	install -d $(DESTDIR)$(FICS_HOME)/data/stats
+	$(ROOT)scripts/i-data-stats.sh $(DESTDIR)$(FICS_HOME)/data/stats
 	install -d $(DESTDIR)$(FICS_HOME)/data/usage
 	$(ROOT)scripts/i-data-usage.sh $(ROOT)data/usage \
 	    $(DESTDIR)$(FICS_HOME)/data/usage
