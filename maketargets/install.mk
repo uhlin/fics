@@ -48,6 +48,8 @@ install:
 	$(ROOT)scripts/i-data-usage.sh $(ROOT)data/usage \
 	    $(DESTDIR)$(FICS_HOME)/data/usage
 	install -d $(DESTDIR)$(FICS_HOME)/data/uscf
+	$(ROOT)scripts/i-data-uscf.sh $(ROOT)data/uscf \
+	    $(DESTDIR)$(FICS_HOME)/data/uscf
 	install -d $(DESTDIR)$(FICS_HOME)/games
 	install -d $(DESTDIR)$(FICS_HOME)/games/adjourned
 	install -d $(DESTDIR)$(FICS_HOME)/games/history
