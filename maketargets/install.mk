@@ -36,6 +36,8 @@ install:
 	$(ROOT)scripts/i-data-help.sh $(ROOT)data/help \
 	    $(DESTDIR)$(FICS_HOME)/data/help
 	install -d $(DESTDIR)$(FICS_HOME)/data/index
+	$(ROOT)scripts/i-data-index.sh $(ROOT)data/index \
+	    $(DESTDIR)$(FICS_HOME)/data/index
 	install -d $(DESTDIR)$(FICS_HOME)/data/info
 	install -d $(DESTDIR)$(FICS_HOME)/data/lists
 	$(ROOT)scripts/i-data-lists.sh $(DESTDIR)$(FICS_HOME)/data/lists
