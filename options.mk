@@ -3,7 +3,7 @@
 # Locations of the data, players and games directories.
 FICS_HOME ?= /home/chess/fics
 
-PREFIX ?= /usr/local
+PREFIX ?= /home/chess
 
 CC ?= cc
 CFLAGS = -O2 -Wall -pipe -std=c11
