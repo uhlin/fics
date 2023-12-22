@@ -29,6 +29,8 @@ install:
 	$(ROOT)scripts/i-data-book.sh $(ROOT)data/book \
 	    $(DESTDIR)$(FICS_HOME)/data/book
 	install -d $(DESTDIR)$(FICS_HOME)/data/com_help
+	install -m 0755 $(ROOT)data/com_help/makelinks.sh \
+	    $(DESTDIR)$(FICS_HOME)/data/com_help
 	install -m 0644 $(ROOT)data/commands $(DESTDIR)$(FICS_HOME)/data
 	install -d $(DESTDIR)$(FICS_HOME)/data/help
 	$(ROOT)scripts/i-data-help.sh $(ROOT)data/help \
