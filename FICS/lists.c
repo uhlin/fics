@@ -471,8 +471,6 @@ com_showlist(int p, param_list param)
 		if ((gl = list_findpartial(p, param[0].val.word, 0)) == NULL)
 			return COM_OK;
 
-		rights = ListArray[gl->which].rights;
-
 		{ // display the list
 			multicol *m = multicol_start(gl->numMembers);
 
