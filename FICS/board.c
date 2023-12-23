@@ -382,21 +382,41 @@ PUBLIC int style2(game_state_t *b, move_t *ml)
   return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
 }
 
-/* Experimental vt-100 ANSI board for dark backgrounds */
-PUBLIC int style3(game_state_t *b, move_t *ml)
+/*
+ * Experimental vt-100 ANSI board for dark backgrounds
+ */
+PUBLIC int
+style3(game_state_t *b, move_t *ml)
 {
-  static char *wp[] = {"   ", " P ", " N ", " B ", " R ", " Q ", " K "};
-  static char *bp[] = {"   ", " *P", " *N", " *B", " *R", " *Q", " *K"};
-  static char *wsqr = "\033[0m";
-  static char *bsqr = "\033[7m";
-  static char *top = "\t+------------------------+\n";
-  static char *mid = "";
-  static char *start = "|";
-  static char *end = "\033[0m|";
-  static char *label = "\t  a  b  c  d  e  f  g  h\n";
-  static char *blabel = "\t  h  g  f  e  d  c  b  a\n";
+	static char	*wp[] = {
+		"   ",
+		" P ",
+		" N ",
+		" B ",
+		" R ",
+		" Q ",
+		" K "
+	};
+	static char	*bp[] = {
+		"   ",
+		" *P",
+		" *N",
+		" *B",
+		" *R",
+		" *Q",
+		" *K"
+	};
+	static char	*wsqr = "\033[0m";
+	static char	*bsqr = "\033[7m";
+	static char	*top = "\t+------------------------+\n";
+	static char	*mid = "";
+	static char	*start = "|";
+	static char	*end = "\033[0m|";
+	static char	*label = "\t  a  b  c  d  e  f  g  h\n";
+	static char	*blabel = "\t  h  g  f  e  d  c  b  a\n";
 
-  return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
+	return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label,
+	    blabel);
 }
 
 /*
