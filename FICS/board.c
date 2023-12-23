@@ -58,20 +58,21 @@ PUBLIC char *wpstring[] = {" ", "P", "N", "B", "R", "Q", "K"};
 PUBLIC char *bpstring[] = {" ", "p", "n", "b", "r", "q", "k"};
 
 PUBLIC int pieceValues[7] = {0, 1, 3, 3, 5, 9, 0};
-PUBLIC int (*styleFuncs[MAX_STYLES]) () = {
-  style1,
-  style2,
-  style3,
-  style4,
-  style5,
-  style6,
-  style7,
-  style8,
-  style9,
-  style10,
-  style11,
-  style12,
-  style13
+
+PUBLIC int (*styleFuncs[MAX_STYLES])() = {
+	style1,
+	style2,
+	style3,
+	style4,
+	style5,
+	style6,
+	style7,
+	style8,
+	style9,
+	style10,
+	style11,
+	style12,
+	style13
 };
 
 PRIVATE const int mach_type = (1<<7) | (1<<8) | (1<<9) | (1<<10) | (1<<11);
