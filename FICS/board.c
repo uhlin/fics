@@ -92,22 +92,28 @@ PRIVATE int	 orient;
 PRIVATE int	 forPlayer;
 PRIVATE int	 myTurn;
 
-PUBLIC int board_init(game_state_t *b, char *category, char *board)
+PUBLIC int
+board_init(game_state_t *b, char *category, char *board)
 {
-  int retval;
-  int wval;
+	int	retval;
+	int	wval;
 
-  if (!category || !board || !category[0] || !board[0])
-    retval = board_read_file("standard", "standard", b);
-  else {
-    if (!strcmp(category, "wild")) {
-      if (sscanf(board, "%d", &wval) == 1 && wval >= 1 && wval <= 4)
-	wild_update(wval);
-    }
-    retval = board_read_file(category, board, b);
-  }
-  b->gameNum = -1;
-  return retval;
+	if (category == NULL || board == NULL ||
+	    !category[0] || !board[0]) {
+		retval = board_read_file("standard", "standard", b);
+	} else {
+		if (!strcmp(category, "wild")) {
+			if (sscanf(board, "%d", &wval) == 1 &&
+			    wval >= 1 &&
+			    wval <= 4)
+				wild_update(wval);
+		}
+
+		retval = board_read_file(category, board, b);
+	}
+
+	b->gameNum = -1;
+	return retval;
 }
 
 PUBLIC void
