@@ -882,90 +882,123 @@ PUBLIC int com_raisedead(int p, param_list param)
  *
  *      addplayer Hawk u940456@daimi.aau.dk Henrik Gram
  */
-PUBLIC int com_addplayer(int p, param_list param)
+PUBLIC int
+com_addplayer(int p, param_list param)
 {
-  char text[2048];
-  char *newplayer = param[0].val.word;
-  char *newname = param[2].val.string;
-  char *newemail = param[1].val.word;
-  char password[PASSLEN + 1];
-  char newplayerlower[MAX_LOGIN_NAME];
-  char salt[3];
-  int p1, lookup;
-  int i;
+	char	*newemail = param[1].val.word;
+	char	*newname = param[2].val.string;
+	char	*newplayer = param[0].val.word;
+	char	 newplayerlower[MAX_LOGIN_NAME];
+	char	 password[PASSLEN + 1];
+	char	 salt[3];
+	char	 text[2048];
+	int	 i;
+	int	 p1;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (strlen(newplayer) >= MAX_LOGIN_NAME) {
-    pprintf(p, "Player name is too long\n");
-    return COM_OK;
-  }
-  if (strlen(newplayer) < 3) {
-    pprintf(p, "Player name is too short\n");
-    return COM_OK;
-  }
-  if (!alphastring(newplayer)) {
-    pprintf(p, "Illegal characters in player name. Only A-Za-z allowed.\n");
-    return COM_OK;
-  }
-  strcpy(newplayerlower, newplayer);
-  stolower(newplayerlower);
-  p1 = player_new();
-  lookup = player_read(p1, newplayerlower);
-  if (!lookup) {
-   pprintf(p, "A player by the name %s is already registered.\n", newplayerlower);
-   player_remove(p1);
-   return COM_OK;
-  }
-  parray[p1].name = xstrdup(newplayer);
-  parray[p1].login = xstrdup(newplayerlower);
-  parray[p1].fullName = xstrdup(newname);
-  parray[p1].emailAddress = xstrdup(newemail);
-  if (strcmp(newemail, "none")) {
-    for (i = 0; i < PASSLEN; i++) {
-      password[i] = 'a' + rand() % 26;
-    }
-    password[i] = '\0';
-    salt[0] = 'a' + rand() % 26;
-    salt[1] = 'a' + rand() % 26;
-    salt[2] = '\0';
-    parray[p1].passwd = xstrdup(crypt(password, salt));
-  } else {
-    password[0] = '\0';
-    parray[p1].passwd = xstrdup(password);
-  }
-  parray[p1].registered = 1;
-  parray[p1].rated = 1;
-  player_add_comment(p, p1, "Player added by addplayer.");
-  player_save(p1);
-  player_remove(p1);
-  pprintf(p, "Added: >%s< >%s< >%s< >%s<\n", newplayer, newname, newemail, password);
-  if (strcmp(newemail, "none")) {
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-   sprintf(text, "\nYour player account has been created.\n\n"
-   "Login Name: %s\nFull Name: %s\nEmail Address: %s\nInitial Password: %s\n\n"
-   "If any of this information is incorrect, please contact the administrator\n"
-   "to get it corrected.\n\n"
-   "You may change your password with the password command on the the server.\n"
-   "\nPlease be advised that if this is an unauthorized duplicate account for\n"
-   "you, by using it you take the risk of being banned from accessing this\n"
-   "chess server.\n\nTo connect to the server and use this account:\n\n"
-   "    telnet %s 5000\n\nand enter your handle name and password.\n\n"
-   "Regards,\n\nThe FICS admins\n",
-        newplayer, newname, newemail, password, fics_hostname);
+	if (strlen(newplayer) >= MAX_LOGIN_NAME) {
+		pprintf(p, "Player name is too long\n");
+		return COM_OK;
+	}
 
-    mail_string_to_address(newemail, "FICS Account Created", text);
-    if ((p1 = player_find_part_login(newplayer)) >= 0) {
-      pprintf_prompt(p1, "\n\nYou are now registered! Confirmation together with\npassword is sent to your email address.\n\n");
-      return COM_OK;
-    }
-    return COM_OK;
-  } else {
-    if ((p1 = player_find_part_login(newplayer)) >= 0) {
-      pprintf_prompt(p1, "\n\nYou are now registered! Your have NO password!\n\n");
-      return COM_OK;
-    }
-  }
-  return COM_OK;
+	if (strlen(newplayer) < 3) {
+		pprintf(p, "Player name is too short\n");
+		return COM_OK;
+	}
+
+	if (!alphastring(newplayer)) {
+		pprintf(p, "Illegal characters in player name. "
+		    "Only A-Za-z allowed.\n");
+		return COM_OK;
+	}
+
+	strcpy(newplayerlower, newplayer);
+	stolower(newplayerlower);
+
+	p1 = player_new();
+
+	if (!player_read(p1, newplayerlower)) {
+		pprintf(p, "A player by the name %s is already registered.\n",
+		    newplayerlower);
+		player_remove(p1);
+		return COM_OK;
+	}
+
+	parray[p1].name            = xstrdup(newplayer);
+	parray[p1].login           = xstrdup(newplayerlower);
+	parray[p1].fullName        = xstrdup(newname);
+	parray[p1].emailAddress    = xstrdup(newemail);
+
+	if (strcmp(newemail, "none")) {
+		for (i = 0; i < PASSLEN; i++)
+			password[i] = 'a' + rand() % 26;
+		password[i] = '\0';
+
+		salt[0] = ('a' + rand() % 26);
+		salt[1] = ('a' + rand() % 26);
+		salt[2] = '\0';
+
+		parray[p1].passwd = xstrdup(crypt(password, salt));
+	} else {
+		password[0] = '\0';
+		parray[p1].passwd = xstrdup(password);
+	}
+
+	parray[p1].registered	= 1;
+	parray[p1].rated	= 1;
+
+	player_add_comment(p, p1, "Player added by addplayer.");
+	player_save(p1);
+	player_remove(p1);
+
+	pprintf(p, "Added: >%s< >%s< >%s< >%s<\n", newplayer, newname, newemail,
+	    password);
+
+	if (strcmp(newemail, "none")) {
+		sprintf(text, "\nYour player account has been created.\n\n"
+		    "Login Name: %s\n"
+		    "Full Name: %s\n"
+		    "Email Address: %s\n"
+		    "Initial Password: %s\n\n"
+
+		    "If any of this information is incorrect, please\n"
+		    "contact the administrator to get it corrected.\n\n"
+
+		    "You may change your password with the password\n"
+		    "command on the server.\n\n"
+
+		    "Please be advised that if this is an unauthorized\n"
+		    "duplicate account for you, by using it you take\n"
+		    "the risk of being banned from accessing this chess\n"
+		    "server.\n\n"
+
+		    "To connect to the server and use this account:\n\n"
+		    "\ttelnet %s 5000\n\n"
+		    "and enter your handle name and password.\n\n"
+
+		    "Regards,\n\nThe FICS admins\n", newplayer, newname,
+		    newemail, password, fics_hostname);
+
+		mail_string_to_address(newemail, "FICS Account Created", text);
+
+		if ((p1 = player_find_part_login(newplayer)) >= 0) {
+			pprintf_prompt(p1, "\n\nYou are now registered! "
+			    "Confirmation together with\npassword is sent to "
+			    "your email address.\n\n");
+			return COM_OK;
+		}
+
+		return COM_OK;
+	} else {
+		if ((p1 = player_find_part_login(newplayer)) >= 0) {
+			pprintf_prompt(p1, "\n\nYou are now registered! "
+			    "You have NO password!\n\n");
+			return COM_OK;
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int com_pose(int p, param_list param)
