@@ -32,6 +32,12 @@
 #include "playerdb.h"
 #include "utils.h"
 
+#define WHITE_SQUARE	1
+#define BLACK_SQUARE	0
+#define ANY_SQUARE	-1
+
+#define SquareColor(f, r) ((f ^ r) & 1)
+
 extern int style1();
 extern int style2();
 extern int style3();
@@ -1111,11 +1117,6 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 	fclose(fp);
 	return 0;
 }
-
-#define WHITE_SQUARE 1
-#define BLACK_SQUARE 0
-#define ANY_SQUARE -1
-#define SquareColor(f, r) ((f ^ r) & 1)
 
 PRIVATE void
 place_piece(board_t b, int piece, int squareColor)
