@@ -90,9 +90,11 @@ typedef struct _game_state_t {
   int gameNum;
 } game_state_t;
 
+/*
+ * If a drop move, then 'fromFile' is ALG_DROP and 'fromRank' is
+ * piece.
+ */
 #define ALG_DROP -2
-
-/* bughouse: if a drop move, then fromFile is ALG_DROP and fromRank is piece */
 
 typedef struct _move_t {
   int color;
