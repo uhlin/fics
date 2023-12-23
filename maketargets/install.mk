@@ -34,6 +34,7 @@ install-init:
 	install -d $(DESTDIR)$(FICS_HOME)/data/news
 	install -d $(DESTDIR)$(FICS_HOME)/data/Spanish
 	install -d $(DESTDIR)$(FICS_HOME)/data/stats
+	install -d $(DESTDIR)$(FICS_HOME)/data/stats/player_data
 	install -d $(DESTDIR)$(FICS_HOME)/data/usage
 	install -d $(DESTDIR)$(FICS_HOME)/data/uscf
 	install -d $(DESTDIR)$(FICS_HOME)/games
