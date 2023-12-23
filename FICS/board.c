@@ -175,33 +175,44 @@ PRIVATE char *append_holding_display(char *buf, game_state_t *gs, int white)
   return buf;
 }
 
-PUBLIC void update_holding(int g, int pieceCaptured)
+PUBLIC void
+update_holding(int g, int pieceCaptured)
 {
-  int p = piecetype(pieceCaptured);
-  int c = colorval(pieceCaptured);
-  game_state_t *gs = &garray[g].game_state;
-  int pp, pl;
-  char tmp1[80], tmp2[80];
+	char		 tmp1[80];
+	char		 tmp2[80];
+	game_state_t	*gs = &garray[g].game_state;
+	int		 c = colorval(pieceCaptured);
+	int		 p = piecetype(pieceCaptured);
+	int		 pp, pl;
 
-  if (c == WHITE) {
-    c = 0;
-    pp = garray[g].white;
-  } else {
-    c = 1;
-    pp = garray[g].black;
-  }
-  gs->holding[c][p-1]++;
-  tmp1[0] = '\0';
-  append_holding_machine(tmp1, g, c, p);
-  sprintf(tmp2, "Game %d %s received: %s -> [%s]\n", g+1,
-          parray[pp].name, wpstring[p], holding_str(gs->holding[c]));
-  for (pl = 0; pl < p_num; pl++) {
-    if (parray[pl].status == PLAYER_EMPTY)
-      continue;
-    if (player_is_observe(pl, g) || (parray[pl].game == g)) {
-      pprintf_prompt(pl, IsMachineStyle(parray[pl].style) ? tmp1 : tmp2);
+	if (c == WHITE) {
+		c = 0;
+		pp = garray[g].white;
+	} else {
+		c = 1;
+		pp = garray[g].black;
 	}
-  }
+
+	gs->holding[c][p - 1]++;
+
+	tmp1[0] = '\0';
+	append_holding_machine(tmp1, g, c, p);
+
+	sprintf(tmp2, "Game %d %s received: %s -> [%s]\n",
+	    (g + 1),
+	    parray[pp].name,
+	    wpstring[p],
+	    holding_str(gs->holding[c]));
+
+	for (pl = 0; pl < p_num; pl++) {
+		if (parray[pl].status == PLAYER_EMPTY)
+			continue;
+
+		if (player_is_observe(pl, g) || parray[pl].game == g) {
+			pprintf_prompt(pl, (IsMachineStyle(parray[pl].style) ?
+			    tmp1 : tmp2));
+		}
+	}
 }
 
 PUBLIC char *
