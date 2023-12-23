@@ -1012,6 +1012,8 @@ int ReadV1Moves(game *g, FILE * fp)
 int
 ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 {
+	long int lval;
+
 	fscanf(fp, "%s %s", g->white_name, g->black_name);
 	fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
 	fscanf(fp, "%d %d %d %d",
@@ -1023,7 +1025,9 @@ ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 	if (version < 3 && !g->bInitTime)
 		g->bInitTime = g->wInitTime;
 
-	fscanf(fp, "%lx", &g->timeOfStart);
+	fscanf(fp, "%ld", &lval);
+	g->timeOfStart = lval;
+
 	fscanf(fp, "%d %d", &g->wTime, &g->bTime);
 
 	if (version > 1)
@@ -1168,16 +1172,19 @@ PUBLIC int game_delete(int wp, int bp)
 void
 WriteGameFile(FILE *fp, int g)
 {
-	game	*gg = &garray[g];
-	player	*bp = &parray[gg->black];
-	player	*wp = &parray[gg->white];
+	game		*gg = &garray[g];
+	long int	 lval;
+	player		*bp = &parray[gg->black];
+	player		*wp = &parray[gg->white];
 
 	fprintf(fp, "v %d\n", GAMEFILE_VERSION);
 	fprintf(fp, "%s %s\n", wp->name, bp->name);
 	fprintf(fp, "%d %d\n", gg->white_rating, gg->black_rating);
 	fprintf(fp, "%d %d %d %d\n", gg->wInitTime, gg->wIncrement,
 	    gg->bInitTime, gg->bIncrement);
-	fprintf(fp, "%lx\n", gg->timeOfStart);
+
+	lval = gg->timeOfStart;
+	fprintf(fp, "%ld\n", lval);
 
 #ifdef TIMESEAL
 	fprintf(fp, "%d %d\n",
