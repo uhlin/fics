@@ -932,7 +932,7 @@ com_addplayer(int p, param_list param)
 
 	if (strcmp(newemail, "none")) {
 		for (i = 0; i < PASSLEN; i++)
-			password[i] = 'a' + rand() % 26;
+			password[i] = ('a' + rand() % 26);
 		password[i] = '\0';
 
 		salt[0] = ('a' + rand() % 26);
