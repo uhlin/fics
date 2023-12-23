@@ -510,37 +510,50 @@ PUBLIC int style8(game_state_t *b, move_t *ml)
   return 0;
 }
 
-/* last 2 moves only (previous non-verbose mode) */
-PUBLIC int style9(game_state_t *b, move_t *ml)
+/*
+ * Last 2 moves only (previous non-verbose mode).
+ */
+PUBLIC int
+style9(game_state_t *b, move_t *ml)
 {
-  int i, count;
-  char tmp[80];
-  int startmove;
+	char	tmp[80];
+	int	i, count;
+	int	startmove;
 
-  sprintf(tmp, "\nMove     %-23s%s\n",
-	  garray[b->gameNum].white_name,
-	  garray[b->gameNum].black_name);
-  strcat(bstring, tmp);
-  sprintf(tmp, "----     --------------         --------------\n");
-  strcat(bstring, tmp);
-  startmove = ((garray[b->gameNum].numHalfMoves - 3) / 2) * 2;
-  if (startmove < 0)
-    startmove = 0;
-  for (i = startmove, count = 0;
-       i < garray[b->gameNum].numHalfMoves && count < 4;
-       i++, count++) {
-    if (!(i & 0x01)) {
-      sprintf(tmp, "  %2d     ", i / 2 + 1);
-      strcat(bstring, tmp);
-    }
-    sprintf(tmp, "%-23s", move_and_time(&ml[i]));
-    strcat(bstring, tmp);
-    if (i & 0x01)
-      strcat(bstring, "\n");
-  }
-  if (i & 0x01)
-    strcat(bstring, "\n");
-  return 0;
+	sprintf(tmp, "\nMove     %-23s%s\n",
+	    garray[b->gameNum].white_name,
+	    garray[b->gameNum].black_name);
+	strcat(bstring, tmp);
+
+	sprintf(tmp, "----     --------------         --------------\n");
+	strcat(bstring, tmp);
+
+	startmove = ((garray[b->gameNum].numHalfMoves - 3) / 2) * 2;
+
+	if (startmove < 0)
+		startmove = 0;
+
+	i = startmove;
+	count = 0;
+
+	while (i < garray[b->gameNum].numHalfMoves && count < 4) {
+		if (!(i & 0x01)) {
+			sprintf(tmp, "  %2d     ", (i / 2 + 1));
+			strcat(bstring, tmp);
+		}
+
+		sprintf(tmp, "%-23s", move_and_time(&ml[i]));
+		strcat(bstring, tmp);
+
+		if (i & 0x01)
+			strcat(bstring, "\n");
+		i++;
+		count++;
+	}
+
+	if (i & 0x01)
+		strcat(bstring, "\n");
+	return 0;
 }
 
 /*
