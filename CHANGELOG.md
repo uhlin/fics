@@ -13,6 +13,7 @@ documented in this file.
   of `int`.
 - Deleted disabled code
 - Did new revisions of the following files:
+  - `board.c`
   - `eco.c`
   - `fics_addplayer.c`
   - `makerank.c`
