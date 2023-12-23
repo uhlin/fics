@@ -45,6 +45,9 @@
 #define MAX_BOARD_STRING_LEGTH 1280     /* Arbitrarily 80 * 16 */
 #define MAX_STYLES 13
 
+#define MoveToHalfMove(gs) \
+    ((((gs)->moveNum - 1) * 2) + (((gs)->onMove == WHITE) ? 0 : 1))
+
 #define W_PAWN		(PAWN | WHITE)
 #define W_KNIGHT	(KNIGHT | WHITE)
 #define W_BISHOP	(BISHOP | WHITE)
@@ -105,8 +108,6 @@ typedef struct _move_t {
   unsigned atTime;
   unsigned tookTime;
 } move_t;
-
-#define MoveToHalfMove( gs ) ((((gs)->moveNum - 1) * 2) + (((gs)->onMove == WHITE) ? 0 : 1))
 
 extern char	*wpstring[];
 extern char	*bpstring[];
