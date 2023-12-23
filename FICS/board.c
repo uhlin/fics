@@ -331,21 +331,41 @@ PRIVATE int genstyle(game_state_t *b, move_t *ml, char *wp[], char *bp[],
   return 0;
 }
 
-/* Experimental ANSI board for colour representation */
-PUBLIC int style13(game_state_t *b, move_t *ml)
+/*
+ * Experimental ANSI board for colour representation
+ */
+PUBLIC int
+style13(game_state_t *b, move_t *ml)
 {
-  static char *wp[] = {"   ", "\033[37m\033[1m P ", "\033[37m\033[1m N ", "\033[37m\033[1m B ", "\033[37m\033[1m R ", "\033[37m\033[1m Q ", "\033[37m\033[1m K "};
-  static char *bp[] = {"   ", "\033[21m\033[37m P ", "\033[21m\033[37m N ", "\033[21m\033[37m B ", "\033[21m\033[37m R ", "\033[21m\033[37m Q ", "\033[21m\033[37m K "};
-  static char *wsqr = "\033[40m";
-  static char *bsqr = "\033[45m";
-  static char *top = "\t+------------------------+\n";
-  static char *mid = "";
-  static char *start = "|";
-  static char *end = "\033[0m|";
-  static char *label = "\t  a  b  c  d  e  f  g  h\n";
-  static char *blabel = "\t  h  g  f  e  d  c  b  a\n";
+	static char	*wp[] = {
+		"   ",
+		"\033[37m\033[1m P ",
+		"\033[37m\033[1m N ",
+		"\033[37m\033[1m B ",
+		"\033[37m\033[1m R ",
+		"\033[37m\033[1m Q ",
+		"\033[37m\033[1m K "
+	};
+	static char	*bp[] = {
+		"   ",
+		"\033[21m\033[37m P ",
+		"\033[21m\033[37m N ",
+		"\033[21m\033[37m B ",
+		"\033[21m\033[37m R ",
+		"\033[21m\033[37m Q ",
+		"\033[21m\033[37m K "
+	};
+	static char	*wsqr = "\033[40m";
+	static char	*bsqr = "\033[45m";
+	static char	*top = "\t+------------------------+\n";
+	static char	*mid = "";
+	static char	*start = "|";
+	static char	*end = "\033[0m|";
+	static char	*label = "\t  a  b  c  d  e  f  g  h\n";
+	static char	*blabel = "\t  h  g  f  e  d  c  b  a\n";
 
-  return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
+	return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label,
+	    blabel);
 }
 
 /*
