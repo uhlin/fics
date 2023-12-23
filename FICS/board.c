@@ -929,137 +929,170 @@ PRIVATE void place_piece(board_t b, int piece, int squareColor)
   }
 }
 
-PUBLIC void wild_update(int style)
+PUBLIC void
+wild_update(int style)
 {
-  int f, r, i;
-  board_t b;
+	board_t b;
+	int f, r, i;
 
-  for (f = 0; f < 8; f++)
-    for (r = 0; r < 8; r++)
-      b[f][r] = NOPIECE;
-  for (f = 0; f < 8; f++) {
-    b[f][1] = W_PAWN;
-    b[f][6] = B_PAWN;
-  }
-  switch (style) {
-  case 1:
-    if (rand() & 0x01) {
-      b[4][0] = W_KING;
-      b[3][0] = W_QUEEN;
-    } else {
-      b[3][0] = W_KING;
-      b[4][0] = W_QUEEN;
-    }
-    if (rand() & 0x01) {
-      b[4][7] = B_KING;
-      b[3][7] = B_QUEEN;
-    } else {
-      b[3][7] = B_KING;
-      b[4][7] = B_QUEEN;
-    }
-    b[0][0] = b[7][0] = W_ROOK;
-    b[0][7] = b[7][7] = B_ROOK;
-    /* Must do bishops before knights to be sure opposite colored squares are
-       available. */
-    place_piece(b, W_BISHOP, WHITE_SQUARE);
-    place_piece(b, W_BISHOP, BLACK_SQUARE);
-    place_piece(b, W_KNIGHT, ANY_SQUARE);
-    place_piece(b, W_KNIGHT, ANY_SQUARE);
-    place_piece(b, B_BISHOP, WHITE_SQUARE);
-    place_piece(b, B_BISHOP, BLACK_SQUARE);
-    place_piece(b, B_KNIGHT, ANY_SQUARE);
-    place_piece(b, B_KNIGHT, ANY_SQUARE);
-    break;
-  case 2:
-    place_piece(b, W_KING, ANY_SQUARE);
-    place_piece(b, W_QUEEN, ANY_SQUARE);
-    place_piece(b, W_ROOK, ANY_SQUARE);
-    place_piece(b, W_ROOK, ANY_SQUARE);
-    place_piece(b, W_BISHOP, ANY_SQUARE);
-    place_piece(b, W_BISHOP, ANY_SQUARE);
-    place_piece(b, W_KNIGHT, ANY_SQUARE);
-    place_piece(b, W_KNIGHT, ANY_SQUARE);
-    /* Black mirrors White */
-    for (i = 0; i < 8; i++) {
-      b[i][7] = b[i][0] | BLACK;
-    }
-    break;
-  case 3:
-    /* Generate White king on random square plus random set of pieces */
-    place_piece(b, W_KING, ANY_SQUARE);
-    for (i = 0; i < 8; i++) {
-      if (b[i][0] != W_KING) {
-	b[i][0] = (rand() % 4) + 2;
-      }
-    }
-    /* Black mirrors White */
-    for (i = 0; i < 8; i++) {
-      b[i][7] = b[i][0] | BLACK;
-    }
-    break;
-  case 4:
-    /* Generate White king on random square plus random set of pieces */
-    place_piece(b, W_KING, ANY_SQUARE);
-    for (i = 0; i < 8; i++) {
-      if (b[i][0] != W_KING) {
-	b[i][0] = (rand() % 4) + 2;
-      }
-    }
-    /* Black has same set of pieces, but randomly permuted, except that Black
-       must have the same number of bishops on white squares as White has on
-       black squares, and vice versa.  So we must place Black's bishops first
-       to be sure there are enough squares left of the correct color. */
-    for (i = 0; i < 8; i++) {
-      if (b[i][0] == W_BISHOP) {
-	place_piece(b, B_BISHOP, !SquareColor(i, 0));
-      }
-    }
-    for (i = 0; i < 8; i++) {
-      if (b[i][0] != W_BISHOP) {
-	place_piece(b, b[i][0] | BLACK, ANY_SQUARE);
-      }
-    }
-    break;
-  default:
-    return;
-    break;
-  }
-  {
-    FILE *fp;
-    char fname[MAX_FILENAME_SIZE + 1];
-    int onPiece;
+	for (f = 0; f < 8; f++) {
+		for (r = 0; r < 8; r++)
+			b[f][r] = NOPIECE;
+	}
 
-    sprintf(fname, "%s/wild/%d", board_dir, style);
-    fp = fopen(fname, "w");
-    if (!fp) {
-      fprintf(stderr, "FICS: Can't write file name %s\n", fname);
-      return;
-    }
-    fprintf(fp, "W:");
-    onPiece = -1;
-    for (r = 1; r >= 0; r--) {
-      for (f = 0; f < 8; f++) {
-	if (onPiece < 0 || b[f][r] != onPiece) {
-	  onPiece = b[f][r];
-	  fprintf(fp, " %s", wpstring[piecetype(b[f][r])]);
+	for (f = 0; f < 8; f++) {
+		b[f][1] = W_PAWN;
+		b[f][6] = B_PAWN;
 	}
-	fprintf(fp, " %c%c", f + 'a', r + '1');
-      }
-    }
-    fprintf(fp, "\nB:");
-    onPiece = -1;
-    for (r = 6; r < 8; r++) {
-      for (f = 0; f < 8; f++) {
-	if (onPiece < 0 || b[f][r] != onPiece) {
-	  onPiece = b[f][r];
-	  fprintf(fp, " %s", wpstring[piecetype(b[f][r])]);
+
+	switch (style) {
+	case 1:
+		if (rand() & 0x01) {
+			b[4][0] = W_KING;
+			b[3][0] = W_QUEEN;
+		} else {
+			b[3][0] = W_KING;
+			b[4][0] = W_QUEEN;
+		}
+		if (rand() & 0x01) {
+			b[4][7] = B_KING;
+			b[3][7] = B_QUEEN;
+		} else {
+			b[3][7] = B_KING;
+			b[4][7] = B_QUEEN;
+		}
+
+		b[0][0] = b[7][0] = W_ROOK;
+		b[0][7] = b[7][7] = B_ROOK;
+
+		/*
+		 * Must do bishops before knights to be sure opposite
+		 * colored squares are available.
+		 */
+		place_piece(b, W_BISHOP, WHITE_SQUARE);
+		place_piece(b, W_BISHOP, BLACK_SQUARE);
+		place_piece(b, W_KNIGHT, ANY_SQUARE);
+		place_piece(b, W_KNIGHT, ANY_SQUARE);
+		place_piece(b, B_BISHOP, WHITE_SQUARE);
+		place_piece(b, B_BISHOP, BLACK_SQUARE);
+		place_piece(b, B_KNIGHT, ANY_SQUARE);
+		place_piece(b, B_KNIGHT, ANY_SQUARE);
+		break;
+	case 2:
+		place_piece(b, W_KING, ANY_SQUARE);
+		place_piece(b, W_QUEEN, ANY_SQUARE);
+		place_piece(b, W_ROOK, ANY_SQUARE);
+		place_piece(b, W_ROOK, ANY_SQUARE);
+		place_piece(b, W_BISHOP, ANY_SQUARE);
+		place_piece(b, W_BISHOP, ANY_SQUARE);
+		place_piece(b, W_KNIGHT, ANY_SQUARE);
+		place_piece(b, W_KNIGHT, ANY_SQUARE);
+
+		/* Black mirrors White */
+		for (i = 0; i < 8; i++)
+			b[i][7] = (b[i][0] | BLACK);
+		break;
+	case 3:
+		/*
+		 * Generate White king on random square plus random
+		 * set of pieces.
+		 */
+		place_piece(b, W_KING, ANY_SQUARE);
+
+		for (i = 0; i < 8; i++) {
+			if (b[i][0] != W_KING) {
+				b[i][0] = (rand() % 4) + 2;
+			}
+		}
+
+		/* Black mirrors White */
+		for (i = 0; i < 8; i++)
+			b[i][7] = (b[i][0] | BLACK);
+		break;
+	case 4:
+		/*
+		 * Generate White king on random square plus random
+		 * set of pieces.
+		 */
+		place_piece(b, W_KING, ANY_SQUARE);
+
+		for (i = 0; i < 8; i++) {
+			if (b[i][0] != W_KING)
+				b[i][0] = (rand() % 4) + 2;
+		}
+
+		/*
+		 * Black has the same set of pieces, but randomly
+		 * permuted, except that Black must have the same
+		 * number of bishops on white squares as White has on
+		 * black squares, and vice versa. So we must place
+		 * Black's bishops first to be sure there are enough
+		 * squares left of the correct color.
+		 */
+
+		for (i = 0; i < 8; i++) {
+			if (b[i][0] == W_BISHOP)
+				place_piece(b, B_BISHOP, !SquareColor(i, 0));
+		}
+
+		for (i = 0; i < 8; i++) {
+			if (b[i][0] != W_BISHOP)
+				place_piece(b, (b[i][0] | BLACK), ANY_SQUARE);
+		}
+		break;
+	default:
+		return;
+		break;
 	}
-	fprintf(fp, " %c%c", f + 'a', r + '1');
-      }
-    }
-    fprintf(fp, "\n");
-    fclose(fp);
-  }
+
+	{
+		FILE	*fp;
+		char	 fname[MAX_FILENAME_SIZE + 1];
+		int	 onPiece;
+
+		sprintf(fname, "%s/wild/%d", board_dir, style);
+
+		if ((fp = fopen(fname, "w")) == NULL) {
+			fprintf(stderr, "FICS: Can't write file name %s\n",
+			    fname);
+			return;
+		}
+
+		fprintf(fp, "W:");
+		onPiece = -1;
+
+		for (r = 1; r >= 0; r--) {
+			for (f = 0; f < 8; f++) {
+				if (onPiece < 0 || b[f][r] != onPiece) {
+					onPiece = b[f][r];
+
+					fprintf(fp, " %s", wpstring
+					    [piecetype(b[f][r])]);
+				}
+
+				fprintf(fp, " %c%c", f + 'a', r + '1');
+			}
+		}
+
+		fprintf(fp, "\nB:");
+		onPiece = -1;
+
+		for (r = 6; r < 8; r++) {
+			for (f = 0; f < 8; f++) {
+				if (onPiece < 0 || b[f][r] != onPiece) {
+					onPiece = b[f][r];
+
+					fprintf(fp, " %s", wpstring
+					    [piecetype(b[f][r])]);
+				}
+
+				fprintf(fp, " %c%c", (f + 'a'), (r + '1'));
+			}
+		}
+
+		fprintf(fp, "\n");
+		fclose(fp);
+	}
 }
 
 PUBLIC void
