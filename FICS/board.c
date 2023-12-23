@@ -433,21 +433,40 @@ PUBLIC int style5(game_state_t *b, move_t *ml)
   return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
 }
 
-/* Email Board suggested by Thomas Fought (tlf@rsch.oclc.org) */
-PUBLIC int style6(game_state_t *b, move_t *ml)
+/*
+ * Email Board suggested by Thomas Fought (tlf@rsch.oclc.org)
+ */
+PUBLIC int
+style6(game_state_t *b, move_t *ml)
 {
-  static char *wp[] = {"    |", " wp |", " WN |", " WB |", " WR |", " WQ |", " WK |"};
-  static char *bp[] = {"    |", " bp |", " BN |", " BB |", " BR |", " BQ |", " BK |"};
-  static char *wsqr = "";
-  static char *bsqr = "";
-  static char *top = "\t-----------------------------------------\n";
-  static char *mid = "\t-----------------------------------------\n";
-  static char *start = "|";
-  static char *end = "";
-  static char *label = "\t  A    B    C    D    E    F    G    H\n";
-  static char *blabel = "\t  H    G    F    E    D    C    B    A\n";
+	static char	*wp[] = {
+		"    |",
+		" wp |",
+		" WN |",
+		" WB |",
+		" WR |",
+		" WQ |",
+		" WK |"
+	};
+	static char	*bp[] = {
+		"    |",
+		" bp |",
+		" BN |",
+		" BB |",
+		" BR |",
+		" BQ |",
+		" BK |"};
+	static char	*wsqr = "";
+	static char	*bsqr = "";
+	static char	*top = "\t-----------------------------------------\n";
+	static char	*mid = "\t-----------------------------------------\n";
+	static char	*start = "|";
+	static char	*end = "";
+	static char	*label = "\t  A    B    C    D    E    F    G    H\n";
+	static char	*blabel = "\t  H    G    F    E    D    C    B    A\n";
 
-  return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
+	return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label,
+	    blabel);
 }
 
 /*
