@@ -58,6 +58,8 @@ install: install-init
 	$(ROOT)scripts/i-data-messages.sh $(ROOT)data/messages \
 	    $(DESTDIR)$(FICS_HOME)/data/messages
 	$(ROOT)scripts/i-data-stats.sh $(DESTDIR)$(FICS_HOME)/data/stats
+	$(ROOT)scripts/i-players.sh \
+	    $(DESTDIR)$(FICS_HOME)/data/stats/player_data
 	$(ROOT)scripts/i-data-usage.sh $(ROOT)data/usage \
 	    $(DESTDIR)$(FICS_HOME)/data/usage
 	$(ROOT)scripts/i-data-uscf.sh $(ROOT)data/uscf \
