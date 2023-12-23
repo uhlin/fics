@@ -1070,7 +1070,7 @@ wild_update(int style)
 					    [piecetype(b[f][r])]);
 				}
 
-				fprintf(fp, " %c%c", f + 'a', r + '1');
+				fprintf(fp, " %c%c", (f + 'a'), (r + '1'));
 			}
 		}
 
