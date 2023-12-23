@@ -365,21 +365,41 @@ PUBLIC int style1(game_state_t *b, move_t *ml)
   return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
 }
 
-/* USA-Today Sports Center-style board */
-PUBLIC int style2(game_state_t *b, move_t *ml)
+/*
+ * USA-Today Sports Center-style board
+ */
+PUBLIC int
+style2(game_state_t *b, move_t *ml)
 {
-  static char *wp[] = {"+  ", "P  ", "N  ", "B  ", "R  ", "Q  ", "K  "};
-  static char *bp[] = {"-  ", "p' ", "n' ", "b' ", "r' ", "q' ", "k' "};
-  static char *wsqr = "";
-  static char *bsqr = "";
-  static char *top = "";
-  static char *mid = "";
-  static char *start = "";
-  static char *end = "";
-  static char *label = "\ta  b  c  d  e  f  g  h\n";
-  static char *blabel = "\th  g  f  e  d  c  b  a\n";
+	static char	*wp[] = {
+		"+  ",
+		"P  ",
+		"N  ",
+		"B  ",
+		"R  ",
+		"Q  ",
+		"K  "
+	};
+	static char	*bp[] = {
+		"-  ",
+		"p' ",
+		"n' ",
+		"b' ",
+		"r' ",
+		"q' ",
+		"k' "
+	};
+	static char	*wsqr = "";
+	static char	*bsqr = "";
+	static char	*top = "";
+	static char	*mid = "";
+	static char	*start = "";
+	static char	*end = "";
+	static char	*label = "\ta  b  c  d  e  f  g  h\n";
+	static char	*blabel = "\th  g  f  e  d  c  b  a\n";
 
-  return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
+	return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label,
+	    blabel);
 }
 
 /*
