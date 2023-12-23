@@ -50,7 +50,7 @@ PUBLIC int
 main(int argc, char *argv[])
 {
 	char	 password[PASSLEN + 1];
-	char	 salt[3];
+	char	 salt[6];
 	char	 text[2048];
 	int	 i;
 	int	 p;
@@ -113,9 +113,12 @@ main(int argc, char *argv[])
 		password[i] = 'a' + rand() % 26;
 	}
 	password[i] = '\0';
-	salt[0] = 'a' + rand() % 26;
-	salt[1] = 'a' + rand() % 26;
-	salt[2] = '\0';
+	salt[0] = '$';
+	salt[1] = '1';
+	salt[2] = '$';
+	salt[3] = ('a' + rand() % 26);
+	salt[4] = ('a' + rand() % 26);
+	salt[5] = '\0';
 	parray[p].passwd = xstrdup(crypt(password, salt));
 	parray[p].registered = 1;
 //	parray[p].network_player = !local;
