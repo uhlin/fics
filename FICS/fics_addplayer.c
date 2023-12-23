@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash	              	94/03/07	Created
    Markus Uhlin			23/12/09	Revamped the file
+   Markus Uhlin			23/12/23	Fixed crypt()
 */
 
 #include "stdinclude.h"
