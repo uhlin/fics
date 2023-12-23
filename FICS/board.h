@@ -74,20 +74,32 @@
 typedef int board_t[8][8];
 
 typedef struct _game_state_t {
-  board_t board;
-  /* for bughouse */
-  int holding[2][5];
-  /* For castling */
-  unsigned char wkmoved, wqrmoved, wkrmoved;
-  unsigned char bkmoved, bqrmoved, bkrmoved;
-  /* for ep */
-  int ep_possible[2][8];
-  /* For draws */
-  int lastIrreversable;
-  int onMove;
-  int moveNum;
-  /* Game num not saved, must be restored when read */
-  int gameNum;
+	board_t board;
+
+	/*
+	 * For bughouse
+	 */
+	int holding[2][5];
+
+	/*
+	 * For castling
+	 */
+	unsigned char	wkmoved, wqrmoved, wkrmoved;
+	unsigned char	bkmoved, bqrmoved, bkrmoved;
+
+	/*
+	 * For ep
+	 */
+	int	ep_possible[2][8];
+
+	/*
+	 * For draws
+	 */
+	int	lastIrreversable;
+	int	onMove;
+	int	moveNum;
+
+	int	gameNum;
 } game_state_t;
 
 /*
