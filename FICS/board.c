@@ -796,7 +796,7 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 		for (r = 0; r < 8; r++)
 			gs->ep_possible[f][r] = 0;
 		for (r = PAWN; r <= QUEEN; r++)
-			gs->holding[f][r-1] = 0;
+			gs->holding[f][r - 1] = 0;
 	}
 
 	gs->wkmoved = gs->wqrmoved = gs->wkrmoved = 0;
