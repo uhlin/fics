@@ -660,7 +660,7 @@ check_news(int p, int admin)
 PRIVATE int
 process_password(int p, char *password)
 {
-	char		 salt[3];
+	char		 salt[6];
 	int		 dummy;    // to hold a return value
 	int		 fd;
 	int		 messnum;
@@ -670,9 +670,12 @@ process_password(int p, char *password)
 	turn_echo_on(parray[p].socket);
 
 	if (parray[p].passwd && parray[p].registered) {
-		salt[0] = parray[p].passwd[0];
-		salt[1] = parray[p].passwd[1];
-		salt[2] = '\0';
+		salt[0] = '$';
+		salt[1] = '1';
+		salt[2] = '$';
+		salt[3] = parray[p].passwd[0];
+		salt[4] = parray[p].passwd[1];
+		salt[5] = '\0';
 
 		if (strcmp(crypt(password, salt), parray[p].passwd)) {
 			fd		= parray[p].socket;
