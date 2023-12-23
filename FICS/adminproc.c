@@ -1134,55 +1134,72 @@ PUBLIC int com_cmuzzle(int p, param_list param)
  *   of the admin who changed it, or likewise of his account status.  An
  *   email message is mailed to the player's email address as well.
  */
-PUBLIC int com_asetpasswd(int p, param_list param)
+PUBLIC int
+com_asetpasswd(int p, param_list param)
 {
-  int p1, connected;
-  char subject[400], text[10100];
-  char salt[3];
+	char	 salt[3];
+	char	 subject[400];
+	char	 text[10100];
+	int	 p1, connected;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
 
-  if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
-    pprintf(p, "You can only set password for players below your adminlevel.\n");
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  if (!parray[p1].registered) {
-    pprintf(p, "You cannot set the password of an unregistered player!\n");
-    return COM_OK;
-  }
-  if (parray[p1].passwd)
-    rfree(parray[p1].passwd);
-  if (param[1].val.word[0] == '*') {
-    parray[p1].passwd = xstrdup(param[1].val.word);
-    pprintf(p, "Account %s locked!\n", parray[p1].name);
-    sprintf(text, "Password of %s is now useless.  Your account at our FICS has been locked.\n", parray[p1].name);
-  } else {
-    salt[0] = 'a' + rand() % 26;
-    salt[1] = 'a' + rand() % 26;
-    salt[2] = '\0';
-    parray[p1].passwd = xstrdup(crypt(param[1].val.word, salt));
-    sprintf(text, "Password of %s changed to \"%s\".\n", parray[p1].name, param[1].val.word);
-    pprintf(p, "%s", text);
-  }
-  if (param[1].val.word[0] == '*') {
-    sprintf(subject, "FICS: %s has locked your account.", parray[p].name);
-    if (connected)
-      pprintf_prompt(p1, "\n%s\n", subject);
-  } else {
-    sprintf(subject, "FICS: %s has changed your password.", parray[p].name);
-    if (connected)
-      pprintf_prompt(p1, "\n%s\n", subject);
-  }
-  mail_string_to_address(parray[p1].emailAddress, subject, text);
-  player_save(p1);
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
+		pprintf(p, "You can only set password for players below your "
+		    "adminlevel.\n");
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	if (!parray[p1].registered) {
+		pprintf(p, "You cannot set the password of an unregistered "
+		    "player!\n");
+		return COM_OK;
+	}
+
+	if (parray[p1].passwd)
+		rfree(parray[p1].passwd);
+
+	if (param[1].val.word[0] == '*') {
+		parray[p1].passwd = xstrdup(param[1].val.word);
+		pprintf(p, "Account %s locked!\n", parray[p1].name);
+		sprintf(text, "Password of %s is now useless.  Your account at "
+		    "our FICS has been locked.\n", parray[p1].name);
+	} else {
+		salt[0] = ('a' + rand() % 26);
+		salt[1] = ('a' + rand() % 26);
+		salt[2] = '\0';
+
+		parray[p1].passwd = xstrdup(crypt(param[1].val.word, salt));
+
+		sprintf(text, "Password of %s changed to \"%s\".\n",
+		    parray[p1].name, param[1].val.word);
+		pprintf(p, "%s", text);
+	}
+
+	if (param[1].val.word[0] == '*') {
+		sprintf(subject, "FICS: %s has locked your account.",
+		    parray[p].name);
+		if (connected)
+			pprintf_prompt(p1, "\n%s\n", subject);
+	} else {
+		sprintf(subject, "FICS: %s has changed your password.",
+		    parray[p].name);
+		if (connected)
+			pprintf_prompt(p1, "\n%s\n", subject);
+	}
+
+	mail_string_to_address(parray[p1].emailAddress, subject, text);
+	player_save(p1);
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 /*
