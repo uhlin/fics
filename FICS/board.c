@@ -148,20 +148,23 @@ PRIVATE char *holding_str(int *holding)
   return tmp;
 }
 
-PRIVATE char *append_holding_machine(char *buf, int g, int c, int p)
+PRIVATE char *
+append_holding_machine(char *buf, int g, int c, int p)
 {
-  game_state_t *gs = &garray[g].game_state;
-  char tmp[50];
+	char		 tmp[50];
+	game_state_t	*gs = &garray[g].game_state;
 
-  sprintf(tmp, "<b1> game %d white [%s] black [", g+1, holding_str(gs->holding[0]));
-  strcat(tmp, holding_str(gs->holding[1]));
-  strcat(buf, tmp);
-  if (p) {
-    sprintf(tmp, "] <- %c%s\n", "WB"[c], wpstring[p]);
-    strcat(buf, tmp);
-  } else
-    strcat(buf, "]\n");
-  return buf;
+	sprintf(tmp, "<b1> game %d white [%s] black [", (g + 1),
+	    holding_str(gs->holding[0]));
+	strcat(tmp, holding_str(gs->holding[1]));
+	strcat(buf, tmp);
+
+	if (p) {
+		sprintf(tmp, "] <- %c%s\n", "WB"[c], wpstring[p]);
+		strcat(buf, tmp);
+	} else
+		strcat(buf, "]\n");
+	return buf;
 }
 
 PRIVATE char *
