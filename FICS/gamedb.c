@@ -22,6 +22,7 @@
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/16	Fixed compiler warnings
    Markus Uhlin                 23/12/17	Reformatted functions
+   Markus Uhlin                 23/12/23	Fixed clang warnings
 */
 
 #include "stdinclude.h"
