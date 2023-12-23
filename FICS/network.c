@@ -107,9 +107,7 @@ net_addConnection(int fd, unsigned int fromHost)
 PRIVATE int
 remConnection(int fd)
 {
-	int which;
-
-	if ((which = findConnection(fd)) < 0)
+	if (findConnection(fd) < 0)
 		return -1;
 	numConnections--;
 
