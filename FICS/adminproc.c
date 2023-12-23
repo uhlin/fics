@@ -890,7 +890,7 @@ com_addplayer(int p, param_list param)
 	char	*newplayer = param[0].val.word;
 	char	 newplayerlower[MAX_LOGIN_NAME];
 	char	 password[PASSLEN + 1];
-	char	 salt[3];
+	char	 salt[6];
 	char	 text[2048];
 	int	 i;
 	int	 p1;
@@ -935,9 +935,12 @@ com_addplayer(int p, param_list param)
 			password[i] = ('a' + rand() % 26);
 		password[i] = '\0';
 
-		salt[0] = ('a' + rand() % 26);
-		salt[1] = ('a' + rand() % 26);
-		salt[2] = '\0';
+		salt[0] = '$';
+		salt[1] = '1';
+		salt[2] = '$';
+		salt[3] = ('a' + rand() % 26);
+		salt[4] = ('a' + rand() % 26);
+		salt[5] = '\0';
 
 		parray[p1].passwd = xstrdup(crypt(password, salt));
 	} else {
@@ -1137,7 +1140,7 @@ PUBLIC int com_cmuzzle(int p, param_list param)
 PUBLIC int
 com_asetpasswd(int p, param_list param)
 {
-	char	 salt[3];
+	char	 salt[6];
 	char	 subject[400];
 	char	 text[10100];
 	int	 p1, connected;
@@ -1171,9 +1174,12 @@ com_asetpasswd(int p, param_list param)
 		sprintf(text, "Password of %s is now useless.  Your account at "
 		    "our FICS has been locked.\n", parray[p1].name);
 	} else {
-		salt[0] = ('a' + rand() % 26);
-		salt[1] = ('a' + rand() % 26);
-		salt[2] = '\0';
+		salt[0] = '$';
+		salt[1] = '1';
+		salt[2] = '$';
+		salt[3] = ('a' + rand() % 26);
+		salt[4] = ('a' + rand() % 26);
+		salt[5] = '\0';
 
 		parray[p1].passwd = xstrdup(crypt(param[1].val.word, salt));
 
