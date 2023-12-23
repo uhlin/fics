@@ -122,6 +122,4 @@ extern int board_read_file(char *, char *, game_state_t *);
 extern void wild_update(int);
 extern void wild_init(void);
 
-extern int fgetc();
-
 #endif
