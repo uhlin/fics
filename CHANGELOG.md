@@ -26,6 +26,7 @@ documented in this file.
 - Fixed bugs in `process_move()`
 - Fixed bugs in `stored_mail_moves()`
 - Fixed comparison between pointer and integer in `com_inchannel()`.
+- Fixed dead assignments
 - Fixed implicit integers
 - Fixed _multiple_ cases of use of possibly uninitialized variables.
 - Fixed _multiple_ possible buffer overflows
