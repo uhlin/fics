@@ -108,8 +108,8 @@ typedef struct _move_t {
 
 #define MoveToHalfMove( gs ) ((((gs)->moveNum - 1) * 2) + (((gs)->onMove == WHITE) ? 0 : 1))
 
-extern char *wpstring[];
-extern char *bpstring[];
+extern char	*wpstring[];
+extern char	*bpstring[];
 
 extern int pieceValues[7];
 
