@@ -537,7 +537,7 @@ com_password(int p, param_list param)
 {
 	char	*oldpassword = param[0].val.word;
 	char	*newpassword = param[1].val.word;
-	char	 salt[3];
+	char	 salt[6];
 
 	if (!parray[p].registered) {
 		pprintf(p, "Setting a password is only for registered players."
@@ -546,9 +546,12 @@ com_password(int p, param_list param)
 	}
 
 	if (parray[p].passwd) {
-		salt[0] = parray[p].passwd[0];
-		salt[1] = parray[p].passwd[1];
-		salt[2] = '\0';
+		salt[0] = '$';
+		salt[1] = '1';
+		salt[2] = '$';
+		salt[3] = parray[p].passwd[0];
+		salt[4] = parray[p].passwd[1];
+		salt[5] = '\0';
 
 		if (strcmp(crypt(oldpassword, salt), parray[p].passwd)) {
 			pprintf(p, "Incorrect password, password not changed!"
@@ -560,9 +563,12 @@ com_password(int p, param_list param)
 		parray[p].passwd = NULL;
 	}
 
-	salt[0] = ('a' + rand() % 26);
-	salt[1] = ('a' + rand() % 26);
-	salt[2] = '\0';
+	salt[0] = '$';
+	salt[1] = '1';
+	salt[2] = '$';
+	salt[3] = ('a' + rand() % 26);
+	salt[4] = ('a' + rand() % 26);
+	salt[5] = '\0';
 	parray[p].passwd = xstrdup(crypt(newpassword, salt));
 
 	pprintf(p, "Password changed to \"%s\".\n", newpassword);
