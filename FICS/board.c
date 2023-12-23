@@ -38,6 +38,8 @@
 
 #define SquareColor(f, r) ((f ^ r) & 1)
 
+#define IsMachineStyle(n) (((1<<(n)) & mach_type) != 0)
+
 extern int style1();
 extern int style2();
 extern int style3();
@@ -73,7 +75,6 @@ PUBLIC int (*styleFuncs[MAX_STYLES]) () = {
 };
 
 PRIVATE const int mach_type = (1<<7) | (1<<8) | (1<<9) | (1<<10) | (1<<11);
-#define IsMachineStyle(n) (((1<<(n)) & mach_type) != 0)
 
 PRIVATE char bstring[MAX_BOARD_STRING_LEGTH];
 
