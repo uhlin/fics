@@ -83,6 +83,15 @@ PRIVATE const int mach_type = ((1 << 7) |
 
 PRIVATE char bstring[MAX_BOARD_STRING_LEGTH];
 
+/*
+ * Globals used for each board
+ */
+PRIVATE char	*wName, *bName;
+PRIVATE int	 wTime, bTime;
+PRIVATE int	 orient;
+PRIVATE int	 forPlayer;
+PRIVATE int	 myTurn;
+
 PUBLIC int board_init(game_state_t *b, char *category, char *board)
 {
   int retval;
@@ -194,15 +203,6 @@ PUBLIC void update_holding(int g, int pieceCaptured)
 	}
   }
 }
-
-/* Globals used for each board */
-PRIVATE char *wName, *bName;
-PRIVATE int wTime, bTime;
-PRIVATE int orient;
-PRIVATE int forPlayer;
-PRIVATE int myTurn;		/* 1 = my turn, 0 = observe, -1 = other turn */
- /* 2 = examiner, -2 = observing examiner */
- /* -3 = just send position (spos/refresh) */
 
 PUBLIC char *
 board_to_string(char *wn, char *bn, int wt, int bt, game_state_t *b, move_t *ml,
