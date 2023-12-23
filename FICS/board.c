@@ -640,47 +640,63 @@ style10(game_state_t *b, move_t *ml)
 	return 0;
 }
 
-/* Same as 8, but with verbose moves ("P/e3-e4", instead of "e4") */
-PUBLIC int style11(game_state_t *b, move_t *ml)
+/*
+ * Same as 8, but with verbose moves ("P/e3-e4", instead of "e4").
+ */
+PUBLIC int
+style11(game_state_t *b, move_t *ml)
 {
-  char tmp[80];
-  int f, r;
-  int ws, bs;
+	char	tmp[80];
+	int	f, r;
+	int	ws, bs;
 
-  board_calc_strength(b, &ws, &bs);
-  sprintf(tmp, "#@#%03d%-16s%s%-16s%s", b->gameNum,
-	  garray[b->gameNum].white_name,
-	  (orient == WHITE) ? "*" : ":",
-	  garray[b->gameNum].black_name,
-	  (orient == WHITE) ? ":" : "*");
-  strcat(bstring, tmp);
-  for (r = 0; r < 8; r++) {
-    for (f = 0; f < 8; f++) {
-      if (b->board[f][r] == NOPIECE) {
-	strcat(bstring, " ");
-      } else {
-	if (colorval(b->board[f][r]) == WHITE)
-	  strcat(bstring, wpstring[piecetype(b->board[f][r])]);
-	else
-	  strcat(bstring, bpstring[piecetype(b->board[f][r])]);
-      }
-    }
-  }
-    sprintf(tmp, "%03d%s%02d%02d%05d%05d%-7s(%s)@#@\n",
-	    garray[b->gameNum].numHalfMoves / 2 + 1,
-	    (b->onMove == WHITE) ? "W" : "B",
+	board_calc_strength(b, &ws, &bs);
+
+	sprintf(tmp, "#@#%03d%-16s%s%-16s%s",
+	    b->gameNum,
+
+	    garray[b->gameNum].white_name,
+	    (orient == WHITE ? "*" : ":"),
+
+	    garray[b->gameNum].black_name,
+	    (orient == WHITE ? ":" : "*"));
+
+	strcat(bstring, tmp);
+
+	for (r = 0; r < 8; r++) {
+		for (f = 0; f < 8; f++) {
+			if (b->board[f][r] == NOPIECE) {
+				strcat(bstring, " ");
+			} else {
+				if (colorval(b->board[f][r]) == WHITE) {
+					strcat(bstring, wpstring
+					    [piecetype(b->board[f][r])]);
+				} else {
+					strcat(bstring, bpstring
+					    [piecetype(b->board[f][r])]);
+				}
+			}
+		}
+	}
+
+	sprintf(tmp, "%03d%s%02d%02d%05d%05d%-7s(%s)@#@\n",
+	    (garray[b->gameNum].numHalfMoves / 2 + 1),
+	    (b->onMove == WHITE ? "W" : "B"),
 	    ws,
 	    bs,
-	    (wTime + 5) / 10,
-	    (bTime + 5) / 10,
-	    garray[b->gameNum].numHalfMoves ?
-	    ml[garray[b->gameNum].numHalfMoves - 1].moveString :
-	    "none",
-	    garray[b->gameNum].numHalfMoves ?
-	    tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0) :
-	    "0:00");
-  strcat(bstring, tmp);
-  return 0;
+	    ((wTime + 5) / 10),
+	    ((bTime + 5) / 10),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? ml[garray[b->gameNum].numHalfMoves - 1].moveString
+	    : "none"),
+
+	    (garray[b->gameNum].numHalfMoves
+	    ? tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0)
+	    : "0:00"));
+
+	strcat(bstring, tmp);
+	return 0;
 }
 
 /*
