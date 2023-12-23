@@ -131,21 +131,21 @@ PUBLIC void board_calc_strength(game_state_t *b, int *ws, int *bs)
   }
 }
 
-PRIVATE char *holding_str(int *holding)
+PRIVATE char *
+holding_str(int *holding)
 {
-  static char tmp[30];
-  int p,i,j;
+	int p, i, j;
+	static char tmp[30];
 
-  i = 0;
-  for (p = PAWN; p <= QUEEN; p++)
-  {
-    for (j = 0; j < holding[p-1]; j++)
-    {
-      tmp[i++] = wpstring[p][0];
-    }
-  }
-  tmp[i] = '\0';
-  return tmp;
+	i = 0;
+
+	for (p = PAWN; p <= QUEEN; p++) {
+		for (j = 0; j < holding[p - 1]; j++)
+			tmp[i++] = wpstring[p][0];
+	}
+
+	tmp[i] = '\0';
+	return tmp;
 }
 
 PRIVATE char *
