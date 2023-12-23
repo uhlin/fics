@@ -1062,10 +1062,11 @@ PUBLIC void wild_update(int style)
   }
 }
 
-PUBLIC void wild_init()
+PUBLIC void
+wild_init(void)
 {
-  wild_update(1);
-  wild_update(2);
-  wild_update(3);
-  wild_update(4);
+	wild_update(1);
+	wild_update(2);
+	wild_update(3);
+	wild_update(4);
 }
