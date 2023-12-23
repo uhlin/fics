@@ -110,25 +110,28 @@ PUBLIC int board_init(game_state_t *b, char *category, char *board)
   return retval;
 }
 
-PUBLIC void board_calc_strength(game_state_t *b, int *ws, int *bs)
+PUBLIC void
+board_calc_strength(game_state_t *b, int *ws, int *bs)
 {
-  int r, f;
-  int *p;
+	int	*p;
+	int	 r, f;
 
-  *ws = *bs = 0;
-  for (f = 0; f < 8; f++) {
-    for (r = 0; r < 8; r++) {
-      if (colorval(b->board[r][f]) == WHITE)
-	p = ws;
-      else
-	p = bs;
-      *p += pieceValues[piecetype(b->board[r][f])];
-    }
-  }
-  for (r = PAWN; r <= QUEEN; r++) {
-    *ws += b->holding[0][r-1] * pieceValues[r];
-    *bs += b->holding[1][r-1] * pieceValues[r];
-  }
+	*ws = *bs = 0;
+
+	for (f = 0; f < 8; f++) {
+		for (r = 0; r < 8; r++) {
+			if (colorval(b->board[r][f]) == WHITE)
+				p = ws;
+			else
+				p = bs;
+			*p += pieceValues[piecetype(b->board[r][f])];
+		}
+	}
+
+	for (r = PAWN; r <= QUEEN; r++) {
+		*ws += (b->holding[0][r - 1] * pieceValues[r]);
+		*bs += (b->holding[1][r - 1] * pieceValues[r]);
+	}
 }
 
 PRIVATE char *
