@@ -904,29 +904,32 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 #define ANY_SQUARE -1
 #define SquareColor(f, r) ((f ^ r) & 1)
 
-PRIVATE void place_piece(board_t b, int piece, int squareColor)
+PRIVATE void
+place_piece(board_t b, int piece, int squareColor)
 {
-  int r, f;
-  int placed = 0;
+	int	placed = 0;
+	int	r, f;
 
-  if (iscolor(piece, BLACK))
-    r = 7;
-  else
-    r = 0;
+	if (iscolor(piece, BLACK))
+		r = 7;
+	else
+		r = 0;
 
-  while (!placed) {
-    if (squareColor == ANY_SQUARE) {
-      f = rand() % 8;
-    } else {
-      f = (rand() % 4) * 2;
-      if (SquareColor(f, r) != squareColor)
-	f++;
-    }
-    if ((b)[f][r] == NOPIECE) {
-      (b)[f][r] = piece;
-      placed = 1;
-    }
-  }
+	while (!placed) {
+		if (squareColor == ANY_SQUARE) {
+			f = (rand() % 8);
+		} else {
+			f = (rand() % 4) * 2;
+
+			if (SquareColor(f, r) != squareColor)
+				f++;
+		}
+
+		if ((b)[f][r] == NOPIECE) {
+			(b)[f][r] = piece;
+			placed = 1;
+		}
+	}
 }
 
 PUBLIC void
