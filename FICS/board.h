@@ -27,34 +27,37 @@
 
 #define WHITE 0x00
 #define BLACK 0x80
-#define CString( c ) (((c) == WHITE) ? "White" : "Black" )
-#define CToggle( c ) (((c) == BLACK) ? WHITE : BLACK )
 
-/* These are indexes into an array so their values are not arbitrary */
-#define NOPIECE 0x00
-#define PAWN 0x01
-#define KNIGHT 0x02
-#define BISHOP 0x03
-#define ROOK 0x04
-#define QUEEN 0x05
-#define KING 0x06
+#define CString(c) (((c) == WHITE) ? "White" : "Black")
+#define CToggle(c) (((c) == BLACK) ? WHITE : BLACK)
 
-#define MAX_BOARD_STRING_LEGTH 1280	/* Abitrarily 80 * 16 */
+/*
+ * These are indexes into an array so their values are not arbitrary.
+ */
+#define NOPIECE	0x00
+#define PAWN	0x01
+#define KNIGHT	0x02
+#define BISHOP	0x03
+#define ROOK	0x04
+#define QUEEN	0x05
+#define KING	0x06
+
+#define MAX_BOARD_STRING_LEGTH 1280     /* Arbitrarily 80 * 16 */
 #define MAX_STYLES 13
 
-#define W_PAWN (PAWN | WHITE)
-#define W_KNIGHT (KNIGHT | WHITE)
-#define W_BISHOP (BISHOP | WHITE)
-#define W_ROOK (ROOK | WHITE)
-#define W_QUEEN (QUEEN | WHITE)
-#define W_KING (KING | WHITE)
+#define W_PAWN		(PAWN | WHITE)
+#define W_KNIGHT	(KNIGHT | WHITE)
+#define W_BISHOP	(BISHOP | WHITE)
+#define W_ROOK		(ROOK | WHITE)
+#define W_QUEEN		(QUEEN | WHITE)
+#define W_KING		(KING | WHITE)
 
-#define B_PAWN (PAWN | BLACK)
-#define B_KNIGHT (KNIGHT | BLACK)
-#define B_BISHOP (BISHOP | BLACK)
-#define B_ROOK (ROOK | BLACK)
-#define B_QUEEN (QUEEN | BLACK)
-#define B_KING (KING | BLACK)
+#define B_PAWN		(PAWN | BLACK)
+#define B_KNIGHT	(KNIGHT | BLACK)
+#define B_BISHOP	(BISHOP | BLACK)
+#define B_ROOK		(ROOK | BLACK)
+#define B_QUEEN		(QUEEN | BLACK)
+#define B_KING		(KING | BLACK)
 
 #define isblack(p) ((p) & BLACK)
 #define iswhite(p) (!isblack(p))
