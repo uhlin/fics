@@ -97,18 +97,20 @@ typedef struct _game_state_t {
 #define ALG_DROP -2
 
 typedef struct _move_t {
-  int color;
-  int fromFile, fromRank;
-  int toFile, toRank;
-  int pieceCaptured;
-  int piecePromotionTo;
-  int enPassant; /* 0 = no, 1=higher -1= lower */
-  int doublePawn; /* Only used for board display */
-  char moveString[8];
-  char algString[8];
-  unsigned char FENpos[74];    /* This replaces the boardList. */
-  unsigned atTime;
-  unsigned tookTime;
+	int		 color;
+	int		 fromFile, fromRank;
+	int		 toFile, toRank;
+	int		 pieceCaptured;
+	int		 piecePromotionTo;
+	int		 enPassant;     // 0 = No, 1 = Higher, -1 = Lower
+	int		 doublePawn;    // Only used for board display
+
+	char		 moveString[8];
+	char		 algString[8];
+
+	unsigned char	 FENpos[74];
+	unsigned int	 atTime;
+	unsigned int	 tookTime;
 } move_t;
 
 extern char	*wpstring[];
