@@ -791,85 +791,121 @@ PUBLIC int com_remplayer(int p, param_list param)
  *   user, especially if the account had been locked
  *   by setting the password to *.
  */
-PUBLIC int com_raisedead(int p, param_list param)
+PUBLIC int
+com_raisedead(int p, param_list param)
 {
-  char *player = param[0].val.word;
-  char playerlower[MAX_LOGIN_NAME], newplayerlower[MAX_LOGIN_NAME];
+	char	*player = param[0].val.word;
+	char	 newplayerlower[MAX_LOGIN_NAME];
+	char	 playerlower[MAX_LOGIN_NAME];
+	int	 p1, p2, lookup;
 
-  int p1, p2, lookup;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  strcpy(playerlower, player);
-  stolower(playerlower);
-  if (player_find_bylogin(playerlower) >= 0) {
-    pprintf(p, "A player by that name is logged in.\n");
-    pprintf(p, "Can't raise until they leave.\n");
-    return COM_OK;
-  }
-  p1 = player_new();
-  lookup = player_read(p1, playerlower);
-  player_remove(p1);
-  if (!lookup) {
-    pprintf(p, "A player by the name %s is already registered.\n", player);
-    pprintf(p, "Obtain a new handle for the dead person.\n");
-    pprintf(p, "Then use raisedead [oldname] [newname].\n");
-    return COM_OK;
-  }
-  if (param[1].type == TYPE_NULL) {
-    if (!player_raise(playerlower)) {
-      pprintf(p, "Player %s raised from dead.\n", player);
+	strcpy(playerlower, player);
+	stolower(playerlower);
 
-      p1 = player_new();
-      if (!(lookup = player_read(p1, playerlower))) {
-	if (parray[p1].s_stats.rating > 0)
-	  UpdateRank(TYPE_STAND, player, &parray[p1].s_stats, player);
-	if (parray[p1].b_stats.rating > 0)
-	  UpdateRank(TYPE_BLITZ, player, &parray[p1].b_stats, player);
-	if (parray[p1].w_stats.rating > 0)
-	  UpdateRank(TYPE_WILD, player, &parray[p1].w_stats, player);
-      }
-      player_remove(p1);
-    } else {
-      pprintf(p, "Raisedead failed.\n");
-    }
-    return COM_OK;
-  } else {
-    char *newplayer = param[1].val.word;
-    strcpy(newplayerlower, newplayer);
-    stolower(newplayerlower);
-    if (player_find_bylogin(newplayerlower) >= 0) {
-      pprintf(p, "A player by the requested name is logged in.\n");
-      pprintf(p, "Can't reincarnate until they leave.\n");
-      return COM_OK;
-    }
-    p2 = player_new();
-    lookup = player_read(p2, newplayerlower);
-    player_remove(p2);
-    if (!lookup) {
-      pprintf(p, "A player by the name %s is already registered.\n", player);
-      pprintf(p, "Obtain another new handle for the dead person.\n");
-      return COM_OK;
-    }
-    if (!player_reincarn(playerlower, newplayerlower)) {
-      pprintf(p, "Player %s reincarnated to %s.\n", player, newplayer);
-      p2 = player_new();
-      if (!(lookup = player_read(p2, newplayerlower))) {
-	strfree(parray[p2].name);
-	parray[p2].name = xstrdup(newplayer);
-	player_save(p2);
-	if (parray[p2].s_stats.rating > 0)
-	  UpdateRank(TYPE_STAND, newplayer, &parray[p2].s_stats, newplayer);
-	if (parray[p2].b_stats.rating > 0)
-	  UpdateRank(TYPE_BLITZ, newplayer, &parray[p2].b_stats, newplayer);
-	if (parray[p2].w_stats.rating > 0)
-	  UpdateRank(TYPE_WILD, newplayer, &parray[p2].w_stats, newplayer);
-      }
-      player_remove(p2);
-    } else {
-      pprintf(p, "Raisedead failed.\n");
-    }
-  }
-  return COM_OK;
+	if (player_find_bylogin(playerlower) >= 0) {
+		pprintf(p, "A player by that name is logged in.\n");
+		pprintf(p, "Can't raise until they leave.\n");
+		return COM_OK;
+	}
+
+	p1 = player_new();
+	lookup = player_read(p1, playerlower);
+	player_remove(p1);
+
+	if (!lookup) {
+		pprintf(p, "A player by the name %s is already registered.\n",
+		    player);
+		pprintf(p, "Obtain a new handle for the dead person.\n");
+		pprintf(p, "Then use raisedead [oldname] [newname].\n");
+		return COM_OK;
+	}
+
+	if (param[1].type == TYPE_NULL) {
+		if (!player_raise(playerlower)) {
+			pprintf(p, "Player %s raised from dead.\n", player);
+
+			p1 = player_new();
+
+			if (!player_read(p1, playerlower)) {
+				if (parray[p1].s_stats.rating > 0) {
+					UpdateRank(TYPE_STAND, player,
+					    &parray[p1].s_stats, player);
+				}
+				if (parray[p1].b_stats.rating > 0) {
+					UpdateRank(TYPE_BLITZ, player,
+					    &parray[p1].b_stats, player);
+				}
+				if (parray[p1].w_stats.rating > 0) {
+					UpdateRank(TYPE_WILD, player,
+					    &parray[p1].w_stats, player);
+				}
+			}
+
+			player_remove(p1);
+		} else {
+			pprintf(p, "Raisedead failed.\n");
+		}
+
+		return COM_OK;
+	} else {
+		char *newplayer = param[1].val.word;
+
+		strcpy(newplayerlower, newplayer);
+		stolower(newplayerlower);
+
+		if (player_find_bylogin(newplayerlower) >= 0) {
+			pprintf(p, "A player by the requested name is "
+			    "logged in.\n");
+			pprintf(p, "Can't reincarnate until they leave.\n");
+			return COM_OK;
+		}
+
+		p2 = player_new();
+		lookup = player_read(p2, newplayerlower);
+		player_remove(p2);
+
+		if (!lookup) {
+			pprintf(p, "A player by the name %s is already "
+			    "registered.\n", player);
+			pprintf(p, "Obtain another new handle for the dead "
+			    "person.\n");
+			return COM_OK;
+		}
+
+		if (!player_reincarn(playerlower, newplayerlower)) {
+			pprintf(p, "Player %s reincarnated to %s.\n", player,
+			    newplayer);
+
+			p2 = player_new();
+
+			if (!player_read(p2, newplayerlower)) {
+				strfree(parray[p2].name);
+				parray[p2].name = xstrdup(newplayer);
+				player_save(p2);
+
+				if (parray[p2].s_stats.rating > 0) {
+					UpdateRank(TYPE_STAND, newplayer,
+					    &parray[p2].s_stats, newplayer);
+				}
+				if (parray[p2].b_stats.rating > 0) {
+					UpdateRank(TYPE_BLITZ, newplayer,
+					    &parray[p2].b_stats, newplayer);
+				}
+				if (parray[p2].w_stats.rating > 0) {
+					UpdateRank(TYPE_WILD, newplayer,
+					    &parray[p2].w_stats, newplayer);
+				}
+			}
+
+			player_remove(p2);
+		} else {
+			pprintf(p, "Raisedead failed.\n");
+		}
+	}
+
+	return COM_OK;
 }
 
 /*
