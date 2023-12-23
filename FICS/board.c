@@ -772,118 +772,130 @@ style12(game_state_t *b, move_t *ml)
 	return 0;
 }
 
-PUBLIC int board_read_file(char *category, char *gname, game_state_t *gs)
+PUBLIC int
+board_read_file(char *category, char *gname, game_state_t *gs)
 {
-  int f, r;
-  FILE *fp;
-  char fname[MAX_FILENAME_SIZE + 1];
-  int c;
-  int onNewLine = 1;
-  int onColor = -1;
-  int onPiece = -1;
-  int onFile = -1;
-  int onRank = -1;
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE + 1];
+	int	 c;
+	int	 f, r;
+	int	 onColor = -1;
+	int	 onFile = -1;
+	int	 onNewLine = 1;
+	int	 onPiece = -1;
+	int	 onRank = -1;
 
-  sprintf(fname, "%s/%s/%s", board_dir, category, gname);
-  fp = fopen(fname, "r");
-  if (!fp)
-    return 1;
+	sprintf(fname, "%s/%s/%s", board_dir, category, gname);
 
-  for (f = 0; f < 8; f++)
-    for (r = 0; r < 8; r++)
-      gs->board[f][r] = NOPIECE;
-  for (f = 0; f < 2; f++) {
-    for (r = 0; r < 8; r++)
-      gs->ep_possible[f][r] = 0;
-    for (r = PAWN; r <= QUEEN; r++)
-      gs->holding[f][r-1] = 0;
-  }
-  gs->wkmoved = gs->wqrmoved = gs->wkrmoved = 0;
-  gs->bkmoved = gs->bqrmoved = gs->bkrmoved = 0;
-  gs->onMove = -1;
-  gs->moveNum = 1;
-  gs->lastIrreversable = -1;
-  while (!feof(fp)) {
-    c = fgetc(fp);
-    if (onNewLine) {
-      if (c == 'W') {
-	onColor = WHITE;
-	if (gs->onMove < 0)
-	  gs->onMove = WHITE;
-      } else if (c == 'B') {
-	onColor = BLACK;
-	if (gs->onMove < 0)
-	  gs->onMove = BLACK;
-      } else if (c == '#') {
-	while (!feof(fp) && c != '\n')
-	  c = fgetc(fp);	/* Comment line */
-	continue;
-      } else {			/* Skip any line we don't understand */
-	while (!feof(fp) && c != '\n')
-	  c = fgetc(fp);
-	continue;
-      }
-      onNewLine = 0;
-    } else {
-      switch (c) {
-      case 'P':
-	onPiece = PAWN;
-	break;
-      case 'R':
-	onPiece = ROOK;
-	break;
-      case 'N':
-	onPiece = KNIGHT;
-	break;
-      case 'B':
-	onPiece = BISHOP;
-	break;
-      case 'Q':
-	onPiece = QUEEN;
-	break;
-      case 'K':
-	onPiece = KING;
-	break;
-      case 'a':
-      case 'b':
-      case 'c':
-      case 'd':
-      case 'e':
-      case 'f':
-      case 'g':
-      case 'h':
-	onFile = c - 'a';
-	onRank = -1;
-	break;
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-	onRank = c - '1';
-	if (onFile >= 0 && onColor >= 0 && onPiece >= 0)
-	  gs->board[onFile][onRank] = onPiece | onColor;
-	break;
-      case '#':
-	while (!feof(fp) && c != '\n')
-	  c = fgetc(fp);	/* Comment line */
-      case '\n':
-	onNewLine = 1;
-	onColor = -1;
-	onPiece = -1;
-	onFile = -1;
-	onRank = -1;
-	break;
-      default:
-	break;
-      }
-    }
-  }
-  fclose(fp);
-  return 0;
+	if ((fp = fopen(fname, "r")) == NULL)
+		return 1;
+	for (f = 0; f < 8; f++)
+		for (r = 0; r < 8; r++)
+			gs->board[f][r] = NOPIECE;
+	for (f = 0; f < 2; f++) {
+		for (r = 0; r < 8; r++)
+			gs->ep_possible[f][r] = 0;
+		for (r = PAWN; r <= QUEEN; r++)
+			gs->holding[f][r-1] = 0;
+	}
+
+	gs->wkmoved = gs->wqrmoved = gs->wkrmoved = 0;
+	gs->bkmoved = gs->bqrmoved = gs->bkrmoved = 0;
+
+	gs->onMove		= -1;
+	gs->moveNum		= 1;
+	gs->lastIrreversable	= -1;
+
+	while (!feof(fp)) {
+		c = fgetc(fp);
+
+		if (onNewLine) {
+			if (c == 'W') {
+				onColor = WHITE;
+				if (gs->onMove < 0)
+					gs->onMove = WHITE;
+			} else if (c == 'B') {
+				onColor = BLACK;
+				if (gs->onMove < 0)
+					gs->onMove = BLACK;
+			} else if (c == '#') {
+				while (!feof(fp) && c != '\n')
+					c = fgetc(fp); // Comment line
+				continue;
+			} else { // Skip any line we don't understand
+				while (!feof(fp) && c != '\n')
+					c = fgetc(fp);
+				continue;
+			}
+
+			onNewLine = 0;
+		} else {
+			switch (c) {
+			case 'P':
+				onPiece = PAWN;
+				break;
+			case 'R':
+				onPiece = ROOK;
+				break;
+			case 'N':
+				onPiece = KNIGHT;
+				break;
+			case 'B':
+				onPiece = BISHOP;
+				break;
+			case 'Q':
+				onPiece = QUEEN;
+				break;
+			case 'K':
+				onPiece = KING;
+				break;
+			case 'a':
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'e':
+			case 'f':
+			case 'g':
+			case 'h':
+				onFile = c - 'a';
+				onRank = -1;
+				break;
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+				onRank = c - '1';
+
+				if (onFile >= 0 &&
+				    onColor >= 0 &&
+				    onPiece >= 0) {
+					gs->board[onFile][onRank] =
+					    (onPiece | onColor);
+				}
+
+				break;
+			case '#':
+				while (!feof(fp) && c != '\n')
+					c = fgetc(fp);	// Comment line
+			case '\n':
+				onNewLine = 1;
+				onColor = -1;
+				onPiece = -1;
+				onFile = -1;
+				onRank = -1;
+				break;
+			default:
+				break;
+			}
+		}
+	} // while
+
+	fclose(fp);
+	return 0;
 }
 
 #define WHITE_SQUARE 1
