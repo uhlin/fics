@@ -348,21 +348,41 @@ PUBLIC int style13(game_state_t *b, move_t *ml)
   return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
 }
 
-/* Standard ICS */
-PUBLIC int style1(game_state_t *b, move_t *ml)
+/*
+ * Standard ICS
+ */
+PUBLIC int
+style1(game_state_t *b, move_t *ml)
 {
-  static char *wp[] = {"   |", " P |", " N |", " B |", " R |", " Q |", " K |"};
-  static char *bp[] = {"   |", " *P|", " *N|", " *B|", " *R|", " *Q|", " *K|"};
-  static char *wsqr = "";
-  static char *bsqr = "";
-  static char *top = "\t---------------------------------\n";
-  static char *mid = "\t|---+---+---+---+---+---+---+---|\n";
-  static char *start = "|";
-  static char *end = "";
-  static char *label = "\t  a   b   c   d   e   f   g   h\n";
-  static char *blabel = "\t  h   g   f   e   d   c   b   a\n";
+	static char	*wp[] = {
+		"   |",
+		" P |",
+		" N |",
+		" B |",
+		" R |",
+		" Q |",
+		" K |"
+	};
+	static char	*bp[] = {
+		"   |",
+		" *P|",
+		" *N|",
+		" *B|",
+		" *R|",
+		" *Q|",
+		" *K|"
+	};
+	static char	*wsqr = "";
+	static char	*bsqr = "";
+	static char	*top = "\t---------------------------------\n";
+	static char	*mid = "\t|---+---+---+---+---+---+---+---|\n";
+	static char	*start = "|";
+	static char	*end = "";
+	static char	*label = "\t  a   b   c   d   e   f   g   h\n";
+	static char	*blabel = "\t  h   g   f   e   d   c   b   a\n";
 
-  return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label, blabel);
+	return genstyle(b, ml, wp, bp, wsqr, bsqr, top, mid, start, end, label,
+	    blabel);
 }
 
 /*
