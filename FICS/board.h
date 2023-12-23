@@ -67,8 +67,6 @@
 #define piecetype(p)		((p) & 0x7f)
 #define square_color(r, f)	((((r) + (f)) & 0x01) ? BLACK : WHITE)
 
-extern int pieceValues[7];
-
 /* Treated as [file][rank] */
 typedef int board_t[8][8];
 
@@ -112,6 +110,8 @@ typedef struct _move_t {
 
 extern char *wpstring[];
 extern char *bpstring[];
+
+extern int pieceValues[7];
 
 extern int board_init(game_state_t *, char *, char *);
 extern void board_calc_strength(game_state_t *, int *, int *);
