@@ -857,7 +857,7 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 			case 'f':
 			case 'g':
 			case 'h':
-				onFile = c - 'a';
+				onFile = (c - 'a');
 				onRank = -1;
 				break;
 			case '1':
@@ -868,7 +868,7 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 			case '6':
 			case '7':
 			case '8':
-				onRank = c - '1';
+				onRank = (c - '1');
 
 				if (onFile >= 0 &&
 				    onColor >= 0 &&
@@ -890,7 +890,7 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 				break;
 			default:
 				break;
-			}
+			} // switch
 		}
 	} // while
 
