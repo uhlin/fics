@@ -59,12 +59,13 @@
 #define B_QUEEN		(QUEEN | BLACK)
 #define B_KING		(KING | BLACK)
 
-#define isblack(p) ((p) & BLACK)
-#define iswhite(p) (!isblack(p))
-#define iscolor(p,color) (((p) & BLACK) == (color))
-#define piecetype(p) ((p) & 0x7f)
-#define colorval(p) ((p) & 0x80)
-#define square_color(r,f) ((((r)+(f)) & 0x01) ? BLACK : WHITE)
+#define isblack(p)		((p) & BLACK)
+#define iswhite(p)		(!isblack(p))
+#define iscolor(p, color)	(((p) & BLACK) == (color))
+
+#define colorval(p)		((p) & 0x80)
+#define piecetype(p)		((p) & 0x7f)
+#define square_color(r, f)	((((r) + (f)) & 0x01) ? BLACK : WHITE)
 
 extern int pieceValues[7];
 
