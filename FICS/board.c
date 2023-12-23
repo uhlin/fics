@@ -237,98 +237,113 @@ PUBLIC char *move_and_time(move_t *m)
   return tmp;
 }
 
-/* The following take the game state and whole move list */
-
-PRIVATE int genstyle(game_state_t *b, move_t *ml, char *wp[], char *bp[],
-		      char *wsqr, char *bsqr,
-		  char *top, char *mid, char *start, char *end, char *label,
-		      char *blabel)
+PRIVATE int
+genstyle(game_state_t *b, move_t *ml, char *wp[], char *bp[],
+    char *wsqr, char *bsqr, char *top, char *mid, char *start, char *end,
+    char *label, char *blabel)
 {
-  int f, r, count;
-  char tmp[80];
-  int first, last, inc;
-  int ws, bs;
+	char	tmp[80];
+	int	f, r, count;
+	int	first, last, inc;
+	int	ws, bs;
 
-  board_calc_strength(b, &ws, &bs);
-  if (orient == WHITE) {
-    first = 7;
-    last = 0;
-    inc = -1;
-  } else {
-    first = 0;
-    last = 7;
-    inc = 1;
-  }
-  strcat(bstring, top);
-  for (f = first, count = 7; f != last + inc; f += inc, count--) {
-    sprintf(tmp, "     %d  %s", f + 1, start);
-    strcat(bstring, tmp);
-    for (r = last; r != first - inc; r = r - inc) {
-      if (square_color(r, f) == WHITE)
-	strcat(bstring, wsqr);
-      else
-	strcat(bstring, bsqr);
-      if (piecetype(b->board[r][f]) == NOPIECE) {
-	if (square_color(r, f) == WHITE)
-	  strcat(bstring, bp[0]);
+	board_calc_strength(b, &ws, &bs);
+
+	if (orient == WHITE) {
+		first	= 7;
+		last	= 0;
+		inc	= -1;
+	} else {
+		first	= 0;
+		last	= 7;
+		inc	= 1;
+	}
+
+	strcat(bstring, top);
+
+	for (f = first, count = 7; f != last + inc; f += inc, count--) {
+		sprintf(tmp, "     %d  %s", f + 1, start);
+		strcat(bstring, tmp);
+
+		for (r = last; r != first - inc; r = r - inc) {
+			if (square_color(r, f) == WHITE)
+				strcat(bstring, wsqr);
+			else
+				strcat(bstring, bsqr);
+
+			if (piecetype(b->board[r][f]) == NOPIECE) {
+				if (square_color(r, f) == WHITE)
+					strcat(bstring, bp[0]);
+				else
+					strcat(bstring, wp[0]);
+			} else {
+				if (colorval(b->board[r][f]) == WHITE) {
+					strcat(bstring,
+					    wp[piecetype(b->board[r][f])]);
+				} else {
+					strcat(bstring,
+					    bp[piecetype(b->board[r][f])]);
+				}
+			}
+		}
+
+		sprintf(tmp, "%s", end);
+		strcat(bstring, tmp);
+
+		switch (count) {
+		case 7:
+			sprintf(tmp, "     Move # : %d (%s)",
+			    b->moveNum,
+			    CString(b->onMove));
+			strcat(bstring, tmp);
+			break;
+		case 6:
+			if (garray[b->gameNum].numHalfMoves > 0) {
+				// loon: think this fixes the crashing ascii
+				// board on takeback bug
+				sprintf(tmp, "     %s Moves : '%s'",
+				    CString(CToggle(b->onMove)), move_and_time
+				    (&ml[garray[b->gameNum].numHalfMoves - 1]));
+				strcat(bstring, tmp);
+			}
+			break;
+		case 5:
+			break;
+		case 4:
+			sprintf(tmp, "     Black Clock : %s",
+			    tenth_str((bTime > 0 ? bTime : 0), 1));
+			strcat(bstring, tmp);
+			break;
+		case 3:
+			sprintf(tmp, "     White Clock : %s",
+			    tenth_str((wTime > 0 ? wTime : 0), 1));
+			strcat(bstring, tmp);
+			break;
+		case 2:
+			sprintf(tmp, "     Black Strength : %d", bs);
+			strcat(bstring, tmp);
+			break;
+		case 1:
+			sprintf(tmp, "     White Strength : %d", ws);
+			strcat(bstring, tmp);
+			break;
+		case 0:
+			break;
+		} // switch
+
+		strcat(bstring, "\n");
+
+		if (count != 0)
+			strcat(bstring, mid);
+		else
+			strcat(bstring, top);
+	} // for
+
+	if (orient == WHITE)
+		strcat(bstring, label);
 	else
-	  strcat(bstring, wp[0]);
-      } else {
-	if (colorval(b->board[r][f]) == WHITE)
-	  strcat(bstring, wp[piecetype(b->board[r][f])]);
-	else
-	  strcat(bstring, bp[piecetype(b->board[r][f])]);
-      }
-    }
-    sprintf(tmp, "%s", end);
-    strcat(bstring, tmp);
-    switch (count) {
-    case 7:
-      sprintf(tmp, "     Move # : %d (%s)", b->moveNum, CString(b->onMove));
-      strcat(bstring, tmp);
-      break;
-    case 6:
-/*    if ((b->moveNum > 1) || (b->onMove == BLACK)) {  */
-/* The change from the above line to the one below is a kludge by hersco. */
-      if (garray[b->gameNum].numHalfMoves > 0) {
-/* loon: think this fixes the crashing ascii board on takeback bug */
-	sprintf(tmp, "     %s Moves : '%s'", CString(CToggle(b->onMove)),
-		move_and_time(&ml[garray[b->gameNum].numHalfMoves - 1]));
-	strcat(bstring, tmp);
-      }
-      break;
-    case 5:
-      break;
-    case 4:
-      sprintf(tmp, "     Black Clock : %s", tenth_str(((bTime > 0) ? bTime : 0), 1));
-      strcat(bstring, tmp);
-      break;
-    case 3:
-      sprintf(tmp, "     White Clock : %s", tenth_str(((wTime > 0) ? wTime : 0), 1));
-      strcat(bstring, tmp);
-      break;
-    case 2:
-      sprintf(tmp, "     Black Strength : %d", bs);
-      strcat(bstring, tmp);
-      break;
-    case 1:
-      sprintf(tmp, "     White Strength : %d", ws);
-      strcat(bstring, tmp);
-      break;
-    case 0:
-      break;
-    }
-    strcat(bstring, "\n");
-    if (count != 0)
-      strcat(bstring, mid);
-    else
-      strcat(bstring, top);
-  }
-  if (orient == WHITE)
-    strcat(bstring, label);
-  else
-    strcat(bstring, blabel);
-  return 0;
+		strcat(bstring, blabel);
+	return 0;
 }
 
 /*
