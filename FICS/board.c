@@ -882,11 +882,11 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 				while (!feof(fp) && c != '\n')
 					c = fgetc(fp);	// Comment line
 			case '\n':
-				onNewLine = 1;
-				onColor = -1;
-				onPiece = -1;
-				onFile = -1;
-				onRank = -1;
+				onNewLine	= 1;
+				onColor		= -1;
+				onPiece		= -1;
+				onFile		= -1;
+				onRank		= -1;
 				break;
 			default:
 				break;
