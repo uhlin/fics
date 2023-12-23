@@ -763,11 +763,14 @@ style12(game_state_t *b, move_t *ml)
 	    : "none"),
 
 	    (orient == WHITE ? 0 : 1));
+
 	too_long = (ret < 0 || (size_t)ret >= sizeof tmp);
+
 	if (too_long) {
 		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
 		    __func__);
 	}
+
 	strcat(bstring, tmp);
 
 	return 0;
