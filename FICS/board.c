@@ -236,7 +236,7 @@ move_and_time(move_t *m)
 	static char tmp[20];
 
 	sprintf(tmp, "%-7s (%s)", m->algString, tenth_str(m->tookTime, 0));
-	return tmp;
+	return &tmp[0];
 }
 
 PRIVATE int
