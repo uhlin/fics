@@ -192,42 +192,45 @@ PRIVATE int myTurn;		/* 1 = my turn, 0 = observe, -1 = other turn */
  /* 2 = examiner, -2 = observing examiner */
  /* -3 = just send position (spos/refresh) */
 
-PUBLIC char *board_to_string(char *wn, char *bn,
-			      int wt, int bt,
-			      game_state_t *b, move_t *ml, int style,
-			      int orientation, int relation,
-			      int p)
+PUBLIC char *
+board_to_string(char *wn, char *bn, int wt, int bt, game_state_t *b, move_t *ml,
+    int style, int orientation, int relation, int p)
 {
-  int bh = (b->gameNum >= 0 && garray[b->gameNum].link >= 0);
-  wName = wn;
-  bName = bn;
-  wTime = wt;
-  bTime = bt;
-  orient = orientation;
-  myTurn = relation;
+	int bh = (b->gameNum >= 0 && garray[b->gameNum].link >= 0);
 
-  forPlayer = p;
-  if ((style < 0) || (style >= MAX_STYLES))
-    return NULL;
+	wName		= wn;
+	bName		= bn;
+	wTime		= wt;
+	bTime		= bt;
+	orient		= orientation;
+	myTurn		= relation;
+	forPlayer	= p;
 
-  if (style != 11) {		/* game header */
-    sprintf(bstring, "Game %d (%s vs. %s)\n\n",
-	  b->gameNum + 1,
-	  garray[b->gameNum].white_name,
-	  garray[b->gameNum].black_name);
-  } else
-    bstring[0] = '\0';
-  if (bh && !IsMachineStyle(style))
-    append_holding_display(bstring, b, orientation==BLACK);
-  if (styleFuncs[style] (b, ml))
-    return NULL;
-  if (bh) {
-    if (IsMachineStyle(style))
-      append_holding_machine(bstring, b->gameNum, 0, 0);
-    else
-      append_holding_display(bstring, b, orientation==WHITE);
-  }
-  return bstring;
+	if (style < 0 || style >= MAX_STYLES)
+		return NULL;
+
+	if (style != 11) {    // game header
+		sprintf(bstring, "Game %d (%s vs. %s)\n\n",
+		    (b->gameNum + 1),
+		    garray[b->gameNum].white_name,
+		    garray[b->gameNum].black_name);
+	} else
+		bstring[0] = '\0';
+
+	if (bh && !IsMachineStyle(style))
+		append_holding_display(bstring, b, (orientation == BLACK));
+	if (styleFuncs[style] (b, ml))
+		return NULL;
+	if (bh) {
+		if (IsMachineStyle(style))
+			append_holding_machine(bstring, b->gameNum, 0, 0);
+		else {
+			append_holding_display(bstring, b,
+			    (orientation == WHITE));
+		}
+	}
+
+	return bstring;
 }
 
 PUBLIC char *
