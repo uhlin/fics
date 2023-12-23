@@ -1,7 +1,7 @@
 # options.mk
 
 # Locations of the data, players and games directories.
-FICS_HOME ?= /home/chess/fics
+FICS_HOME ?= /home/chess/config
 
 PREFIX ?= /home/chess
 
