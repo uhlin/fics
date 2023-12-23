@@ -129,7 +129,8 @@ main(int argc, char *argv[])
 	printf("Added player account: >%s< >%s< >%s< >%s<\n",
 	       funame, fname, email, password);
 
-	sprintf(text, "\nYour player account has been created.\n\n"
+	snprintf(text, sizeof text,
+	    "\nYour player account has been created.\n\n"
 	    "Login Name: %s\n"
 	    "Full Name: %s\n"
 	    "Email Address: %s\n"
