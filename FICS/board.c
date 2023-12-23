@@ -230,11 +230,13 @@ PUBLIC char *board_to_string(char *wn, char *bn,
   return bstring;
 }
 
-PUBLIC char *move_and_time(move_t *m)
+PUBLIC char *
+move_and_time(move_t *m)
 {
-  static char tmp[20];
-  sprintf(tmp, "%-7s (%s)", m->algString, tenth_str(m->tookTime, 0));
-  return tmp;
+	static char tmp[20];
+
+	sprintf(tmp, "%-7s (%s)", m->algString, tenth_str(m->tookTime, 0));
+	return tmp;
 }
 
 PRIVATE int
