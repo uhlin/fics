@@ -113,13 +113,14 @@ extern char *bpstring[];
 
 extern int pieceValues[7];
 
-extern int board_init(game_state_t *, char *, char *);
-extern void board_calc_strength(game_state_t *, int *, int *);
-extern void update_holding(int, int);
-extern char *board_to_string(char *, char *, int, int, game_state_t *, move_t *, int, int, int, int);
-extern char *move_and_time(move_t *);
-extern int board_read_file(char *, char *, game_state_t *);
-extern void wild_update(int);
-extern void wild_init(void);
+extern char	*board_to_string(char *, char *, int, int, game_state_t *,
+		     move_t *, int, int, int, int);
+extern char	*move_and_time(move_t *);
+extern int	 board_init(game_state_t *, char *, char *);
+extern int	 board_read_file(char *, char *, game_state_t *);
+extern void	 board_calc_strength(game_state_t *, int *, int *);
+extern void	 update_holding(int, int);
+extern void	 wild_init(void);
+extern void	 wild_update(int);
 
 #endif
