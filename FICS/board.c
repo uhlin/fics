@@ -38,7 +38,7 @@
 
 #define SquareColor(f, r) ((f ^ r) & 1)
 
-#define IsMachineStyle(n) (((1<<(n)) & mach_type) != 0)
+#define IsMachineStyle(n) (((1 << (n)) & mach_type) != 0)
 
 extern int style1();
 extern int style2();
