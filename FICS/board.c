@@ -164,15 +164,16 @@ PRIVATE char *append_holding_machine(char *buf, int g, int c, int p)
   return buf;
 }
 
-PRIVATE char *append_holding_display(char *buf, game_state_t *gs, int white)
+PRIVATE char *
+append_holding_display(char *buf, game_state_t *gs, int white)
 {
-  if (white)
-    strcat(buf, "White holding: [");
-  else
-    strcat(buf, "Black holding: [");
-  strcat(buf, holding_str(gs->holding[white ? 0 : 1]));
-  strcat(buf, "]\n");
-  return buf;
+	if (white)
+		strcat(buf, "White holding: [");
+	else
+		strcat(buf, "Black holding: [");
+	strcat(buf, holding_str(gs->holding[white ? 0 : 1]));
+	strcat(buf, "]\n");
+	return buf;
 }
 
 PUBLIC void
