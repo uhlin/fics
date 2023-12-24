@@ -40,8 +40,8 @@
 
 #define IsMachineStyle(n) (((1 << (n)) & mach_type) != 0)
 
-PUBLIC char *wpstring[] = {" ", "P", "N", "B", "R", "Q", "K"};
-PUBLIC char *bpstring[] = {" ", "p", "n", "b", "r", "q", "k"};
+PUBLIC char	*wpstring[] = {" ", "P", "N", "B", "R", "Q", "K"};
+PUBLIC char	*bpstring[] = {" ", "p", "n", "b", "r", "q", "k"};
 
 PUBLIC int pieceValues[7] = {0, 1, 3, 3, 5, 9, 0};
 
