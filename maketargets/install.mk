@@ -68,5 +68,6 @@ install: install-init
 	    $(DESTDIR)$(FICS_HOME)/data/uscf
 	$(ROOT)scripts/i-games-adjourned.sh \
 	    $(DESTDIR)$(FICS_HOME)/games/adjourned
+	$(ROOT)scripts/i-games-history.sh $(DESTDIR)$(FICS_HOME)/games/history
 	$(ROOT)scripts/i-games-journal.sh $(DESTDIR)$(FICS_HOME)/games/journal
 	$(ROOT)scripts/i-players.sh $(DESTDIR)$(FICS_HOME)/players
