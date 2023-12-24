@@ -20,6 +20,9 @@ install-init:
 	    $(DESTDIR)$(FICS_HOME)/data/boards/standard
 	install -m 0644 $(ROOT)data/boards/std.board \
 	    $(DESTDIR)$(FICS_HOME)/data/boards
+	install -d $(DESTDIR)$(FICS_HOME)/data/boards/blitz
+	install -d $(DESTDIR)$(FICS_HOME)/data/boards/lightning
+	install -d $(DESTDIR)$(FICS_HOME)/data/boards/std
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards/wild
 	install -d $(DESTDIR)$(FICS_HOME)/data/book
 	install -d $(DESTDIR)$(FICS_HOME)/data/com_help
