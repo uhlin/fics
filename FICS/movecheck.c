@@ -932,159 +932,196 @@ PUBLIC int parse_move(char *mstr, game_state_t * gs, move_t * mt, int promote)
   return move_calculate(gs, mt, promote);
 }
 
-/* Returns MOVE_OK, MOVE_NOMATERIAL, MOVE_CHECKMATE, or MOVE_STALEMATE */
-/* check_game_status prevents recursion */
-PUBLIC int execute_move(game_state_t * gs, move_t * mt, int check_game_status)
+/*
+ * Returns 'MOVE_OK', 'MOVE_NOMATERIAL', 'MOVE_CHECKMATE', or
+ * 'MOVE_STALEMATE'.
+ *
+ * ('check_game_status' prevents recursion.)
+ */
+PUBLIC int
+execute_move(game_state_t *gs, move_t *mt, int check_game_status)
 {
-  int movedPiece;
-  int tookPiece;
-  int i, j, foobar;
+	int	i, j, foobar;
+	int	movedPiece;
+	int	tookPiece;
 
-  if (mt->fromFile == ALG_DROP) {
-    movedPiece = mt->fromRank;
-    tookPiece = NOPIECE;
-    gs->holding[gs->onMove==WHITE ? 0 : 1][movedPiece-1]--;
-    gs->board[mt->toFile][mt->toRank] = movedPiece | gs->onMove;
-    if (gs->gameNum >= 0)
-      gs->lastIrreversable = garray[gs->gameNum].numHalfMoves;
-  } else {
-  movedPiece = gs->board[mt->fromFile][mt->fromRank];
-  tookPiece = gs->board[mt->toFile][mt->toRank];
-  if (mt->piecePromotionTo == NOPIECE) {
-    gs->board[mt->toFile][mt->toRank] = gs->board[mt->fromFile][mt->fromRank];
-  } else {
-    gs->board[mt->toFile][mt->toRank] = mt->piecePromotionTo | gs->onMove;
-  }
-  gs->board[mt->fromFile][mt->fromRank] = NOPIECE;
-  /* Check if irreversable */
-  if ((piecetype(movedPiece) == PAWN) || (tookPiece != NOPIECE)) {
-    if (gs->gameNum >= 0)
-      gs->lastIrreversable = garray[gs->gameNum].numHalfMoves;
-  }
-  /* Check if this move is en-passant */
-  if ((piecetype(movedPiece) == PAWN) && (mt->fromFile != mt->toFile) &&
-      (tookPiece == NOPIECE)) {
-    if (gs->onMove == WHITE) {
-      mt->pieceCaptured = B_PAWN;
-    } else {
-      mt->pieceCaptured = W_PAWN;
-    }
-    if (mt->fromFile > mt->toFile) {
-      mt->enPassant = -1;
-    } else {
-      mt->enPassant = 1;
-    }
-    gs->board[mt->toFile][mt->fromRank] = NOPIECE;
-  }
-  /* Check en-passant flags for next moves */
-  for (i = 0; i < 8; i++) {
-    gs->ep_possible[0][i] = 0;
-    gs->ep_possible[1][i] = 0;
-  }
-/* Added by Sparky 3/16/95
+	if (mt->fromFile == ALG_DROP) {
+		movedPiece	= mt->fromRank;
+		tookPiece	= NOPIECE;
 
-   From soso@Viktoria.drp.fmph.uniba.sk Thu Mar 16 13:08:51 1995
-   Subject: Re: To DAV: enpassant prob. again
-   To: chess@caissa.onenet.net (ICS)
-   Date: Thu, 16 Mar 1995 20:06:20 +0100 (MET)
+		gs->holding[gs->onMove == WHITE ? 0 : 1][movedPiece-1]--;
+		gs->board[mt->toFile][mt->toRank] = (movedPiece | gs->onMove);
 
-   Yeah !
-   There was bug in other part of code:
+		if (gs->gameNum >= 0)
+			gs->lastIrreversable = garray[gs->gameNum].numHalfMoves;
+	} else {
+		movedPiece	= gs->board[mt->fromFile][mt->fromRank];
+		tookPiece	= gs->board[mt->toFile][mt->toRank];
 
-   movecheck.c , line about 800:
+		if (mt->piecePromotionTo == NOPIECE) {
+			gs->board[mt->toFile][mt->toRank] =
+			    gs->board[mt->fromFile][mt->fromRank];
+		} else {
+			gs->board[mt->toFile][mt->toRank] =
+			    (mt->piecePromotionTo | gs->onMove);
+		}
 
-     if (gs->onMove == WHITE) {
-        if ((mt->toFile+1 < 7 ) ....  should be : (mt->toFile < 7 ) }
-*/
+		gs->board[mt->fromFile][mt->fromRank] = NOPIECE;
 
-  if ((piecetype(movedPiece) == PAWN) &&
-   ((mt->fromRank == mt->toRank + 2) || (mt->fromRank + 2 == mt->toRank))) {
-    /* Should turn on enpassent flag if possible */
-    if (gs->onMove == WHITE) {
-      if ((mt->toFile < 7) && gs->board[mt->toFile + 1][3] == B_PAWN) {
-	gs->ep_possible[1][mt->toFile + 1] = -1;
-      }
-      if ((mt->toFile - 1 >= 0) && gs->board[mt->toFile - 1][3] == B_PAWN) {
-	gs->ep_possible[1][mt->toFile - 1] = 1;
-      }
-    } else {
-      if ((mt->toFile < 7) && gs->board[mt->toFile + 1][4] == W_PAWN) {
-	gs->ep_possible[0][mt->toFile + 1] = -1;
-      }
-      if ((mt->toFile - 1 >= 0) && gs->board[mt->toFile - 1][4] == W_PAWN) {
-	gs->ep_possible[0][mt->toFile - 1] = 1;
-      }
-    }
-  }
-  if ((piecetype(movedPiece) == ROOK) && (mt->fromFile == 0)) {
-    if ((mt->fromRank == 0) && (gs->onMove == WHITE))
-      gs->wqrmoved = 1;
-    if ((mt->fromRank == 7) && (gs->onMove == BLACK))
-      gs->bqrmoved = 1;
-  }
-  if ((piecetype(movedPiece) == ROOK) && (mt->fromFile == 7)) {
-    if ((mt->fromRank == 0) && (gs->onMove == WHITE))
-      gs->wkrmoved = 1;
-    if ((mt->fromRank == 7) && (gs->onMove == BLACK))
-      gs->bkrmoved = 1;
-  }
-  if (piecetype(movedPiece) == KING) {
-    if (gs->onMove == WHITE)
-      gs->wkmoved = 1;
-    else
-      gs->bkmoved = 1;
-  }
-  if ((piecetype(movedPiece) == KING) &&
-      ((mt->fromFile == 4) && ((mt->toFile == 6)))) {	/* Check for KS castling */
-    gs->board[5][mt->toRank] = gs->board[7][mt->toRank];
-    gs->board[7][mt->toRank] = NOPIECE;
-  }
-  if ((piecetype(movedPiece) == KING) &&
-      ((mt->fromFile == 4) && ((mt->toFile == 2)))) {	/* Check for QS castling */
-    gs->board[3][mt->toRank] = gs->board[0][mt->toRank];
-    gs->board[0][mt->toRank] = NOPIECE;
-  }
-  }
-  if (gs->onMove == BLACK)
-    gs->moveNum++;
+		/*
+		 * Check if irreversable
+		 */
+		if (piecetype(movedPiece) == PAWN || tookPiece != NOPIECE) {
+			if (gs->gameNum >= 0) {
+				gs->lastIrreversable =
+				    garray[gs->gameNum].numHalfMoves;
+			}
+		}
 
-  if (check_game_status) {
-    /* Does this move result in check? */
-    if (in_check(gs)) {
-      /* Check for checkmate */
-      gs->onMove = CToggle(gs->onMove);
-      if (!has_legal_move(gs))
-	return MOVE_CHECKMATE;
-    } else {
-      /* Check for stalemate */
-      gs->onMove = CToggle(gs->onMove);
-      if (!has_legal_move(gs))
-	return MOVE_STALEMATE;
-/* loon: check for insufficient mating material, first try */
-      foobar = 0;
-      for (i=0; i<8; i++) {
-        for (j=0; j<8; j++) {
-          switch(piecetype(gs->board[i][j])) {
-            case KNIGHT:
-            case BISHOP:
-              foobar++;
-              break;
-            case KING:
-	    case NOPIECE:
-	      break;
-            default:
-              foobar = 2;
-              break;
-          }
-        }
-      }
-      if (foobar < 2)
-        return MOVE_NOMATERIAL;
-    }
-  } else {
-    gs->onMove = CToggle(gs->onMove);
-  }
-  return MOVE_OK;
+		/*
+		 * Check if this move is en-passant
+		 */
+		if (piecetype(movedPiece) == PAWN &&
+		    mt->fromFile != mt->toFile &&
+		    tookPiece == NOPIECE) {
+			if (gs->onMove == WHITE)
+				mt->pieceCaptured = B_PAWN;
+			else
+				mt->pieceCaptured = W_PAWN;
+
+			if (mt->fromFile > mt->toFile)
+				mt->enPassant = -1;
+			else
+				mt->enPassant = 1;
+			gs->board[mt->toFile][mt->fromRank] = NOPIECE;
+		}
+
+		/*
+		 * Check en-passant flags for next moves
+		 */
+		for (i = 0; i < 8; i++) {
+			gs->ep_possible[0][i] = 0;
+			gs->ep_possible[1][i] = 0;
+		}
+
+		if (piecetype(movedPiece) == PAWN &&
+		    (mt->fromRank == (mt->toRank + 2) ||
+		    (mt->fromRank + 2) == mt->toRank)) {
+			/*
+			 * Should turn on enpassent flag if possible.
+			 */
+
+			if (gs->onMove == WHITE) {
+				if (mt->toFile < 7 &&
+				    gs->board[mt->toFile + 1][3] == B_PAWN)
+					gs->ep_possible[1][mt->toFile + 1] = -1;
+				if ((mt->toFile - 1) >= 0 &&
+				    gs->board[mt->toFile - 1][3] == B_PAWN)
+					gs->ep_possible[1][mt->toFile - 1] = 1;
+			} else {
+				if (mt->toFile < 7 &&
+				    gs->board[mt->toFile + 1][4] == W_PAWN)
+					gs->ep_possible[0][mt->toFile + 1] = -1;
+				if ((mt->toFile - 1) >= 0 &&
+				    gs->board[mt->toFile - 1][4] == W_PAWN)
+					gs->ep_possible[0][mt->toFile - 1] = 1;
+			}
+		}
+
+		if (piecetype(movedPiece) == ROOK && mt->fromFile == 0) {
+			if (mt->fromRank == 0 && gs->onMove == WHITE)
+				gs->wqrmoved = 1;
+			if (mt->fromRank == 7 && gs->onMove == BLACK)
+				gs->bqrmoved = 1;
+		}
+
+		if (piecetype(movedPiece) == ROOK && mt->fromFile == 7) {
+			if (mt->fromRank == 0 && gs->onMove == WHITE)
+				gs->wkrmoved = 1;
+			if (mt->fromRank == 7 && gs->onMove == BLACK)
+				gs->bkrmoved = 1;
+		}
+
+		if (piecetype(movedPiece) == KING) {
+			if (gs->onMove == WHITE)
+				gs->wkmoved = 1;
+			else
+				gs->bkmoved = 1;
+		}
+
+		if (piecetype(movedPiece) == KING &&
+		    (mt->fromFile == 4 && mt->toFile == 6)) {	// Check for KS
+								// castling
+			gs->board[5][mt->toRank] = gs->board[7][mt->toRank];
+			gs->board[7][mt->toRank] = NOPIECE;
+		}
+
+		if (piecetype(movedPiece) == KING &&
+		    (mt->fromFile == 4 && mt->toFile == 2)) {	// Check for QS
+								// castling
+			gs->board[3][mt->toRank] = gs->board[0][mt->toRank];
+			gs->board[0][mt->toRank] = NOPIECE;
+		}
+	}
+
+	if (gs->onMove == BLACK)
+		gs->moveNum++;
+
+	if (check_game_status) {
+		/*
+		 * Does this move result in check?
+		 */
+
+		if (in_check(gs)) {
+			/*
+			 * Check for checkmate
+			 */
+
+			gs->onMove = CToggle(gs->onMove);
+
+			if (!has_legal_move(gs))
+				return MOVE_CHECKMATE;
+		} else {
+			/*
+			 * Check for stalemate
+			 */
+
+			gs->onMove = CToggle(gs->onMove);
+
+			if (!has_legal_move(gs))
+				return MOVE_STALEMATE;
+
+			/*
+			 * loon: check for insufficient mating material
+			 */
+
+			foobar = 0;
+
+			for (i = 0; i < 8; i++) {
+				for (j = 0; j < 8; j++) {
+					switch (piecetype(gs->board[i][j])) {
+					case KNIGHT:
+					case BISHOP:
+						foobar++;
+						break;
+					case KING:
+					case NOPIECE:
+						break;
+					default:
+						foobar = 2;
+						break;
+					}
+				}
+			}
+
+			if (foobar < 2)
+				return MOVE_NOMATERIAL;
+		}
+	} else {
+		gs->onMove = CToggle(gs->onMove);
+	}
+
+	return MOVE_OK;
 }
 
 PUBLIC int backup_move(int g, int mode)
