@@ -26,9 +26,9 @@
 */
 
 #include "stdinclude.h"
+#include "common.h"
 
 #include "command.h"
-#include "common.h"
 #include "comproc.h"
 #include "config.h"
 #include "ficsmain.h"
