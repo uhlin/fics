@@ -131,6 +131,20 @@ extern char	*bpstring[];
 
 extern int pieceValues[7];
 
+extern int style1();
+extern int style2();
+extern int style3();
+extern int style4();
+extern int style5();
+extern int style6();
+extern int style7();
+extern int style8();
+extern int style9();
+extern int style10();
+extern int style11();
+extern int style12();
+extern int style13();
+
 extern char	*board_to_string(char *, char *, int, int, game_state_t *,
 		     move_t *, int, int, int, int);
 extern char	*move_and_time(move_t *);

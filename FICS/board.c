@@ -40,20 +40,6 @@
 
 #define IsMachineStyle(n) (((1 << (n)) & mach_type) != 0)
 
-extern int style1();
-extern int style2();
-extern int style3();
-extern int style4();
-extern int style5();
-extern int style6();
-extern int style7();
-extern int style8();
-extern int style9();
-extern int style10();
-extern int style11();
-extern int style12();
-extern int style13();
-
 PUBLIC char *wpstring[] = {" ", "P", "N", "B", "R", "Q", "K"};
 PUBLIC char *bpstring[] = {" ", "p", "n", "b", "r", "q", "k"};
 
