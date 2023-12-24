@@ -314,167 +314,198 @@ PUBLIC int player_remove(int p)
   return 0;
 }
 
-void ReadV1PlayerFmt(int p,player *pp, FILE * fp, char *file, int version)
+void
+ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 {
+	char	*tmp;
+	char	 tmp2[MAX_STRING_LENGTH];
+	int	 bs, ss, ws, ls, bugs;
+	int	 i, size_cens, size_noplay, size_not, size_gnot, size_chan, len;
 
- int i,size_cens, size_noplay, size_not, size_gnot, size_chan, len;
- int bs,ss,ws,ls,bugs;
+	/*
+	 * Name
+	 */
+	fgets(tmp2, sizeof tmp2, fp);
+	if (strcmp(tmp2, "NONE\n")) {
+		tmp2[strlen(tmp2) - 1] = '\0';
+		pp->name = xstrdup(tmp2);
+	} else {
+		pp->name = NULL;
+	}
 
- char* tmp;
- char tmp2[MAX_STRING_LENGTH];
+	/*
+	 * Full name
+	 */
+	fgets(tmp2, sizeof tmp2, fp);
+	if (strcmp(tmp2, "NONE\n")) {
+		tmp2[strlen(tmp2) - 1] = '\0';
+		pp->fullName = xstrdup(tmp2);
+	} else {
+		pp->fullName = NULL;
+	}
 
- fgets(tmp2, MAX_STRING_LENGTH, fp);
- if (strcmp(tmp2,"NONE\n")) {
-   tmp2[strlen(tmp2)-1] = '\0';
-   pp->name = xstrdup (tmp2);
- } else
-   pp->name = NULL;
- fgets(tmp2, MAX_STRING_LENGTH, fp);
- if (strcmp(tmp2,"NONE\n")) {
-   tmp2[strlen(tmp2)-1] = '\0';
-   pp->fullName = xstrdup (tmp2);
- } else
-   pp->fullName = NULL;
- fgets(tmp2, MAX_STRING_LENGTH, fp);
- if (strcmp(tmp2,"NONE\n")) {
-   tmp2[strlen(tmp2)-1] = '\0';
-   pp->passwd = xstrdup (tmp2);
- } else
-   pp->passwd = NULL;
- fgets(tmp2, MAX_STRING_LENGTH, fp);
- if (strcmp(tmp2,"NONE\n")) {
-   tmp2[strlen(tmp2)-1] = '\0';
-   pp->emailAddress = xstrdup (tmp2);
- } else
-   pp->emailAddress = NULL;
- if (fscanf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %d\n",
+	/*
+	 * Password
+	 */
+	fgets(tmp2, sizeof tmp2, fp);
+	if (strcmp(tmp2, "NONE\n")) {
+		tmp2[strlen(tmp2) - 1] = '\0';
+		pp->passwd = xstrdup(tmp2);
+	} else {
+		pp->passwd = NULL;
+	}
 
- &pp->s_stats.num, &pp->s_stats.win, &pp->s_stats.los,
- &pp->s_stats.dra, &pp->s_stats.rating, &ss,
- &pp->s_stats.ltime, &pp->s_stats.best, &pp->s_stats.whenbest,
+	/*
+	 * Email
+	 */
+	fgets(tmp2, sizeof tmp2, fp);
+	if (strcmp(tmp2, "NONE\n")) {
+		tmp2[strlen(tmp2) - 1] = '\0';
+		pp->emailAddress = xstrdup(tmp2);
+	} else {
+		pp->emailAddress = NULL;
+	}
 
- &pp->b_stats.num, &pp->b_stats.win, &pp->b_stats.los,
- &pp->b_stats.dra, &pp->b_stats.rating, &bs,
- &pp->b_stats.ltime, &pp->b_stats.best, &pp->b_stats.whenbest,
+	if (fscanf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
+	    "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
+	    "%u %u %u %u %u %d\n",
+	    &pp->s_stats.num, &pp->s_stats.win, &pp->s_stats.los,
+	    &pp->s_stats.dra, &pp->s_stats.rating, &ss,
+	    &pp->s_stats.ltime, &pp->s_stats.best, &pp->s_stats.whenbest,
 
- &pp->w_stats.num, &pp->w_stats.win, &pp->w_stats.los,
- &pp->w_stats.dra, &pp->w_stats.rating, &ws,
- &pp->w_stats.ltime, &pp->w_stats.best, &pp->w_stats.whenbest,
+	    &pp->b_stats.num, &pp->b_stats.win, &pp->b_stats.los,
+	    &pp->b_stats.dra, &pp->b_stats.rating, &bs,
+	    &pp->b_stats.ltime, &pp->b_stats.best, &pp->b_stats.whenbest,
 
- &pp->l_stats.num, &pp->l_stats.win, &pp->l_stats.los,
- &pp->l_stats.dra, &pp->l_stats.rating, &ls,
- &pp->l_stats.ltime, &pp->l_stats.best, &pp->l_stats.whenbest,
+	    &pp->w_stats.num, &pp->w_stats.win, &pp->w_stats.los,
+	    &pp->w_stats.dra, &pp->w_stats.rating, &ws,
+	    &pp->w_stats.ltime, &pp->w_stats.best, &pp->w_stats.whenbest,
 
- &pp->bug_stats.num, &pp->bug_stats.win, &pp->bug_stats.los,
- &pp->bug_stats.dra, &pp->bug_stats.rating, &bugs,
- &pp->bug_stats.ltime, &pp->bug_stats.best, &pp->bug_stats.whenbest,
- &pp->lastHost) != 46) {
-  fprintf(stderr,"Player %s is corrupt\n",parray[p].name);
-  return;
- }
+	    &pp->l_stats.num, &pp->l_stats.win, &pp->l_stats.los,
+	    &pp->l_stats.dra, &pp->l_stats.rating, &ls,
+	    &pp->l_stats.ltime, &pp->l_stats.best, &pp->l_stats.whenbest,
 
- pp->b_stats.sterr = bs / 10.0;
- pp->s_stats.sterr = ss / 10.0;
- pp->w_stats.sterr = ws / 10.0;
- pp->l_stats.sterr = ls / 10.0;
- pp->bug_stats.sterr = bugs / 10.0;
+	    &pp->bug_stats.num, &pp->bug_stats.win, &pp->bug_stats.los,
+	    &pp->bug_stats.dra, &pp->bug_stats.rating, &bugs,
+	    &pp->bug_stats.ltime, &pp->bug_stats.best, &pp->bug_stats.whenbest,
 
- fgets (tmp2, MAX_STRING_LENGTH, fp);
-   tmp2[strlen(tmp2)-1] = '\0';
-   pp->prompt = xstrdup(tmp2);
- if (fscanf (fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
- &pp->open, &pp->rated, &pp->ropen, &pp->timeOfReg,
- &pp->totalTime, &pp->bell, &pp->pgn, &pp->notifiedby,
- &pp->i_login, &pp->i_game, &pp->i_shout, &pp->i_cshout,
- &pp->i_tell, &pp->i_kibitz, &pp->private, &pp->jprivate,
- &pp->automail, &pp->i_mailmess, &pp->style, &pp->d_time,
- &pp->d_inc, &pp->d_height, &pp->d_width, &pp->language,
- &pp->adminLevel, &pp->num_white, &pp->num_black, &pp->highlight,
- &pp->num_comments,
- &pp->num_plan, &pp->num_formula,&size_cens,
- &size_not, &size_noplay,
- &size_gnot, &pp->numAlias, &size_chan) != 37) {
-  fprintf(stderr,"Player %s is corrupt\n",parray[p].name);
-  return;
- }
+	    &pp->lastHost) != 46) {
+		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
+		return;
+	}
 
-   if (pp->num_plan > 0) {
-     for (i = 0; i < pp->num_plan; i++) {
-       fgets(tmp2, MAX_LINE_SIZE, fp);
-       if (!(len = strlen(tmp2))) {
-         fprintf(stderr, "FICS: Error bad plan in file %s\n", file);
-         i--;
-         pp->num_plan--;
-       } else {
-         tmp2[len - 1] = '\0';  /* Get rid of '\n' */
-         pp->planLines[i] = (len > 1) ? xstrdup(tmp2) : NULL;
-       }
-     }
-   }
-   if (pp->num_formula > 0) {
-     for (i = 0; i < pp->num_formula; i++) {
-       fgets(tmp2, MAX_LINE_SIZE, fp);
-       if (!(len = strlen(tmp2))) {
-         fprintf(stderr, "FICS: Error bad formula in file %s\n", file);
-         i--;
-         pp->num_formula--;
-       } else {
-         tmp2[len - 1] = '\0';  /* Get rid of '\n' */
-         pp->formulaLines[i] = (len > 1) ? xstrdup(tmp2) : NULL;
-       }
-     }
-   }
-  fgets(tmp2, MAX_LINE_SIZE, fp);
-  tmp2[strlen(tmp2) - 1] = '\0';
-  if (!strcmp (tmp2,"NONE"))
-    pp->formula = NULL;
-  else
-    pp->formula = xstrdup(tmp2);
+	pp->b_stats.sterr	= (bs / 10.0);
+	pp->s_stats.sterr	= (ss / 10.0);
+	pp->w_stats.sterr	= (ws / 10.0);
+	pp->l_stats.sterr	= (ls / 10.0);
+	pp->bug_stats.sterr	= (bugs / 10.0);
 
-  if (pp->numAlias > 0) {
-    for (i = 0; i < pp->numAlias; i++) {
-      fgets(tmp2, MAX_LINE_SIZE, fp);
-      if (!(len = strlen(tmp2))) {
-        fprintf(stderr, "FICS: Error bad alias in file %s\n", file);
-        i--;
-        pp->numAlias--;
-      } else {
-        tmp2[len - 1] = '\0';  /* Get rid of '\n' */
-        tmp = tmp2;
-        tmp = eatword(tmp2);
-        *tmp = '\0';
-        tmp++;
-        tmp = eatwhite(tmp);
-        pp->alias_list[i].comm_name = xstrdup(tmp2);
-        pp->alias_list[i].alias = xstrdup(tmp);
-      }
-    }
-  }
+	fgets(tmp2, MAX_STRING_LENGTH, fp);
+	tmp2[strlen(tmp2) - 1] = '\0';
+	pp->prompt = xstrdup(tmp2);
 
-    while (size_cens--) {
-      fscanf(fp,"%s",tmp2);
-      list_add(p, L_CENSOR, tmp2);
-      }
+	if (fscanf(fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
+	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+	    &pp->open, &pp->rated, &pp->ropen, &pp->timeOfReg, &pp->totalTime,
+	    &pp->bell, &pp->pgn, &pp->notifiedby, &pp->i_login, &pp->i_game,
+	    &pp->i_shout, &pp->i_cshout, &pp->i_tell, &pp->i_kibitz,
+	    &pp->private, &pp->jprivate, &pp->automail, &pp->i_mailmess,
+	    &pp->style, &pp->d_time, &pp->d_inc, &pp->d_height, &pp->d_width,
+	    &pp->language, &pp->adminLevel, &pp->num_white, &pp->num_black,
+	    &pp->highlight, &pp->num_comments, &pp->num_plan, &pp->num_formula,
+	    &size_cens, &size_not, &size_noplay, &size_gnot, &pp->numAlias,
+	    &size_chan) != 37) {
+		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
+		return;
+	}
 
-    while(size_not--) {
-      fscanf(fp,"%s",tmp2);
-      list_add(p, L_NOTIFY, tmp2);
-      }
+	if (pp->num_plan > 0) {
+		for (i = 0; i < pp->num_plan; i++) {
+			fgets(tmp2, MAX_LINE_SIZE, fp);
 
-    while(size_noplay--) {
-      fscanf(fp,"%s",tmp2);
-      list_add(p, L_NOPLAY, tmp2);
-      }
+			if (!(len = strlen(tmp2))) {
+				fprintf(stderr, "FICS: Error bad plan in "
+				    "file %s\n", file);
+				i--;
+				pp->num_plan--;
+			} else {
+				tmp2[len - 1] = '\0'; // Get rid of '\n'.
 
-    while(size_gnot--) {
-      fscanf(fp,"%s",tmp2);
-      list_add(p, L_GNOTIFY, tmp2);
-      }
+				pp->planLines[i] = (len > 1 ? xstrdup(tmp2) :
+				    NULL);
+			}
+		}
+	}
 
-    while(size_chan--) {
-      fscanf(fp,"%s",tmp2);
-      list_add(p, L_CHANNEL, tmp2);
-      }
+	if (pp->num_formula > 0) {
+		for (i = 0; i < pp->num_formula; i++) {
+			fgets(tmp2, MAX_LINE_SIZE, fp);
+
+			if (!(len = strlen(tmp2))) {
+				fprintf(stderr, "FICS: Error bad formula in "
+				    "file %s\n", file);
+				i--;
+				pp->num_formula--;
+			} else {
+				tmp2[len - 1] = '\0'; // Get rid of '\n'.
+
+				pp->formulaLines[i] = (len > 1 ? xstrdup(tmp2) :
+				    NULL);
+			}
+		}
+	}
+
+	fgets(tmp2, MAX_LINE_SIZE, fp);
+	tmp2[strlen(tmp2) - 1] = '\0';
+
+	if (!strcmp(tmp2, "NONE"))
+		pp->formula = NULL;
+	else
+		pp->formula = xstrdup(tmp2);
+
+	if (pp->numAlias > 0) {
+		for (i = 0; i < pp->numAlias; i++) {
+			fgets(tmp2, MAX_LINE_SIZE, fp);
+
+			if (!(len = strlen(tmp2))) {
+				fprintf(stderr, "FICS: Error bad alias in "
+				    "file %s\n", file);
+				i--;
+				pp->numAlias--;
+			} else {
+				tmp2[len - 1] = '\0'; // Get rid of '\n'.
+				tmp = tmp2;
+				tmp = eatword(tmp2);
+				*tmp = '\0';
+				tmp++;
+				tmp = eatwhite(tmp);
+
+				pp->alias_list[i].comm_name = xstrdup(tmp2);
+				pp->alias_list[i].alias = xstrdup(tmp);
+			}
+		}
+	}
+
+	while (size_cens--) {
+		fscanf(fp, "%s", tmp2);
+		list_add(p, L_CENSOR, tmp2);
+	}
+	while (size_not--) {
+		fscanf(fp, "%s", tmp2);
+		list_add(p, L_NOTIFY, tmp2);
+	}
+	while (size_noplay--) {
+		fscanf(fp, "%s", tmp2);
+		list_add(p, L_NOPLAY, tmp2);
+	}
+	while (size_gnot--) {
+		fscanf(fp, "%s", tmp2);
+		list_add(p, L_GNOTIFY, tmp2);
+	}
+	while (size_chan--) {
+		fscanf(fp, "%s", tmp2);
+		list_add(p, L_CHANNEL, tmp2);
+	}
 }
 
 PRIVATE int got_attr_value_player(int p, char *attr, char *value, FILE * fp, char *file)
