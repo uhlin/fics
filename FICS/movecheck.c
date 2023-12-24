@@ -947,7 +947,7 @@ execute_move(game_state_t *gs, move_t *mt, int check_game_status)
 
 	if (mt->fromFile == ALG_DROP) {
 		movedPiece	= mt->fromRank;
-		tookPiece	= NOPIECE;
+//		tookPiece	= NOPIECE;
 
 		gs->holding[gs->onMove == WHITE ? 0 : 1][movedPiece-1]--;
 		gs->board[mt->toFile][mt->toRank] = (movedPiece | gs->onMove);
