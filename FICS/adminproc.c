@@ -738,42 +738,51 @@ com_checkGAME(int p,param_list param)
  *   'zombie' files.  These zombie accounts are not listed in handles or
  *   totals.
  */
-PUBLIC int com_remplayer(int p, param_list param)
+PUBLIC int
+com_remplayer(int p, param_list param)
 {
-  char *player = param[0].val.word;
-  char playerlower[MAX_LOGIN_NAME];
-  int p1, lookup;
+	char	*player = param[0].val.word;
+	char	 playerlower[MAX_LOGIN_NAME];
+	int	 p1, lookup;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  strcpy(playerlower, player);
-  stolower(playerlower);
-  p1 = player_new();
-  lookup = player_read(p1, playerlower);
-  if (!lookup) {
-    if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
-      pprintf(p, "You can't remove an admin with a level higher than or equal to yourself.\n");
-      player_remove(p1);
-      return COM_OK;
-    }
-  }
-  player_remove(p1);
-  if (lookup) {
-    pprintf(p, "No player by the name %s is registered.\n", player);
-    return COM_OK;
-  }
-  if (player_find_bylogin(playerlower) >= 0) {
-    pprintf(p, "A player by that name is logged in.\n");
-    return COM_OK;
-  }
-  if (!player_kill(playerlower)) {
-    pprintf(p, "Player %s removed.\n", player);
-    UpdateRank(TYPE_BLITZ, NULL, NULL, player);
-    UpdateRank(TYPE_STAND, NULL, NULL, player);
-    UpdateRank(TYPE_WILD, NULL, NULL, player);
-  } else {
-    pprintf(p, "Remplayer failed.\n");
-  }
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	strcpy(playerlower, player);
+	stolower(playerlower);
+	p1 = player_new();
+	lookup = player_read(p1, playerlower);
+
+	if (!lookup) {
+		if (parray[p].adminLevel <= parray[p1].adminLevel &&
+		    !player_ishead(p)) {
+			pprintf(p, "You can't remove an admin with a level "
+			    "higher than or equal to yourself.\n");
+			player_remove(p1);
+			return COM_OK;
+		}
+	}
+
+	player_remove(p1);
+
+	if (lookup) {
+		pprintf(p, "No player by the name %s is registered.\n", player);
+		return COM_OK;
+	}
+
+	if (player_find_bylogin(playerlower) >= 0) {
+		pprintf(p, "A player by that name is logged in.\n");
+		return COM_OK;
+	}
+
+	if (!player_kill(playerlower)) {
+		pprintf(p, "Player %s removed.\n", player);
+		UpdateRank(TYPE_BLITZ, NULL, NULL, player);
+		UpdateRank(TYPE_STAND, NULL, NULL, player);
+		UpdateRank(TYPE_WILD, NULL, NULL, player);
+	} else {
+		pprintf(p, "Remplayer failed.\n");
+	}
+	return COM_OK;
 }
 
 /*
