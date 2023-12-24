@@ -2382,15 +2382,16 @@ PUBLIC int player_reincarn(char *name, char *newname)
   return 0;
 }
 
-PUBLIC int player_num_comments(int p)
+PUBLIC int
+player_num_comments(int p)
 {
-  char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE];
 
-  if (!parray[p].registered)
-    return 0;
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
-	  parray[p].login, "comments");
-  return lines_file(fname);
+	if (!parray[p].registered)
+		return 0;
+	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
+	    parray[p].login, "comments");
+	return lines_file(fname);
 }
 
 PUBLIC int
@@ -2415,18 +2416,22 @@ player_add_comment(int p_by, int p_to, char *comment)
 	return 0;
 }
 
-PUBLIC int player_show_comments(int p, int p1)
+PUBLIC int
+player_show_comments(int p, int p1)
 {
-  char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE];
 
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p1].login[0],
-	  parray[p1].login, "comments");
-  psend_file(p, NULL, fname);
-  return 0;
+	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
+	    parray[p1].login[0], parray[p1].login, "comments");
+	psend_file(p, NULL, fname);
+	return 0;
 }
 
-/* returns 1 if player is head admin, 0 otherwise */
-PUBLIC int player_ishead(int p)
+/*
+ * Returns 1 if player is head admin and 0 otherwise.
+ */
+PUBLIC int
+player_ishead(int p)
 {
-  return (!strcasecmp(parray[p].name, hadmin_handle));
+	return (!strcasecmp(parray[p].name, hadmin_handle));
 }
