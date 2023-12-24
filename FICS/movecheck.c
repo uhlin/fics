@@ -22,6 +22,7 @@
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/14	Fixed compiler warnings
    Markus Uhlin                 23/12/17	Fixed compiler warnings
+   Markus Uhlin                 23/12/24	Fixed dead assignment
 */
 
 #include "stdinclude.h"
