@@ -861,81 +861,90 @@ PUBLIC int player_markdeleted(int p)
   return 0;
 }
 
-void WritePlayerFile(FILE* fp, int p)
+void
+WritePlayerFile(FILE *fp, int p)
 {
- int i;
- player *pp = &parray[p];
+	int	 i;
+	player	*pp = &parray[p];
 
- fprintf (fp, "v %d\n", PLAYER_VERSION);
- if (pp->name == NULL) /* This should never happen! */
-   fprintf (fp,"NONE\n");
- else
-   fprintf(fp, "%s\n", pp->name);
- if (pp->fullName == NULL)
-   fprintf (fp,"NONE\n");
- else
-   fprintf(fp, "%s\n", pp->fullName);
- if (pp->passwd == NULL)
-   fprintf (fp,"NONE\n");
- else
-   fprintf(fp, "%s\n", pp->passwd);
- if (pp->emailAddress == NULL)
-   fprintf (fp,"NONE\n");
- else
-   fprintf(fp, "%s\n", pp->emailAddress);
- fprintf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %d\n",
+	fprintf(fp, "v %d\n", PLAYER_VERSION);
 
- pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
- pp->s_stats.dra, pp->s_stats.rating, (int) (pp->s_stats.sterr * 10.0),
- pp->s_stats.ltime, pp->s_stats.best, pp->s_stats.whenbest,
+	fprintf(fp, "%s\n", (pp->name ? pp->name : "NONE"));
+	fprintf(fp, "%s\n", (pp->fullName ? pp->fullName : "NONE"));
+	fprintf(fp, "%s\n", (pp->passwd ? pp->passwd : "NONE"));
+	fprintf(fp, "%s\n", (pp->emailAddress ? pp->emailAddress : "NONE"));
 
- pp->b_stats.num, pp->b_stats.win, pp->b_stats.los,
- pp->b_stats.dra, pp->b_stats.rating, (int) (pp->b_stats.sterr * 10.0),
- pp->b_stats.ltime, pp->b_stats.best, pp->b_stats.whenbest,
+	fprintf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
+	    "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
+	    "%u %u %u %u %d\n",
+	    pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
+	    pp->s_stats.dra, pp->s_stats.rating,
+	    (int)(pp->s_stats.sterr * 10.0),
+	    pp->s_stats.ltime, pp->s_stats.best, pp->s_stats.whenbest,
 
- pp->w_stats.num, pp->w_stats.win, pp->w_stats.los,
- pp->w_stats.dra, pp->w_stats.rating, (int) (pp->w_stats.sterr * 10.0),
- pp->w_stats.ltime, pp->w_stats.best, pp->w_stats.whenbest,
+	    pp->b_stats.num, pp->b_stats.win, pp->b_stats.los,
+	    pp->b_stats.dra, pp->b_stats.rating,
+	    (int)(pp->b_stats.sterr * 10.0),
+	    pp->b_stats.ltime, pp->b_stats.best, pp->b_stats.whenbest,
 
- pp->l_stats.num, pp->l_stats.win, pp->l_stats.los,
- pp->l_stats.dra, pp->l_stats.rating, (int) (pp->l_stats.sterr * 10.0),
- pp->l_stats.ltime, pp->l_stats.best, pp->l_stats.whenbest,
+	    pp->w_stats.num, pp->w_stats.win, pp->w_stats.los,
+	    pp->w_stats.dra, pp->w_stats.rating,
+	    (int)(pp->w_stats.sterr * 10.0),
+	    pp->w_stats.ltime, pp->w_stats.best, pp->w_stats.whenbest,
 
- pp->bug_stats.num, pp->bug_stats.win, pp->bug_stats.los,
- pp->bug_stats.dra, pp->bug_stats.rating, (int) (pp->bug_stats.sterr * 10.0),
- pp->bug_stats.ltime, pp->bug_stats.best, pp->bug_stats.whenbest,
- pp->lastHost);
+	    pp->l_stats.num, pp->l_stats.win, pp->l_stats.los,
+	    pp->l_stats.dra, pp->l_stats.rating,
+	    (int)(pp->l_stats.sterr * 10.0),
+	    pp->l_stats.ltime, pp->l_stats.best, pp->l_stats.whenbest,
 
- fprintf (fp, "%s\n", pp->prompt);
- fprintf (fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
- pp->open, pp->rated, pp->ropen, pp->timeOfReg,
- pp->totalTime, pp->bell, pp->pgn, pp->notifiedby,
- pp->i_login, pp->i_game, pp->i_shout, pp->i_cshout,
- pp->i_tell, pp->i_kibitz, pp->private, pp->jprivate,
- pp->automail, pp->i_mailmess, pp->style, pp->d_time,
- pp->d_inc, pp->d_height, pp->d_width, pp->language,
- pp->adminLevel, pp->num_white, pp->num_black, pp->highlight,
- pp->num_comments,
- pp->num_plan, pp->num_formula,list_size(p, L_CENSOR),
- list_size(p, L_NOTIFY), list_size(p, L_NOPLAY),
- list_size(p, L_GNOTIFY), pp->numAlias, list_size(p, L_CHANNEL ));
-  for (i = 0; i < pp->num_plan; i++)
-    fprintf(fp, "%s\n", (pp->planLines[i] ? pp->planLines[i] : ""));
-  for (i = 0; i < pp->num_formula; i++)
-    fprintf(fp, "%s\n", (pp->formulaLines[i] ? pp->formulaLines[i] : ""));
-  if (parray[p].formula != NULL)
-    fprintf(fp, "%s\n", pp->formula);
-  else
-    fprintf(fp, "NONE\n");
-  for (i = 0; i < pp->numAlias; i++)
-    fprintf(fp, "%s %s\n", pp->alias_list[i].comm_name,
-	    pp->alias_list[i].alias);
+	    pp->bug_stats.num, pp->bug_stats.win, pp->bug_stats.los,
+	    pp->bug_stats.dra, pp->bug_stats.rating,
+	    (int)(pp->bug_stats.sterr * 10.0),
+	    pp->bug_stats.ltime, pp->bug_stats.best, pp->bug_stats.whenbest,
 
-  list_print(fp, p, L_CENSOR);
-  list_print(fp, p, L_NOTIFY);
-  list_print(fp, p, L_NOPLAY);
-  list_print(fp, p, L_GNOTIFY);
-  list_print(fp, p, L_CHANNEL);
+	    pp->lastHost); /* fprintf() */
+
+	fprintf(fp, "%s\n", pp->prompt);
+
+	fprintf(fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
+	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+	    pp->open, pp->rated, pp->ropen, pp->timeOfReg, pp->totalTime,
+	    pp->bell, pp->pgn, pp->notifiedby, pp->i_login, pp->i_game,
+	    pp->i_shout, pp->i_cshout, pp->i_tell, pp->i_kibitz, pp->private,
+	    pp->jprivate, pp->automail, pp->i_mailmess, pp->style, pp->d_time,
+	    pp->d_inc, pp->d_height, pp->d_width, pp->language, pp->adminLevel,
+	    pp->num_white, pp->num_black, pp->highlight, pp->num_comments,
+	    pp->num_plan, pp->num_formula,
+
+	    list_size(p, L_CENSOR),
+	    list_size(p, L_NOTIFY),
+	    list_size(p, L_NOPLAY),
+	    list_size(p, L_GNOTIFY),
+	    pp->numAlias,
+	    list_size(p, L_CHANNEL));
+
+	for (i = 0; i < pp->num_plan; i++)
+		fprintf(fp, "%s\n", (pp->planLines[i] ? pp->planLines[i] : ""));
+	for (i = 0; i < pp->num_formula; i++) {
+		fprintf(fp, "%s\n", (pp->formulaLines[i] ? pp->formulaLines[i] :
+		    ""));
+	}
+
+	if (parray[p].formula != NULL)
+		fprintf(fp, "%s\n", pp->formula);
+	else
+		fprintf(fp, "NONE\n");
+
+	for (i = 0; i < pp->numAlias; i++) {
+		fprintf(fp, "%s %s\n", pp->alias_list[i].comm_name,
+		    pp->alias_list[i].alias);
+	}
+
+	list_print(fp, p, L_CENSOR);
+	list_print(fp, p, L_NOTIFY);
+	list_print(fp, p, L_NOPLAY);
+	list_print(fp, p, L_GNOTIFY);
+	list_print(fp, p, L_CHANNEL);
 }
 
 PUBLIC int player_save(int p)
