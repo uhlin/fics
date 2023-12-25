@@ -800,20 +800,21 @@ PUBLIC char *file_bplayer(char *fname)
   return ptr + 1;
 }
 
-
-/* Hey, leave this code alone.  "a" is always in network byte order,
-   which is big-endian, even on a little-endian machine.  I fixed this
-   code to handle that correctly a while ago, and someone
-   gratuitiously changed it so that it would work correctly only on a
-   big-endian machine (like a Sun).  I have now changed it back. --mann
-*/
-PUBLIC char *dotQuad(unsigned int a)
+/*
+ * Hey, leave this code alone. 'a' is always in network byte order,
+ * which is big-endian, even on a little-endian machine. I fixed this
+ * code to handle that correctly a while ago and someone gratuitously
+ * changed it so that it would work correctly only on a big-endian
+ * machine (like a Sun). I have now changed it back.  --mann
+ */
+PUBLIC char *
+dotQuad(unsigned int a)
 {
-  static char tmp[20];
-  unsigned char *aa = (unsigned char *) &a;
+	static char	 tmp[20];
+	unsigned char	*aa = (unsigned char *) &a;
 
-  sprintf(tmp, "%d.%d.%d.%d", aa[0], aa[1], aa[2], aa[3]);
-  return tmp;
+	sprintf(tmp, "%d.%d.%d.%d", aa[0], aa[1], aa[2], aa[3]);
+	return tmp;
 }
 
 PUBLIC int
