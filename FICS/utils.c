@@ -790,14 +790,14 @@ PUBLIC char *file_wplayer(char *fname)
   return tmp;
 }
 
-PUBLIC char *file_bplayer(char *fname)
+PUBLIC char *
+file_bplayer(char *fname)
 {
-  char *ptr;
+	char *ptr;
 
-  ptr = rindex(fname, '-');
-  if (!ptr)
-    return "";
-  return ptr + 1;
+	if ((ptr = rindex(fname, '-')) == NULL)
+		return "";
+	return ptr + 1;
 }
 
 /*
