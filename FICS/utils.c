@@ -750,23 +750,27 @@ PUBLIC int truncate_file(char *file, int lines)
   return 0;
 }
 
-/* Warning, if lines in the file are greater than 1024 bytes in length, this
-   won't work! */
-PUBLIC int lines_file(char *file)
+/*
+ * XXX: If lines in the file are greater than 1024 bytes in length,
+ * this won't work!
+ */
+PUBLIC int
+lines_file(char *file)
 {
-  FILE *fp;
-  int lcount = 0;
-  char tmp[MAX_LINE_SIZE];
+	FILE	*fp;
+	char	 tmp[MAX_LINE_SIZE];
+	int	 lcount = 0;
 
-  fp = fopen(file, "r");
-  if (!fp)
-    return 0;
-  while (!feof(fp)) {
-    if (fgets(tmp, MAX_LINE_SIZE, fp))
-      lcount++;
-  }
-  fclose(fp);
-  return lcount;
+	if ((fp = fopen(file, "r")) == NULL)
+		return 0;
+
+	while (!feof(fp)) {
+		if (fgets(tmp, MAX_LINE_SIZE, fp))
+			lcount++;
+	}
+
+	fclose(fp);
+	return lcount;
 }
 
 PUBLIC int
