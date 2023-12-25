@@ -396,38 +396,38 @@ PUBLIC int psend_file(int p, char *dir, char *file)
 }
 
 /*
- * Marsalis added on 8/27/95 so that [next] does not
- * appear in the logout process for those that have
- * a short screen height.  (Fixed due to complaint
- * in Bug's messages).
+ * Marsalis added on 8/27/95 so that [next] does not appear in the
+ * logout process for those that have a short screen height.
  */
-PUBLIC int psend_logoutfile(int p, char *dir, char *file)
+PUBLIC int
+psend_logoutfile(int p, char *dir, char *file)
 {
-  FILE *fp;
-  char tmp[MAX_LINE_SIZE];
-  char fname[MAX_FILENAME_SIZE];
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 tmp[MAX_LINE_SIZE];
 
-  if (parray[p].last_file)
-    rfree(parray[p].last_file);
-  parray[p].last_file = NULL;
-  parray[p].last_file_byte = 0L;
+	if (parray[p].last_file)
+		rfree(parray[p].last_file);
+	parray[p].last_file = NULL;
+	parray[p].last_file_byte = 0L;
 
-  if (dir)
-    sprintf(fname, "%s/%s", dir, file);
-  else
-    strcpy(fname, file);
-  fp = fopen(fname, "r");
-  if (!fp)
-    return -1;
-  while (!feof(fp)) {
-    fgets(tmp, MAX_LINE_SIZE - 1, fp);
-    if (!feof(fp)) {
-	net_send_string(parray[p].socket, tmp, 1);
-    }
-  }
+	if (dir)
+		sprintf(fname, "%s/%s", dir, file);
+	else
+		strcpy(fname, file);
 
-  fclose(fp);
-  return 0;
+	if ((fp = fopen(fname, "r")) == NULL)
+		return -1;
+
+	while (!feof(fp)) {
+		fgets(tmp, MAX_LINE_SIZE - 1, fp);
+
+		if (!feof(fp))
+			net_send_string(parray[p].socket, tmp, 1);
+	}
+
+	fclose(fp);
+	return 0;
 }
 
 PUBLIC int
