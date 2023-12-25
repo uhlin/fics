@@ -36,13 +36,13 @@
 #include "utils.h"
 
 struct t_tree {
-	char		 name;
 	struct t_tree	*left, *right;
+	char		 name;
 };
 
 struct t_dirs {
-	char		 name;
 	struct t_dirs	*left, *right;
+	char		 name;
 	struct t_tree	*files;
 	time_t		 mtime;
 };
