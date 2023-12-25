@@ -904,15 +904,18 @@ PRIVATE void t_sft(char *want, struct t_tree *t)
   }
 }
 
-/* delete file tree t_tree */
-PRIVATE void t_cft(struct t_tree **t)
+/*
+ * Delete file tree
+ */
+PRIVATE void
+t_cft(struct t_tree **t)
 {
-  if (*t) {
-    t_cft(&(*t)->left);
-    t_cft(&(*t)->right);
-    rfree(*t);
-    *t = NULL;
-  }
+	if (*t) {
+		t_cft(&(*t)->left);
+		t_cft(&(*t)->right);
+		rfree(*t);
+		*t = NULL;
+	}
 }
 
 /*
