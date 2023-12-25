@@ -189,18 +189,18 @@ mail_file_to_address(char *addr, char *subj, char *fname)
 	return 0;
 }
 
-PUBLIC int mail_file_to_user(int p, char *subj, char *fname)
+PUBLIC int
+mail_file_to_user(int p, char *subj, char *fname)
 {
-
-  if (parray[p].emailAddress &&
-      parray[p].emailAddress[0] &&
-      safestring(parray[p].emailAddress)) {
-    return mail_file_to_address(parray[p].emailAddress, subj, fname);
-  } else {
-    return -1;
-  }
+	if (parray[p].emailAddress &&
+	    parray[p].emailAddress[0] &&
+	    safestring(parray[p].emailAddress)) {
+		return mail_file_to_address(parray[p].emailAddress, subj,
+		    fname);
+	} else {
+		return -1;
+	}
 }
-
 
 /*
  * Process a command for a user
