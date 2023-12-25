@@ -60,14 +60,12 @@ PUBLIC int count_lines(FILE *fp)
   return nl;
 }
 
-PUBLIC int iswhitespace(int c)
+PUBLIC int
+iswhitespace(int c)
 {
-  if ((c < ' ') || (c == '\b') || (c == '\n') ||
-      (c == '\t') || (c == ' ')) {	/* white */
-    return 1;
-  } else {
-    return 0;
-  }
+	if (c < ' ' || c == '\b' || c == '\n' || c == '\t' || c == ' ')
+		return 1;
+	return 0;
 }
 
 PUBLIC char *
