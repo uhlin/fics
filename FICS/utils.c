@@ -49,15 +49,15 @@ struct t_dirs {
 PRIVATE char**	t_buffer = NULL;
 PRIVATE int	t_buffersize = 0;
 
-PUBLIC int count_lines(FILE *fp)
+PUBLIC int
+count_lines(FILE *fp)
 {
-  int c, nl = 0;
+	int c, nl = 0;
 
-  while ((c = fgetc(fp)) != EOF)
-	if (c == '\n')
-		++nl;
-
-  return nl;
+	while ((c = fgetc(fp)) != EOF)
+		if (c == '\n')
+			++nl;
+	return nl;
 }
 
 PUBLIC int
