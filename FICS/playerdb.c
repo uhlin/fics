@@ -23,6 +23,7 @@
    Markus Uhlin                 23/12/13	Fixed compiler warnings
    Markus Uhlin                 23/12/17	Usage of 'time_t'
    Markus Uhlin                 23/12/19	Usage of 'time_t'
+   Markus Uhlin                 23/12/25	Reformatted functions
 */
 
 #include "stdinclude.h"
