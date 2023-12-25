@@ -948,7 +948,7 @@ t_sft(char *want, struct t_tree *t)
 PRIVATE void
 t_cft(struct t_tree **t)
 {
-	if (*t) {
+	if (t != NULL && *t != NULL) {
 		t_cft(&(*t)->left);
 		t_cft(&(*t)->right);
 		rfree(*t);
