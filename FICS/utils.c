@@ -778,16 +778,18 @@ PUBLIC int file_has_pname(char *fname, char *plogin)
   return 0;
 }
 
-PUBLIC char *file_wplayer(char *fname)
+PUBLIC char *
+file_wplayer(char *fname)
 {
-  static char tmp[MAX_FILENAME_SIZE];
-  char *ptr;
-  strcpy(tmp, fname);
-  ptr = rindex(tmp, '-');
-  if (!ptr)
-    return "";
-  *ptr = '\0';
-  return tmp;
+	char		*ptr;
+	static char	 tmp[MAX_FILENAME_SIZE];
+
+	strcpy(tmp, fname);
+
+	if ((ptr = rindex(tmp, '-')) == NULL)
+		return "";
+	*ptr = '\0';
+	return tmp;
 }
 
 PUBLIC char *
