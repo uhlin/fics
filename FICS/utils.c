@@ -203,7 +203,7 @@ PUBLIC int mail_file_to_user(int p, char *subj, char *fname)
 
 
 /* Process a command for a user */
-PUBLIC int pcommand(int p, char *comstr,...)
+PUBLIC int pcommand(int p, char *comstr, ...)
 {
   char tmp[MAX_LINE_SIZE];
   int retval;
@@ -221,7 +221,7 @@ PUBLIC int pcommand(int p, char *comstr,...)
   return retval;
 }
 
-PUBLIC int pprintf(int p, char *format,...)
+PUBLIC int pprintf(int p, char *format, ...)
 {
   char tmp[10 * MAX_LINE_SIZE];	/* Make sure you can handle 10 lines worth of
 				   stuff */
@@ -250,7 +250,7 @@ PUBLIC void pprintf_dohightlight(int p)
     pprintf(p, "\033[2m");
 }
 
-PUBLIC int pprintf_highlight(int p, char *format,...)
+PUBLIC int pprintf_highlight(int p, char *format, ...)
 {
   char tmp[10 * MAX_LINE_SIZE];
   int retval;
@@ -283,7 +283,7 @@ PUBLIC void sprintf_dohightlight(int p, char *s)
 }
 
 PUBLIC int
-psprintf_highlight(int p, char *s, char *format,...)
+psprintf_highlight(int p, char *s, char *format, ...)
 {
 	int retval;
 	va_list ap;
@@ -306,7 +306,7 @@ psprintf_highlight(int p, char *s, char *format,...)
 }
 
 PUBLIC int
-pprintf_prompt(int p, char *format,...)
+pprintf_prompt(int p, char *format, ...)
 {
 	char tmp[10 * MAX_LINE_SIZE];
 	int retval;
@@ -322,7 +322,7 @@ pprintf_prompt(int p, char *format,...)
 }
 
 PUBLIC int
-pprintf_noformat(int p, char *format,...)
+pprintf_noformat(int p, char *format, ...)
 {
 	char tmp[10 * MAX_LINE_SIZE];
 	int retval;
