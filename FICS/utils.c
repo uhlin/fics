@@ -103,22 +103,27 @@ PUBLIC char *eatwhite(char *str)
   return str;
 }
 
-PUBLIC char *eattailwhite(char *str)
+PUBLIC char *
+eattailwhite(char *str)
 {
-  int len;
-  if (str == NULL)
-    return NULL;
+	int len;
 
-  len = strlen(str);
-  while (len > 0 && iswhitespace(str[len - 1]))
-    len--;
-  str[len] = '\0';
-  return (str);
+	if (str == NULL)
+		return NULL;
+
+	len = strlen(str);
+
+	while (len > 0 && iswhitespace(str[len - 1]))
+		len--;
+
+	str[len] = '\0';
+	return str;
 }
 
-PUBLIC char *nextword(char *str)
+PUBLIC char *
+nextword(char *str)
 {
-  return eatwhite(eatword(str));
+	return eatwhite(eatword(str));
 }
 
 PUBLIC int
