@@ -269,17 +269,17 @@ PUBLIC int pprintf_highlight(int p, char *format, ...)
   return retval;
 }
 
-PUBLIC void sprintf_dohightlight(int p, char *s)
+PUBLIC void
+sprintf_dohightlight(int p, char *s)
 {
-
-  if (parray[p].highlight & 0x01)
-    strcat(s, "\033[7m");
-  if (parray[p].highlight & 0x02)
-    strcat(s, "\033[1m");
-  if (parray[p].highlight & 0x04)
-    strcat(s, "\033[4m");
-  if (parray[p].highlight & 0x08)
-    strcat(s, "\033[2m");
+	if (parray[p].highlight & 0x01)
+		strcat(s, "\033[7m");
+	if (parray[p].highlight & 0x02)
+		strcat(s, "\033[1m");
+	if (parray[p].highlight & 0x04)
+		strcat(s, "\033[4m");
+	if (parray[p].highlight & 0x08)
+		strcat(s, "\033[2m");
 }
 
 PUBLIC int
