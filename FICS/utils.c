@@ -299,23 +299,20 @@ PUBLIC int psprintf_highlight(int p, char *s, char *format,...)
   return retval;
 }
 
-PUBLIC int pprintf_prompt(int p, char *format,...)
+PUBLIC int
+pprintf_prompt(int p, char *format,...)
 {
-  char tmp[10 * MAX_LINE_SIZE];	/* Make sure you can handle 10 lines worth of
-				   stuff */
-  int retval;
-  va_list ap;
+	char tmp[10 * MAX_LINE_SIZE];
+	int retval;
+	va_list ap;
 
-  va_start(ap, format);
+	va_start(ap, format);
+	retval = vsnprintf(tmp, sizeof tmp, format, ap);
+	va_end(ap);
 
-  retval = vsprintf(tmp, format, ap);
-  if (strlen(tmp) > 10 * MAX_LINE_SIZE) {
-    fprintf(stderr, "FICS: pprintf_prompt buffer overflow\n");
-  }
-  net_send_string(parray[p].socket, tmp, 1);
-  net_send_string(parray[p].socket, parray[p].prompt, 1);
-  va_end(ap);
-  return retval;
+	net_send_string(parray[p].socket, tmp, 1);
+	net_send_string(parray[p].socket, parray[p].prompt, 1);
+	return retval;
 }
 
 PUBLIC int
