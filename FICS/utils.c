@@ -202,23 +202,29 @@ PUBLIC int mail_file_to_user(int p, char *subj, char *fname)
 }
 
 
-/* Process a command for a user */
-PUBLIC int pcommand(int p, char *comstr, ...)
+/*
+ * Process a command for a user
+ */
+PUBLIC int
+pcommand(int p, char *comstr, ...)
 {
-  char tmp[MAX_LINE_SIZE];
-  int retval;
-  int current_socket = parray[p].socket;
-  va_list ap;
-  va_start(ap, comstr);
+	char tmp[MAX_LINE_SIZE];
+	int current_socket = parray[p].socket;
+	int retval;
+	va_list ap;
 
-  vsprintf(tmp, comstr, ap);
-  retval = process_input(current_socket, tmp);
-  if (retval == COM_LOGOUT) {
-    process_disconnection(current_socket);
-    net_close_connection(current_socket);
-  }
-  va_end(ap);
-  return retval;
+	va_start(ap, comstr);
+	vsnprintf(tmp, sizeof tmp, comstr, ap);
+	va_end(ap);
+
+	retval = process_input(current_socket, tmp);
+
+	if (retval == COM_LOGOUT) {
+		process_disconnection(current_socket);
+		net_close_connection(current_socket);
+	}
+
+	return retval;
 }
 
 PUBLIC int
