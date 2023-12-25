@@ -143,16 +143,17 @@ PUBLIC int mail_string_to_address(char *addr, char *subj, char *str)
   return 0;
 }
 
-PUBLIC int mail_string_to_user(int p, char *subj, char *str)
+PUBLIC int
+mail_string_to_user(int p, char *subj, char *str)
 {
-
-  if (parray[p].emailAddress &&
-      parray[p].emailAddress[0] &&
-      safestring(parray[p].emailAddress)) {
-    return mail_string_to_address(parray[p].emailAddress, subj, str);
-  } else {
-    return -1;
-  }
+	if (parray[p].emailAddress &&
+	    parray[p].emailAddress[0] &&
+	    safestring(parray[p].emailAddress)) {
+		return mail_string_to_address(parray[p].emailAddress, subj,
+		    str);
+	} else {
+		return -1;
+	}
 }
 
 PUBLIC int
