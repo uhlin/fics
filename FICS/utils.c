@@ -598,44 +598,46 @@ int days, hours, mins, secs;
     return tstr;
 }
 
-PUBLIC char *hms(int t, int showhour, int showseconds, int spaces)
+PUBLIC char *
+hms(int t, int showhour, int showseconds, int spaces)
 {
-  static char tstr[20];
-  char tmp[10];
-  int h, m, s;
+	char		tmp[10];
+	int		h, m, s;
+	static char	tstr[20];
 
-  h = t / 3600;
-  t = t % 3600;
-  m = t / 60;
-  s = t % 60;
-  if (h || showhour) {
-    if (spaces)
-      sprintf(tstr, "%d : %02d", h, m);
-    else
-      sprintf(tstr, "%d:%02d", h, m);
-  } else {
-    sprintf(tstr, "%d", m);
-  }
-  if (showseconds) {
-    if (spaces)
-      sprintf(tmp, " : %02d", s);
-    else
-      sprintf(tmp, ":%02d", s);
-    strcat(tstr, tmp);
-  }
-  return tstr;
+	h = (t / 3600);
+	t = (t % 3600);
+	m = (t / 60);
+	s = (t % 60);
+
+	if (h || showhour) {
+		if (spaces)
+			sprintf(tstr, "%d : %02d", h, m);
+		else
+			sprintf(tstr, "%d:%02d", h, m);
+	} else {
+		sprintf(tstr, "%d", m);
+	}
+	if (showseconds) {
+		if (spaces)
+			sprintf(tmp, " : %02d", s);
+		else
+			sprintf(tmp, ":%02d", s);
+		strcat(tstr, tmp);
+	}
+	return tstr;
 }
 
-PRIVATE char *strtime(struct tm * stm)
+PRIVATE char *
+strtime(struct tm * stm)
 {
-  static char tstr[100];
-
+	static char tstr[100];
 #if defined (SGI)
-  strftime(tstr, sizeof(tstr), "%a %b %e, %H:%M %Z", stm);
+	strftime(tstr, sizeof(tstr), "%a %b %e, %H:%M %Z", stm);
 #else
-  strftime(tstr, sizeof(tstr), "%a %b %e, %k:%M %Z", stm);
+	strftime(tstr, sizeof(tstr), "%a %b %e, %k:%M %Z", stm);
 #endif
-  return (tstr);
+	return (tstr);
 }
 
 PUBLIC char *
