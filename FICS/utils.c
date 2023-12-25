@@ -563,39 +563,36 @@ xstrdup(const char *str)
 	return strcpy(out, str);
 }
 
-PUBLIC char *hms_desc(int t)
+PUBLIC char *
+hms_desc(int t)
 {
-static char tstr[80];
-int days, hours, mins, secs;
+	int		days, hours, mins, secs;
+	static char	tstr[80];
 
-    days  = (t / (60*60*24));
-    hours = ((t % (60*60*24)) / (60*60));
-    mins  = (((t % (60*60*24)) % (60*60)) / 60);
-    secs  = (((t % (60*60*24)) % (60*60)) % 60);
-    if ((days==0) && (hours==0) && (mins==0)) {
-      sprintf(tstr, "%d sec%s",
-                 secs, (secs==1) ? "" : "s");
-    } else if ((days==0) && (hours==0)) {
-/*      sprintf(tstr, "%d min%s, %d sec%s",
-                 mins, (mins==1) ? "" : "s",
-                 secs, (secs==1) ? "" : "s");  */
-      sprintf(tstr, "%d min%s",
-                 mins, (mins==1) ? "" : "s");
-    } else if (days==0) {
-      sprintf(tstr, "%d hr%s, %d min%s, %d "
-                 "sec%s",
-                 hours, (hours==1) ? "" : "s",
-                 mins, (mins==1) ? "" : "s",
-                 secs, (secs==1) ? "" : "s");
-    } else {
-      sprintf(tstr, "%d day%s, %d hour%s, %d minute%s "
-                 "and %d second%s",
-                 days, (days==1) ? "" : "s",
-                 hours, (hours==1) ? "" : "s",
-                 mins, (mins==1) ? "" : "s",
-                 secs, (secs==1) ? "" : "s");
-    }
-    return tstr;
+	days	= t / (60 * 60 * 24);
+	hours	= (t % (60 * 60 * 24)) / (60 * 60);
+	mins	= ((t % (60 * 60 * 24)) % (60 * 60)) / 60;
+	secs	= ((t % (60 * 60 * 24)) % (60 * 60)) % 60;
+
+	if (days == 0 && hours == 0 && mins == 0) {
+		sprintf(tstr, "%d sec%s", secs, (secs == 1 ? "" : "s"));
+	} else if (days == 0 && hours == 0) {
+		sprintf(tstr, "%d min%s", mins, (mins == 1 ? "" : "s"));
+	} else if (days == 0) {
+		sprintf(tstr, "%d hr%s, %d min%s, %d sec%s",
+		    hours, (hours == 1 ? "" : "s"),
+		    mins, (mins == 1 ? "" : "s"),
+		    secs, (secs == 1 ? "" : "s"));
+	} else {
+		sprintf(tstr, "%d day%s, %d hour%s, %d minute%s and "
+		    "%d second%s",
+		    days, (days == 1 ? "" : "s"),
+		    hours, (hours == 1 ? "" : "s"),
+		    mins, (mins == 1 ? "" : "s"),
+		    secs, (secs == 1 ? "" : "s"));
+	}
+
+	return tstr;
 }
 
 PUBLIC char *
