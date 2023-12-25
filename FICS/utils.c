@@ -361,38 +361,42 @@ PUBLIC int psend_raw_file(int p, char *dir, char *file)
   return 0;
 }
 
-PUBLIC int psend_file(int p, char *dir, char *file)
+PUBLIC int
+psend_file(int p, char *dir, char *file)
 {
-  FILE *fp;
-  char tmp[MAX_LINE_SIZE];
-  char fname[MAX_FILENAME_SIZE];
-  int lcount = parray[p].d_height - 1;
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 tmp[MAX_LINE_SIZE];
+	int	 lcount = (parray[p].d_height - 1);
 
-  if (parray[p].last_file)
-    rfree(parray[p].last_file);
-  parray[p].last_file = NULL;
-  parray[p].last_file_byte = 0L;
+	if (parray[p].last_file)
+		rfree(parray[p].last_file);
+	parray[p].last_file = NULL;
+	parray[p].last_file_byte = 0L;
 
-  if (dir)
-    sprintf(fname, "%s/%s", dir, file);
-  else
-    strcpy(fname, file);
-  fp = fopen(fname, "r");
-  if (!fp)
-    return -1;
-  while (!feof(fp) && (--lcount > 0)) {
-    fgets(tmp, MAX_LINE_SIZE - 1, fp);
-    if (!feof(fp)) {
-      net_send_string(parray[p].socket, tmp, 1);
-    }
-  }
-  if (!feof(fp)) {
-    parray[p].last_file = xstrdup(fname);
-    parray[p].last_file_byte = ftell(fp);
-    pprintf(p, "Type [next] to see next page.\n");
-  }
-  fclose(fp);
-  return 0;
+	if (dir)
+		sprintf(fname, "%s/%s", dir, file);
+	else
+		strcpy(fname, file);
+
+	if ((fp = fopen(fname, "r")) == NULL)
+		return -1;
+
+	while (!feof(fp) && --lcount > 0) {
+		fgets(tmp, MAX_LINE_SIZE - 1, fp);
+
+		if (!feof(fp))
+			net_send_string(parray[p].socket, tmp, 1);
+	}
+
+	if (!feof(fp)) {
+		parray[p].last_file = xstrdup(fname);
+		parray[p].last_file_byte = ftell(fp);
+		pprintf(p, "Type [next] to see next page.\n");
+	}
+
+	fclose(fp);
+	return 0;
 }
 
 /*
