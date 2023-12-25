@@ -42,9 +42,9 @@ struct t_tree {
 
 struct t_dirs {
 	struct t_dirs	*left, *right;
-	char		 name;
-	struct t_tree	*files;
 	time_t		 mtime;
+	struct t_tree	*files;
+	char		 name;
 };
 
 PRIVATE char**	t_buffer = NULL;
