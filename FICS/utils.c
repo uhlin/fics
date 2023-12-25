@@ -997,15 +997,15 @@ PUBLIC int search_directory(char *dir, char *filter, char **buffer, int buffersi
   return (buffersize - t_buffersize);
 }
 
-PUBLIC int display_directory(int p, char **buffer, int count)
-/* buffer contains 'count' string pointers */
-{
-  int i;
-  multicol *m = multicol_start(count);
+PUBLIC int
+display_directory(int p, char **buffer, int count)
+{ // 'buffer' contains 'count' string pointers.
+	int		 i;
+	multicol	*m = multicol_start(count);
 
-  for (i = 0; (i < count); i++)
-    multicol_store(m, *buffer++);
-  multicol_pprint(m, p, 78, 1);
-  multicol_end(m);
-  return (i);
+	for (i = 0; (i < count); i++)
+		multicol_store(m, *buffer++);
+	multicol_pprint(m, p, 78, 1);
+	multicol_end(m);
+	return (i);
 }
