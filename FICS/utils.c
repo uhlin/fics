@@ -769,13 +769,14 @@ PUBLIC int lines_file(char *file)
   return lcount;
 }
 
-PUBLIC int file_has_pname(char *fname, char *plogin)
+PUBLIC int
+file_has_pname(char *fname, char *plogin)
 {
-  if (!strcmp(file_wplayer(fname), plogin))
-    return 1;
-  if (!strcmp(file_bplayer(fname), plogin))
-    return 1;
-  return 0;
+	if (!strcmp(file_wplayer(fname), plogin))
+		return 1;
+	if (!strcmp(file_bplayer(fname), plogin))
+		return 1;
+	return 0;
 }
 
 PUBLIC char *
