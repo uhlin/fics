@@ -888,20 +888,26 @@ struct t_dirs {
 PRIVATE char **t_buffer = NULL; /* pointer to next space in return buffer */
 PRIVATE int t_buffersize = 0;	/* size of return buffer */
 
-/* fill t_buffer with anything matching "want*" in file tree t_tree */
-PRIVATE void t_sft(char *want, struct t_tree *t)
+/*
+ * Fill 't_buffer' with anything matching "want*" in file tree
+ */
+PRIVATE void
+t_sft(char *want, struct t_tree *t)
 {
-  if (t) {
-    int cmp = strncmp(want, &t->name, strlen(want));
-    if (cmp <= 0)		/* if want <= this one, look left */
-      t_sft(want, t->left);
-    if (t_buffersize && (cmp == 0)) {	/* if a match, add it to buffer */
-      t_buffersize--;
-      *t_buffer++ = &(t->name);
-    }
-    if (cmp >= 0)		/* if want >= this one, look right */
-      t_sft(want, t->right);
-  }
+	if (t) {
+		int cmp = strncmp(want, &t->name, strlen(want));
+
+		if (cmp <= 0) // If 'want' <= this one, look left
+			t_sft(want, t->left);
+
+		if (t_buffersize && cmp == 0) { // If a match, add it to buffer
+			t_buffersize--;
+			*t_buffer++ = &(t->name);
+		}
+
+		if (cmp >= 0) // If 'want' >= this one, look right
+			t_sft(want, t->right);
+	}
 }
 
 /*
