@@ -868,24 +868,26 @@ PUBLIC char *ratstr(int rat)
   return tmp[on - 1];
 }
 
-PUBLIC char *ratstrii(int rat, int reg)
+PUBLIC char *
+ratstrii(int rat, int reg)
 {
-  static int on = 0;
-  static char tmp[20][10];
+	static char	tmp[20][10];
+	static int	on = 0;
 
-  if (on == 20)
-    on = 0;
-  if (rat) {
-    sprintf(tmp[on], "%4d", rat);
-  } else {
-    if (reg) {
-      sprintf(tmp[on], "----");
-    } else {
-      sprintf(tmp[on], "++++");
-    }
-  }
-  on++;
-  return tmp[on - 1];
+	if (on == 20)
+		on = 0;
+	if (rat) {
+		sprintf(tmp[on], "%4d", rat);
+	} else {
+		if (reg) {
+			sprintf(tmp[on], "----");
+		} else {
+			sprintf(tmp[on], "++++");
+		}
+	}
+
+	on++;
+	return tmp[on - 1];
 }
 
 /*
