@@ -948,53 +948,63 @@ PRIVATE void t_mft(struct t_dirs *d)
   }
 }
 
-PUBLIC int search_directory(char *dir, char *filter, char **buffer, int buffersize)
+/*
+ * dir = directory to search
+ * filter = what to search for
+ * buffer = where to store pointers to matches
+ * buffersize = how many pointers will fit inside buffer
+ */
+PUBLIC int
+search_directory(char *dir, char *filter, char **buffer, int buffersize)
 {
-/* dir = directory to search
-   filter = what to search for
-   buffer = where to store pointers to matches
-   buffersize = how many pointers will fit inside buffer */
+	int cmp;
+	static char nullify = '\0';
+	static struct t_dirs *ramdirs = NULL;
+	struct stat statbuf;
+	struct t_dirs **i;
 
-  static struct t_dirs *ramdirs = NULL;
-  struct t_dirs **i;
-  int cmp;
-  static char nullify = '\0';
-  struct stat statbuf;
+	t_buffer	= buffer;
+	t_buffersize	= buffersize;
 
-  t_buffer = buffer;
-  t_buffersize = buffersize;
+	if (!stat(dir, &statbuf)) {
+		if (filter == NULL)	// NULL becomes pointer to null string
+			filter = &nullify;
 
-  if (!stat(dir, &statbuf)) {
-    if (filter == NULL)		/* NULL becomes pointer to null string */
-      filter = &nullify;
-    i = &ramdirs;
-    while (*i) {			/* find dir in dir tree */
-      cmp = strcmp(dir, &(*i)->name);
-      if (cmp == 0)
-	break;
-      else if (cmp < 0)
-	i = &(*i)->left;
-      else
-	i = &(*i)->right;
-    }
-    if (!*i) {				/* if dir isn't in dir tree, add him */
-      *i = rmalloc(sizeof(struct t_dirs) + strlen(dir));
-      (*i)->left = (*i)->right = NULL;
-      (*i)->files = NULL;
-      strcpy(&(*i)->name, dir);
-    }
-    if ((*i)->files) {			/* delete any obsolete file tree */
-      if ((*i)->mtime != statbuf.st_mtime) {
-	t_cft(&(*i)->files);
-      }
-    }
-    if ((*i)->files == NULL) {		/* if no file tree for him, make one */
-      (*i)->mtime = statbuf.st_mtime;
-      t_mft(*i);
-    }
-    t_sft(filter, (*i)->files);		/* finally, search for matches */
-  }
-  return (buffersize - t_buffersize);
+		i = &ramdirs;
+
+		while (*i) {		// Find dir in dir tree
+			if ((cmp = strcmp(dir, &(*i)->name)) == 0)
+				break;
+			else if (cmp < 0)
+				i = &(*i)->left;
+			else
+				i = &(*i)->right;
+		}
+
+		if (!*i) {			// If dir isn't in dir tree,
+						// add him.
+			*i = rmalloc(sizeof(struct t_dirs) + strlen(dir));
+			(*i)->left = (*i)->right = NULL;
+			(*i)->files = NULL;
+			strcpy(&(*i)->name, dir);
+		}
+
+		if ((*i)->files) {		// Delete any obsolete file
+						// tree.
+			if ((*i)->mtime != statbuf.st_mtime)
+				t_cft(&(*i)->files);
+		}
+
+		if ((*i)->files == NULL) {	// If no file tree for him,
+						// make one.
+			(*i)->mtime = statbuf.st_mtime;
+			t_mft(*i);
+		}
+
+		t_sft(filter, (*i)->files);	// Finally, search for matches.
+	}
+
+	return (buffersize - t_buffersize);
 }
 
 PUBLIC int
