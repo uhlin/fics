@@ -851,21 +851,22 @@ PUBLIC int file_exists(char *fname)
   return 1;
 }
 
-PUBLIC char *ratstr(int rat)
+PUBLIC char *
+ratstr(int rat)
 {
-  static int on = 0;
-  static char tmp[20][10];
+	static char	tmp[20][10];
+	static int	on = 0;
 
-  if (on == 20)
-    on = 0;
-  if (rat) {
-    sprintf(tmp[on], "%4d", rat);
-  } else {
-    sprintf(tmp[on], "----");
+	if (on == 20)
+		on = 0;
+	if (rat) {
+		sprintf(tmp[on], "%4d", rat);
+	} else {
+		sprintf(tmp[on], "----");
+	}
 
-  }
-  on++;
-  return tmp[on - 1];
+	on++;
+	return tmp[on - 1];
 }
 
 PUBLIC char *
