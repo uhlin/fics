@@ -691,18 +691,21 @@ PUBLIC unsigned tenth_secs(void)
   return ((tp.tv_sec - 331939277) * 10L) + (tp.tv_usec / 100000);
 }
 
-/* This is to translate tenths-secs time back into 1/1/70 time in full
- * seconds, because vek didn't read utils.c when he programmed new ratings.
-   1 sec since 1970 fits into a 32 bit int OK.
-*/
-PUBLIC int untenths(unsigned tenths)
+/*
+ * This is to translate tenths-secs time back into 1/1/70 time in full
+ * seconds, because vek didn't read utils.c when he programmed new
+ * ratings. 1 sec since 1970 fits into a 32 bit int OK.
+ */
+PUBLIC int
+untenths(unsigned tenths)
 {
-  return (tenths / 10 + 331939277 + 0xffffffff / 10 + 1);
+	return (tenths / 10 + 331939277 + 0xffffffff / 10 + 1);
 }
 
-PUBLIC char *tenth_str(unsigned t, int spaces)
+PUBLIC char *
+tenth_str(unsigned t, int spaces)
 {
-  return hms((t + 5) / 10, 0, 1, spaces);	/* Round it */
+	return hms((t + 5) / 10, 0, 1, spaces);
 }
 
 /*
