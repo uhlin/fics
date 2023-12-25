@@ -465,29 +465,32 @@ PUBLIC int pmore_file(int p)
   return 0;
 }
 
-PUBLIC int psend_command(int p, char *command, char *input)
+PUBLIC int
+psend_command(int p, char *command, char *input)
 {
-  FILE *fp;
-  char tmp[MAX_LINE_SIZE];
-  int num;
+	FILE	*fp;
+	char	 tmp[MAX_LINE_SIZE];
+	int	 num;
 
-  if (input)
-    fp = popen(command, "w");
-  else
-    fp = popen(command, "r");
-  if (!fp)
-    return -1;
-  if (input) {
-    fwrite(input, sizeof(char), strlen(input), fp);
-  } else {
-    while (!feof(fp)) {
-      num = fread(tmp, sizeof(char), MAX_LINE_SIZE - 1, fp);
-      tmp[num] = '\0';
-      net_send_string(parray[p].socket, tmp, 1);
-    }
-  }
-  pclose(fp);
-  return 0;
+	if (input)
+		fp = popen(command, "w");
+	else
+		fp = popen(command, "r");
+	if (!fp)
+		return -1;
+
+	if (input) {
+		fwrite(input, sizeof(char), strlen(input), fp);
+	} else {
+		while (!feof(fp)) {
+			num = fread(tmp, sizeof(char), MAX_LINE_SIZE - 1, fp);
+			tmp[num] = '\0';
+			net_send_string(parray[p].socket, tmp, 1);
+		}
+	}
+
+	pclose(fp);
+	return 0;
 }
 
 PUBLIC char *
