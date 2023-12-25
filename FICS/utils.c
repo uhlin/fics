@@ -816,28 +816,10 @@ PUBLIC char *dotQuad(unsigned int a)
   return tmp;
 }
 
-PUBLIC int available_space(void)
+PUBLIC int
+available_space(void)
 {
-#if defined(SYSTEM_NEXT)
-  struct statfs buf;
-
-  statfs(player_dir, &buf);
-  return ((buf.f_bsize * buf.f_bavail));
-#elif defined(SYSTEM_ULTRIX)
-  struct fs_data buf;
-
-  statfs(player_dir, &buf);
-  return ((1024 * buf.bfreen));
-#elif defined(SYSTEM_SUN4)
-/*
-  struct statfs buf;
-
-  statfs(player_dir, buf);
-  return (1024 * buf.f_bfree); */
-  return 100000000;		/* Infinite space */
-#else
-   return 100000000;		/* Infinite space */
-#endif
+	return 100000000; /* Infinite space */
 }
 
 PUBLIC int
