@@ -840,15 +840,15 @@ PUBLIC int available_space(void)
 #endif
 }
 
-PUBLIC int file_exists(char *fname)
+PUBLIC int
+file_exists(char *fname)
 {
-  FILE *fp;
+	FILE *fp;
 
-  fp = fopen(fname, "r");
-  if (!fp)
-    return 0;
-  fclose(fp);
-  return 1;
+	if ((fp = fopen(fname, "r")) == NULL)
+		return 0;
+	fclose(fp);
+	return 1;
 }
 
 PUBLIC char *
