@@ -26,8 +26,8 @@
 */
 
 #include "stdinclude.h"
-
 #include "common.h"
+
 #include "config.h"
 #include "network.h"
 #include "playerdb.h"
