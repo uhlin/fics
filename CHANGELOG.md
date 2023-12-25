@@ -20,6 +20,7 @@ documented in this file.
   - `network.c`
   - `shutdown.c`
   - `stdinclude.h`
+  - `utils.c`
   - ...
 - Fixed a `sscanf()` bug in `com_anews()`.
 - Fixed a bug in `fix_time()` (did return a local address)
