@@ -525,18 +525,16 @@ PUBLIC int safestring(char *str)
   return 1;
 }
 
-PUBLIC int alphastring(char *str)
+PUBLIC int
+alphastring(char *str)
 {
-  int i;
-
-  if (!str)
-    return 1;
-  for (i = 0; str[i]; i++) {
-    if (!isalpha(str[i])) {
-      return 0;
-    }
-  }
-  return 1;
+	if (!str)
+		return 1;
+	for (int i = 0; str[i]; i++) {
+		if (!isalpha(str[i]))
+			return 0;
+	}
+	return 1;
 }
 
 PUBLIC int
