@@ -25,9 +25,10 @@
 */
 
 #include "stdinclude.h"
+#include "common.h"
 
 #include "command.h"
-#include "common.h"
+#include "fics_getsalt.h"
 #include "playerdb.h"
 #include "utils.h"
 
@@ -51,7 +52,7 @@ PUBLIC int
 main(int argc, char *argv[])
 {
 	char	 password[PASSLEN + 1];
-	char	 salt[6];
+	char	 salt[FICS_SALT_SIZE];
 	char	 text[2048];
 	int	 i;
 	int	 p;
@@ -115,12 +116,7 @@ main(int argc, char *argv[])
 		password[i] = ('a' + rand() % 26);
 	password[i] = '\0';
 
-	salt[0] = '$';
-	salt[1] = '1';
-	salt[2] = '$';
-	salt[3] = ('a' + rand() % 26);
-	salt[4] = ('a' + rand() % 26);
-	salt[5] = '\0';
+	strcpy(salt, fics_getsalt());
 	parray[p].passwd = xstrdup(crypt(password, salt));
 	parray[p].registered = 1;
 //	parray[p].network_player = !local;

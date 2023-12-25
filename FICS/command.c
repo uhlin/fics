@@ -33,6 +33,7 @@
 #include "command.h"
 #include "command_list.h"
 #include "config.h"
+#include "fics_getsalt.h"
 #include "ficsmain.h"
 #include "gamedb.h"
 #include "gameproc.h"
@@ -661,7 +662,7 @@ check_news(int p, int admin)
 PRIVATE int
 process_password(int p, char *password)
 {
-	char		 salt[6];
+	char		 salt[FICS_SALT_SIZE];
 	int		 dummy;    // to hold a return value
 	int		 fd;
 	int		 messnum;
@@ -671,12 +672,8 @@ process_password(int p, char *password)
 	turn_echo_on(parray[p].socket);
 
 	if (parray[p].passwd && parray[p].registered) {
-		salt[0] = '$';
-		salt[1] = '1';
-		salt[2] = '$';
-		salt[3] = parray[p].passwd[0];
-		salt[4] = parray[p].passwd[1];
-		salt[5] = '\0';
+		strncpy(salt, &(parray[p].passwd[0]), sizeof salt - 1);
+		salt[sizeof salt - 1] = '\0';
 
 		if (strcmp(crypt(password, salt), parray[p].passwd)) {
 			fd		= parray[p].socket;

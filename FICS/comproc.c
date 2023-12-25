@@ -39,6 +39,7 @@
 #include "comproc.h"
 #include "config.h"
 #include "eco.h"
+#include "fics_getsalt.h"
 #include "ficsmain.h"
 #include "formula.h"
 #include "gamedb.h"
@@ -538,7 +539,7 @@ com_password(int p, param_list param)
 {
 	char	*oldpassword = param[0].val.word;
 	char	*newpassword = param[1].val.word;
-	char	 salt[6];
+	char	 salt[FICS_SALT_SIZE];
 
 	if (!parray[p].registered) {
 		pprintf(p, "Setting a password is only for registered players."
@@ -547,12 +548,8 @@ com_password(int p, param_list param)
 	}
 
 	if (parray[p].passwd) {
-		salt[0] = '$';
-		salt[1] = '1';
-		salt[2] = '$';
-		salt[3] = parray[p].passwd[0];
-		salt[4] = parray[p].passwd[1];
-		salt[5] = '\0';
+		strncpy(salt, &(parray[p].passwd[0]), sizeof salt - 1);
+		salt[sizeof salt - 1] = '\0';
 
 		if (strcmp(crypt(oldpassword, salt), parray[p].passwd)) {
 			pprintf(p, "Incorrect password, password not changed!"
@@ -564,12 +561,7 @@ com_password(int p, param_list param)
 		parray[p].passwd = NULL;
 	}
 
-	salt[0] = '$';
-	salt[1] = '1';
-	salt[2] = '$';
-	salt[3] = ('a' + rand() % 26);
-	salt[4] = ('a' + rand() % 26);
-	salt[5] = '\0';
+	strcpy(salt, fics_getsalt());
 	parray[p].passwd = xstrdup(crypt(newpassword, salt));
 
 	pprintf(p, "Password changed to \"%s\".\n", newpassword);
