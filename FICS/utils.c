@@ -221,21 +221,19 @@ PUBLIC int pcommand(int p, char *comstr, ...)
   return retval;
 }
 
-PUBLIC int pprintf(int p, char *format, ...)
+PUBLIC int
+pprintf(int p, char *format, ...)
 {
-  char tmp[10 * MAX_LINE_SIZE];	/* Make sure you can handle 10 lines worth of
-				   stuff */
-  int retval;
-  va_list ap;
-  va_start(ap, format);
+	char tmp[10 * MAX_LINE_SIZE];
+	int retval;
+	va_list ap;
 
-  retval = vsprintf(tmp, format, ap);
-  if (strlen(tmp) > 10 * MAX_LINE_SIZE) {
-    fprintf(stderr, "FICS: pprintf buffer overflow\n");
-  }
-  net_send_string(parray[p].socket, tmp, 1);
-  va_end(ap);
-  return retval;
+	va_start(ap, format);
+	retval = vsnprintf(tmp, sizeof tmp, format, ap);
+	va_end(ap);
+
+	net_send_string(parray[p].socket, tmp, 1);
+	return retval;
 }
 
 PUBLIC void
