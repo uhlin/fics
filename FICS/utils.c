@@ -504,12 +504,13 @@ PUBLIC char *stolower(char *str)
   return str;
 }
 
-PUBLIC int safechar(int c)
+PUBLIC int
+safechar(int c)
 {
-  if ((c == '>') || (c == '!') || (c == '&') || (c == '*') || (c == '?') ||
-      (c == '/') || (c == '<') || (c == '|') || (c == '`') || (c == '$'))
-    return 0;
-  return 1;
+	if (c == '>' || c == '!' || c == '&' || c == '*' || c == '?' ||
+	    c == '/' || c == '<' || c == '|' || c == '`' || c == '$')
+		return 0;
+	return 1;
 }
 
 PUBLIC int
