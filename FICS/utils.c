@@ -238,16 +238,17 @@ PUBLIC int pprintf(int p, char *format, ...)
   return retval;
 }
 
-PUBLIC void pprintf_dohightlight(int p)
+PUBLIC void
+pprintf_dohightlight(int p)
 {
-  if (parray[p].highlight & 0x01)
-    pprintf(p, "\033[7m");
-  if (parray[p].highlight & 0x02)
-    pprintf(p, "\033[1m");
-  if (parray[p].highlight & 0x04)
-    pprintf(p, "\033[4m");
-  if (parray[p].highlight & 0x08)
-    pprintf(p, "\033[2m");
+	if (parray[p].highlight & 0x01)
+		pprintf(p, "\033[7m");
+	if (parray[p].highlight & 0x02)
+		pprintf(p, "\033[1m");
+	if (parray[p].highlight & 0x04)
+		pprintf(p, "\033[4m");
+	if (parray[p].highlight & 0x08)
+		pprintf(p, "\033[2m");
 }
 
 PUBLIC int
