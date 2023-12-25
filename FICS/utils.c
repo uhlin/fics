@@ -318,47 +318,47 @@ PUBLIC int pprintf_prompt(int p, char *format,...)
   return retval;
 }
 
-PUBLIC int pprintf_noformat(int p, char *format,...)
+PUBLIC int
+pprintf_noformat(int p, char *format,...)
 {
-  char tmp[10 * MAX_LINE_SIZE];	/* Make sure you can handle 10 lines worth of
-				   stuff */
-  int retval;
-  va_list ap;
+	char tmp[10 * MAX_LINE_SIZE];
+	int retval;
+	va_list ap;
 
-  va_start(ap, format);
+	va_start(ap, format);
+	retval = vsprintf(tmp, format, ap);
+	va_end(ap);
 
-  retval = vsprintf(tmp, format, ap);
-  if (strlen(tmp) > 10 * MAX_LINE_SIZE) {
-    fprintf(stderr, "FICS: pprintf_noformat buffer overflow\n");
-  }
-  net_send_string(parray[p].socket, tmp, 0);
-  va_end(ap);
-  return retval;
+	if (strlen(tmp) > 10 * MAX_LINE_SIZE)
+		fprintf(stderr, "FICS: %s: buffer overflow\n", __func__);
+
+	net_send_string(parray[p].socket, tmp, 0);
+	return retval;
 }
 
-
-/*******************       grimm          *************/
-/*******************    added below       *************/
-PUBLIC int psend_raw_file(int p, char *dir, char *file)
+PUBLIC int
+psend_raw_file(int p, char *dir, char *file)
 {
-  FILE *fp;
-  char tmp[MAX_LINE_SIZE];
-  char fname[MAX_FILENAME_SIZE];
-  int num;
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 tmp[MAX_LINE_SIZE];
+	int	 num;
 
-  if (dir)
-    sprintf(fname, "%s/%s", dir, file);
-  else
-    strcpy(fname, file);
-  fp = fopen(fname, "r");
-  if (!fp)
-    return -1;
-  while ((num = fread(tmp, sizeof(char), MAX_LINE_SIZE - 1, fp)) > 0) {
-    tmp[num] = '\0';
-    net_send_string(parray[p].socket, tmp, 1);
-  }
-  fclose(fp);
-  return 0;
+	if (dir)
+		sprintf(fname, "%s/%s", dir, file);
+	else
+		strcpy(fname, file);
+
+	if ((fp = fopen(fname, "r")) == NULL)
+		return -1;
+
+	while ((num = fread(tmp, sizeof(char), MAX_LINE_SIZE - 1, fp)) > 0) {
+		tmp[num] = '\0';
+		net_send_string(parray[p].socket, tmp, 1);
+	}
+
+	fclose(fp);
+	return 0;
 }
 
 PUBLIC int
