@@ -430,39 +430,43 @@ PUBLIC int psend_logoutfile(int p, char *dir, char *file)
   return 0;
 }
 
-PUBLIC int pmore_file(int p)
+PUBLIC int
+pmore_file(int p)
 {
-  FILE *fp;
-  char tmp[MAX_LINE_SIZE];
-  int lcount = parray[p].d_height - 1;
+	FILE	*fp;
+	char	 tmp[MAX_LINE_SIZE];
+	int	 lcount = (parray[p].d_height - 1);
 
-  if (!parray[p].last_file) {
-    pprintf(p, "There is no more.\n");
-    return -1;
-  }
-  fp = fopen(parray[p].last_file, "r");
-  if (!fp) {
-    pprintf(p, "File not found!\n");
-    return -1;
-  }
-  fseek(fp, parray[p].last_file_byte, SEEK_SET);
+	if (!parray[p].last_file) {
+		pprintf(p, "There is no more.\n");
+		return -1;
+	}
 
-  while (!feof(fp) && (--lcount > 0)) {
-    fgets(tmp, MAX_LINE_SIZE, fp);
-    if (!feof(fp)) {
-	net_send_string(parray[p].socket, tmp, 1);
-    }
-  }
-  if (!feof(fp)) {
-    parray[p].last_file_byte = ftell(fp);
-    pprintf(p, "Type [next] to see next page.\n");
-  } else {
-    rfree(parray[p].last_file);
-    parray[p].last_file = NULL;
-    parray[p].last_file_byte = 0L;
-  }
-  fclose(fp);
-  return 0;
+	if ((fp = fopen(parray[p].last_file, "r")) == NULL) {
+		pprintf(p, "File not found!\n");
+		return -1;
+	}
+
+	fseek(fp, parray[p].last_file_byte, SEEK_SET);
+
+	while (!feof(fp) && --lcount > 0) {
+		fgets(tmp, MAX_LINE_SIZE, fp);
+
+		if (!feof(fp))
+			net_send_string(parray[p].socket, tmp, 1);
+	}
+
+	if (!feof(fp)) {
+		parray[p].last_file_byte = ftell(fp);
+		pprintf(p, "Type [next] to see next page.\n");
+	} else {
+		rfree(parray[p].last_file);
+		parray[p].last_file = NULL;
+		parray[p].last_file_byte = 0L;
+	}
+
+	fclose(fp);
+	return 0;
 }
 
 PUBLIC int
