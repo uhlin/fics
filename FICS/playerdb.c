@@ -401,7 +401,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	pp->l_stats.sterr	= (ls / 10.0);
 	pp->bug_stats.sterr	= (bugs / 10.0);
 
-	fgets(tmp2, MAX_STRING_LENGTH, fp);
+	fgets(tmp2, sizeof tmp2, fp);
 	tmp2[strlen(tmp2) - 1] = '\0';
 	pp->prompt = xstrdup(tmp2);
 
@@ -422,7 +422,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 
 	if (pp->num_plan > 0) {
 		for (i = 0; i < pp->num_plan; i++) {
-			fgets(tmp2, MAX_LINE_SIZE, fp);
+			fgets(tmp2, sizeof tmp2, fp);
 
 			if (!(len = strlen(tmp2))) {
 				fprintf(stderr, "FICS: Error bad plan in "
@@ -440,7 +440,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 
 	if (pp->num_formula > 0) {
 		for (i = 0; i < pp->num_formula; i++) {
-			fgets(tmp2, MAX_LINE_SIZE, fp);
+			fgets(tmp2, sizeof tmp2, fp);
 
 			if (!(len = strlen(tmp2))) {
 				fprintf(stderr, "FICS: Error bad formula in "
@@ -456,7 +456,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		}
 	}
 
-	fgets(tmp2, MAX_LINE_SIZE, fp);
+	fgets(tmp2, sizeof tmp2, fp);
 	tmp2[strlen(tmp2) - 1] = '\0';
 
 	if (!strcmp(tmp2, "NONE"))
@@ -466,7 +466,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 
 	if (pp->numAlias > 0) {
 		for (i = 0; i < pp->numAlias; i++) {
-			fgets(tmp2, MAX_LINE_SIZE, fp);
+			fgets(tmp2, sizeof tmp2, fp);
 
 			if (!(len = strlen(tmp2))) {
 				fprintf(stderr, "FICS: Error bad alias in "
