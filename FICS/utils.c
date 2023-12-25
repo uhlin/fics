@@ -89,18 +89,20 @@ PUBLIC char *getword(char *str)
   return word;
 }
 
-PUBLIC char *eatword(char *str)
+PUBLIC char *
+eatword(char *str)
 {
-  while (*str && !iswhitespace(*str))
-    str++;
-  return str;
+	while (*str && !iswhitespace(*str))
+		str++;
+	return str;
 }
 
-PUBLIC char *eatwhite(char *str)
+PUBLIC char *
+eatwhite(char *str)
 {
-  while (*str && iswhitespace(*str))
-    str++;
-  return str;
+	while (*str && iswhitespace(*str))
+		str++;
+	return str;
 }
 
 PUBLIC char *
