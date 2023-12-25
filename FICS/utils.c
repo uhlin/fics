@@ -490,18 +490,16 @@ PUBLIC int psend_command(int p, char *command, char *input)
   return 0;
 }
 
-PUBLIC char *stolower(char *str)
+PUBLIC char *
+stolower(char *str)
 {
-  int i;
-
-  if (!str)
-    return NULL;
-  for (i = 0; str[i]; i++) {
-    if (isupper(str[i])) {
-      str[i] = tolower(str[i]);
-    }
-  }
-  return str;
+	if (!str)
+		return NULL;
+	for (int i = 0; str[i]; i++) {
+		if (isupper(str[i]))
+			str[i] = tolower(str[i]);
+	}
+	return str;
 }
 
 PUBLIC int
