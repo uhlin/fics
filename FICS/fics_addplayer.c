@@ -110,10 +110,11 @@ main(int argc, char *argv[])
 	stolower(parray[p].login);
 	parray[p].fullName = xstrdup(fname);
 	parray[p].emailAddress = xstrdup(email);
-	for (i = 0; i < PASSLEN; i++) {
-		password[i] = 'a' + rand() % 26;
-	}
+
+	for (i = 0; i < PASSLEN; i++)
+		password[i] = ('a' + rand() % 26);
 	password[i] = '\0';
+
 	salt[0] = '$';
 	salt[1] = '1';
 	salt[2] = '$';
