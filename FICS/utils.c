@@ -282,21 +282,27 @@ PUBLIC void sprintf_dohightlight(int p, char *s)
     strcat(s, "\033[2m");
 }
 
-PUBLIC int psprintf_highlight(int p, char *s, char *format,...)
+PUBLIC int
+psprintf_highlight(int p, char *s, char *format,...)
 {
-  int retval;
-  va_list ap;
+	int retval;
+	va_list ap;
 
-  va_start(ap, format);
-  if (parray[p].highlight) {
-    sprintf_dohightlight(p, s);
-    retval = vsprintf(s + strlen(s), format, ap);
-    strcat(s, "\033[0m");
-  } else {
-    retval = vsprintf(s, format, ap);
-  }
-  va_end(ap);
-  return retval;
+	if (parray[p].highlight) {
+		sprintf_dohightlight(p, s);
+
+		va_start(ap, format);
+		retval = vsprintf(s + strlen(s), format, ap);
+		va_end(ap);
+
+		strcat(s, "\033[0m");
+	} else {
+		va_start(ap, format);
+		retval = vsprintf(s, format, ap);
+		va_end(ap);
+	}
+
+	return retval;
 }
 
 PUBLIC int
