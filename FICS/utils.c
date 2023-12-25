@@ -705,49 +705,58 @@ PUBLIC char *tenth_str(unsigned t, int spaces)
   return hms((t + 5) / 10, 0, 1, spaces);	/* Round it */
 }
 
-#define MAX_TRUNC_SIZE 100
-
-/* Warning, if lines in the file are greater than 1024 bytes in length, this
-   won't work! */
-/* nasty bug fixed by mann, 3-12-95 */
-PUBLIC int truncate_file(char *file, int lines)
+/*
+ * XXX: if lines in the file are greater than 1024 bytes in length,
+ * this won't work!
+ */
+PUBLIC int
+truncate_file(char *file, int lines)
 {
-  FILE *fp;
-  int bptr = 0, trunc = 0, i;
-  char tBuf[MAX_TRUNC_SIZE][MAX_LINE_SIZE];
+#define MAX_TRUNC_SIZE 100
+	FILE	*fp;
+	char	 tBuf[MAX_TRUNC_SIZE][MAX_LINE_SIZE];
+	int	 bptr = 0, trunc = 0, i;
 
-  if (lines > MAX_TRUNC_SIZE)
-    lines = MAX_TRUNC_SIZE;
-  fp = fopen(file, "r");
-  if (!fp)
-    return 1;
-  while (!feof(fp)) {
-    fgets(tBuf[bptr], MAX_LINE_SIZE, fp);
-    if (feof(fp))
-      break;
-    if (tBuf[bptr][strlen(tBuf[bptr]) - 1] != '\n') {	/* Line too long */
-      fclose(fp);
-      return -1;
-    }
-    bptr++;
-    if (bptr == lines) {
-      trunc = 1;
-      bptr = 0;
-    }
-  }
-  fclose(fp);
-  if (trunc) {
-    fp = fopen(file, "w");
-    for (i = 0; i < lines; i++) {
-      fputs(tBuf[bptr], fp);
-      bptr++;
-      if (bptr == lines) {
-	bptr = 0;
-      }
-    }
-    fclose(fp);
-  }
-  return 0;
+	if (lines > MAX_TRUNC_SIZE)
+		lines = MAX_TRUNC_SIZE;
+
+	if ((fp = fopen(file, "r")) == NULL)
+		return 1;
+
+	while (!feof(fp)) {
+		fgets(tBuf[bptr], MAX_LINE_SIZE, fp);
+
+		if (feof(fp))
+			break;
+
+		if (tBuf[bptr][strlen(tBuf[bptr]) - 1] != '\n') {
+			// Line too long
+			fclose(fp);
+			return -1;
+		}
+
+		if (++bptr == lines) {
+			trunc = 1;
+			bptr = 0;
+		}
+	}
+
+	fclose(fp);
+
+	if (trunc) {
+		fp = fopen(file, "w");
+
+		for (i = 0; i < lines; i++) {
+			fputs(tBuf[bptr], fp);
+
+			if (++bptr == lines)
+				bptr = 0;
+		}
+
+		fclose(fp);
+	}
+
+	return 0;
 }
 
 /*
