@@ -9,7 +9,7 @@ CC ?= cc
 CFLAGS = -O2 -Wall -pipe -std=c11
 
 CXX ?= c++
-CXXFLAGS = -std=c++17
+CXXFLAGS = -O2 -Wall -pipe -std=c++17
 
 # C preprocessor flags
 CPPFLAGS = -D_DEFAULT_SOURCE=1
