@@ -539,17 +539,16 @@ PUBLIC int alphastring(char *str)
   return 1;
 }
 
-PUBLIC int printablestring(char *str)
+PUBLIC int
+printablestring(char *str)
 {
-  int i;
-
-  if (!str)
-    return 1;
-  for (i = 0; str[i]; i++) {
-    if ((!isprint(str[i])) && (str[i] != '\t') && (str[i] != '\n'))
-      return 0;
-  }
-  return 1;
+	if (!str)
+		return 1;
+	for (int i = 0; str[i]; i++) {
+		if (!isprint(str[i]) && str[i] != '\t' && str[i] != '\n')
+			return 0;
+	}
+	return 1;
 }
 
 PUBLIC char *
