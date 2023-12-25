@@ -677,18 +677,19 @@ strgtime(time_t *clock)
 	return strtime(stm);
 }
 
-/* This is used only for relative timeing since it reports seconds since
- * about 5:00pm on Feb 16, 1994
+/*
+ * This is used only for relative timing since it reports seconds
+ * since about 5:00 pm on Feb 16, 1994.
  */
-PUBLIC unsigned tenth_secs(void)
+PUBLIC unsigned
+tenth_secs(void)
 {
-  struct timeval tp;
-  struct timezone tzp;
+	struct timeval	tp;
+	struct timezone	tzp;
 
-  gettimeofday(&tp, &tzp);
-/* .1 seconds since 1970 almost fills a 32 bit int! So lets subtract off
- * the time right now */
-  return ((tp.tv_sec - 331939277) * 10L) + (tp.tv_usec / 100000);
+	gettimeofday(&tp, &tzp);
+
+	return ((tp.tv_sec - 331939277) * 10L) + (tp.tv_usec / 100000);
 }
 
 /*
