@@ -70,23 +70,27 @@ PUBLIC int iswhitespace(int c)
   }
 }
 
-PUBLIC char *getword(char *str)
+PUBLIC char *
+getword(char *str)
 {
-  int i;
-  static char word[MAX_WORD_SIZE];
+	int i;
+	static char word[MAX_WORD_SIZE];
 
-  i = 0;
-  while (*str && !iswhitespace(*str)) {
-    word[i] = *str;
-    str++;
-    i++;
-    if (i == MAX_WORD_SIZE) {
-      i = i - 1;
-      break;
-    }
-  }
-  word[i] = '\0';
-  return word;
+	i = 0;
+
+	while (*str && !iswhitespace(*str)) {
+		word[i] = *str;
+		str++;
+		i++;
+
+		if (i == MAX_WORD_SIZE) {
+			i = (i - 1);
+			break;
+		}
+	}
+
+	word[i] = '\0';
+	return word;
 }
 
 PUBLIC char *
