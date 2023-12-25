@@ -250,23 +250,24 @@ PUBLIC void pprintf_dohightlight(int p)
     pprintf(p, "\033[2m");
 }
 
-PUBLIC int pprintf_highlight(int p, char *format, ...)
+PUBLIC int
+pprintf_highlight(int p, char *format, ...)
 {
-  char tmp[10 * MAX_LINE_SIZE];
-  int retval;
-  va_list ap;
+	char tmp[10 * MAX_LINE_SIZE];
+	int retval;
+	va_list ap;
 
-  va_start(ap, format);
-  pprintf_dohightlight(p);
-  retval = vsprintf(tmp, format, ap);
-  if (strlen(tmp) > 10 * MAX_LINE_SIZE) {
-    fprintf(stderr, "FICS: pprintf buffer overflow\n");
-  }
-  net_send_string(parray[p].socket, tmp, 1);
-  va_end(ap);
-  if (parray[p].highlight)
-    pprintf(p, "\033[0m");
-  return retval;
+	pprintf_dohightlight(p);
+
+	va_start(ap, format);
+	retval = vsnprintf(tmp, sizeof tmp, format, ap);
+	va_end(ap);
+
+	net_send_string(parray[p].socket, tmp, 1);
+
+	if (parray[p].highlight)
+		pprintf(p, "\033[0m");
+	return retval;
 }
 
 PUBLIC void
