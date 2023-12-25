@@ -121,26 +121,30 @@ PUBLIC char *nextword(char *str)
   return eatwhite(eatword(str));
 }
 
-PUBLIC int mail_string_to_address(char *addr, char *subj, char *str)
+PUBLIC int
+mail_string_to_address(char *addr, char *subj, char *str)
 {
-  char com[1000];
-  FILE *fp;
+	FILE	*fp;
+	char	 com[1000];
 
 #ifdef SENDMAILPROG
-  sprintf(com, "%s\n", SENDMAILPROG);
+	sprintf(com, "%s\n", SENDMAILPROG);
 #else
-  sprintf(com, "%s -s \"%s\" %s", MAILPROGRAM, subj, addr);
+	sprintf(com, "%s -s \"%s\" %s", MAILPROGRAM, subj, addr);
 #endif
-  fp = popen(com, "w");
-  if (!fp)
-    return -1;
+
+	fp = popen(com, "w");
+	if (!fp)
+		return -1;
+
 #ifdef SENDMAILPROG
-  fprintf(fp, "To: %s\nSubject: %s\n%s", addr, subj, str);
+	fprintf(fp, "To: %s\nSubject: %s\n%s", addr, subj, str);
 #else
-  fprintf(fp, "%s", str);
+	fprintf(fp, "%s", str);
 #endif
-  pclose(fp);
-  return 0;
+
+	pclose(fp);
+	return 0;
 }
 
 PUBLIC int
