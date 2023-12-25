@@ -915,37 +915,42 @@ PRIVATE void t_cft(struct t_tree **t)
   }
 }
 
-/* make file tree for dir d */
-PRIVATE void t_mft(struct t_dirs *d)
+/*
+ * Make file tree for dir 'd'
+ */
+PRIVATE void
+t_mft(struct t_dirs *d)
 {
-  DIR *dirp;
+	DIR *dirp;
 #ifdef USE_DIRENT
-  struct dirent *dp;
+	struct dirent *dp;
 #else
-  struct direct *dp;
+	struct direct *dp;
 #endif
-  struct t_tree **t;
+	struct t_tree **t;
 
-  if ((dirp = opendir(&(d->name))) == NULL) {
-    fprintf(stderr, "FICS:mft() couldn't opendir.\n");
-  } else {
-    while ((dp = readdir(dirp))) {
-      t = &d->files;
-      if (dp->d_name[0] != '.') {	/* skip anything starting with . */
-	while (*t) {
-	  if (strcmp(dp->d_name, &(*t)->name) < 0) {
-	    t = &(*t)->left;
-	  } else {
-	    t = &(*t)->right;
-	  }
+	if ((dirp = opendir(&(d->name))) == NULL) {
+		fprintf(stderr, "FICS: %s: couldn't opendir\n", __func__);
+		return;
 	}
-	*t = rmalloc(sizeof(struct t_tree) + strlen(dp->d_name));
-	(*t)->right = (*t)->left = NULL;
-	strcpy(&(*t)->name, dp->d_name);
-      }
-    }
-    closedir(dirp);
-  }
+	while ((dp = readdir(dirp))) {
+		t = &d->files;
+
+		if (dp->d_name[0] != '.') { // skip anything starting with '.'
+			while (*t) {
+				if (strcmp(dp->d_name, &(*t)->name) < 0)
+					t = &(*t)->left;
+				else
+					t = &(*t)->right;
+			}
+
+			*t = rmalloc(sizeof(struct t_tree) +
+			    strlen(dp->d_name));
+			(*t)->right = (*t)->left = NULL;
+			strcpy(&(*t)->name, dp->d_name);
+		}
+	}
+	closedir(dirp);
 }
 
 /*
