@@ -326,11 +326,8 @@ pprintf_noformat(int p, char *format,...)
 	va_list ap;
 
 	va_start(ap, format);
-	retval = vsprintf(tmp, format, ap);
+	retval = vsnprintf(tmp, sizeof tmp, format, ap);
 	va_end(ap);
-
-	if (strlen(tmp) > 10 * MAX_LINE_SIZE)
-		fprintf(stderr, "FICS: %s: buffer overflow\n", __func__);
 
 	net_send_string(parray[p].socket, tmp, 0);
 	return retval;
