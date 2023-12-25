@@ -34,6 +34,21 @@
 #include "rmalloc.h"
 #include "utils.h"
 
+struct t_tree {
+	char		 name;
+	struct t_tree	*left, *right;
+};
+
+struct t_dirs {
+	char		 name;
+	struct t_dirs	*left, *right;
+	struct t_tree	*files;
+	time_t		 mtime;
+};
+
+PRIVATE char**	t_buffer = NULL;
+PRIVATE int	t_buffersize = 0;
+
 PUBLIC int count_lines(FILE *fp)
 {
   int c, nl = 0;
@@ -872,21 +887,6 @@ PUBLIC char *ratstrii(int rat, int reg)
   on++;
   return tmp[on - 1];
 }
-
-struct t_tree {
-  struct t_tree *left, *right;
-  char name;			/* Not just 1 char - space for whole name */
-};				/* is allocated.  Maybe a little cheesy? */
-
-struct t_dirs {
-  struct t_dirs *left, *right;
-  time_t mtime;			/* dir's modification time */
-  struct t_tree *files;
-  char name;			/* ditto */
-};
-
-PRIVATE char **t_buffer = NULL; /* pointer to next space in return buffer */
-PRIVATE int t_buffersize = 0;	/* size of return buffer */
 
 /*
  * Fill 't_buffer' with anything matching "want*" in file tree
