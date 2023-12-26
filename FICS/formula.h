@@ -3,8 +3,8 @@
 
 #define OP_BAD -1
 
-#include "playerdb.h"
 #include "gamedb.h"
+#include "playerdb.h"
 
 #define OP_NONE      0
 #define OP_RTPAREN   1
