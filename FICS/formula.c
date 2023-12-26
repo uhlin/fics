@@ -335,68 +335,79 @@ FUDGE_FACTOR);
   }
 }    /* end of function EvalBinaryOp. */
 
-/* If eval is 1, ScanForNumber evaluates the number at position *i
-   in the formula given by *g and clause, and place this value in
-   *token.  op_type is the precedence of the operator preceding the
-   *i'th position.  If we come to an operator of higher precedence,
-   we must keep going before we can leave this function.  If eval
-   is 0, just move past the number we would evaluate.  Returns 0 if
-   no error; otherwise return code indicates the error.
-*/
-int ScanForNumber (game *g, int clause, int *i, int op_type,
-                   int *token, int eval)
+/*
+ * If 'eval' is 1, ScanForNumber() evaluates the number at position
+ * 'i' in the formula given by 'g' and 'clause', and places this value
+ * in 'token'. 'op_type' is the precedence of the operator preceding
+ * the i'th position. If we come to an operator of higher precedence
+ * we must keep going before we can leave this function. If 'eval' is
+ * 0, just move past the number we would evaluate. This function
+ * returns 0 on no error. Otherwise an error code is returned.
+ */
+int
+ScanForNumber(game *g, int clause, int *i, int op_type, int *token, int eval)
 {
-  char *string = GetPlayersFormula (&parray[g->black], clause);
-  char c;
-  int ret;
+	char	*string = GetPlayersFormula (&parray[g->black], clause);
+	char	 c;
+	int	 ret;
 
-  while ((string[*i] != '\0') && (isspace(string[*i]))) (*i)++;
-  switch (c = string[*i])
-  {
-    case '\0':  case '#':
-      if (op_type != OPTYPE_NONE) return (ERR_EOF);
-      else *token=1;
-      return (ERR_NONE);
+	while (string[*i] != '\0' && isspace(string[*i]))
+		(*i)++;
 
-    case ')':
-      if (op_type != OPTYPE_PAREN) return (ERR_PAREN);
-      else *token=1;
-      return(ERR_NONE);
+	switch (c = string[*i]) {
+	case '\0':
+	case '#':
+		if (op_type != OPTYPE_NONE)
+			return ERR_EOF;
+		else
+			*token = 1;
+		return ERR_NONE;
+	case ')':
+		if (op_type != OPTYPE_PAREN)
+			return ERR_PAREN;
+		else
+			*token = 1;
+		return ERR_NONE;
+	case '(':
+		return GetNumberInsideParens(g, clause, i, token, eval);
+	case '-':
+	case '!':
+		++(*i);
 
-    case '(':  return GetNumberInsideParens(g,clause,i,token,eval);
+		if (c == string[*i])
+			return ERR_UNARY;
 
-    case '-':  case '!':
-      ++(*i);
-      if (c==string[*i]) return(ERR_UNARY);
-      ret = ScanForNumber(g,clause,i,OPTYPE_UNARY,token,eval);
-      if (ret != ERR_NONE)
-        return (ret);
-      if (c == '-') *token = -(*token);
-      else if (c == '!') *token = !(*token);
-      return (ERR_NONE);
+		ret = ScanForNumber(g, clause, i, OPTYPE_UNARY, token, eval);
 
-    default:
-      if (isdigit(string[*i]))
-      {
-        *token = 0;
+		if (ret != ERR_NONE)
+			return ret;
+		if (c == '-')
+			*token = -(*token);
+		else if (c == '!')
+			*token = !(*token);
+		return ERR_NONE;
+	default:
+		if (isdigit(string[*i])) {
+			*token = 0;
 
-        do *token = 10 * (*token) + string[(*i)++] - '0';
-        while (isdigit(string[*i]));
+			do {
+				*token = (10 * (*token) + string[(*i)++] - '0');
+			} while (isdigit(string[*i]));
 
-        while (string[*i] != '\0' && isspace(string[*i])) (*i)++;
-        if (MoveIndexPastString (string, i, "minutes"))
-          *token *= 60;
-        return (ERR_NONE);
-      }
-      else if (isalpha(string[*i]))
-      {
-        if (!VarToToken (g, clause, string, i, token, eval))
-          return (ERR_BADVAR);
-        return(ERR_NONE);
-      }
-      else return (ERR_NONESENSE);
-  }
-}    /* end of function ScanForNumber. */
+			while (string[*i] != '\0' && isspace(string[*i]))
+				(*i)++;
+
+			if (MoveIndexPastString(string, i, "minutes"))
+				*token *= 60;
+			return ERR_NONE;
+		} else if (isalpha(string[*i])) {
+			if (!VarToToken(g, clause, string, i, token, eval))
+				return ERR_BADVAR;
+			return ERR_NONE;
+		} else
+			return ERR_NONESENSE;
+	} /* switch */
+}
 
 /*
  * If 'eval' is 1, CheckFormula() looks for the next token in the
