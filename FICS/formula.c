@@ -514,27 +514,34 @@ void ExplainFormula (game *g, textlist *eval)
 }
 #endif
 
-/* GameMatchesFormula converts parameters to a game structure
-   and passes a pointer to this game to CheckFormula for
-   evaluation.  It returns the evaluated formula.
-*/
-PUBLIC int GameMatchesFormula (int w, int b, int wTime, int wInc, int bTime,
-           int bInc, int rated, int gametype, textlist **clauseList)
+/*
+ * GameMatchesFormula() converts parameters to a game structure and
+ * passes a pointer to this game to CheckFormula() for evaluation. It
+ * returns the evaluated formula.
+ */
+PUBLIC int
+GameMatchesFormula(int w, int b, int wTime, int wInc, int bTime, int bInc,
+    int rated, int gametype, textlist **clauseList)
 {
-  game g;
-  int index=0, ret;
+	game	g;
+	int	index = 0, ret;
 
-  g.white = w;  g.black = b;
-  g.wInitTime = wTime;  g.bInitTime = bTime;
-  g.wIncrement = wInc;  g.bIncrement = bInc;
-  g.rated = rated;
-  g.type = gametype;
+	g.white		= w;
+	g.black		= b;
+	g.wInitTime	= wTime;
+	g.bInitTime	= bTime;
+	g.wIncrement	= wInc;
+	g.bIncrement	= bInc;
+	g.rated		= rated;
+	g.type		= gametype;
 
-  if (CheckFormula(&g, MAX_FORMULA, &index, OPTYPE_NONE, &ret, 1) != ERR_NONE)
-    return (0);
-  if (ret == 0) ExplainFormula (&g, clauseList);
-  return (ret);
-}    /* end of function GameMatchesFormula. */
+	if (CheckFormula(&g, MAX_FORMULA, &index, OPTYPE_NONE, &ret, 1) !=
+	    ERR_NONE)
+		return 0;
+	if (ret == 0)
+		ExplainFormula (&g, clauseList);
+	return ret;
+}
 
 /*
  * SetValidFormula() sets a clause of player 'p' and creates a game
