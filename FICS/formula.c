@@ -482,38 +482,6 @@ void ExplainFormula (game *g, textlist **clauses)
   }
 }
 
-#if 0
-void ExplainFormula (game *g, textlist *eval)
-{
-  int i, newPos, value;
-  char Head[MAX_STRING_LENGTH],
-       Tail[MAX_STRING_LENGTH];
-
-  strcpy (strRet, GetPlayersFormula(&parray[g->black], clause));
-  for (i=0; strRet[i] != '\0'; i++)
-  {
-    if (strRet[i] == '#')
-    {
-      strRet[i] = '\0';
-      break;
-    }
-    if (!isalpha(strRet[i])) continue;
-    newPos = i;
-    if (!VarToToken(g, clause, strRet, &newPos, &value, 1))
-      i = newPos;
-    else
-    {
-      strcpy (Head, strRet);
-      strcpy (Tail, strRet + newPos);
-      Head[i] = '\0';
-
-      sprintf(strRet, "%s%d%s", Head, value, Tail);
-      while (isalpha(strRet[i])) i++;
-    }
-  }
-}
-#endif
-
 /*
  * GameMatchesFormula() converts parameters to a game structure and
  * passes a pointer to this game to CheckFormula() for evaluation. It
