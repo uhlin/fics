@@ -536,50 +536,56 @@ PUBLIC int GameMatchesFormula (int w, int b, int wTime, int wInc, int bTime,
   return (ret);
 }    /* end of function GameMatchesFormula. */
 
-/* SetValidFormula sets a clause of player p and creates a game structure
-   to check whether that new formula is legitimate.  If so, return 1;
-   otherwise, reset the formula and return 0.
-*/
-int SetValidFormula (int p, int clause, char *string)
+/*
+ * SetValidFormula() sets a clause of player 'p' and creates a game
+ * structure to check whether that new formula is legitimate. If so,
+ * return 1. Otherwise reset the formula and return 0.
+ */
+int
+SetValidFormula(int p, int clause, char *string)
 {
-  game g;
-  int index=0, ret, err=ERR_NONE;
-  char *Old=NULL, **Cur;
-  player *me = &parray[p];
+	char	*Old = NULL, **Cur;
+	game	 g;
+	int	 index = 0, ret, err = ERR_NONE;
+	player	*me = &parray[p];
 
-  if (clause==MAX_FORMULA)
-    Cur = &me->formula;
-  else
-    Cur = &me->formulaLines[clause];
+	if (clause == MAX_FORMULA)
+		Cur = &me->formula;
+	else
+		Cur = &me->formulaLines[clause];
 
-  Old = *Cur;
+	Old = *Cur;
 
-  if (string != NULL) {
-      string = eatwhite(string);
-      *Cur = (*string != '\0'  ?  xstrdup (string)  :  NULL);
-  }
-  else *Cur = NULL;
+	if (string != NULL) {
+		string = eatwhite(string);
+		*Cur = (*string != '\0' ? xstrdup(string) : NULL);
+	} else
+		*Cur = NULL;
 
-  if (*Cur==NULL) {
-      if (Old != NULL) rfree(Old);
-      return 1;
-  }
+	if (*Cur == NULL) {
+		if (Old != NULL)
+			rfree(Old);
+		return 1;
+	}
 
-  g.white = g.black = p;
-  g.wInitTime = g.bInitTime = me->d_time;
-  g.wIncrement = g.bIncrement = me->d_inc;
-  g.rated = me->rated;
-  g.type = TYPE_BLITZ;
-  err = CheckFormula (&g, clause, &index, OPTYPE_NONE, &ret, 0);
+	g.white = g.black = p;
+	g.wInitTime = g.bInitTime = me->d_time;
+	g.wIncrement = g.bIncrement = me->d_inc;
+	g.rated = me->rated;
+	g.type = TYPE_BLITZ;
 
-  if (err != ERR_NONE) {
-      /* Bad formula; reset it. */
-       rfree(*Cur);
-      *Cur = Old;
-  } else {
-      if (Old != NULL) rfree(Old);
-  }
-  return (err == ERR_NONE);
+	err = CheckFormula (&g, clause, &index, OPTYPE_NONE, &ret, 0);
+
+	if (err != ERR_NONE) {
+		/* Bad formula  --  reset it. */
+		rfree(*Cur);
+		*Cur = Old;
+	} else {
+		if (Old != NULL)
+			rfree(Old);
+	}
+
+	return (err == ERR_NONE);
 }
 
 PUBLIC void
