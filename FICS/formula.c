@@ -131,7 +131,7 @@ int Maxtime (game *g, int numMoves, int numPlayers)
     max = 60 * g->bInitTime + numMoves * g->bIncrement;
     if ((g->type != TYPE_UNTIMED) && (g->bInitTime == 0))
       max +=10; /* 0 x start with ten secs */
-  } 
+  }
 
   return max;
 }
@@ -198,7 +198,7 @@ int VarToToken (game *g, int clause, char *string, int *i, int *tok, int eval)
     *tok = you->private;
   else if (MoveIndexPastString(string, i, "maxtime"))
   {
-    if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE) 
+    if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE)
       return (0);
     *tok = Maxtime (g, *tok, 2);
   }
@@ -325,7 +325,7 @@ int EvalBinaryOp (int *left, int op, game *g, int clause, int *i)
       }
       else
       {
-        pprintf(g->black, "Dividing by %lf instead or zero in formula.\n", 
+        pprintf(g->black, "Dividing by %lf instead or zero in formula.\n",
 FUDGE_FACTOR);
         *left /= FUDGE_FACTOR;
         return (ERR_NONE);
@@ -391,7 +391,7 @@ int ScanForNumber (game *g, int clause, int *i, int op_type,
         if (!VarToToken (g, clause, string, i, token, eval))
           return (ERR_BADVAR);
         return(ERR_NONE);
-      }    
+      }
       else return (ERR_NONESENSE);
   }
 }    /* end of function ScanForNumber. */
