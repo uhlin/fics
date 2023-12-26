@@ -261,24 +261,44 @@ int ScanForOp (char *string, int *i)
   return (OP_BAD);
 }    /* end of function ScanForOp. */
 
-/* OpType returns the precedence of the operator op. */
-int OpType (int op)
+/*
+ * OpType() returns the precedence of the operator 'op'.
+ */
+int
+OpType(int op)
 {
-  switch (op)
-  {
-    case OP_BAD:  return (OPTYPE_BAD);
-    case OP_NONE:  return (OPTYPE_NONE);
-    case OP_RTPAREN:  return (OPTYPE_RPAREN);
-    case OP_OR:  return (OPTYPE_OR);
-    case OP_AND:  return (OPTYPE_AND);
-    case OP_EQ: case OP_NEQ:  return (OPTYPE_COMPEQ);
-    case OP_GT: case OP_GE:  case OP_LT: case OP_LE:  return (OPTYPE_COMPGL);
-    case OP_PLUS: case OP_MINUS:  return (OPTYPE_ADD);
-    case OP_MULT: case OP_DIV:  return (OPTYPE_MULT);
-    case OP_NEGATE: case OP_NOT:  return (OPTYPE_UNARY);
-    default: return (OPTYPE_BAD);
-  }
-}    /* end of function OpType. */
+	switch (op) {
+	case OP_BAD:
+		return OPTYPE_BAD;
+	case OP_NONE:
+		return OPTYPE_NONE;
+	case OP_RTPAREN:
+		return OPTYPE_RPAREN;
+	case OP_OR:
+		return OPTYPE_OR;
+	case OP_AND:
+		return OPTYPE_AND;
+	case OP_EQ:
+	case OP_NEQ:
+		return OPTYPE_COMPEQ;
+	case OP_GT:
+	case OP_GE:
+	case OP_LT:
+	case OP_LE:
+		return OPTYPE_COMPGL;
+	case OP_PLUS:
+	case OP_MINUS:
+		return OPTYPE_ADD;
+	case OP_MULT:
+	case OP_DIV:
+		return OPTYPE_MULT;
+	case OP_NEGATE:
+	case OP_NOT:
+		return OPTYPE_UNARY;
+	default:
+		return OPTYPE_BAD;
+	}
+}
 
 /*
  * In EvalBinaryOp() 'left' is the left operand, and 'op' is the
