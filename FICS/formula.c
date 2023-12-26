@@ -347,7 +347,7 @@ FUDGE_FACTOR);
 int
 ScanForNumber(game *g, int clause, int *i, int op_type, int *token, int eval)
 {
-	char	*string = GetPlayersFormula (&parray[g->black], clause);
+	char	*string = GetPlayersFormula(&parray[g->black], clause);
 	char	 c;
 	int	 ret;
 
