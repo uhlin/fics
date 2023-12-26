@@ -398,46 +398,59 @@ int ScanForNumber (game *g, int clause, int *i, int op_type,
   }
 }    /* end of function ScanForNumber. */
 
-/* If eval is 1, CheckFormula looks for the next token in the
-   formula given by *g, clause, and *i; usually this is the right
-   side of an expression whose operator has precedence OpType; if
-   eval is 0, just go to the end of an expression.  Return 0 if no
-   error; otherwise, return error type.
-*/
-int CheckFormula (game *g, int clause, int *i, int op_type,
-                  int *result, int eval)
+/*
+ * If 'eval' is 1, CheckFormula() looks for the next token in the
+ * formula given by 'g', 'clause' and 'i'. Usually this is the right
+ * side of an expression whose operator has precedence OpType(). If
+ * 'eval' is 0, just go to the end of an expression.
+ */
+int
+CheckFormula(game *g, int clause, int *i, int op_type, int *result, int eval)
 {
-  int token, ret, nextOp, lastPos;
-  char *string = GetPlayersFormula (&parray[g->black], clause);
+	char	*string = GetPlayersFormula(&parray[g->black], clause);
+	int	 token, ret, nextOp, lastPos;
 
-  if (string == NULL)
-  {
-    *result = 1;
-    return (ERR_NONE);
-  }
-  ret = ScanForNumber (g, clause, i, op_type, &token, eval);
-  if (ret != ERR_NONE)
-    return (ret);
-  lastPos = *i;
-  nextOp = ScanForOp (string, i);
-  while (OpType(nextOp) > op_type)    /* higher precedence. */
-  {
-    if (nextOp==OP_RTPAREN) return (ERR_PAREN);
-    if (!eval)
-      ret = CheckFormula(g, clause, i, OpType(nextOp), &token, 0);
-    else ret = EvalBinaryOp (&token, nextOp, g, clause, i);
-    if (ret != ERR_NONE) return (ret);
-    lastPos = *i;
-    nextOp = ScanForOp (string, i);
-  }
-  if (nextOp == OP_BAD) return(ERR_BADOP);
-  *result = token;
+	if (string == NULL) {
+		*result = 1;
+		return ERR_NONE;
+	}
 
-  /* move back unless we're at the end or at a right paren, in which
-     case we never went forward. */
-  if (nextOp != OP_NONE && nextOp != OP_RTPAREN) *i=lastPos;
-  return (ERR_NONE);
-}    /* end of function CheckFormula. */
+	ret = ScanForNumber(g, clause, i, op_type, &token, eval);
+
+	if (ret != ERR_NONE)
+		return ret;
+
+	lastPos	= *i;
+	nextOp	= ScanForOp(string, i);
+
+	while (OpType(nextOp) > op_type) { /* Higher precedence. */
+			if (nextOp == OP_RTPAREN)
+				return ERR_PAREN;
+			if (!eval) {
+				ret = CheckFormula(g, clause, i, OpType(nextOp),
+				    &token, 0);
+			} else {
+				ret = EvalBinaryOp(&token, nextOp, g, clause,
+				    i);
+			}
+
+			if (ret != ERR_NONE)
+				return ret;
+			lastPos	= *i;
+			nextOp	= ScanForOp(string, i);
+	}
+
+	if (nextOp == OP_BAD)
+		return ERR_BADOP;
+	*result = token;
+	/*
+	 * Move back unless we're at the end or at a right paren, in
+	 * which case we never went forward.
+	 */
+	if (nextOp != OP_NONE && nextOp != OP_RTPAREN)
+		*i = lastPos;
+	return ERR_NONE;
+}
 
 /*
  * Which clauses are relevant for a player's formula.
