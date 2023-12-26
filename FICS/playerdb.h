@@ -197,6 +197,11 @@ typedef struct _textlist {
 extern player	 parray[PARRAY_SIZE];
 extern int	 p_num;
 
+extern int sort_blitz[];
+extern int sort_stand[];
+extern int sort_alpha[];
+extern int sort_wild[];
+
 extern void player_init(int);
 
 extern int player_new(void);
@@ -266,11 +271,6 @@ extern int ClrMsgRange(int, int, int);
 extern int ShowMsgRange(int, int, int);
 extern int ClearMsgsBySender(int, param_list);
 extern int player_search(int, char *);
-
-extern int sort_blitz[];
-extern int sort_stand[];
-extern int sort_alpha[];
-extern int sort_wild[];
 
 extern int player_kill(char *);
 extern int player_rename(char *, char *);
