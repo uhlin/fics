@@ -582,14 +582,13 @@ int SetValidFormula (int p, int clause, char *string)
   return (err == ERR_NONE);
 }
 
-PUBLIC void ShowClauses (int p, int p1, textlist *clauses)
+PUBLIC void
+ShowClauses(int p, int p1, textlist *clauses)
 {
-  textlist *Cur;
-
-  if (clauses != NULL)
-    pprintf(p, "\n");
-  for (Cur = clauses; Cur != NULL; Cur = Cur->next) {
-    pprintf(p, "f%d=%s: %s\n", Cur->index + 1, Cur->text,
-               parray[p1].formulaLines[Cur->index]);
-  }
+	if (clauses != NULL)
+		pprintf(p, "\n");
+	for (textlist *Cur = clauses; Cur != NULL; Cur = Cur->next) {
+		pprintf(p, "f%d=%s: %s\n", (Cur->index + 1), Cur->text,
+		    parray[p1].formulaLines[Cur->index]);
+	}
 }
