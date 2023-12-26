@@ -280,60 +280,83 @@ int OpType (int op)
   }
 }    /* end of function OpType. */
 
-/* In EvalBinaryOp, *left is the left operand; and op is the
-   current operator.  *g and clause specify which formula string to
-   look at (we're checking parray[g->black].formulaLines[clause]),
-   and *i tells us where we are in the string.  We look for a right
-   operand from position *i in the string, and place the expression
-   (*left op right) in *left.  For example, if *left=6, op =
-   OP_MULT, and we pull off right = 4, we replace *left with
-   6*4=24.  Returns 0 if no error; otherwise indicates the error.
-*/
-int EvalBinaryOp (int *left, int op, game *g, int clause, int *i)
+/*
+ * In EvalBinaryOp() 'left' is the left operand, and 'op' is the
+ * current operator. 'g' and 'clause' specify which formula string to
+ * look at, and 'i' tells us where we are in the string. We look for a
+ * right operand from position 'i' in the string. And place the
+ * expression in 'left'. This function returns 0 on no error.
+ * Otherwise an error code is returned.
+ */
+int
+EvalBinaryOp(int *left, int op, game *g, int clause, int *i)
 {
-  int right, ret;
-  if ((op==OP_OR) && (*left != 0))            /* Nothing to decide. */
-  {
-    *left = 1;
-    return (CheckFormula (g, clause, i, OpType(op), &right, 0));
-  }
-  else if ((op==OP_AND) && (*left == 0))     /* Nothing to decide. */
-    return (CheckFormula (g, clause, i, OpType(op), &right, 0));
+	int right, ret;
 
-  else {
-    ret = CheckFormula (g, clause, i, OpType(op), &right, 1);
-    if (ret != ERR_NONE) return (ret);
-  }
-  switch (op)
-  {
-    default:  case OP_BAD:  return (ERR_BADOP);
-    case OP_NONE:  case OP_RTPAREN:  return (ERR_NONE);
-    case OP_OR:  *left = (*left || right);  return (ERR_NONE);
-    case OP_AND:  *left = (*left && right);  return (ERR_NONE);
-    case OP_EQ:  *left = (*left == right);  return (ERR_NONE);
-    case OP_NEQ:  *left = (*left != right);  return (ERR_NONE);
-    case OP_GT:  *left = (*left > right);  return (ERR_NONE);
-    case OP_GE:  *left = (*left >= right);  return (ERR_NONE);
-    case OP_LT:  *left = (*left < right);  return (ERR_NONE);
-    case OP_LE:  *left = (*left <= right);  return (ERR_NONE);
-    case OP_PLUS:  *left += right;  return (ERR_NONE);
-    case OP_MINUS:  *left -= right;  return (ERR_NONE);
-    case OP_MULT:  *left *= right;  return (ERR_NONE);
-    case OP_DIV:
-      if (right != 0)
-      {
-        *left /= right;
-        return (ERR_NONE);
-      }
-      else
-      {
-        pprintf(g->black, "Dividing by %lf instead or zero in formula.\n",
-FUDGE_FACTOR);
-        *left /= FUDGE_FACTOR;
-        return (ERR_NONE);
-      }
-  }
-}    /* end of function EvalBinaryOp. */
+	if (op == OP_OR && *left != 0) { /* Nothing to decide. */
+		*left = 1;
+		return CheckFormula(g, clause, i, OpType(op), &right, 0);
+	} else if (op == OP_AND && *left == 0) { /* Nothing to decide. */
+		return CheckFormula(g, clause, i, OpType(op), &right, 0);
+	} else {
+		ret = CheckFormula(g, clause, i, OpType(op), &right, 1);
+
+		if (ret != ERR_NONE)
+			return ret;
+	}
+
+	switch (op) {
+	default:
+	case OP_BAD:
+		return ERR_BADOP;
+	case OP_NONE:
+	case OP_RTPAREN:
+		return ERR_NONE;
+	case OP_OR:
+		*left = (*left || right);
+		return ERR_NONE;
+	case OP_AND:
+		*left = (*left && right);
+		return ERR_NONE;
+	case OP_EQ:
+		*left = (*left == right);
+		return ERR_NONE;
+	case OP_NEQ:
+		*left = (*left != right);
+		return ERR_NONE;
+	case OP_GT:
+		*left = (*left > right);
+		return ERR_NONE;
+	case OP_GE:
+		*left = (*left >= right);
+		return ERR_NONE;
+	case OP_LT:
+		*left = (*left < right);
+		return ERR_NONE;
+	case OP_LE:
+		*left = (*left <= right);
+		return ERR_NONE;
+	case OP_PLUS:
+		*left += right;
+		return ERR_NONE;
+	case OP_MINUS:
+		*left -= right;
+		return ERR_NONE;
+	case OP_MULT:
+		*left *= right;
+		return ERR_NONE;
+	case OP_DIV:
+		if (right != 0) {
+			*left /= right;
+			return ERR_NONE;
+		} else {
+			pprintf(g->black, "Dividing by %lf instead or zero in "
+			    "formula.\n", FUDGE_FACTOR);
+			*left /= FUDGE_FACTOR;
+			return ERR_NONE;
+		}
+	} /* switch */
+}
 
 /*
  * If 'eval' is 1, ScanForNumber() evaluates the number at position
