@@ -555,7 +555,7 @@ SetValidFormula(int p, int clause, char *string)
 	g.rated = me->rated;
 	g.type = TYPE_BLITZ;
 
-	err = CheckFormula (&g, clause, &index, OPTYPE_NONE, &ret, 0);
+	err = CheckFormula(&g, clause, &index, OPTYPE_NONE, &ret, 0);
 
 	if (err != ERR_NONE) {
 		/* Bad formula  --  reset it. */
