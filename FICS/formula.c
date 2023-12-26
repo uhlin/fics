@@ -462,24 +462,25 @@ PRIVATE int ChooseClauses(player *who, char *formula)
   return ret;
 }    /* end of function ChooseClauses. */
 
-void ExplainFormula (game *g, textlist **clauses)
+void
+ExplainFormula(game *g, textlist **clauses)
 {
-  int i, which, dummy_index, value;
-  char txt[20];
-  player *challenged = &parray[g->black];
-  textlist **Cur = clauses;
+	char txt[20];
+	int i, which, dummy_index, value;
+	player *challenged = &parray[g->black];
+	textlist **Cur = clauses;
 
-  which = ChooseClauses(challenged, challenged->formula);
+	which = ChooseClauses(challenged, challenged->formula);
 
-  for (i = 0; i < MAX_FORMULA; i++) {
-    if ((which & (1 << i)) == 0)
-      continue;
-    dummy_index = 0;
-    CheckFormula (g, i, &dummy_index, OPTYPE_NONE, &value, 1);
-    sprintf(txt, "%d", value);
-    SaveTextListEntry (Cur, txt, i);
-    Cur = &(*Cur)->next;
-  }
+	for (i = 0; i < MAX_FORMULA; i++) {
+		if ((which & (1 << i)) == 0)
+			continue;
+		dummy_index = 0;
+		CheckFormula(g, i, &dummy_index, OPTYPE_NONE, &value, 1);
+		sprintf(txt, "%d", value);
+		SaveTextListEntry(Cur, txt, i);
+		Cur = &(*Cur)->next;
+	}
 }
 
 /*
