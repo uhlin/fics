@@ -226,40 +226,72 @@ int VarToToken (game *g, int clause, char *string, int *i, int *tok, int eval)
   return (1);
 }    /* end of function VarToToken. */
 
-/* ScanForOp checks for an operator at position *i in string[]. */
-int ScanForOp (char *string, int *i)
+/*
+ * ScanForOp() checks for an operator at position 'i' in 'string'.
+ */
+int
+ScanForOp(char *string, int *i)
 {
-  while (string[*i] != '\0' && isspace(string[*i])) (*i)++;
+	while (string[*i] != '\0' && isspace(string[*i]))
+		(*i)++;
 
-  if (string[*i] == '\0') return (OP_NONE);
-  if (string[*i] == '#') return (OP_NONE);
-  if (string[*i] == ')') return (OP_RTPAREN);
+	if (string[*i] == '\0')
+		return OP_NONE;
+	if (string[*i] == '#')
+		return OP_NONE;
+	if (string[*i] == ')')
+		return OP_RTPAREN;
 
-  /* Two char operators and longer first. */
-  if (MoveIndexPastString(string, i, "and")) return (OP_AND);
-  if (MoveIndexPastString(string, i, "or")) return (OP_OR);
-  if (MoveIndexPastString(string, i, "||")) return (OP_OR);
-  if (MoveIndexPastString(string, i, "&&")) return (OP_AND);
-  if (MoveIndexPastString(string, i, "==")) return (OP_EQ);
-  if (MoveIndexPastString(string, i, "!=")) return (OP_NEQ);
-  if (MoveIndexPastString(string, i, "<>")) return (OP_NEQ);
-  if (MoveIndexPastString(string, i, ">=")) return (OP_GE);
-  if (MoveIndexPastString(string, i, "=>")) return (OP_GE);
-  if (MoveIndexPastString(string, i, "<=")) return (OP_LE);
-  if (MoveIndexPastString(string, i, "=<")) return (OP_LE);
+	/*
+	 * Two char operators and longer first.
+	 */
+	if (MoveIndexPastString(string, i, "and"))
+		return OP_AND;
+	if (MoveIndexPastString(string, i, "or"))
+		return OP_OR;
+	if (MoveIndexPastString(string, i, "||"))
+		return OP_OR;
+	if (MoveIndexPastString(string, i, "&&"))
+		return OP_AND;
+	if (MoveIndexPastString(string, i, "=="))
+		return OP_EQ;
+	if (MoveIndexPastString(string, i, "!="))
+		return OP_NEQ;
+	if (MoveIndexPastString(string, i, "<>"))
+		return OP_NEQ;
+	if (MoveIndexPastString(string, i, ">="))
+		return OP_GE;
+	if (MoveIndexPastString(string, i, "=>"))
+		return OP_GE;
+	if (MoveIndexPastString(string, i, "<="))
+		return OP_LE;
+	if (MoveIndexPastString(string, i, "=<"))
+		return OP_LE;
 
-  /* One char operators now. */
-  if (MoveIndexPastString(string, i, "|")) return (OP_OR);
-  if (MoveIndexPastString(string, i, "&")) return (OP_AND);
-  if (MoveIndexPastString(string, i, ">")) return (OP_GT);
-  if (MoveIndexPastString(string, i, "<")) return (OP_LT);
-  if (MoveIndexPastString(string, i, "=")) return (OP_EQ);
-  if (MoveIndexPastString(string, i, "+")) return (OP_PLUS);
-  if (MoveIndexPastString(string, i, "-")) return (OP_MINUS);
-  if (MoveIndexPastString(string, i, "*")) return (OP_MULT);
-  if (MoveIndexPastString(string, i, "/")) return (OP_DIV);
-  return (OP_BAD);
-}    /* end of function ScanForOp. */
+	/*
+	 * One char operators now.
+	 */
+	if (MoveIndexPastString(string, i, "|"))
+		return OP_OR;
+	if (MoveIndexPastString(string, i, "&"))
+		return OP_AND;
+	if (MoveIndexPastString(string, i, ">"))
+		return OP_GT;
+	if (MoveIndexPastString(string, i, "<"))
+		return OP_LT;
+	if (MoveIndexPastString(string, i, "="))
+		return OP_EQ;
+	if (MoveIndexPastString(string, i, "+"))
+		return OP_PLUS;
+	if (MoveIndexPastString(string, i, "-"))
+		return OP_MINUS;
+	if (MoveIndexPastString(string, i, "*"))
+		return OP_MULT;
+	if (MoveIndexPastString(string, i, "/"))
+		return OP_DIV;
+
+	return OP_BAD;
+}
 
 /*
  * OpType() returns the precedence of the operator 'op'.
