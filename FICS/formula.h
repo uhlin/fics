@@ -46,10 +46,9 @@
 
 #define FUDGE_FACTOR 1e-3
 
-extern int GetRating (player *, int);
-extern int GameMatchesFormula (int, int, int, int, int, int, int, int, textlist **);
 extern int CheckFormula (game *, int, int *, int, int *, int);
+extern int GameMatchesFormula (int, int, int, int, int, int, int, int, textlist **);
+extern int GetRating (player *, int);
 extern void ShowClauses (int, int, textlist *);
 
 #endif
-
