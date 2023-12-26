@@ -48,19 +48,21 @@
    is set, your formula is automatically set to f0 when you log in.
 */
 
+#include "stdinclude.h"
+#include "common.h"
+
 #include <ctype.h>
+
+#include "command.h"
 #include "config.h"
 #include "formula.h"
-#include "playerdb.h"
 #include "gamedb.h"
-#include "command.h"
-#include "common.h"
-#include "stdinclude.h"
-#include "utils.h"
-#include "rmalloc.h"
 #include "lists.h"
 #include "network.h"
+#include "playerdb.h"
 #include "ratings.h"
+#include "rmalloc.h"
+#include "utils.h"
 
 extern player parray[];
 
