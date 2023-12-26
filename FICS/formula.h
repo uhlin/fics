@@ -1,7 +1,8 @@
 #ifndef FORMULA_H
 #define FORMULA_H
 
-#define OP_BAD      -1
+#define OP_BAD -1
+
 #include "playerdb.h"
 #include "gamedb.h"
 
@@ -34,15 +35,15 @@
 #define OPTYPE_MULT    9
 #define OPTYPE_UNARY  10
 
-#define ERR_NONE 0
-#define ERR_EOF 1
-#define ERR_UNARY 2
-#define ERR_BADCHAR 3
-#define ERR_BADVAR 4
-#define ERR_BADOP 5
-#define ERR_NONESENSE 6
-#define ERR_DIVBYZERO 7
-#define ERR_PAREN 8
+#define ERR_NONE         0
+#define ERR_EOF          1
+#define ERR_UNARY        2
+#define ERR_BADCHAR      3
+#define ERR_BADVAR       4
+#define ERR_BADOP        5
+#define ERR_NONESENSE    6
+#define ERR_DIVBYZERO    7
+#define ERR_PAREN        8
 
 #define FUDGE_FACTOR 1e-3
 
