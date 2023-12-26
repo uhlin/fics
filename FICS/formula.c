@@ -439,28 +439,33 @@ int CheckFormula (game *g, int clause, int *i, int op_type,
   return (ERR_NONE);
 }    /* end of function CheckFormula. */
 
-/* which clauses are relevant for a player's formula. */
-PRIVATE int ChooseClauses(player *who, char *formula)
+/*
+ * Which clauses are relevant for a player's formula.
+ */
+PRIVATE int
+ChooseClauses(player *who, char *formula)
 {
-  int i, which, ret=0;
+	int i, which, ret = 0;
 
-  if (formula == NULL)
-    return ret;
-  for (i=0; formula[i] != '\0' && formula[i] != '#'; i++) {
-    if (formula[i] != 'f' || (i > 0 && isalnum(formula[i-1]))
-        || !isdigit(formula[i+1]))
-      continue;
-    sscanf(&formula[i], "f%d", &which);
-    ret |= (1 << (which - 1));
-  }
-  /* now scan clauses found as part of the formula. */
-  for (i = MAX_FORMULA - 1; i >= 0; i--) {
-    if (ret & (1 << i)) {
-      ret |= ChooseClauses(who, who->formulaLines[i]);
-    }
-  }
-  return ret;
-}    /* end of function ChooseClauses. */
+	if (formula == NULL)
+		return ret;
+
+	for (i = 0; formula[i] != '\0' && formula[i] != '#'; i++) {
+		if (formula[i] != 'f' || (i > 0 && isalnum(formula[i - 1])) ||
+		    !isdigit(formula[i + 1]))
+			continue;
+		sscanf(&formula[i], "f%d", &which);
+		ret |= (1 << (which - 1));
+	}
+
+	/* Now scan clauses found as part of the formula. */
+	for (i = MAX_FORMULA - 1; i >= 0; i--) {
+		if (ret & (1 << i))
+			ret |= ChooseClauses(who, who->formulaLines[i]);
+	}
+
+	return ret;
+}
 
 void
 ExplainFormula(game *g, textlist **clauses)
