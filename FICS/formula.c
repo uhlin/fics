@@ -285,7 +285,7 @@ int OpType (int op)
  * current operator. 'g' and 'clause' specify which formula string to
  * look at, and 'i' tells us where we are in the string. We look for a
  * right operand from position 'i' in the string. And place the
- * expression in 'left'. This function returns 0 on no error.
+ * expression in 'left'. This function returns 0 if no error.
  * Otherwise an error code is returned.
  */
 int
@@ -365,7 +365,7 @@ EvalBinaryOp(int *left, int op, game *g, int clause, int *i)
  * the i'th position. If we come to an operator of higher precedence
  * we must keep going before we can leave this function. If 'eval' is
  * 0, just move past the number we would evaluate. This function
- * returns 0 on no error. Otherwise an error code is returned.
+ * returns 0 if no error. Otherwise an error code is returned.
  */
 int
 ScanForNumber(game *g, int clause, int *i, int op_type, int *token, int eval)
