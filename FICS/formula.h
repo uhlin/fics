@@ -32,7 +32,7 @@
 #define OPTYPE_COMPGL  7
 #define OPTYPE_ADD     8
 #define OPTYPE_MULT    9
-#define OPTYPE_UNARY  10 
+#define OPTYPE_UNARY  10
 
 #define ERR_NONE 0
 #define ERR_EOF 1
@@ -46,7 +46,7 @@
 
 #define FUDGE_FACTOR 1e-3
 
-extern int GetRating (player *, int); 
+extern int GetRating (player *, int);
 extern int GameMatchesFormula (int, int, int, int, int, int, int, int, textlist **);
 extern int CheckFormula (game *, int, int *, int, int *, int);
 extern void ShowClauses (int, int, textlist *);
