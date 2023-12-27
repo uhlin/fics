@@ -112,32 +112,33 @@ int GetNumberInsideParens (game *g, int clause, int *i, int *token,
   else return (ERR_PAREN);
 }
 
-int Maxtime (game *g, int numMoves, int numPlayers)
+int
+Maxtime(game *g, int numMoves, int numPlayers)
 {
-  int max;
+	int max;
 
-  if ((g->bInitTime == g->wInitTime) && (g->bIncrement == g->wIncrement)) {
-    max = numPlayers * (60 * g->wInitTime + numMoves * g->wIncrement);
-    if ((g->type != TYPE_UNTIMED) && (g->wInitTime == 0))
-      max +=10 * numPlayers; /* 0 x start with ten secs */
+	if (g->bInitTime == g->wInitTime && g->bIncrement == g->wIncrement) {
+		max = numPlayers * (60 * g->wInitTime + numMoves *
+		    g->wIncrement);
 
-  } else if (numPlayers == 2) {
-    max = 60 * (g->wInitTime + g->bInitTime)
-            + numMoves * (g->wIncrement + g->bIncrement);
-    if ((g->type != TYPE_UNTIMED) && (g->wInitTime == 0))
-      max +=10; /* 0 x start with ten secs */
-    if ((g->type != TYPE_UNTIMED) && (g->bInitTime == 0))
-      max +=10; /* 0 x start with ten secs */
+		if (g->type != TYPE_UNTIMED && g->wInitTime == 0)
+			max += (10 * numPlayers);
+	} else if (numPlayers == 2) {
+		max = 60 * (g->wInitTime + g->bInitTime) + numMoves *
+		    (g->wIncrement + g->bIncrement);
 
-  } else {
-    max = 60 * g->bInitTime + numMoves * g->bIncrement;
-    if ((g->type != TYPE_UNTIMED) && (g->bInitTime == 0))
-      max +=10; /* 0 x start with ten secs */
-  }
+		if (g->type != TYPE_UNTIMED && g->wInitTime == 0)
+			max += 10;
+		if (g->type != TYPE_UNTIMED && g->bInitTime == 0)
+			max += 10;
+	} else {
+		max = (60 * g->bInitTime + numMoves * g->bIncrement);
 
-  return max;
+		if (g->type != TYPE_UNTIMED && g->bInitTime == 0)
+			max += 10;
+	}
+	return max;
 }
-
 
 /*
  * The black player in game 'g' has been challenged. S/he has a list
