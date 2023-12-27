@@ -35,15 +35,13 @@
 #include "comproc.h"
 #include "config.h"
 #include "ficsmain.h"
+#include "formula.h" /* SetValidFormula() */
 #include "playerdb.h"
 #include "rmalloc.h"
 #include "talkproc.h"
 #include "utils.h"
 #include "variable.h"
 
-/* grimm */
-int SetValidFormula(int p, int which, char *val);
-/* added for warning */
 PRIVATE int set_boolean_var(int *var, char *val)
 {
   int v = -1;
