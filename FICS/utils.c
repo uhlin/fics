@@ -736,13 +736,13 @@ tenth_secs(void)
  * ratings. 1 sec since 1970 fits into a 32 bit int OK.
  */
 PUBLIC int
-untenths(unsigned tenths)
+untenths(unsigned int tenths)
 {
 	return (tenths / 10 + 331939277 + 0xffffffff / 10 + 1);
 }
 
 PUBLIC char *
-tenth_str(unsigned t, int spaces)
+tenth_str(unsigned int t, int spaces)
 {
 	return hms((t + 5) / 10, 0, 1, spaces);
 }
