@@ -73,7 +73,7 @@ GetPlayersFormula(player *pWho, int clause)
 	return pWho->formulaLines[clause];
 }
 
-int
+PRIVATE int
 MoveIndexPastString(char *string, int *i, char *text)
 {
 	int n = strlen(text);
@@ -101,7 +101,7 @@ GetRating(player *p, int gametype)
 		return 0;
 }
 
-int
+PRIVATE int
 GetNumberInsideParens(game *g, int clause, int *i, int *token, int eval)
 {
 	char	*string = GetPlayersFormula(&parray[g->black], clause);
@@ -124,7 +124,7 @@ GetNumberInsideParens(game *g, int clause, int *i, int *token, int eval)
 		return ERR_PAREN;
 }
 
-int
+PRIVATE int
 Maxtime(game *g, int numMoves, int numPlayers)
 {
 	int max;
@@ -162,7 +162,7 @@ Maxtime(game *g, int numMoves, int numPlayers)
  * function returns 1 or 0 depending on whether a legitimate variable
  * was found.
  */
-int
+PRIVATE int
 VarToToken(game *g, int clause, char *string, int *i, int *tok, int eval)
 {
 	double	 dummy_sterr;
@@ -253,7 +253,7 @@ VarToToken(game *g, int clause, char *string, int *i, int *tok, int eval)
 /*
  * ScanForOp() checks for an operator at position 'i' in 'string'.
  */
-int
+PRIVATE int
 ScanForOp(char *string, int *i)
 {
 	while (string[*i] != '\0' && isspace(string[*i]))
@@ -320,7 +320,7 @@ ScanForOp(char *string, int *i)
 /*
  * OpType() returns the precedence of the operator 'op'.
  */
-int
+PRIVATE int
 OpType(int op)
 {
 	switch (op) {
@@ -364,7 +364,7 @@ OpType(int op)
  * expression in 'left'. This function returns 0 if no error.
  * Otherwise an error code is returned.
  */
-int
+PRIVATE int
 EvalBinaryOp(int *left, int op, game *g, int clause, int *i)
 {
 	int right, ret;
@@ -443,7 +443,7 @@ EvalBinaryOp(int *left, int op, game *g, int clause, int *i)
  * 0, just move past the number we would evaluate. This function
  * returns 0 if no error. Otherwise an error code is returned.
  */
-int
+PRIVATE int
 ScanForNumber(game *g, int clause, int *i, int op_type, int *token, int eval)
 {
 	char	*string = GetPlayersFormula(&parray[g->black], clause);
@@ -590,7 +590,7 @@ ChooseClauses(player *who, char *formula)
 	return ret;
 }
 
-void
+PRIVATE void
 ExplainFormula(game *g, textlist **clauses)
 {
 	char txt[20];
