@@ -51,6 +51,7 @@ extern int	 CheckFormula(game *, int, int *, int, int *, int);
 extern int	 GameMatchesFormula(int, int, int, int, int, int, int, int,
 		     textlist **);
 extern int	 GetRating(player *, int);
+extern int	 SetValidFormula(int, int, char *);
 extern void	 ShowClauses(int, int, textlist *);
 
 #endif
