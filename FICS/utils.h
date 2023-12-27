@@ -95,7 +95,7 @@ extern int safestring( );
 extern int search_directory(char *, char *, char **, int);
 extern int truncate_file();
 extern int untenths();
-extern unsigned tenth_secs();
+extern unsigned int tenth_secs(void);
 extern void pprintf_dohightlight(int);
 extern void sprintf_dohightlight(int,char *);
 

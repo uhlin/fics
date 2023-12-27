@@ -719,7 +719,7 @@ strgtime(time_t *clock)
  * This is used only for relative timing since it reports seconds
  * since about 5:00 pm on Feb 16, 1994.
  */
-PUBLIC unsigned
+PUBLIC unsigned int
 tenth_secs(void)
 {
 	struct timeval	tp;
