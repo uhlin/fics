@@ -84,7 +84,7 @@ MoveIndexPastString(char *string, int *i, char *text)
 	return n;
 }
 
-int
+PUBLIC int
 GetRating(player *p, int gametype)
 {
 	if (gametype == TYPE_BLITZ)
@@ -514,7 +514,7 @@ ScanForNumber(game *g, int clause, int *i, int op_type, int *token, int eval)
  * side of an expression whose operator has precedence OpType(). If
  * 'eval' is 0, just go to the end of an expression.
  */
-int
+PUBLIC int
 CheckFormula(game *g, int clause, int *i, int op_type, int *result, int eval)
 {
 	char	*string = GetPlayersFormula(&parray[g->black], clause);
