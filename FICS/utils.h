@@ -97,6 +97,6 @@ extern int truncate_file();
 extern int untenths();
 extern unsigned int tenth_secs(void);
 extern void pprintf_dohightlight(int);
-extern void sprintf_dohightlight(int,char *);
+extern void sprintf_dohightlight(int, char *);
 
 #endif /* _UTILS_H */
