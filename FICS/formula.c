@@ -66,24 +66,24 @@
 
 extern player parray[];
 
-PRIVATE char *GetPlayersFormula (player *pWho, int clause)
+PRIVATE char *
+GetPlayersFormula(player *pWho, int clause)
 {
-  if (clause==MAX_FORMULA) return (pWho->formula);
-  else return (pWho->formulaLines[clause]);
+	if (clause == MAX_FORMULA)
+		return pWho->formula;
+	return pWho->formulaLines[clause];
 }
 
-/* In MoveIndexPastString, *i is treated as the index into string[];
-   this function returns 1 if the character string beginning with
-   string[*i] match *text, and 0 otherwise.  In the former case, *i
-   is incremented to move the index past *text.
-*/
-int MoveIndexPastString (char *string, int *i, char *text)
+int
+MoveIndexPastString(char *string, int *i, char *text)
 {
-  int n = strlen(text);
-  if (strncasecmp(text, string + *i, n)) return (0);
-  *i += n;
-  return (n);
-}    /* end of function MoveIndexPastString. */
+	int n = strlen(text);
+
+	if (strncasecmp(text, string + *i, n))
+		return 0;
+	*i += n;
+	return n;
+}
 
 int
 GetRating(player *p, int gametype)
