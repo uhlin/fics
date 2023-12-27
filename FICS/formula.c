@@ -96,20 +96,27 @@ int GetRating(player *p, int gametype)
     else return 0;
 }    /* end of function GetRating. */
 
-int GetNumberInsideParens (game *g, int clause, int *i, int *token,
-                           int eval)
+int
+GetNumberInsideParens(game *g, int clause, int *i, int *token, int eval)
 {
-  char *string = GetPlayersFormula(&parray[g->black], clause);
-  int ret;
+	char	*string = GetPlayersFormula(&parray[g->black], clause);
+	int	 ret;
 
-  while (string[*i] != '\0' && isspace(string[*i])) (*i)++;
-  if (!MoveIndexPastString(string, i, "(")) return (ERR_BADCHAR);
+	while (string[*i] != '\0' && isspace(string[*i]))
+		(*i)++;
 
-  ret = CheckFormula(g, clause, i, OPTYPE_PAREN, token, eval);
-  if (ret != ERR_NONE)
-    return (ret);
-  if (MoveIndexPastString(string, i, ")")) return (ERR_NONE);
-  else return (ERR_PAREN);
+	if (!MoveIndexPastString(string, i, "("))
+		return ERR_BADCHAR;
+
+	ret = CheckFormula(g, clause, i, OPTYPE_PAREN, token, eval);
+
+	if (ret != ERR_NONE)
+		return ret;
+
+	if (MoveIndexPastString(string, i, ")"))
+		return ERR_NONE;
+	else
+		return ERR_PAREN;
 }
 
 int
