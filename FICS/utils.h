@@ -30,14 +30,19 @@
 #define _UTILS_H
 
 #include <stdio.h>
+
 #include "multicol.h"
 
 #define MAX_WORD_SIZE 1024
 
-/* Maximum length of an output line */
+/*
+ * Maximum length of an output line
+ */
 #define MAX_LINE_SIZE 1024
 
-/* Maximum size of a filename */
+/*
+ * Maximum size of a filename
+ */
 #ifdef FILENAME_MAX
 #  define MAX_FILENAME_SIZE FILENAME_MAX
 #else
