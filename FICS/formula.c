@@ -645,7 +645,7 @@ GameMatchesFormula(int w, int b, int wTime, int wInc, int bTime, int bInc,
  * structure to check whether that new formula is legitimate. If so,
  * return 1. Otherwise reset the formula and return 0.
  */
-int
+PUBLIC int
 SetValidFormula(int p, int clause, char *string)
 {
 	char	*Old = NULL, **Cur;
