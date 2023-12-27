@@ -11,6 +11,7 @@ documented in this file.
 - Added better handling of memory allocation errors.
 - Added usage of the `time_t` typedef in multiple places. This instead
   of `int`.
+- Declared file-local functions and variables as `PRIVATE`.
 - Deleted disabled code
 - Did new revisions of the following files:
   - `board.c`
