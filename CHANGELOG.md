@@ -16,6 +16,7 @@ documented in this file.
   - `board.c`
   - `eco.c`
   - `fics_addplayer.c`
+  - `formula.c`
   - `makerank.c`
   - `network.c`
   - `shutdown.c`
