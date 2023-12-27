@@ -65,8 +65,6 @@
 #include "rmalloc.h"
 #include "utils.h"
 
-extern player parray[];
-
 PRIVATE char *
 GetPlayersFormula(player *pWho, int clause)
 {
