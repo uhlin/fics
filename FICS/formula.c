@@ -1,52 +1,53 @@
-/* Formula program for FICS.  Written by Dave Herscovici
-                                         (dhersco@math.nps.navy.mil)
-			      Edited by DAV to include wild,non-std and untimed
-				 lightning flags
-
-   Operators allowed, in order of precedence:
-      ! (not), - (unary),
-      *, /,
-      +, -,
-      <, <=, =<, >, >=, =>, (<= and =< are equivalent, as are >= and =>)
-      =, ==, !=, <>, (two ways of saying both equals and not equals)
-      &, &&, (both "and")
-      |, ||, (both "or").
-
-   Parentheses () are also allowed, as is a pound sign '#' for comments.
-   The program will divide by a fudge factor of .001 instead of 0.
-
-   Variables allowed:
-      time, inc, rating, myrating, rated, blitz, standard, lightning, registered,
-      assesswin, assessdraw, assessloss, timeseal,
-      ratingdiff = rating - myrating, private, wild, untimed, nonstandard,
-      maxtime(n) = maximum time n moves will take (in seconds),
-      mymaxtime(n) = same, but just count my time.
-      f1, f2, f3, f4, f5, f6, f7, f8, f9.
-
-   The code for translating blitz and standard variables may have to be
-   redone.  F1 through f9 are user-defined formula variables.  They can
-   be used to avoid having to retype your entire formula when you want
-   to change one part of it, or to compensate for the lack of a 'mood'
-   variable.
-
-   For example:
-      set f1 rated & time=5 & inc=0   # rated 5 minute games
-      set f2 rating - myrating
-      set f3 # this line is a random comment.
-      set f4 f2>400   # I want a REAL fight
-
-   Then you can type:
-      set formula f1   # rated 5 min. games only
-      set formula etime >= 10 & f2 > -100 # long games, decent competition
-      set formula f1 & !f4
-   or set formula f2 >= 0 | blitz
-   depending on your mood.
-
-   Further modifications could account for starting positions, time
-   odds games, provisional or established opponents, etc.  Maybe f0
-   should be reserved for your formula upon logging in; i.e. if f0
-   is set, your formula is automatically set to f0 when you log in.
-*/
+/*
+ * Formula program for FICS. Written by Dave Herscovici
+ *                           <dhersco@math.nps.navy.mil>
+ * Edited by DAV to include wild, non-std and untimed lightning flags.
+ *
+ * Operators allowed, in order of precedence:
+ *     ! (not), - (unary),
+ *     *, /,
+ *     +, -,
+ *     <, <=, =<, >, >=, =>, (<= and =< are equivalent, as are >= and =>)
+ *     =, ==, !=, <>, (two ways of saying both equals and not equals)
+ *     &, &&, (both "and")
+ *     |, ||, (both "or").
+ *
+ * Parentheses () are also allowed, as is a pound sign '#' for comments.
+ * The program will divide by a fudge factor of .001 instead of 0.
+ *
+ * Variables allowed:
+ *     assessdraw, assessloss, assesswin, blitz,
+ *     f1, f2, f3, f4, f5, f6, f7, f8, f9,
+ *     inc, lightning,
+ *     maxtime(n) = maximum time n moves will take (in seconds),
+ *     mymaxtime(n) = same, but just count my time,
+ *     myrating, nonstandard, private, rated, rating,
+ *     ratingdiff = rating - myrating,
+ *     registered, standard, time, timeseal, untimed, wild.
+ *
+ * The code for translating blitz and standard variables may have to
+ * be redone. f1 through f9 are user-defined formula variables. They
+ * can be used to avoid having to retype your entire formula when you
+ * want to change one part of it. Or to compensate for the lack of a
+ * 'mood' variable.
+ *
+ * For example:
+ *     set f1 rated & time=5 & inc=0    # Rated 5 minute games
+ *     set f2 rating - myrating
+ *     set f3 # This line is a random comment
+ *     set f4 f2>400 # I want a REAL fight
+ *
+ * Then you can type:
+ *     set formula f1    # Rated 5 min games only
+ *     set formula etime >= 10 & f2 > -100 # Long games, decent competition.
+ *     set formula f1 & !f4
+ * Or 'set formula f2 >= 0 | blitz' depending on your mood.
+ *
+ * Further modifications could account for starting positions, time
+ * odds games, provisional or established opponents, etc. Maybe f0
+ * should be reserved for your formula upon logging in, i.e. if f0 is
+ * set, your formula is automatically set to f0 when you log in.
+ */
 
 #include "stdinclude.h"
 #include "common.h"
