@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.0] - 2023-12-28 ##
 - Added a new build system (and deleted the old).
 - Added argument lists to many function declarations.
 - Added auto-generation of the header file `ficspaths.h` and included
