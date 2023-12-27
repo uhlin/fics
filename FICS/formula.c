@@ -85,16 +85,22 @@ int MoveIndexPastString (char *string, int *i, char *text)
   return (n);
 }    /* end of function MoveIndexPastString. */
 
-/* GetRating simply chooses between blitz, standard and ratings. */
-int GetRating(player *p, int gametype)
+int
+GetRating(player *p, int gametype)
 {
-    if (gametype == TYPE_BLITZ) return (p->b_stats.rating);
-    else if (gametype == TYPE_STAND) return (p->s_stats.rating);
-    else if (gametype == TYPE_WILD) return (p->w_stats.rating);
-    else if (gametype == TYPE_LIGHT) return (p->l_stats.rating);
-    else if (gametype == TYPE_BUGHOUSE) return (p->bug_stats.rating);
-    else return 0;
-}    /* end of function GetRating. */
+	if (gametype == TYPE_BLITZ)
+		return (p->b_stats.rating);
+	else if (gametype == TYPE_STAND)
+		return (p->s_stats.rating);
+	else if (gametype == TYPE_WILD)
+		return (p->w_stats.rating);
+	else if (gametype == TYPE_LIGHT)
+		return (p->l_stats.rating);
+	else if (gametype == TYPE_BUGHOUSE)
+		return (p->bug_stats.rating);
+	else
+		return 0;
+}
 
 int
 GetNumberInsideParens(game *g, int clause, int *i, int *token, int eval)
