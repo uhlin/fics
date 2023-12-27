@@ -3,6 +3,9 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Added argument lists to many function declarations.
+
 ## [1.0] - 2023-12-28 ##
 - Added a new build system (and deleted the old).
 - Added argument lists to many function declarations.
