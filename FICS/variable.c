@@ -19,12 +19,13 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash	              	93/10/22	Created
-   loon				95/03/17	added figure_boolean, use it :)
-   hersco			95/04/10	replaced figure_boolean with
-							set_boolean_var
-   DAV				95/19/11        moved variable command to here
-						added jprivate
+   Richard Nash                 93/10/22	Created
+   loon                         95/03/17	Added figure_boolean()
+   hersco                       95/04/10	Replaced figure_boolean() with
+						set_boolean_var()
+   DAV                          95/19/11	Moved variable command to here
+						Added jprivate
+   Markus Uhlin                 23/12/27	Fixed the includes
 */
 
 #include "stdinclude.h"
