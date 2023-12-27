@@ -50,14 +50,10 @@
 extern int count_lines(FILE *);
 extern int iswhitespace( );
 extern char *getword( );
-/* Returns a pointer to the first whitespace in the argument */
-extern char *eatword( );
-/* Returns a pointer to the first non-whitespace char in the argument */
-extern char *eatwhite( );
-/* Returns a pointer to the same string with trailing spaces removed */
-extern char *eattailwhite( );
-/* Returns the next word in a given string >eatwhite(eatword(foo))< */
-extern char *nextword( );
+extern char *eatword(char *);
+extern char *eatwhite(char *);
+extern char *eattailwhite(char *);
+extern char *nextword(char *);
 
 extern int mail_string_to_address();
 extern int mail_string_to_user();

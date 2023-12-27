@@ -92,6 +92,9 @@ getword(char *str)
 	return word;
 }
 
+/*
+ * Returns a pointer to the first whitespace in the argument.
+ */
 PUBLIC char *
 eatword(char *str)
 {
@@ -100,6 +103,9 @@ eatword(char *str)
 	return str;
 }
 
+/*
+ * Returns a pointer to the first non-whitespace char in the argument.
+ */
 PUBLIC char *
 eatwhite(char *str)
 {
@@ -108,6 +114,9 @@ eatwhite(char *str)
 	return str;
 }
 
+/*
+ * Returns a pointer to the same string with trailing spaces removed.
+ */
 PUBLIC char *
 eattailwhite(char *str)
 {
@@ -125,6 +134,9 @@ eattailwhite(char *str)
 	return str;
 }
 
+/*
+ * Returns the next word in a given string.
+ */
 PUBLIC char *
 nextword(char *str)
 {
