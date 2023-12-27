@@ -24,7 +24,7 @@
    hersco			95/04/10	replaced figure_boolean with
 							set_boolean_var
    DAV				95/19/11        moved variable command to here
-						added jprivate 
+						added jprivate
 */
 
 #include "stdinclude.h"
@@ -524,7 +524,7 @@ PUBLIC int com_partner(int p, param_list param)
   }
   if (pNew == p) {
     pprintf(p, "You can't be your own bughouse partner.\n");
-    return COM_OK; 
+    return COM_OK;
   }
   /* Now we know a legit partner has been chosen.  Is an offer pending? */
   if (player_find_pendfrom(p, pNew, PEND_PARTNER) >= 0) {
