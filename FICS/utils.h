@@ -47,64 +47,56 @@
 #define ClearFlag(VAR, FLAG) (VAR &= ~(FLAG))
 #define CheckFlag(VAR, FLAG) (VAR & (FLAG))
 
-extern int count_lines(FILE *);
-extern int iswhitespace( );
-extern char *getword( );
-extern char *eatword(char *);
-extern char *eatwhite(char *);
-extern char *eattailwhite(char *);
-extern char *nextword(char *);
-
-extern int mail_string_to_address();
-extern int mail_string_to_user();
-extern int mail_file_to_address(char *, char *, char *);
-extern int mail_file_to_user();
-extern int pcommand(int, char *, ...);
-extern int pprintf(int, char *, ...);
-extern void pprintf_dohightlight(int);
-extern void sprintf_dohightlight(int,char *);
-extern int pprintf_highlight(int, char *, ...);
-extern int psprintf_highlight(int, char *, char *, ...);
-extern int pprintf_prompt(int, char *, ...);
-extern int pprintf_noformat(int, char *, ...);
-extern int psend_raw_file( );
-extern int psend_file( );
-extern int psend_logoutfile( );
-extern int pmore_file( );
-extern int pmail_file( );
-extern int psend_command( );
-extern char *fix_time(char *);
-extern char *stolower( );
-
-extern int safechar( );
-extern int safestring( );
-extern int alphastring( );
-extern int printablestring( );
-extern char *xstrdup(const char *);
-
-extern char *hms_desc();
-extern char *hms();
-extern char *strltime(time_t *);
-extern char *strgtime(time_t *);
-extern unsigned tenth_secs();
-extern char *tenth_str();
-extern int untenths();
-
-extern int truncate_file();
-extern int lines_file();
-
-extern int file_has_pname();
-extern char *file_wplayer();
-extern char *file_bplayer();
-
 extern char *dotQuad();
-
-extern int available_space();
-extern int file_exists();
+extern char *eattailwhite(char *);
+extern char *eatwhite(char *);
+extern char *eatword(char *);
+extern char *file_bplayer();
+extern char *file_wplayer();
+extern char *fix_time(char *);
+extern char *getword( );
+extern char *hms();
+extern char *hms_desc();
+extern char *nextword(char *);
 extern char *ratstr();
 extern char *ratstrii();
-
-extern int search_directory(char *, char *, char **, int);
+extern char *stolower( );
+extern char *strgtime(time_t *);
+extern char *strltime(time_t *);
+extern char *tenth_str();
+extern char *xstrdup(const char *);
+extern int alphastring( );
+extern int available_space();
+extern int count_lines(FILE *);
 extern int display_directory(int, char **, int);
+extern int file_exists();
+extern int file_has_pname();
+extern int iswhitespace( );
+extern int lines_file();
+extern int mail_file_to_address(char *, char *, char *);
+extern int mail_file_to_user();
+extern int mail_string_to_address();
+extern int mail_string_to_user();
+extern int pcommand(int, char *, ...);
+extern int pmail_file( );
+extern int pmore_file( );
+extern int pprintf(int, char *, ...);
+extern int pprintf_highlight(int, char *, ...);
+extern int pprintf_noformat(int, char *, ...);
+extern int pprintf_prompt(int, char *, ...);
+extern int printablestring( );
+extern int psend_command( );
+extern int psend_file( );
+extern int psend_logoutfile( );
+extern int psend_raw_file( );
+extern int psprintf_highlight(int, char *, char *, ...);
+extern int safechar( );
+extern int safestring( );
+extern int search_directory(char *, char *, char **, int);
+extern int truncate_file();
+extern int untenths();
+extern unsigned tenth_secs();
+extern void pprintf_dohightlight(int);
+extern void sprintf_dohightlight(int,char *);
 
 #endif /* _UTILS_H */
