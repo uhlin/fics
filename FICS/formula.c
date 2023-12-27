@@ -139,92 +139,103 @@ int Maxtime (game *g, int numMoves, int numPlayers)
 }
 
 
-/* The black player in game *g has been challenged.  S/he has a list
-   of formulas, and we're checking the one given by the index clause
-   (MAX_FORMULA denotes the actual formula; if clause is smaller,
-   we're looking at one of the user-defined formulas).  We're at
-   position *i in the formula.  If we find a legitimate variable there
-   and eval is 1, VarToToken puts its value in *tok; if eval is 0,
-   just move past the variable.  Returns 1 or 0, depending on whether
-   a legitimate variable was found.
-*/
-int VarToToken (game *g, int clause, char *string, int *i, int *tok, int eval)
+/*
+ * The black player in game 'g' has been challenged. S/he has a list
+ * of formulas and we're checking the one given by the index
+ * clause. 'MAX_FORMULA' denotes the actual formula. If clause is
+ * smaller, we're looking at one of the user-defined formulas. We're
+ * at position 'i' in the formula. If we find a legitimate variable
+ * there and 'eval' is 1 VarToToken() puts its value in 'tok'. This
+ * function returns 1 or 0 depending on whether a legitimate variable
+ * was found.
+ */
+int
+VarToToken(game *g, int clause, char *string, int *i, int *tok, int eval)
 {
-  player *me = &parray[g->black];
-  player *you = &parray[g->white];
-  int index=0, c;
-  double dummy_sterr;
+	double	 dummy_sterr;
+	int	 index = 0, c;
+	player	*me = &parray[g->black];
+	player	*you = &parray[g->white];
 
-  /* We list possible variables with the longest names first. */
-  if (MoveIndexPastString(string, i, "registered")) *tok=you->registered;
-  else if (MoveIndexPastString(string, i, "ratingdiff"))
-    *tok = GetRating(you, g->type) - GetRating(me, g->type);
-  else if (MoveIndexPastString(string, i, "assessloss"))
-  {
-    if (g->rated)
-      rating_sterr_delta(g->black, g->white, g->type,
-                         time(0), RESULT_LOSS, tok, &dummy_sterr);
-    else *tok = 0;
-  }
-  else if (MoveIndexPastString(string, i, "assessdraw"))
-  {
-    if (g->rated)
-      rating_sterr_delta(g->black, g->white, g->type,
-                         time(0), RESULT_DRAW, tok, &dummy_sterr);
-    else *tok = 0;
-  }
-  else if (MoveIndexPastString(string, i, "assesswin"))
-  {
-    if (g->rated)
-      rating_sterr_delta(g->black, g->white, g->type,
-                         time(0), RESULT_WIN, tok, &dummy_sterr);
-    else *tok = 0;
-  }
-  else if (MoveIndexPastString(string, i, "mymaxtime"))
-  {
-    if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE)
-      return (0);
-    *tok = Maxtime (g, *tok, 1);
-  }
+	/*
+	 * We list possible variables with the longest names first.
+	 */
+	if (MoveIndexPastString(string, i, "registered")) {
+		*tok = you->registered;
+	} else if (MoveIndexPastString(string, i, "ratingdiff")) {
+		*tok = (GetRating(you, g->type) - GetRating(me, g->type));
+	} else if (MoveIndexPastString(string, i, "assessloss")) {
+		if (g->rated) {
+			rating_sterr_delta(g->black, g->white, g->type,
+			    time(NULL), RESULT_LOSS, tok, &dummy_sterr);
+		} else {
+			*tok = 0;
+		}
+	} else if (MoveIndexPastString(string, i, "assessdraw")) {
+		if (g->rated) {
+			rating_sterr_delta(g->black, g->white, g->type,
+			    time(NULL), RESULT_DRAW, tok, &dummy_sterr);
+		} else {
+			*tok = 0;
+		}
+	} else if (MoveIndexPastString(string, i, "assesswin")) {
+		if (g->rated) {
+			rating_sterr_delta(g->black, g->white, g->type,
+			    time(NULL), RESULT_WIN, tok, &dummy_sterr);
+		} else {
+			*tok = 0;
+		}
+	} else if (MoveIndexPastString(string, i, "mymaxtime")) {
+		if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE)
+			return 0;
+		*tok = Maxtime (g, *tok, 1);
+	}
 #ifdef TIMESEAL
-  else if (MoveIndexPastString(string, i, "timeseal"))
-    *tok = con[you->socket].timeseal;
+	else if (MoveIndexPastString(string, i, "timeseal"))
+		*tok = con[you->socket].timeseal;
 #endif
-  else if (MoveIndexPastString(string, i, "myrating"))
-    *tok = GetRating(me, g->type);
-  else if (MoveIndexPastString(string, i, "computer"))
-    *tok = in_list(-1, L_COMPUTER, you->name);
-  else if (MoveIndexPastString(string, i, "standard"))
-    *tok = (g->type == TYPE_STAND);
-  else if (MoveIndexPastString(string, i, "private"))
-    *tok = you->private;
-  else if (MoveIndexPastString(string, i, "maxtime"))
-  {
-    if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE)
-      return (0);
-    *tok = Maxtime (g, *tok, 2);
-  }
-  else if (MoveIndexPastString(string, i, "abuser"))
-    *tok = in_list(-1, L_ABUSER, you->name);
-  else if (MoveIndexPastString(string, i, "rating"))
-    *tok = GetRating(you, g->type);
-  else if (MoveIndexPastString(string, i, "rated")) *tok=g->rated;
-  else if (MoveIndexPastString(string, i, "blitz")) *tok = (g->type == TYPE_BLITZ);
-  else if (MoveIndexPastString(string, i, "wild")) *tok = (g->type == TYPE_WILD);
-  else if (MoveIndexPastString(string, i, "lightning")) *tok = (g->type == TYPE_LIGHT);
-  else if (MoveIndexPastString(string, i, "nonstandard")) *tok = (g->type == TYPE_NONSTANDARD);
-  else if (MoveIndexPastString(string, i, "untimed")) *tok = (g->type == TYPE_UNTIMED);
-  else if (MoveIndexPastString(string, i, "time")) *tok=g->wInitTime;
-  else if (MoveIndexPastString(string, i, "inc")) *tok=g->wIncrement;
-  else if (tolower(string[*i])=='f' && isdigit(string[*i+1]) &&
-           (c = (string[*i+1]-'1')) >= 0 && clause > c)
-  {
-    *i += 2;
-    return (!CheckFormula (g, c, &index, OPTYPE_NONE, tok, eval));
-  }
-  else return (0);
-  return (1);
-}    /* end of function VarToToken. */
+	else if (MoveIndexPastString(string, i, "myrating"))
+		*tok = GetRating(me, g->type);
+	else if (MoveIndexPastString(string, i, "computer"))
+		*tok = in_list(-1, L_COMPUTER, you->name);
+	else if (MoveIndexPastString(string, i, "standard"))
+		*tok = (g->type == TYPE_STAND);
+	else if (MoveIndexPastString(string, i, "private"))
+		*tok = you->private;
+	else if (MoveIndexPastString(string, i, "maxtime")) {
+		if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE)
+			return 0;
+		*tok = Maxtime (g, *tok, 2);
+	} else if (MoveIndexPastString(string, i, "abuser"))
+		*tok = in_list(-1, L_ABUSER, you->name);
+	else if (MoveIndexPastString(string, i, "rating"))
+		*tok = GetRating(you, g->type);
+	else if (MoveIndexPastString(string, i, "rated"))
+		*tok = g->rated;
+	else if (MoveIndexPastString(string, i, "blitz"))
+		*tok = (g->type == TYPE_BLITZ);
+	else if (MoveIndexPastString(string, i, "wild"))
+		*tok = (g->type == TYPE_WILD);
+	else if (MoveIndexPastString(string, i, "lightning"))
+		*tok = (g->type == TYPE_LIGHT);
+	else if (MoveIndexPastString(string, i, "nonstandard"))
+		*tok = (g->type == TYPE_NONSTANDARD);
+	else if (MoveIndexPastString(string, i, "untimed"))
+		*tok = (g->type == TYPE_UNTIMED);
+	else if (MoveIndexPastString(string, i, "time"))
+		*tok = g->wInitTime;
+	else if (MoveIndexPastString(string, i, "inc"))
+		*tok = g->wIncrement;
+	else if (tolower(string[*i]) == 'f' &&
+	    isdigit(string[*i + 1]) &&
+	    (c = (string[*i + 1] - '1')) >= 0 &&
+	    clause > c) {
+		*i += 2;
+		return (!CheckFormula(g, c, &index, OPTYPE_NONE, tok, eval));
+	} else
+		return 0;
+	return 1;
+}
 
 /*
  * ScanForOp() checks for an operator at position 'i' in 'string'.
