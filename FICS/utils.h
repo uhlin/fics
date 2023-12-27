@@ -23,6 +23,7 @@
    Markus Uhlin			23/12/10	Renamed strdup() to xstrdup()
    Markus Uhlin			23/12/10	Deleted check_emailaddr()
    Markus Uhlin			23/12/17	Added argument lists
+   Markus Uhlin			23/12/28	Completed adding argument lists
 */
 
 #ifndef _UTILS_H
