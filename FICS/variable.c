@@ -28,18 +28,18 @@
 */
 
 #include "stdinclude.h"
-
 #include "common.h"
-#include "variable.h"
-#include "playerdb.h"
-#include "utils.h"
-#include "ficsmain.h"
-#include "config.h"
-#include "rmalloc.h"
+
 #include "board.h"
 #include "command.h"
-#include "talkproc.h"
 #include "comproc.h"
+#include "config.h"
+#include "ficsmain.h"
+#include "playerdb.h"
+#include "rmalloc.h"
+#include "talkproc.h"
+#include "utils.h"
+#include "variable.h"
 
 /* grimm */
 int SetValidFormula(int p, int which, char *val);
