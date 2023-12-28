@@ -2205,45 +2205,48 @@ ShowMsgsBySender(int p, param_list param)
 	return (nFrom > 0 || nTo > 0);
 }
 
-PUBLIC int ShowMsgRange (int p, int start, int end)
+PUBLIC int
+ShowMsgRange(int p, int start, int end)
 {
-  textlist *Head;
-  int n;
+	int		 n;
+	textlist	*Head;
 
-  n = LoadMsgRange (p, start, end, &Head);
-  if (n > 0) {
-    ShowTextList (p, Head, 1);
-    ClearTextList (Head);
-  }
-  return n;
+	if ((n = LoadMsgRange(p, start, end, &Head)) > 0) {
+		ShowTextList(p, Head, 1);
+		ClearTextList(Head);
+	}
+
+	return n;
 }
 
-PUBLIC int ClrMsgRange (int p, int start, int end)
+PUBLIC int
+ClrMsgRange(int p, int start, int end)
 {
-  textlist *Head;
-  int n;
+	int		 n;
+	textlist	*Head;
 
-  n = LoadMsgRange (p, -start, -end, &Head);
-  if (n > 0) {
-/* You can use ShowTextList to see what's left after the real code. */
-/*  ShowTextList (p, Head, 1);  */
-    if (WriteMsgFile (p, Head))
-      pprintf (p, "Message %d cleared.\n", start);
-  }
-  if (n >= 0)
-    ClearTextList (Head);
-  return n;
+	n = LoadMsgRange(p, -start, -end, &Head);
+
+	if (n > 0) {
+		if (WriteMsgFile(p, Head))
+			pprintf(p, "Message %d cleared.\n", start);
+	}
+
+	if (n >= 0)
+		ClearTextList(Head);
+	return n;
 }
 
-PUBLIC int player_clear_messages(int p)
+PUBLIC int
+player_clear_messages(int p)
 {
-  char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE];
 
-  if (!parray[p].registered)
-    return -1;
-  GetMsgFile (p, fname);
-  unlink(fname);
-  return 0;
+	if (!parray[p].registered)
+		return -1;
+	GetMsgFile(p, fname);
+	unlink(fname);
+	return 0;
 }
 
 /*
