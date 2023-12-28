@@ -38,7 +38,7 @@
 #include "talkproc.h"
 #include "utils.h"
 
-#define PASSLEN 4
+#define PASSLEN 8
 
 PUBLIC int num_anews = -1;
 
