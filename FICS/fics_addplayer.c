@@ -33,7 +33,7 @@
 #include "playerdb.h"
 #include "utils.h"
 
-#define PASSLEN 4
+#define PASSLEN 8
 
 PRIVATE char *funame = NULL;
 PRIVATE char *fname = NULL;
