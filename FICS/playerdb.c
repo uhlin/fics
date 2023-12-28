@@ -2246,61 +2246,71 @@ PUBLIC int player_clear_messages(int p)
   return 0;
 }
 
-PUBLIC int player_search(int p, char *name)
 /*
- * Find player matching the given string. First looks for exact match
- *  with a logged in player, then an exact match with a registered player,
- *  then a partial unique match with a logged in player, then a partial
- *  match with a registered player.
- *  Returns player number if the player is connected, negative (player number)
- *  if the player had to be connected, and 0 if no player was found
+ * Find player matching the given string.
+ *
+ * First looks for exact match with a logged in player, then an exact
+ * match with a registered player, then a partial unique match with a
+ * logged in player, then a partial match with a registered player.
+ *
+ * Returns player number if the player is connected. Negative (player
+ * number) if the player had to be connected and 0 if no player was
+ * found.
  */
+PUBLIC int
+player_search(int p, char *name)
 {
-  int p1, count;
-  char *buffer[1000];
-  char pdir[MAX_FILENAME_SIZE];
+	char	*buffer[1000];
+	char	 pdir[MAX_FILENAME_SIZE];
+	int	 p1, count;
 
-  /* exact match with connected player? */
-  if ((p1 = player_find_bylogin(name)) >= 0) {
-    return p1 + 1;
-  }
-  /* exact match with registered player? */
-  sprintf(pdir, "%s/%c", player_dir, name[0]);
-  count = search_directory(pdir, name, buffer, 1000);
-  if (count > 0 && !strcmp(name, *buffer)) {
-    goto ReadPlayerFromFile;	/* found an unconnected registered player */
-  }
-  /* partial match with connected player? */
-  if ((p1 = player_find_part_login(name)) >= 0) {
-    return p1 + 1;
-  } else if (p1 == -2) {
-    /* ambiguous; matches too many connected players. */
-    pprintf (p, "Ambiguous name '%s'; matches more than one player.\n", name);
-    return 0;
-  }
-  /* partial match with registered player? */
-  if (count < 1) {
-    pprintf(p, "There is no player matching that name.\n");
-    return 0;
-  }
-  if (count > 1) {
-    pprintf(p, "-- Matches: %d names --", count);
-    display_directory(p, buffer, count);
-    return(0);
-  }
-ReadPlayerFromFile:
-  p1 = player_new();
-  if (player_read(p1, *buffer)) {
-    player_remove(p1);
-    pprintf(p, "ERROR: a player named %s was expected but not found!\n",
-	    *buffer);
-    pprintf(p, "Please tell an admin about this incident. Thank you.\n");
-    return 0;
-  }
-  return (-p1) - 1;		/* negative to indicate player was not
-				   connected */
+	// Exact match with connected player?
+	if ((p1 = player_find_bylogin(name)) >= 0)
+		return (p1 + 1);
+
+	// Exact match with registered player?
+	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, name[0]);
+	count = search_directory(pdir, name, buffer, 1000);
+
+	if (count > 0 && !strcmp(name, *buffer))
+		goto ReadPlayerFromFile;	// Found an unconnected
+						// registered player
+
+	// Partial match with connected player?
+	if ((p1 = player_find_part_login(name)) >= 0) {
+		return (p1 + 1);
+	} else if (p1 == -2) {
+		// Ambiguous. Matches too many connected players.
+		pprintf(p, "Ambiguous name '%s'; matches more than one player."
+		    "\n", name);
+		return 0;
+	}
+
+	// Partial match with registered player?
+	if (count < 1) {
+		pprintf(p, "There is no player matching that name.\n");
+		return 0;
+	} else if (count > 1) {
+		pprintf(p, "-- Matches: %d names --", count);
+		display_directory(p, buffer, count);
+		return 0;
+	}
+
+  ReadPlayerFromFile:
+
+	p1 = player_new();
+
+	if (player_read(p1, *buffer)) {
+		player_remove(p1);
+		pprintf(p, "ERROR: a player named %s was expected but not "
+		    "found!\n", *buffer);
+		pprintf(p, "Please tell an admin about this incident. "
+		    "Thank you.\n");
+		return 0;
+	}
+
+	return (-p1) - 1;	// Negative to indicate player was not connected
 }
-
 
 PUBLIC int
 player_kill(char *name)
