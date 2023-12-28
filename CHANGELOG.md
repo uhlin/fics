@@ -6,6 +6,7 @@ documented in this file.
 ## [Unreleased] ##
 - Added argument lists to many function declarations.
 - Deleted non-existent functions from the header files.
+- Replaced `rand()` calls with arc4random.
 
 ## [1.0] - 2023-12-28 ##
 - Added a new build system (and deleted the old).
