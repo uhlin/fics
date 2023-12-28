@@ -22,6 +22,7 @@
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/17	Fixed compiler warnings
    Markus Uhlin                 23/12/23	Reformatted all functions
+   Markus Uhlin                 23/12/28	Replaced rand() calls
 */
 
 #include "stdinclude.h"
