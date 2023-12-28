@@ -84,7 +84,6 @@ extern int		 mail_file_to_user(int, char *, char *);
 extern int		 mail_string_to_address(char *, char *, char *);
 extern int		 mail_string_to_user(int, char *, char *);
 extern int		 pcommand(int, char *, ...);
-extern int		 pmail_file(); /* XXX */
 extern int		 pmore_file(int);
 extern int		 pprintf(int, char *, ...);
 extern int		 pprintf_highlight(int, char *, ...);
