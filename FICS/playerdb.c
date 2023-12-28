@@ -2326,26 +2326,43 @@ PUBLIC int player_kill(char *name)
   return 0;
 }
 
-PUBLIC int player_rename(char *name, char *newname)
+PUBLIC int
+player_rename(char *name, char *newname)
 {
-  char fname[MAX_FILENAME_SIZE], fname2[MAX_FILENAME_SIZE];
+	char	fname[MAX_FILENAME_SIZE];
+	char	fname2[MAX_FILENAME_SIZE];
 
-  sprintf(fname, "%s/%c/%s", player_dir, name[0], name);
-  sprintf(fname2, "%s/%c/%s", player_dir, newname[0], newname);
-  rename(fname, fname2);
-  sprintf(fname, "%s/player_data/%c/%s.games", stats_dir, name[0], name);
-  sprintf(fname2, "%s/player_data/%c/%s.games", stats_dir, newname[0], newname);
-  rename(fname, fname2);
-  sprintf(fname, "%s/player_data/%c/%s.comments", stats_dir, name[0], name);
-  sprintf(fname2, "%s/player_data/%c/%s.comments", stats_dir, newname[0], newname);
-  rename(fname, fname2);
-  sprintf(fname, "%s/player_data/%c/%s.logons", stats_dir, name[0], name);
-  sprintf(fname2, "%s/player_data/%c/%s.logons", stats_dir, newname[0], newname);
-  rename(fname, fname2);
-  sprintf(fname, "%s/player_data/%c/%s.messages", stats_dir, name[0], name);
-  sprintf(fname2, "%s/player_data/%c/%s.messages", stats_dir, newname[0], newname);
-  rename(fname, fname2);
-  return 0;
+	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir, name[0],
+	    name);
+	snprintf(fname2, sizeof fname2, "%s/%c/%s", player_dir, newname[0],
+	    newname);
+	rename(fname, fname2);
+
+	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.games",
+	    stats_dir, name[0], name);
+	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.games",
+	    stats_dir, newname[0], newname);
+	rename(fname, fname2);
+
+	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.comments",
+	    stats_dir, name[0], name);
+	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.comments",
+	    stats_dir, newname[0], newname);
+	rename(fname, fname2);
+
+	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.logons",
+	    stats_dir, name[0], name);
+	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.logons",
+	    stats_dir, newname[0], newname);
+	rename(fname, fname2);
+
+	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.messages",
+	    stats_dir, name[0], name);
+	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.messages",
+	    stats_dir, newname[0], newname);
+	rename(fname, fname2);
+
+	return 0;
 }
 
 PUBLIC int
