@@ -6,6 +6,7 @@ documented in this file.
 ## [Unreleased] ##
 - Added argument lists to many function declarations.
 - Deleted non-existent functions from the header files.
+- Reformatted code according to OpenBSD's KNF.
 - Replaced `rand()` calls with arc4random.
 - Replaced multiple `sprintf()` calls with `snprintf()`.
 
