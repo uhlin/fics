@@ -49,9 +49,9 @@
 #  define MAX_FILENAME_SIZE 1024
 #endif
 
-#define SetFlag(VAR, FLAG) (VAR |= (FLAG))
-#define ClearFlag(VAR, FLAG) (VAR &= ~(FLAG))
-#define CheckFlag(VAR, FLAG) (VAR & (FLAG))
+#define SetFlag(VAR, FLAG)	(VAR |= (FLAG))
+#define ClearFlag(VAR, FLAG)	(VAR &= ~(FLAG))
+#define CheckFlag(VAR, FLAG)	(VAR & (FLAG))
 
 extern char		*dotQuad(unsigned int);
 extern char		*eattailwhite(char *);
