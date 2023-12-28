@@ -22,6 +22,7 @@
    Richard Nash	              	94/03/07	Created
    Markus Uhlin			23/12/09	Revamped the file
    Markus Uhlin			23/12/23	Fixed crypt()
+   Markus Uhlin			23/12/28	Switched to arc4random_uniform()
 */
 
 #include "stdinclude.h"
