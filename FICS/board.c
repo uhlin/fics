@@ -1147,9 +1147,9 @@ place_piece(board_t b, int piece, int squareColor)
 
 	while (!placed) {
 		if (squareColor == ANY_SQUARE) {
-			f = (rand() % 8);
+			f = arc4random_uniform(8);
 		} else {
-			f = (rand() % 4) * 2;
+			f = arc4random_uniform(4) * 2;
 
 			if (SquareColor(f, r) != squareColor)
 				f++;
@@ -1180,14 +1180,14 @@ wild_update(int style)
 
 	switch (style) {
 	case 1:
-		if (rand() & 0x01) {
+		if (arc4random() & 0x01) {
 			b[4][0] = W_KING;
 			b[3][0] = W_QUEEN;
 		} else {
 			b[3][0] = W_KING;
 			b[4][0] = W_QUEEN;
 		}
-		if (rand() & 0x01) {
+		if (arc4random() & 0x01) {
 			b[4][7] = B_KING;
 			b[3][7] = B_QUEEN;
 		} else {
@@ -1233,9 +1233,8 @@ wild_update(int style)
 		place_piece(b, W_KING, ANY_SQUARE);
 
 		for (i = 0; i < 8; i++) {
-			if (b[i][0] != W_KING) {
-				b[i][0] = (rand() % 4) + 2;
-			}
+			if (b[i][0] != W_KING)
+				b[i][0] = arc4random_uniform(4) + 2;
 		}
 
 		/* Black mirrors White */
@@ -1251,7 +1250,7 @@ wild_update(int style)
 
 		for (i = 0; i < 8; i++) {
 			if (b[i][0] != W_KING)
-				b[i][0] = (rand() % 4) + 2;
+				b[i][0] = arc4random_uniform(4) + 2;
 		}
 
 		/*

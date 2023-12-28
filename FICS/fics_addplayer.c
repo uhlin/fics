@@ -113,7 +113,7 @@ main(int argc, char *argv[])
 	parray[p].emailAddress = xstrdup(email);
 
 	for (i = 0; i < PASSLEN; i++)
-		password[i] = ('a' + rand() % 26);
+		password[i] = ('a' + arc4random_uniform(26));
 	password[i] = '\0';
 
 	strcpy(salt, fics_getsalt());
