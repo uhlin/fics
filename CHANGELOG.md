@@ -5,6 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added argument lists to many function declarations.
+- Deleted non-existent functions from the header files.
 
 ## [1.0] - 2023-12-28 ##
 - Added a new build system (and deleted the old).
