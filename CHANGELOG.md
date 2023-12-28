@@ -7,6 +7,7 @@ documented in this file.
 - Added argument lists to many function declarations.
 - Deleted non-existent functions from the header files.
 - Replaced `rand()` calls with arc4random.
+- Replaced multiple `sprintf()` calls with `snprintf()`.
 
 ## [1.0] - 2023-12-28 ##
 - Added a new build system (and deleted the old).
