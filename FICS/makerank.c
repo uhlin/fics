@@ -1,10 +1,16 @@
-/* Revised by maxxe 23/12/14 */
+/*
+ * Revised by maxxe 23/12/14
+ */
 
 #include <ctype.h>
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#if __linux__
+#include <bsd/string.h>
+#endif
 
 #include "makerank.h"
 
@@ -72,8 +78,11 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 					printf("TROUBLE: %s's handle is "
 					    "listed as %s.\n", e->name,
 					    NameWithCase);
-				} else
-					strcpy(e->name, NameWithCase);
+				} else if (strlcpy(e->name, NameWithCase,
+				    sizeof e->name) >= sizeof e->name) {
+					fprintf(stderr, "%s: warning: "
+					    "strlcpy() truncated\n", __func__);
+				}
 			} else if (!strcmp(field, "S_NUM:")) {
 				sscanf(line, "%*s %d", &(e->r[0].num));
 			} else if (!strcmp(field, "B_NUM:")) {
