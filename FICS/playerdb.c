@@ -2087,20 +2087,21 @@ PRIVATE int LoadMsgRange(int p, int start, int end, textlist **Head)
   }
 }
 
-PRIVATE int WriteMsgFile (int p, textlist *Head)
+PRIVATE int
+WriteMsgFile(int p, textlist *Head)
 {
-  char fName[MAX_FILENAME_SIZE];
-  FILE *fp;
-  textlist *Cur;
+	FILE		*fp;
+	char		 fName[MAX_FILENAME_SIZE];
+	textlist	*Cur;
 
-  GetMsgFile (p, fName);
-  fp = fopen(fName, "w");
-  if (fp == NULL)
-    return 0;
-  for (Cur = Head; Cur != NULL; Cur = Cur->next)
-    fprintf(fp, "%s", Cur->text);
-  fclose(fp);
-  return 1;
+	GetMsgFile(p, fName);
+
+	if ((fp = fopen(fName, "w")) == NULL)
+		return 0;
+	for (Cur = Head; Cur != NULL; Cur = Cur->next)
+		fprintf(fp, "%s", Cur->text);
+	fclose(fp);
+	return 1;
 }
 
 PUBLIC int
