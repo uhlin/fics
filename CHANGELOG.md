@@ -9,6 +9,8 @@ documented in this file.
 - Reformatted code according to OpenBSD's KNF.
 - Replaced `rand()` calls with arc4random.
 - Replaced multiple `sprintf()` calls with `snprintf()`.
+- Replaced multiple occurrences of `strcpy()` and `strcat()` with
+  size-bounded versions.
 
 ## [1.0] - 2023-12-28 ##
 - Added a new build system (and deleted the old).
