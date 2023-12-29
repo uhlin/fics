@@ -202,84 +202,72 @@ extern int sort_stand[];
 extern int sort_alpha[];
 extern int sort_wild[];
 
-extern void player_init(int);
-
-extern int player_new(void);
-extern int player_remove(int);
-extern int player_read(int, char *);
+extern int ClearMsgsBySender(int, param_list);
+extern int ClrMsgRange(int, int, int);
+extern int ShowMsgRange(int, int, int);
+extern int ShowMsgsBySender(int, param_list);
+extern int player_add_comment(int, int, char *);
+extern int player_add_message(int, int, char *);
+extern int player_add_observe(int, int);
+extern int player_add_request(int, int, int, int);
+extern int player_censored(int, int);
+extern int player_clear(int);
+extern int player_clear_messages(int);
+extern int player_count(int);
+extern int player_decline_offers(int, int, int);
 extern int player_delete(int);
-extern int player_markdeleted(int);
-extern int player_save(int);
 extern int player_find(int);
 extern int player_find_bylogin(char *);
 extern int player_find_part_login(char *);
-extern int player_censored(int, int);
-extern int player_notified(int, int);
-extern int player_notified_departure(int);
-extern int player_notify_present (int);
-extern int player_notify(int, char *, char *);
-extern int showstored(int);
-
-extern int player_count(int);
-extern int player_idle(int);
-extern int player_ontime(int);
-
-extern int player_zero(int);
-extern int player_free(int);
-extern int player_clear(int);
-
-extern void player_write_login(int);
-extern void player_write_logout(int);
-extern time_t player_lastconnect(int);
-extern time_t player_lastdisconnect(int);
-
-extern void player_pend_print(int, pending *);
-
-extern int player_find_pendto(int, int, int);
-extern int player_new_pendto(int);
-extern int player_remove_pendto(int, int, int);
-
 extern int player_find_pendfrom(int, int, int);
-extern int player_new_pendfrom(int);
-extern int player_remove_pendfrom(int, int, int);
-extern int player_add_request(int, int, int, int);
-extern int player_remove_request(int, int, int);
-extern int player_decline_offers(int, int, int);
-extern int player_withdraw_offers(int, int, int);
-
-extern int player_is_observe(int, int);
-extern int player_add_observe(int, int);
-extern int player_remove_observe(int, int);
+extern int player_find_pendto(int, int, int);
+extern int player_free(int);
 extern int player_game_ended(int);
-
 extern int player_goto_board(int, int);
 extern int player_goto_next_board(int);
 extern int player_goto_prev_board(int);
 extern int player_goto_simulgame_bynum(int,int);
+extern int player_idle(int);
+extern int player_is_observe(int, int);
+extern int player_ishead(int);
+extern int player_kill(char *);
+extern int player_markdeleted(int);
+extern int player_new(void);
+extern int player_new_pendfrom(int);
+extern int player_new_pendto(int);
+extern int player_notified(int, int);
+extern int player_notified_departure(int);
+extern int player_notify(int, char *, char *);
+extern int player_notify_present (int);
 extern int player_num_active_boards(int);
-extern int player_num_results(int, int);
-extern int player_simul_over(int, int, int);
-
+extern int player_num_comments(int);
 extern int player_num_messages(int);
-extern int player_add_message(int, int, char *);
+extern int player_num_results(int, int);
+extern int player_ontime(int);
+extern int player_raise(char *);
+extern int player_read(int, char *);
+extern int player_reincarn(char *,char *);
+extern int player_remove(int);
+extern int player_remove_observe(int, int);
+extern int player_remove_pendfrom(int, int, int);
+extern int player_remove_pendto(int, int, int);
+extern int player_remove_request(int, int, int);
+extern int player_rename(char *, char *);
+extern int player_save(int);
+extern int player_search(int, char *);
+extern int player_show_comments(int, int);
 extern int player_show_messages(int);
-extern int player_clear_messages(int);
+extern int player_simul_over(int, int, int);
+extern int player_withdraw_offers(int, int, int);
+extern int player_zero(int);
+extern int showstored(int);
+extern time_t player_lastconnect(int);
+extern time_t player_lastdisconnect(int);
 extern void ClearTextList(textlist *);
 extern void SaveTextListEntry(textlist **, char *, int);
-extern int ShowMsgsBySender(int, param_list);
-extern int ClrMsgRange(int, int, int);
-extern int ShowMsgRange(int, int, int);
-extern int ClearMsgsBySender(int, param_list);
-extern int player_search(int, char *);
-
-extern int player_kill(char *);
-extern int player_rename(char *, char *);
-extern int player_raise(char *);
-extern int player_reincarn(char *,char *);
-
-extern int player_num_comments(int);
-extern int player_add_comment(int, int, char *);
-extern int player_show_comments(int, int);
-extern int player_ishead(int);
+extern void player_init(int);
+extern void player_pend_print(int, pending *);
+extern void player_write_login(int);
+extern void player_write_logout(int);
 
 #endif /* _PLAYERDB_H */
