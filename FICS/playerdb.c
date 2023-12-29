@@ -2103,32 +2103,39 @@ PRIVATE int WriteMsgFile (int p, textlist *Head)
   return 1;
 }
 
-PUBLIC int ClearMsgsBySender(int p, param_list param)
+PUBLIC int
+ClearMsgsBySender(int p, param_list param)
 {
-  textlist *Head;
-  int p1, connected;
-  int nFound;
+	int		 nFound;
+	int		 p1, connected;
+	textlist	*Head;
 
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return -1;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return -1;
 
-  nFound = LoadMsgs(p, -(p1+1), &Head);
-  if (nFound < 0) {
-    pprintf(p, "You have no messages.\n");
-  } else if (nFound == 0) {
-    pprintf(p, "You have no messages from %s.\n", parray[p1].name);
-  } else {
-    if (WriteMsgFile (p, Head))
-      pprintf(p, "Messages from %s cleared.\n", parray[p1].name);
-    else {
-      pprintf(p, "Problem writing message file; please contact an admin.\n");
-      fprintf(stderr, "Problem writing message file for %s.\n", parray[p].name);
-    }
-    ClearTextList(Head);
-  }
-  if (!connected)
-    player_remove(p1);
-  return nFound;
+	nFound = LoadMsgs(p, -(p1 + 1), &Head);
+
+	if (nFound < 0) {
+		pprintf(p, "You have no messages.\n");
+	} else if (nFound == 0) {
+		pprintf(p, "You have no messages from %s.\n", parray[p1].name);
+	} else {
+		if (WriteMsgFile (p, Head)) {
+			pprintf(p, "Messages from %s cleared.\n",
+			    parray[p1].name);
+		} else {
+			pprintf(p, "Problem writing message file; "
+			    "please contact an admin.\n");
+			fprintf(stderr, "Problem writing message file for "
+			    "%s.\n", parray[p].name);
+		}
+
+		ClearTextList(Head);
+	}
+
+	if (!connected)
+		player_remove(p1);
+	return nFound;
 }
 
 PRIVATE void
