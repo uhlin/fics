@@ -2045,46 +2045,53 @@ PRIVATE int LoadMsgs(int p, int which, textlist **Head)
   return nSave;
 }
 
-/* start > 0 and end > start (or end = 0) to save messages in range;
-   start < 0 and end < start (or end = 0) to clear messages in range;
-   if end = 0, range goes to end of file (not tested yet). */
-PRIVATE int LoadMsgRange(int p, int start, int end, textlist **Head)
+/*
+ * start > 0 and end > start (or end = 0) to save messages in range;
+ * start < 0 and end < start (or end = 0) to clear messages in range;
+ * if end = 0, range goes to end of file (not tested yet).
+ */
+PRIVATE int
+LoadMsgRange(int p, int start, int end, textlist **Head)
 {
-  FILE *fp;
-  char fName[MAX_FILENAME_SIZE];
-  char line[MAX_LINE_SIZE];
-  textlist **Cur = Head;
-  int n=1, nSave=0, nKill=0;
+	FILE		*fp;
+	char		 fName[MAX_FILENAME_SIZE];
+	char		 line[MAX_LINE_SIZE];
+	int		 n = 1, nSave = 0, nKill = 0;
+	textlist**	 Cur = Head;
 
-  *Head = NULL;
-  GetMsgFile (p, fName);
-  fp = fopen  (fName, "r");
-  if (fp == NULL) {
-    pprintf (p, "You have no messages.\n");
-    return -1;
-  }
-  for (n=1; n <= end || end <= 0; n++) {
-    fgets (line, MAX_LINE_SIZE, fp);
-    if (feof(fp))
-      break;
-    if ((start < 0 && (n < -start || n > -end))
-        || (start >= 0 && n >= start)) {
-      SaveTextListEntry (Cur, line, n);
-      Cur = &(*Cur)->next;
-      nSave++;
-    }
-    else nKill++;
-  }
-  fclose (fp);
-  if (start < 0) {
-    if (n <= -start)
-      pprintf (p, "You do not have a message %d.\n", -start);
-    return nKill;
-  } else {
-    if (n <= start)
-      pprintf (p, "You do not have a message %d.\n", start);
-    return nSave;
-  }
+	*Head = NULL;
+	GetMsgFile(p, fName);
+
+	if ((fp = fopen(fName, "r")) == NULL) {
+		pprintf(p, "You have no messages.\n");
+		return -1;
+	}
+
+	for (n = 1; n <= end || end <= 0; n++) {
+		fgets(line, sizeof line, fp);
+
+		if (feof(fp))
+			break;
+		if ((start < 0 && (n < -start || n > -end)) ||
+		    (start >= 0 && n >= start)) {
+			SaveTextListEntry (Cur, line, n);
+			Cur = &(*Cur)->next;
+			nSave++;
+		} else
+			nKill++;
+	}
+
+	fclose(fp);
+
+	if (start < 0) {
+		if (n <= -start)
+			pprintf(p, "You do not have a message %d.\n", -start);
+		return nKill;
+	} else {
+		if (n <= start)
+			pprintf(p, "You do not have a message %d.\n", start);
+		return nSave;
+	}
 }
 
 PRIVATE int
@@ -2159,7 +2166,7 @@ player_show_messages(int p)
 	int		 n;
 	textlist	*Head;
 
-	n = LoadMsgs (p, 0, &Head);
+	n = LoadMsgs(p, 0, &Head);
 
 	if (n <= 0) {
 		pprintf(p, "You have no messages.\n");
