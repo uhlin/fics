@@ -5,6 +5,8 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added argument lists to many function declarations.
+- Changed the addplayer program to generate passwords that are 8
+  characters long (was 4).
 - Deleted non-existent functions from the header files.
 - Fixed unchecked return values
 - Reformatted code according to OpenBSD's KNF.
