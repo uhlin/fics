@@ -2131,35 +2131,37 @@ PUBLIC int ClearMsgsBySender(int p, param_list param)
   return nFound;
 }
 
-PRIVATE void ShowTextList (int p, textlist *Head, int ShowIndex)
+PRIVATE void
+ShowTextList(int p, textlist *Head, int ShowIndex)
 {
-  textlist *CurMsg;
+	textlist *CurMsg;
 
-  if (ShowIndex) {
-    for (CurMsg = Head; CurMsg != NULL; CurMsg = CurMsg->next)
-      pprintf(p, "%2d. %s", CurMsg->index, CurMsg->text);
-  }
-  else {
-    for (CurMsg = Head; CurMsg != NULL; CurMsg = CurMsg->next)
-      pprintf(p, "%s", CurMsg->text);
-  }
+	if (ShowIndex) {
+		for (CurMsg = Head; CurMsg != NULL; CurMsg = CurMsg->next)
+			pprintf(p, "%2d. %s", CurMsg->index, CurMsg->text);
+	} else {
+		for (CurMsg = Head; CurMsg != NULL; CurMsg = CurMsg->next)
+			pprintf(p, "%s", CurMsg->text);
+	}
 }
 
-PUBLIC int player_show_messages(int p)
+PUBLIC int
+player_show_messages(int p)
 {
-  textlist *Head;
-  int n;
+	int		 n;
+	textlist	*Head;
 
-  n = LoadMsgs (p, 0, &Head);
-  if (n <= 0) {
-    pprintf (p, "You have no messages.\n");
-    return -1;
-  } else {
-    pprintf (p, "Messages:\n");
-    ShowTextList (p, Head, 1);
-    ClearTextList (Head);
-    return 0;
-  }
+	n = LoadMsgs (p, 0, &Head);
+
+	if (n <= 0) {
+		pprintf(p, "You have no messages.\n");
+		return -1;
+	} else {
+		pprintf(p, "Messages:\n");
+		ShowTextList(p, Head, 1);
+		ClearTextList(Head);
+		return 0;
+	}
 }
 
 PUBLIC int
