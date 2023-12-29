@@ -164,6 +164,10 @@ LoadEntries(void)
 						listsize += 100;
 						list = realloc(list, listsize *
 						    sizeof(ENTRY *));
+						if (list == NULL) {
+							err(1, "%s: realloc",
+							    __func__);
+						}
 					}
 				}
 			}
@@ -233,6 +237,9 @@ makerank(void)
 		sortmesize	= 100;
 		sortme		= malloc(sizeof(ENTRY *) * sortmesize);
 
+		if (sortme == NULL)
+			err(1, "%s: malloc", __func__);
+
 		for (i = 0; i < n; i++) {
 			if (list[i]->r[rtype].rating) {
 				sortme[sortnum++] = list[i];
@@ -241,6 +248,8 @@ makerank(void)
 					sortmesize += 100;
 					sortme = realloc(sortme, sortmesize *
 					    sizeof(ENTRY *));
+					if (sortme == NULL)
+						err(1, "%s: realloc", __func__);
 				}
 			}
 		}
