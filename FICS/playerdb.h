@@ -197,13 +197,14 @@ typedef struct _textlist {
 extern player	 parray[PARRAY_SIZE];
 extern int	 p_num;
 
-extern int	ClearMsgsBySender(int, param_list);
-extern int	ClrMsgRange(int, int, int);
-extern int	ShowMsgRange(int, int, int);
-extern int	ShowMsgsBySender(int, param_list);
-extern int	showstored(int);
-extern void	ClearTextList(textlist *);
-extern void	SaveTextListEntry(textlist **, char *, int);
+extern int	 ClearMsgsBySender(int, param_list);
+extern int	 ClrMsgRange(int, int, int);
+extern int	 ShowMsgRange(int, int, int);
+extern int	 ShowMsgsBySender(int, param_list);
+extern int	 showstored(int);
+extern textlist	*ClearTextListEntry(textlist *);
+extern void	 ClearTextList(textlist *);
+extern void	 SaveTextListEntry(textlist **, char *, int);
 
 extern int	 player_add_comment(int, int, char *);
 extern int	 player_add_message(int, int, char *);
