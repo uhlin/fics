@@ -1865,53 +1865,67 @@ PUBLIC int player_num_results(int p, int result)
   return count;
 }
 
-PUBLIC int player_simul_over(int p, int g, int result)
+PUBLIC int
+player_simul_over(int p, int g, int result)
 {
-  int on, ong, p1, which = -1, won;
-  char tmp[1024];
+	char	tmp[1024];
+	int	on, ong, p1, which = -1, won;
 
-  for (won = 0; won < parray[p].simul_info.numBoards; won++) {
-    if (parray[p].simul_info.boards[won] == g) {
-      which = won;
-      break;
-    }
-  }
-  if (which == -1) {
-    pprintf(p, "I can't find that game!\n");
-    return -1;
-  }
-  pprintf(p, "\nBoard %d has completed.\n", won + 1);
-  on = parray[p].simul_info.onBoard;
-  ong = parray[p].simul_info.boards[on];
-  parray[p].simul_info.boards[won] = -1;
-  parray[p].simul_info.results[won] = result;
-  if (player_num_active_boards(p) == 0) {
-    sprintf(tmp, "\n{Simul (%s vs. %d) is over.}\nResults: %d Wins, %d Losses, %d Draws, %d Aborts\n",
-	    parray[p].name,
-	    parray[p].simul_info.numBoards,
-	    player_num_results(p, RESULT_WIN),
-	    player_num_results(p, RESULT_LOSS),
-	    player_num_results(p, RESULT_DRAW),
-	    player_num_results(p, RESULT_ABORT));
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p].status != PLAYER_PROMPT)
-	continue;
-      if (!parray[p1].i_game && !player_is_observe(p1, g) && (p1 != p))
-	continue;
-      pprintf_prompt(p1, "%s", tmp);
-    }
-    parray[p].simul_info.numBoards = 0;
-    pprintf_prompt(p, "\nThat was the last board, thanks for playing.\n");
-    return 0;
-  }
-  if (ong == g) {		/* This game is over */
-    player_goto_next_board(p);
-  } else {
-    player_goto_board(p, parray[p].simul_info.onBoard);
-  }
-  pprintf_prompt(p, "\nThere are %d boards left.\n",
-		 player_num_active_boards(p));
-  return 0;
+	for (won = 0; won < parray[p].simul_info.numBoards; won++) {
+		if (parray[p].simul_info.boards[won] == g) {
+			which = won;
+			break;
+		}
+	}
+
+	if (which == -1) {
+		pprintf(p, "I can't find that game!\n");
+		return -1;
+	}
+
+	pprintf(p, "\nBoard %d has completed.\n", (won + 1));
+
+	on	= parray[p].simul_info.onBoard;
+	ong	= parray[p].simul_info.boards[on];
+
+	parray[p].simul_info.boards[won]	= -1;
+	parray[p].simul_info.results[won]	= result;
+
+	if (player_num_active_boards(p) == 0) {
+		snprintf(tmp, sizeof tmp, "\n{Simul (%s vs. %d) is over.}\n"
+		    "Results: %d Wins, %d Losses, %d Draws, %d Aborts\n",
+		    parray[p].name,
+		    parray[p].simul_info.numBoards,
+		    player_num_results(p, RESULT_WIN),
+		    player_num_results(p, RESULT_LOSS),
+		    player_num_results(p, RESULT_DRAW),
+		    player_num_results(p, RESULT_ABORT));
+
+		for (p1 = 0; p1 < p_num; p1++) {
+			if (parray[p].status != PLAYER_PROMPT)
+				continue;
+			if (!parray[p1].i_game && !player_is_observe(p1, g) &&
+			    p1 != p)
+				continue;
+			pprintf_prompt(p1, "%s", tmp);
+		}
+
+		parray[p].simul_info.numBoards = 0;
+
+		pprintf_prompt(p, "\nThat was the last board, thanks for "
+		    "playing.\n");
+
+		return 0;
+	}
+
+	if (ong == g) /* This game is over */
+		player_goto_next_board(p);
+	else
+		player_goto_board(p, parray[p].simul_info.onBoard);
+
+	pprintf_prompt(p, "\nThere are %d boards left.\n",
+	    player_num_active_boards(p));
+	return 0;
 }
 
 PRIVATE void
