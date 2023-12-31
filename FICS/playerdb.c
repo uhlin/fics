@@ -1680,13 +1680,14 @@ PUBLIC int player_is_observe(int p, int g)
     return 1;
 }
 
-PUBLIC int player_add_observe(int p, int g)
+PUBLIC int
+player_add_observe(int p, int g)
 {
-  if (parray[p].num_observe == MAX_OBSERVE)
-    return -1;
-  parray[p].observe_list[parray[p].num_observe] = g;
-  parray[p].num_observe++;
-  return 0;
+	if (parray[p].num_observe == MAX_OBSERVE)
+		return -1;
+	parray[p].observe_list[parray[p].num_observe] = g;
+	parray[p].num_observe++;
+	return 0;
 }
 
 PUBLIC int
