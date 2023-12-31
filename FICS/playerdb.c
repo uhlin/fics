@@ -431,9 +431,13 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	pp->l_stats.sterr	= (ls / 10.0);
 	pp->bug_stats.sterr	= (bugs / 10.0);
 
-	fgets(tmp2, sizeof tmp2, fp);
-	tmp2[strlen(tmp2) - 1] = '\0';
-	pp->prompt = xstrdup(tmp2);
+	if (fgets(tmp2, sizeof tmp2, fp) == NULL) {
+		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
+		return;
+	} else {
+		tmp2[strcspn(tmp2, "\n")] = '\0';
+		pp->prompt = xstrdup(tmp2);
+	}
 
 	if (fscanf(fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
 	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
