@@ -95,13 +95,14 @@ PUBLIC void player_init(int startConsole)
   }
 }
 
-PUBLIC int player_new()
+PUBLIC int
+player_new(void)
 {
-  int new;
+	int new;
 
-  new = get_empty_slot();
-  player_zero(new);
-  return new;
+	new = get_empty_slot();
+	player_zero(new);
+	return new;
 }
 
 PUBLIC int
