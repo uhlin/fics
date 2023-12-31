@@ -1452,31 +1452,33 @@ PUBLIC int player_remove_pendfrom(int p, int p1, int type)
   return 0;
 }
 
-PUBLIC int player_add_request(int p, int p1, int type, int param)
+PUBLIC int
+player_add_request(int p, int p1, int type, int param)
 {
-  int pendt;
-  int pendf;
+	int	pendf;
+	int	pendt;
 
-  if (player_find_pendto(p, p1, type) >= 0)
-    return -1;			/* Already exists */
-  pendt = player_new_pendto(p);
-  if (pendt == -1) {
-    return -1;
-  }
-  pendf = player_new_pendfrom(p1);
-  if (pendf == -1) {
-    parray[p].num_to--;		/* Remove the pendto we allocated */
-    return -1;
-  }
-  parray[p].p_to_list[pendt].type = type;
-  parray[p].p_to_list[pendt].whoto = p1;
-  parray[p].p_to_list[pendt].whofrom = p;
-  parray[p].p_to_list[pendt].param1 = param;
-  parray[p1].p_from_list[pendf].type = type;
-  parray[p1].p_from_list[pendf].whoto = p1;
-  parray[p1].p_from_list[pendf].whofrom = p;
-  parray[p1].p_from_list[pendf].param1 = param;
-  return 0;
+	if (player_find_pendto(p, p1, type) >= 0)
+		return -1; // Already exists
+
+	if ((pendt = player_new_pendto(p)) == -1)
+		return -1;
+	if ((pendf = player_new_pendfrom(p1)) == -1) {
+		parray[p].num_to--;
+		return -1;
+	}
+
+	parray[p].p_to_list[pendt].type		= type;
+	parray[p].p_to_list[pendt].whoto	= p1;
+	parray[p].p_to_list[pendt].whofrom	= p;
+	parray[p].p_to_list[pendt].param1	= param;
+
+	parray[p1].p_from_list[pendf].type	= type;
+	parray[p1].p_from_list[pendf].whoto	= p1;
+	parray[p1].p_from_list[pendf].whofrom	= p;
+	parray[p1].p_from_list[pendf].param1	= param;
+
+	return 0;
 }
 
 PUBLIC int
