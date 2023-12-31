@@ -948,33 +948,39 @@ WritePlayerFile(FILE *fp, int p)
 	list_print(fp, p, L_CHANNEL);
 }
 
-PUBLIC int player_save(int p)
+PUBLIC int
+player_save(int p)
 {
-  FILE *fp;
-  char fname[MAX_FILENAME_SIZE];
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
 
-  if (!parray[p].registered) {  /* Player must not be registered */
-    return -1;
-  }
-  if (parray[p].name == NULL) { /* fixes a bug if name is null */
-	    pprintf(p, "WARNING: Your player file could not be updated, due to corrupt data.\n");
-    return -1;
-   }
-  if (strcasecmp(parray[p].login, parray[p].name)) {
-    pprintf(p, "WARNING: Your player file could not be updated, due to corrupt data.\n");
-    return -1;
-  }
+	if (!parray[p].registered)	// Player must not be registered
+		return -1;
 
-  sprintf(fname, "%s/%c/%s", player_dir, parray[p].login[0], parray[p].login);
-  fp = fopen(fname, "w");
-  if (!fp) {
-    fprintf(stderr, "FICS: Problem opening file %s for write\n", fname);
-    return -1;
-  }
+	if (parray[p].name == NULL) {	// Fixes a bug if name is null
+		pprintf(p, "WARNING: Your player file could not be updated, "
+		    "due to corrupt data.\n");
+		return -1;
+	}
 
-  WritePlayerFile(fp,p);
-  fclose(fp);
-  return 0;
+	if (strcasecmp(parray[p].login, parray[p].name)) {
+		pprintf(p, "WARNING: Your player file could not be updated, "
+		    "due to corrupt data.\n");
+		return -1;
+	}
+
+	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	    parray[p].login[0], parray[p].login);
+
+	if ((fp = fopen(fname, "w")) == NULL) {
+		fprintf(stderr, "FICS: Problem opening file %s for write\n",
+		    fname);
+		return -1;
+	}
+
+	WritePlayerFile(fp, p);
+	fclose(fp);
+	return 0;
 }
 
 PUBLIC int
