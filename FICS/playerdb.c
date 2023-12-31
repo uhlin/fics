@@ -1391,23 +1391,31 @@ PUBLIC int player_find_pendto(int p, int p1, int type)
   return -1;
 }
 
-PUBLIC int player_new_pendto(int p)
+PUBLIC int
+player_new_pendto(int p)
 {
-  if (parray[p].num_to >= MAX_PENDING)
-    return -1;
-  parray[p].num_to++;
-  return parray[p].num_to - 1;
+	if (parray[p].num_to >= MAX_PENDING)
+		return -1;
+
+	parray[p].num_to++;
+
+	return (parray[p].num_to - 1);
 }
 
-PUBLIC int player_remove_pendto(int p, int p1, int type)
+PUBLIC int
+player_remove_pendto(int p, int p1, int type)
 {
-  int w;
-  if ((w = player_find_pendto(p, p1, type)) < 0)
-    return -1;
-  for (; w < parray[p].num_to - 1; w++)
-    parray[p].p_to_list[w] = parray[p].p_to_list[w + 1];
-  parray[p].num_to = parray[p].num_to - 1;
-  return 0;
+	int w;
+
+	if ((w = player_find_pendto(p, p1, type)) < 0)
+		return -1;
+
+	for (; w < (parray[p].num_to - 1); w++)
+		parray[p].p_to_list[w] = parray[p].p_to_list[w + 1];
+
+	parray[p].num_to = (parray[p].num_to - 1);
+
+	return 0;
 }
 
 PUBLIC int
