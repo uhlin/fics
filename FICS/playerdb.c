@@ -342,7 +342,7 @@ player_remove(int p)
 	return 0;
 }
 
-void
+PRIVATE void
 ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 {
 	char	*tmp;
@@ -962,7 +962,7 @@ player_markdeleted(int p)
 	return 0;
 }
 
-void
+PRIVATE void
 WritePlayerFile(FILE *fp, int p)
 {
 	int	 i;
