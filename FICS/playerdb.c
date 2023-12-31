@@ -1072,35 +1072,40 @@ PUBLIC void player_notify_departure(int p)
   }
 }
 
-PUBLIC int player_notify_present(int p)
-/* output Your arrival was notified by..... */
-/* also notify those with notifiedby set if necessary */
+PUBLIC int
+player_notify_present(int p)
 {
-  int p1;
-  int count = 0;
+	int	count = 0;
+	int	p1;
 
-  if (!parray[p].registered)
-    return count;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if ((player_notified(p, p1)) && (parray[p1].status == PLAYER_PROMPT)) {
-      if (!count) {
-	pprintf(p, "Present company includes:");
-      }
-      count++;
-      pprintf(p, " %s", parray[p1].name);
-      if ((parray[p1].notifiedby) && (!player_notified(p1, p))
-                         && (parray[p1].status == PLAYER_PROMPT)) {
-	if (parray[p1].bell)
-	  pprintf_noformat(p1, "\007");
-	pprintf(p1, "\nNotification: ");
-	pprintf_highlight(p1, "%s", parray[p].name);
-	pprintf_prompt(p1, " has arrived and isn't on your notify list.\n");
-      }
-    }
-  }
-  if (count)
-    pprintf(p, ".\n");
-  return count;
+	if (!parray[p].registered)
+		return count;
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (player_notified(p, p1) && parray[p1].status ==
+		    PLAYER_PROMPT) {
+			if (!count)
+				pprintf(p, "Present company includes:");
+			count++;
+
+			pprintf(p, " %s", parray[p1].name);
+
+			if (parray[p1].notifiedby &&
+			    !player_notified(p1, p) &&
+			    parray[p1].status == PLAYER_PROMPT) {
+				if (parray[p1].bell)
+					pprintf_noformat(p1, "\007");
+				pprintf(p1, "\nNotification: ");
+				pprintf_highlight(p1, "%s", parray[p].name);
+				pprintf_prompt(p1, " has arrived and isn't on "
+				    "your notify list.\n");
+			}
+		}
+	}
+
+	if (count)
+		pprintf(p, ".\n");
+	return count;
 }
 
 PUBLIC int
