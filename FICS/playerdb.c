@@ -1506,85 +1506,118 @@ PUBLIC int player_remove_request(int p, int p1, int type)
 }
 
 
-PUBLIC int player_decline_offers(int p, int p1, int offerType)
+PUBLIC int
+player_decline_offers(int p, int p1, int offerType)
 {
-  int offer;
-  int type, p2;
-  int count = 0;
-  int part, p2part;
-  char *pName = parray[p].name, *p2Name;
+	char	*pName = parray[p].name;
+	char	*p2Name;
+	int	 count = 0;
+	int	 offer;
+	int	 part, p2part;
+	int	 type, p2;
 
-  /* First get rid of bughouse offers from partner. */
-  if ((offerType == PEND_MATCH || offerType == PEND_ALL)
-      && parray[p].partner >= 0 && parray[parray[p].partner].partner == p)
-    count += player_decline_offers(parray[p].partner, p1, PEND_BUGHOUSE);
+	// First get rid of bughouse offers from partner.
 
-  while ((offer = player_find_pendfrom(p, p1, offerType)) >= 0) {
-    type = parray[p].p_from_list[offer].type;
-    p2 = parray[p].p_from_list[offer].whofrom;
-    p2Name = parray[p2].name;
+	if ((offerType == PEND_MATCH || offerType == PEND_ALL) &&
+	    parray[p].partner >= 0 &&
+	    parray[parray[p].partner].partner == p) {
+		count += player_decline_offers(parray[p].partner, p1,
+		    PEND_BUGHOUSE);
+	}
 
-    part = parray[p].partner;
-    if (part >= 0 && parray[part].partner != p)
-      part = -1;
-    p2part = parray[p2].partner;
-    if (p2part >= 0 && parray[p2part].partner != p2)
-      p2part = -1;
+	while ((offer = player_find_pendfrom(p, p1, offerType)) >= 0) {
+		type	= parray[p].p_from_list[offer].type;
+		p2	= parray[p].p_from_list[offer].whofrom;
+		p2Name	= parray[p2].name;
+		part	= parray[p].partner;
 
-    switch (type) {
-    case PEND_MATCH:
-      pprintf_prompt(p2, "\n%s declines the match offer.\n", pName);
-      pprintf(p, "You decline the match offer from %s.\n", p2Name);
-      if (!strcmp(parray[p].p_from_list[offer].char2, "bughouse")) {
-        if (part >= 0)
-          pprintf_prompt(part,
-            "Your partner declines the bughouse offer from %s.\n",
-            parray[p2].name);
-        if (p2part >= 0)
-          pprintf_prompt(p2part,
-            "%s declines the bughouse offer from your partner.\n",
-            parray[p].name);
-      }
-      break;
-    case PEND_DRAW:
-      pprintf_prompt(p2, "\n%s declines draw request.\n", pName);
-      pprintf(p, "You decline the draw request from %s.\n", p2Name);
-      break;
-    case PEND_PAUSE:
-      pprintf_prompt(p2, "\n%s declines pause request.\n", pName);
-      pprintf(p, "You decline the pause request from %s.\n", p2Name);
-      break;
-    case PEND_ABORT:
-      pprintf_prompt(p2, "\n%s declines abort request.\n", pName);
-      pprintf(p, "You decline the abort request from %s.\n", p2Name);
-      break;
-    case PEND_TAKEBACK:
-      pprintf_prompt(p2, "\n%s declines the takeback request.\n", pName);
-      pprintf(p, "You decline the takeback request from %s.\n", p2Name);
-      break;
-    case PEND_ADJOURN:
-      pprintf_prompt(p2, "\n%s declines the adjourn request.\n", pName);
-      pprintf(p, "You decline the adjourn request from %s.\n", p2Name);
-      break;
-    case PEND_SWITCH:
-      pprintf_prompt(p2, "\n%s declines the switch sides request.\n", pName);
-      pprintf(p, "You decline the switch sides request from %s.\n", p2Name);
-      break;
-    case PEND_SIMUL:
-      pprintf_prompt(p2, "\n%s declines the simul offer.\n", pName);
-      pprintf(p, "You decline the simul offer from %s.\n", p2Name);
-      break;
-    case PEND_PARTNER:
-      pprintf_prompt(p2, "\n%s declines your partnership request.\n", pName);
-      pprintf(p, "You decline the partnership request from %s.\n", p2Name);
-      break;
-    }
-    player_remove_request(p2, p, type);
-    count++;
-  }
-  return count;
+		if (part >= 0 && parray[part].partner != p)
+			part = -1;
+
+		p2part = parray[p2].partner;
+
+		if (p2part >= 0 && parray[p2part].partner != p2)
+			p2part = -1;
+
+		switch (type) {
+		case PEND_MATCH:
+			pprintf_prompt(p2, "\n%s declines the match offer.\n",
+			    pName);
+			pprintf(p, "You decline the match offer from %s.\n",
+			    p2Name);
+
+			if (!strcmp(parray[p].p_from_list[offer].char2,
+			    "bughouse")) {
+				if (part >= 0) {
+					pprintf_prompt(part, "Your partner "
+					    "declines the bughouse offer from "
+					    "%s.\n", parray[p2].name);
+				}
+
+				if (p2part >= 0) {
+					pprintf_prompt(p2part, "%s declines "
+					    "the bughouse offer from your "
+					    "partner.\n", parray[p].name);
+				}
+			}
+
+			break;
+		case PEND_DRAW:
+			pprintf_prompt(p2, "\n%s declines draw request.\n",
+			    pName);
+			pprintf(p, "You decline the draw request from %s.\n",
+			    p2Name);
+			break;
+		case PEND_PAUSE:
+			pprintf_prompt(p2, "\n%s declines pause request.\n",
+			    pName);
+			pprintf(p, "You decline the pause request from %s.\n",
+			    p2Name);
+			break;
+		case PEND_ABORT:
+			pprintf_prompt(p2, "\n%s declines abort request.\n",
+			    pName);
+			pprintf(p, "You decline the abort request from %s.\n",
+			    p2Name);
+			break;
+		case PEND_TAKEBACK:
+			pprintf_prompt(p2, "\n%s declines the takeback request."
+			    "\n", pName);
+			pprintf(p, "You decline the takeback request from %s."
+			    "\n", p2Name);
+			break;
+		case PEND_ADJOURN:
+			pprintf_prompt(p2, "\n%s declines the adjourn request."
+			    "\n", pName);
+			pprintf(p, "You decline the adjourn request from %s.\n",
+			    p2Name);
+			break;
+		case PEND_SWITCH:
+			pprintf_prompt(p2, "\n%s declines the switch sides "
+			    "request.\n", pName);
+			pprintf(p, "You decline the switch sides request from "
+			    "%s.\n", p2Name);
+			break;
+		case PEND_SIMUL:
+			pprintf_prompt(p2, "\n%s declines the simul offer.\n",
+			    pName);
+			pprintf(p, "You decline the simul offer from %s.\n",
+			    p2Name);
+			break;
+		case PEND_PARTNER:
+			pprintf_prompt(p2, "\n%s declines your partnership "
+			    "request.\n", pName);
+			pprintf(p, "You decline the partnership request from "
+			    "%s.\n", p2Name);
+			break;
+		} /* switch */
+
+		player_remove_request(p2, p, type);
+		count++;
+	} /* while */
+
+	return count;
 }
-
 
 PUBLIC int
 player_withdraw_offers(int p, int p1, int offerType)
