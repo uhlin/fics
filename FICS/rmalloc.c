@@ -25,8 +25,9 @@
 
 
 #include "stdinclude.h"
-
 #include "common.h"
+
+#include "rmalloc.h"
 
 PUBLIC unsigned int	allocated_size = 0;
 PUBLIC unsigned int	malloc_count = 0;
