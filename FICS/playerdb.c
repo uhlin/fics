@@ -1479,32 +1479,38 @@ PUBLIC int player_add_request(int p, int p1, int type, int param)
   return 0;
 }
 
-PUBLIC int player_remove_request(int p, int p1, int type)
+PUBLIC int
+player_remove_request(int p, int p1, int type)
 {
-  int to = 0, from = 0;
+	int to = 0, from = 0;
 
-  while (to != -1) {
-    to = player_find_pendto(p, p1, type);
-    if (to != -1) {
-      for (; to < parray[p].num_to - 1; to++)
-	parray[p].p_to_list[to] = parray[p].p_to_list[to + 1];
-      parray[p].num_to = parray[p].num_to - 1;
-    }
-  }
-  while (from != -1) {
-    from = player_find_pendfrom(p1, p, type);
-    if (from != -1) {
-      for (; from < parray[p1].num_from - 1; from++)
-	parray[p1].p_from_list[from] = parray[p1].p_from_list[from + 1];
-      parray[p1].num_from = parray[p1].num_from - 1;
-    }
-  }
-  if ((type == PEND_ALL || type == PEND_MATCH)
-      && parray[p].partner >= 0)
-    player_remove_request (parray[p].partner, p1, PEND_BUGHOUSE);
-  return 0;
+	while (to != -1) {
+		if ((to = player_find_pendto(p, p1, type)) != -1) {
+			for (; to < parray[p].num_to - 1; to++) {
+				parray[p].p_to_list[to] =
+				    parray[p].p_to_list[to + 1];
+			}
+
+			parray[p].num_to = (parray[p].num_to - 1);
+		}
+	}
+
+	while (from != -1) {
+		if ((from = player_find_pendfrom(p1, p, type)) != -1) {
+			for (; from < parray[p1].num_from - 1; from++) {
+				parray[p1].p_from_list[from] =
+				    parray[p1].p_from_list[from + 1];
+			}
+
+			parray[p1].num_from = (parray[p1].num_from - 1);
+		}
+	}
+
+	if ((type == PEND_ALL || type == PEND_MATCH) && parray[p].partner >= 0)
+		player_remove_request (parray[p].partner, p1, PEND_BUGHOUSE);
+
+	return 0;
 }
-
 
 PUBLIC int
 player_decline_offers(int p, int p1, int offerType)
