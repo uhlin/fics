@@ -238,40 +238,42 @@ PUBLIC int player_zero(int p)
   return 0;
 }
 
-PUBLIC int player_free(int p)
+PUBLIC int
+player_free(int p)
 {
-  int i;
+	int i;
 
-  strfree(parray[p].login);
-  strfree(parray[p].name);
-  strfree(parray[p].passwd);
-  strfree(parray[p].fullName);
-  strfree(parray[p].emailAddress);
-  if (parray[p].prompt != def_prompt)
-    strfree(parray[p].prompt);
-/*  strfree(parray[p].partner); */
-  for (i = 0; i < parray[p].num_plan; i++)
-    strfree(parray[p].planLines[i]);
-  for (i = 0; i < parray[p].num_formula; i++)
-    strfree(parray[p].formulaLines[i]);
-  strfree(parray[p].formula);
-  list_free(parray[p].lists);
-  for (i = 0; i < parray[p].numAlias; i++) {
-    strfree(parray[p].alias_list[i].comm_name);
-    strfree(parray[p].alias_list[i].alias);
-  }
-/*
-  if (parray[p].query_log != NULL)
-    tl_free(parray[p].query_log);
-*/
-  return 0;
+	strfree(parray[p].login);
+	strfree(parray[p].name);
+	strfree(parray[p].passwd);
+	strfree(parray[p].fullName);
+	strfree(parray[p].emailAddress);
+
+	if (parray[p].prompt != def_prompt)
+		strfree(parray[p].prompt);
+
+	for (i = 0; i < parray[p].num_plan; i++)
+		strfree(parray[p].planLines[i]);
+	for (i = 0; i < parray[p].num_formula; i++)
+		strfree(parray[p].formulaLines[i]);
+
+	strfree(parray[p].formula);
+	list_free(parray[p].lists);
+
+	for (i = 0; i < parray[p].numAlias; i++) {
+		strfree(parray[p].alias_list[i].comm_name);
+		strfree(parray[p].alias_list[i].alias);
+	}
+
+	return 0;
 }
 
-PUBLIC int player_clear(int p)
+PUBLIC int
+player_clear(int p)
 {
-  player_free(p);
-  player_zero(p);
-  return 0;
+	player_free(p);
+	player_zero(p);
+	return 0;
 }
 
 PUBLIC int
