@@ -1723,51 +1723,65 @@ PUBLIC int player_game_ended(int g)
   return 0;
 }
 
-PUBLIC int player_goto_board(int p, int board_num)
+PUBLIC int
+player_goto_board(int p, int board_num)
 {
-  int start, count = 0, on, g;
+	int start, count = 0, on, g;
 
-  if (board_num < 0 || board_num >= parray[p].simul_info.numBoards)
-    return -1;
-  if (parray[p].simul_info.boards[board_num] < 0)
-    return -1;
-  parray[p].simul_info.onBoard = board_num;
-  parray[p].game = parray[p].simul_info.boards[board_num];
-  parray[p].opponent = garray[parray[p].game].black;
-  if (parray[p].simul_info.numBoards == 1)
-    return 0;
-  send_board_to(parray[p].game, p);
-  start = parray[p].game;
-  on = parray[p].simul_info.onBoard;
-  do {
-    g = parray[p].simul_info.boards[on];
-    if (g >= 0) {
-      if (count == 0) {
-	if (parray[garray[g].black].bell) {
-	  pprintf(garray[g].black, "\007");
-	}
-	pprintf(garray[g].black, "\n");
-	pprintf_highlight(garray[g].black, "%s", parray[p].name);
-	pprintf_prompt(garray[g].black, " is at your board!\n");
-      } else if (count == 1) {
-	if (parray[garray[g].black].bell) {
-	  pprintf(garray[g].black, "\007");
-	}
-	pprintf(garray[g].black, "\n");
-	pprintf_highlight(garray[g].black, "%s", parray[p].name);
-	pprintf_prompt(garray[g].black, " will be at your board NEXT!\n");
-      } else {
-	pprintf(garray[g].black, "\n");
-	pprintf_highlight(garray[g].black, "%s", parray[p].name);
-	pprintf_prompt(garray[g].black, " is %d boards away.\n", count);
-      }
-      count++;
-    }
-    on++;
-    if (on >= parray[p].simul_info.numBoards)
-      on = 0;
-  } while (start != parray[p].simul_info.boards[on]);
-  return 0;
+	if (board_num < 0 || board_num >= parray[p].simul_info.numBoards)
+		return -1;
+
+	if (parray[p].simul_info.boards[board_num] < 0)
+		return -1;
+
+	parray[p].simul_info.onBoard = board_num;
+	parray[p].game = parray[p].simul_info.boards[board_num];
+	parray[p].opponent = garray[parray[p].game].black;
+
+	if (parray[p].simul_info.numBoards == 1)
+		return 0;
+
+	send_board_to(parray[p].game, p);
+
+	start	= parray[p].game;
+	on	= parray[p].simul_info.onBoard;
+
+	do {
+		if ((g = parray[p].simul_info.boards[on]) >= 0) {
+			if (count == 0) {
+				if (parray[garray[g].black].bell)
+					pprintf(garray[g].black, "\007");
+
+				pprintf(garray[g].black, "\n");
+				pprintf_highlight(garray[g].black, "%s",
+				    parray[p].name);
+				pprintf_prompt(garray[g].black, " is at your "
+				    "board!\n");
+			} else if (count == 1) {
+				if (parray[garray[g].black].bell)
+					pprintf(garray[g].black, "\007");
+
+				pprintf(garray[g].black, "\n");
+				pprintf_highlight(garray[g].black, "%s",
+				    parray[p].name);
+				pprintf_prompt(garray[g].black, " will be at "
+				    "your board NEXT!\n");
+			} else {
+				pprintf(garray[g].black, "\n");
+				pprintf_highlight(garray[g].black, "%s",
+				    parray[p].name);
+				pprintf_prompt(garray[g].black, " is %d boards "
+				    "away.\n", count);
+			}
+
+			count++;
+		}
+
+		if (++on >= parray[p].simul_info.numBoards)
+			on = 0;
+	} while (start != parray[p].simul_info.boards[on]);
+
+	return 0;
 }
 
 PUBLIC int
