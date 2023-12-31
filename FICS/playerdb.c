@@ -1209,18 +1209,22 @@ PUBLIC int player_ontime(int p)
   return time(0) - parray[p].logon_time;
 }
 
-PRIVATE void write_p_inout(int inout, int p, char *file, int maxlines)
+PRIVATE void
+write_p_inout(int inout, int p, char *file, int maxlines)
 {
-  FILE *fp;
+	FILE *fp;
 
-  fp = fopen(file, "a");
-  if (!fp)
-    return;
-  fprintf(fp, "%d %s %d %d %s\n", inout, parray[p].name, (int) time(0),
-	  parray[p].registered, dotQuad(parray[p].thisHost));
-  fclose(fp);
-  if (maxlines)
-    truncate_file(file, maxlines);
+	if ((fp = fopen(file, "a")) == NULL)
+		return;
+
+	fprintf(fp, "%d %s %ld %d %s\n", inout, parray[p].name,
+	    (long int)time(NULL), parray[p].registered,
+	    dotQuad(parray[p].thisHost));
+
+	fclose(fp);
+
+	if (maxlines)
+		truncate_file(file, maxlines);
 }
 
 PUBLIC void
