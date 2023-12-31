@@ -1666,18 +1666,19 @@ PUBLIC int player_withdraw_offers(int p, int p1, int offerType)
 }
 
 
-PUBLIC int player_is_observe(int p, int g)
+PUBLIC int
+player_is_observe(int p, int g)
 {
-  int i;
+	int i;
 
-  for (i = 0; i < parray[p].num_observe; i++) {
-    if (parray[p].observe_list[i] == g)
-      break;
-  }
-  if (i == parray[p].num_observe)
-    return 0;
-  else
-    return 1;
+	for (i = 0; i < parray[p].num_observe; i++) {
+		if (parray[p].observe_list[i] == g)
+			break;
+	}
+	if (i == parray[p].num_observe)
+		return 0;
+	else
+		return 1;
 }
 
 PUBLIC int
