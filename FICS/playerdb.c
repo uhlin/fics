@@ -1794,28 +1794,34 @@ PUBLIC int player_goto_next_board(int p)
   return player_goto_board(p, on);
 }
 
-PUBLIC int player_goto_prev_board(int p)
+PUBLIC int
+player_goto_prev_board(int p)
 {
-  int on;
-  int start;
-  int g;
+	int	g;
+	int	on;
+	int	start;
 
-  on = parray[p].simul_info.onBoard;
-  start = on;
-  g = -1;
-  do {
-    --on;
-    if (on < 0)
-      on = (parray[p].simul_info.numBoards) - 1;
-    g = parray[p].simul_info.boards[on];
-    if (g >= 0)
-      break;
-  } while (start != on);
-  if (g == -1) {
-    pprintf(p, "\nMajor Problem! Can't find your previous board.\n");
-    return -1;
-  }
-  return player_goto_board(p, on);
+	on	= parray[p].simul_info.onBoard;
+	start	= on;
+	g	= -1;
+
+	do {
+		--on;
+
+		if (on < 0)
+			on = (parray[p].simul_info.numBoards) - 1;
+
+		if ((g = parray[p].simul_info.boards[on]) >= 0)
+			break;
+	} while (start != on);
+
+	if (g == -1) {
+		pprintf(p, "\nMajor Problem! Can't find your previous board."
+		    "\n");
+		return -1;
+	}
+
+	return player_goto_board(p, on);
 }
 
 PUBLIC int
