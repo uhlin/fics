@@ -350,7 +350,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	int	 bs, ss, ws, ls, bugs;
 	int	 i, size_cens, size_noplay, size_not, size_gnot, size_chan, len;
 
-	// XXX: not referenced
+	/* XXX: not referenced */
 	(void) version;
 
 	/*
