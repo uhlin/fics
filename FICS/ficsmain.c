@@ -130,8 +130,6 @@ usage(char *progname)
 PUBLIC int
 main(int argc, char *argv[])
 {
-	extern void player_array_init(void); /* XXX */
-
 #ifdef DEBUG
 #ifdef HAVE_MALLOC_DEBUG
 	malloc_debug(16);
