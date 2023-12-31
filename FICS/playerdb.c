@@ -1171,7 +1171,7 @@ showstored(int p)
 
 			if (p1 >= 0) {
 				if (c < 50)
-					multicol_store(m,parray[p1].name);
+					multicol_store(m, parray[p1].name);
 				pprintf(p1, "\nNotification: ");
 				pprintf_highlight(p1, "%s", parray[p].name);
 				pprintf_prompt(p1, ", who has an adjourned "
