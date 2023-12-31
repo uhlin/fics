@@ -80,7 +80,7 @@ extern connection con[512];
 extern int	 no_file;
 extern int	 max_connections;
 
-extern int	 findConnection();
+extern int	 findConnection(int);
 extern int	 net_addConnection(int, unsigned int);
 extern int	 net_consize(void);
 extern int	 net_init(int);
