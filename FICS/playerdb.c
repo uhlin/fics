@@ -990,21 +990,23 @@ PUBLIC int player_find(int fd)
   return -1;
 }
 
-PUBLIC int player_find_bylogin(char *name)
+PUBLIC int
+player_find_bylogin(char *name)
 {
-  int i;
+	for (int i = 0; i < p_num; i++) {
+		if (parray[i].status == PLAYER_EMPTY ||
+		    parray[i].status == PLAYER_LOGIN ||
+		    parray[i].status == PLAYER_PASSWORD)
+			continue;
 
-  for (i = 0; i < p_num; i++) {
-    if ((parray[i].status == PLAYER_EMPTY) ||
-	(parray[i].status == PLAYER_LOGIN) ||
-	(parray[i].status == PLAYER_PASSWORD))
-      continue;
-    if (!parray[i].login)
-      continue;
-    if (!strcmp(parray[i].login, name))
-      return i;
-  }
-  return -1;
+		if (!parray[i].login)
+			continue;
+
+		if (!strcmp(parray[i].login, name))
+			return i;
+	}
+
+	return -1;
 }
 
 PUBLIC int
