@@ -23,6 +23,7 @@
    Markus Uhlin			23/12/09	Revamped the file
    Markus Uhlin			23/12/23	Fixed crypt()
    Markus Uhlin			23/12/28	Switched to arc4random_uniform()
+   Markus Uhlin			24/01/01	Size-bounded copying
 */
 
 #include "stdinclude.h"
