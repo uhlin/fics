@@ -2014,35 +2014,42 @@ PRIVATE int SaveThisMsg (int which, char *line)
   }
 }
 
-PRIVATE int LoadMsgs(int p, int which, textlist **Head)
-  /* which=0 to load all messages; it's (p1+1) to load messages only from
-     p1, and it's -(p1+1) to load all messages EXCEPT those from p1. */
+/*
+ * which = 0 to load all messages;
+ * it's (p1 + 1) to load messages only from p1;
+ * and it's -(p1 + 1) to load all messages EXCEPT those from p1.
+ */
+PRIVATE int
+LoadMsgs(int p, int which, textlist **Head)
 {
-  FILE *fp;
-  textlist **Cur = Head;
-  char fName[MAX_FILENAME_SIZE];
-  char line[MAX_LINE_SIZE];
-  int n=0, nSave=0;
+	FILE		*fp;
+	char		 fName[MAX_FILENAME_SIZE];
+	char		 line[MAX_LINE_SIZE];
+	int		 n = 0, nSave = 0;
+	textlist**	 Cur = Head;
 
-  *Head = NULL;
-  GetMsgFile (p, fName);
-  fp = fopen(fName, "r");
-  if (fp == NULL) {
-    return -1;
-  }
-  while (!feof(fp)) {
-    fgets(line, MAX_LINE_SIZE, fp);
-    if (feof(fp))
-      break;
-    if (SaveThisMsg(which, line)) {
-      SaveTextListEntry(Cur, line, ++n);
-      Cur = &(*Cur)->next;
-      nSave++;
-    }
-    else n++;
-  }
-  fclose (fp);
-  return nSave;
+	*Head = NULL;
+	GetMsgFile(p, fName);
+
+	if ((fp = fopen(fName, "r")) == NULL)
+		return -1;
+
+	while (!feof(fp)) {
+		fgets(line, sizeof line, fp);
+
+		if (feof(fp))
+			break;
+
+		if (SaveThisMsg(which, line)) {
+			SaveTextListEntry(Cur, line, ++n);
+			Cur = &(*Cur)->next;
+			nSave++;
+		} else
+			n++;
+	}
+
+	fclose(fp);
+	return nSave;
 }
 
 /*
