@@ -1706,21 +1706,22 @@ PUBLIC int player_remove_observe(int p, int g)
   return 0;
 }
 
-PUBLIC int player_game_ended(int g)
+PUBLIC int
+player_game_ended(int g)
 {
-  int p;
+	for (int p = 0; p < p_num; p++) {
+		if (parray[p].status == PLAYER_EMPTY)
+			continue;
+		player_remove_observe(p, g);
+	}
 
-  for (p = 0; p < p_num; p++) {
-    if (parray[p].status == PLAYER_EMPTY)
-      continue;
-    player_remove_observe(p, g);
-  }
-  player_remove_request(garray[g].white, garray[g].black, -1);
-  player_remove_request(garray[g].black, garray[g].white, -1);
-  player_save(garray[g].white);	/* Hawk: Added to save finger-info after each
-				   game */
-  player_save(garray[g].black);
-  return 0;
+	player_remove_request(garray[g].white, garray[g].black, -1);
+	player_remove_request(garray[g].black, garray[g].white, -1);
+
+	player_save(garray[g].white);
+	player_save(garray[g].black);
+
+	return 0;
 }
 
 PUBLIC int
