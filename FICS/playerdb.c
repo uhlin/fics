@@ -1987,11 +1987,12 @@ PUBLIC textlist *ClearTextListEntry(textlist *entry)
   return ret;
 }
 
-PUBLIC void ClearTextList(textlist *head)
+PUBLIC void
+ClearTextList(textlist *head)
 {
-  textlist *cur;
-
-  for (cur = head; cur != NULL; cur = ClearTextListEntry(cur));
+	for (textlist *cur = head; cur != NULL; cur = ClearTextListEntry(cur)) {
+		/* null */;
+	}
 }
 
 /*
