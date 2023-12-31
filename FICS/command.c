@@ -93,10 +93,6 @@ PUBLIC int commanding_player = -1;
 
 PRIVATE int lastCommandFound = -1;
 
-/* grimm */
-int player_notify_departure(int p);
-/* added for warnings */
-
 /*
  * Copies command into 'comm'.
  */

@@ -263,6 +263,7 @@ extern time_t	 player_lastconnect(int);
 extern time_t	 player_lastdisconnect(int);
 extern void	 player_array_init(void);
 extern void	 player_init(int);
+extern void	 player_notify_departure(int);
 extern void	 player_pend_print(int, pending *);
 extern void	 player_write_login(int);
 extern void	 player_write_logout(int);
