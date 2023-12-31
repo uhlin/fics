@@ -1994,24 +1994,29 @@ PUBLIC void ClearTextList(textlist *head)
   for (cur = head; cur != NULL; cur = ClearTextListEntry(cur));
 }
 
-/* if which=0 load all messages; if it's (p1+1) load messages only from
-   p1; if it's -(p1+1) load all messages EXCEPT those from p1. */
-PRIVATE int SaveThisMsg (int which, char *line)
+/*
+ * if which = 0 load all messages;
+ * if it's (p1 + 1) load messages only from p1;
+ * if it's -(p1 + 1) load all messages EXCEPT those from p1.
+ */
+PRIVATE int
+SaveThisMsg(int which, char *line)
 {
-  char Sender[MAX_LOGIN_NAME];
-  int p1;
+	char	Sender[MAX_LOGIN_NAME];
+	int	p1;
 
-  if (which == 0) return 1;
+	if (which == 0)
+		return 1;
 
-  sscanf (line, "%s", Sender);
-  if (which < 0) {
-    p1 = -which - 1;
-    return strcmp(Sender, parray[p1].name);
-  }
-  else {
-    p1 = which - 1;
-    return !strcmp(Sender, parray[p1].name);
-  }
+	sscanf(line, "%s", Sender);
+
+	if (which < 0) {
+		p1 = (-which) - 1;
+		return strcmp(Sender, parray[p1].name);
+	}
+
+	p1 = (which - 1);
+	return !strcmp(Sender, parray[p1].name);
 }
 
 /*
