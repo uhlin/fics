@@ -1971,20 +1971,24 @@ player_add_message(int top, int fromp, char *message)
 	return 0;
 }
 
-PUBLIC void SaveTextListEntry(textlist **Entry, char *string, int n)
+PUBLIC void
+SaveTextListEntry(textlist **Entry, char *string, int n)
 {
-  *Entry = (textlist *) rmalloc(sizeof(textlist));
-  (*Entry)->text = xstrdup(string);
-  (*Entry)->index = n;
-  (*Entry)->next = NULL;
+	*Entry = rmalloc(sizeof(textlist));
+
+	(*Entry)->text	= xstrdup(string);
+	(*Entry)->index	= n;
+	(*Entry)->next	= NULL;
 }
 
-PUBLIC textlist *ClearTextListEntry(textlist *entry)
+PUBLIC textlist *
+ClearTextListEntry(textlist *entry)
 {
-  textlist *ret = entry->next;
-  strfree(entry->text);
-  rfree(entry);
-  return ret;
+	textlist *ret = entry->next;
+
+	strfree(entry->text);
+	rfree(entry);
+	return ret;
 }
 
 PUBLIC void
