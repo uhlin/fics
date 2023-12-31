@@ -274,45 +274,52 @@ PUBLIC int player_clear(int p)
   return 0;
 }
 
-PUBLIC int player_remove(int p)
+PUBLIC int
+player_remove(int p)
 {
-  int i;
+	int i;
 
-  player_decline_offers(p, -1, -1);
-  player_withdraw_offers(p, -1, -1);
-  if (parray[p].simul_info.numBoards) {	/* Player disconnected in middle of
-					   simul */
-    for (i = 0; i < parray[p].simul_info.numBoards; i++) {
-      if (parray[p].simul_info.boards[i] >= 0) {
-	game_disconnect(parray[p].simul_info.boards[i], p);
-      }
-    }
-  }
+	player_decline_offers(p, -1, -1);
+	player_withdraw_offers(p, -1, -1);
 
-  if (parray[p].game >=0) {  /* Player disconnected in the middle of a
-				       game! */
-    pprintf(parray[p].opponent, "Your opponent has lost contact or quit.");
-    game_disconnect(parray[p].game, p);
-  }
-/*  ReallyRemoveOldGamesForPlayer(p); */
-  for (i = 0; i < p_num; i++) {
-    if (parray[i].status == PLAYER_EMPTY)
-      continue;
-    if (parray[i].last_tell == p)
-      parray[i].last_tell = -1;
-    if (parray[i].last_opponent == p)
-      parray[i].last_opponent = -1;
-    if (parray[i].partner == p) {
-      pprintf_prompt (i, "Your partner has disconnected.\n");
-      player_withdraw_offers(i, -1, PEND_BUGHOUSE);
-      player_decline_offers(i, -1, PEND_BUGHOUSE);
-      parray[i].partner = -1;
-    }
-  }
-  player_clear(p);
-  parray[p].status = PLAYER_EMPTY;
-/***  fprintf(stderr, "Removed parray[%d/%d]\n", p, p_num-1);*/
-  return 0;
+	if (parray[p].simul_info.numBoards) {	// Player disconnected in
+						// middle of simul
+		for (i = 0; i < parray[p].simul_info.numBoards; i++) {
+			if (parray[p].simul_info.boards[i] >= 0) {
+				game_disconnect(parray[p].simul_info.boards[i],
+				    p);
+			}
+		}
+	}
+
+	if (parray[p].game >= 0) {	// Player disconnected in the middle of
+					// a game!
+		pprintf(parray[p].opponent, "Your opponent has lost contact "
+		    "or quit.\n");
+		game_disconnect(parray[p].game, p);
+	}
+
+	for (i = 0; i < p_num; i++) {
+		if (parray[i].status == PLAYER_EMPTY)
+			continue;
+
+		if (parray[i].last_tell == p)
+			parray[i].last_tell = -1;
+
+		if (parray[i].last_opponent == p)
+			parray[i].last_opponent = -1;
+
+		if (parray[i].partner == p) {
+			pprintf_prompt(i, "Your partner has disconnected.\n");
+			player_withdraw_offers(i, -1, PEND_BUGHOUSE);
+			player_decline_offers(i, -1, PEND_BUGHOUSE);
+			parray[i].partner = -1;
+		}
+	}
+
+	player_clear(p);
+	parray[p].status = PLAYER_EMPTY;
+	return 0;
 }
 
 void
