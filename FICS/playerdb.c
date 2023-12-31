@@ -1007,29 +1007,32 @@ PUBLIC int player_find_bylogin(char *name)
   return -1;
 }
 
-PUBLIC int player_find_part_login(char *name)
+PUBLIC int
+player_find_part_login(char *name)
 {
-  int i;
-  int found = -1;
+	int	found = -1;
+	int	i;
 
-  i = player_find_bylogin(name);
-  if (i >= 0)
-    return i;
-  for (i = 0; i < p_num; i++) {
-    if ((parray[i].status == PLAYER_EMPTY) ||
-	(parray[i].status == PLAYER_LOGIN) ||
-	(parray[i].status == PLAYER_PASSWORD))
-      continue;
-    if (!parray[i].login)
-      continue;
-    if (!strncmp(parray[i].login, name, strlen(name))) {
-      if (found >= 0) {		/* Ambiguous */
-	return -2;
-      }
-      found = i;
-    }
-  }
-  return found;
+	if ((i = player_find_bylogin(name)) >= 0)
+		return i;
+
+	for (i = 0; i < p_num; i++) {
+		if (parray[i].status == PLAYER_EMPTY ||
+		    parray[i].status == PLAYER_LOGIN ||
+		    parray[i].status == PLAYER_PASSWORD)
+			continue;
+
+		if (!parray[i].login)
+			continue;
+
+		if (!strncmp(parray[i].login, name, strlen(name))) {
+			if (found >= 0) /* Ambiguous */
+				return -2;
+			found = i;
+		}
+	}
+
+	return found;
 }
 
 PUBLIC int
