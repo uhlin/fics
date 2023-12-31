@@ -25,7 +25,7 @@
    Markus Uhlin                 23/12/19	Usage of 'time_t'
    Markus Uhlin                 23/12/25	Reformatted functions
    Markus Uhlin                 23/12/31	Completed reformation of all
-						functions.
+						functions and much more...
 */
 
 #include "stdinclude.h"
