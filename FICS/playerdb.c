@@ -1223,34 +1223,42 @@ PRIVATE void write_p_inout(int inout, int p, char *file, int maxlines)
     truncate_file(file, maxlines);
 }
 
-PUBLIC void player_write_login(int p)
+PUBLIC void
+player_write_login(int p)
 {
-  char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE];
 
-  if (parray[p].registered) {
-    sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0], parray[p].login, STATS_LOGONS);
-    write_p_inout(P_LOGIN, p, fname, 8);
-  }
-  sprintf(fname, "%s/%s", stats_dir, STATS_LOGONS);
-  write_p_inout(P_LOGIN, p, fname, 30);
-  /* added complete login/logout log to "logons.log" file */
-  sprintf(fname, "%s/%s", stats_dir, "logons.log");
-  write_p_inout(P_LOGIN, p, fname, 0);
+	if (parray[p].registered) {
+		snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+		    stats_dir, parray[p].login[0], parray[p].login,
+		    STATS_LOGONS);
+		write_p_inout(P_LOGIN, p, fname, 8);
+	}
+
+	snprintf(fname, sizeof fname, "%s/%s", stats_dir, STATS_LOGONS);
+	write_p_inout(P_LOGIN, p, fname, 30);
+
+	snprintf(fname, sizeof fname, "%s/%s", stats_dir, "logons.log");
+	write_p_inout(P_LOGIN, p, fname, 0);
 }
 
-PUBLIC void player_write_logout(int p)
+PUBLIC void
+player_write_logout(int p)
 {
-  char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE];
 
-  if (parray[p].registered) {
-    sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0], parray[p].login, STATS_LOGONS);
-    write_p_inout(P_LOGOUT, p, fname, 8);
-  }
-  sprintf(fname, "%s/%s", stats_dir, STATS_LOGONS);
-  write_p_inout(P_LOGOUT, p, fname, 30);
-  /* added complete login/logout log to "logons.log" file */
-  sprintf(fname, "%s/%s", stats_dir, "logons.log");
-  write_p_inout(P_LOGOUT, p, fname, 0);
+	if (parray[p].registered) {
+		snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+		    stats_dir, parray[p].login[0], parray[p].login,
+		    STATS_LOGONS);
+		write_p_inout(P_LOGOUT, p, fname, 8);
+	}
+
+	snprintf(fname, sizeof fname, "%s/%s", stats_dir, STATS_LOGONS);
+	write_p_inout(P_LOGOUT, p, fname, 30);
+
+	snprintf(fname, sizeof fname, "%s/%s", stats_dir, "logons.log");
+	write_p_inout(P_LOGOUT, p, fname, 0);
 }
 
 PUBLIC time_t
