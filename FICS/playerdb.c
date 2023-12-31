@@ -1689,21 +1689,25 @@ PUBLIC int player_add_observe(int p, int g)
   return 0;
 }
 
-PUBLIC int player_remove_observe(int p, int g)
+PUBLIC int
+player_remove_observe(int p, int g)
 {
-  int i;
+	int i;
 
-  for (i = 0; i < parray[p].num_observe; i++) {
-    if (parray[p].observe_list[i] == g)
-      break;
-  }
-  if (i == parray[p].num_observe)
-    return -1;			/* Not found! */
-  for (; i < parray[p].num_observe - 1; i++) {
-    parray[p].observe_list[i] = parray[p].observe_list[i + 1];
-  }
-  parray[p].num_observe--;
-  return 0;
+	for (i = 0; i < parray[p].num_observe; i++) {
+		if (parray[p].observe_list[i] == g)
+			break;
+	}
+
+	if (i == parray[p].num_observe)
+		return -1; // Not found!
+
+	for (; i < (parray[p].num_observe - 1); i++)
+		parray[p].observe_list[i] = parray[p].observe_list[i + 1];
+
+	parray[p].num_observe--;
+
+	return 0;
 }
 
 PUBLIC int
