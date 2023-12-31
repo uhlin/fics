@@ -1914,20 +1914,24 @@ PUBLIC int player_simul_over(int p, int g, int result)
   return 0;
 }
 
-PRIVATE void GetMsgFile (int p, char *fName)
+PRIVATE void
+GetMsgFile(int p, char *fName)
 {
- sprintf(fName, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
-         parray[p].login, STATS_MESSAGES);
- }
+	sprintf(fName, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
+	    parray[p].login, STATS_MESSAGES);
+}
 
-PUBLIC int player_num_messages(int p)
+PUBLIC int
+player_num_messages(int p)
 {
-  char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE];
 
-  if (!parray[p].registered)
-    return 0;
-  GetMsgFile (p, fname);
-  return lines_file(fname);
+	if (!parray[p].registered)
+		return 0;
+
+	GetMsgFile(p, fname);
+
+	return lines_file(fname);
 }
 
 PUBLIC int
