@@ -838,28 +838,28 @@ PUBLIC int player_delete(int p)
   return 0;
 }
 
-PUBLIC int player_markdeleted(int p)
+PUBLIC int
+player_markdeleted(int p)
 {
-  FILE *fp;
-  char fname[MAX_FILENAME_SIZE], fname2[MAX_FILENAME_SIZE];
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 fname2[MAX_FILENAME_SIZE];
 
-  if (!parray[p].registered) {	/* Player must not be registered */
-    return -1;
-  }
-/*  if (iamserver) {
-    sprintf(fname, "%s.server/%c/%s", player_dir, parray[p].login[0], parray[p].login);
-    sprintf(fname2, "%s.server/%c/%s.delete", player_dir, parray[p].login[0], parray[p].login);
-  } else {*/
-  sprintf(fname, "%s/%c/%s", player_dir, parray[p].login[0], parray[p].login);
-  sprintf(fname2, "%s/%c/%s.delete", player_dir, parray[p].login[0], parray[p].login);
-/*  } */
-  rename(fname, fname2);
-  fp = fopen(fname2, "a");	/* Touch the file */
-  if (fp) {
-    fprintf(fp, "\n");
-    fclose(fp);
-  }
-  return 0;
+	if (!parray[p].registered)	// Player must not be registered
+		return -1;
+
+	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	    parray[p].login[0], parray[p].login);
+	snprintf(fname2, sizeof fname2, "%s/%c/%s.delete", player_dir,
+	    parray[p].login[0], parray[p].login);
+	rename(fname, fname2);
+
+	if ((fp = fopen(fname2, "a")) != NULL) { // Touch the file
+		fprintf(fp, "\n");
+		fclose(fp);
+	}
+
+	return 0;
 }
 
 void
