@@ -1130,55 +1130,67 @@ PUBLIC int player_notify(int p, char *note1, char *note2)
   return count;
 }
 
-/* Show adjourned games upon logon. connex/sous@ipp.tu-clausthal.de
-24.10.1995 */
-PUBLIC int showstored(int p)
+/*
+ * Show adjourned games upon logon
+ */
+PUBLIC int
+showstored(int p)
 {
-  DIR *dirp;
+	DIR		*dirp;
+	char		 dname[MAX_FILENAME_SIZE];
+	int		 c = 0, p1;
+	multicol	*m = multicol_start(50);	// Limit to 50
+							// (should be enough)
 #ifdef USE_DIRENT
-  struct dirent *dp;
+	struct dirent	*dp;
 #else
-  struct direct *dp;
+	struct direct	*dp;
 #endif
-  int c=0,p1;
-  char dname[MAX_FILENAME_SIZE];
-  multicol *m = multicol_start(50); /* Limit to 50, should be enough*/
 
-  sprintf(dname, "%s/%c", adj_dir, parray[p].login[0]);
-  dirp = opendir(dname);
-  if (!dirp) {
-    multicol_end(m);
-    return COM_OK;
-  }
-  for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
-    if (file_has_pname(dp->d_name, parray[p].login)) {
-      if (strcmp(file_wplayer(dp->d_name),parray[p].login) != 0) {
-      	p1=player_find_bylogin(file_wplayer(dp->d_name));
-      } else {
-      	p1=player_find_bylogin(file_bplayer(dp->d_name));
-      }
-      if (p1>=0) {
-      	if (c<50)
-      		multicol_store(m,parray[p1].name);
-      	pprintf(p1,"\nNotification: ");
-      	pprintf_highlight(p1,"%s",parray[p].name);
-      	pprintf_prompt(p1,", who has an adjourned game with you, has arrived.\n");
-      	c++;
-      }
-    }
-  }
-  closedir(dirp);
-  if (c == 1) {
-        pprintf(p, "1 player, who has an adjourned game with you, is online:\007");
-  } else if (c > 1) {
-  	pprintf(p, "\n%d players, who have an adjourned game with you, are online:\007",c);
-  }
-  if (c != 0)
-  	multicol_pprint(m,p,parray[p].d_width,2);
-  multicol_end(m);
-  return COM_OK;
+	snprintf(dname, sizeof dname, "%s/%c", adj_dir, parray[p].login[0]);
+
+	if ((dirp = opendir(dname)) == NULL) {
+		multicol_end(m);
+		return COM_OK;
+	}
+
+	for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
+		if (file_has_pname(dp->d_name, parray[p].login)) {
+			if (strcmp(file_wplayer(dp->d_name), parray[p].login)) {
+				p1 = player_find_bylogin
+				    (file_wplayer(dp->d_name));
+			} else {
+				p1 = player_find_bylogin
+				    (file_bplayer(dp->d_name));
+			}
+
+			if (p1 >= 0) {
+				if (c < 50)
+					multicol_store(m,parray[p1].name);
+				pprintf(p1, "\nNotification: ");
+				pprintf_highlight(p1, "%s", parray[p].name);
+				pprintf_prompt(p1, ", who has an adjourned "
+				    "game with you, has arrived.\n");
+				c++;
+			}
+		}
+	}
+
+	closedir(dirp);
+
+	if (c == 1) {
+		pprintf(p, "1 player, who has an adjourned game with you, is "
+		    "online:\007");
+	} else if (c > 1) {
+		pprintf(p, "\n%d players, who have an adjourned game with you, "
+		    "are online:\007", c);
+	}
+
+	if (c != 0)
+		multicol_pprint(m, p, parray[p].d_width, 2);
+	multicol_end(m);
+	return COM_OK;
 }
-
 
 PUBLIC int
 player_count(int CountAdmins)
