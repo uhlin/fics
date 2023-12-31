@@ -1853,16 +1853,20 @@ PUBLIC int player_num_active_boards(int p)
   return count;
 }
 
-PUBLIC int player_num_results(int p, int result)
+PUBLIC int
+player_num_results(int p, int result)
 {
-  int count = 0, i;
+	int count = 0;
 
-  if (!parray[p].simul_info.numBoards)
-    return 0;
-  for (i = 0; i < parray[p].simul_info.numBoards; i++)
-    if (parray[p].simul_info.results[i] == result)
-      count++;
-  return count;
+	if (!parray[p].simul_info.numBoards)
+		return 0;
+
+	for (int i = 0; i < parray[p].simul_info.numBoards; i++) {
+		if (parray[p].simul_info.results[i] == result)
+			count++;
+	}
+
+	return count;
 }
 
 PUBLIC int
