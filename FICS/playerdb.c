@@ -1479,8 +1479,8 @@ player_lastdisconnect(int p)
 PUBLIC void
 player_pend_print(int p, pending *pend)
 {
-	char	outstr[200];
-	char	tmp[200];
+	char	outstr[200] = { '\0' };
+	char	tmp[200] = { '\0' };
 
 	if (p == pend->whofrom) {
 		sprintf(outstr, "You are offering ");
@@ -1489,7 +1489,7 @@ player_pend_print(int p, pending *pend)
 	}
 
 	if (p == pend->whoto) {
-		strcpy(tmp, "");
+		/* null */;
 	} else {
 		sprintf(tmp, "%s ", parray[pend->whoto].name);
 	}
