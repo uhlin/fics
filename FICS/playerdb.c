@@ -1818,27 +1818,32 @@ PUBLIC int player_goto_prev_board(int p)
   return player_goto_board(p, on);
 }
 
-PUBLIC int player_goto_simulgame_bynum(int p, int num)
+PUBLIC int
+player_goto_simulgame_bynum(int p, int num)
 {
-  int on;
-  int start;
-  int g;
+	int	g;
+	int	on;
+	int	start;
 
-  on = parray[p].simul_info.onBoard;
-  start = on;
-  do {
-    on++;
-    if (on >= parray[p].simul_info.numBoards)
-      on = 0;
-    g = parray[p].simul_info.boards[on];
-    if (g == num)
-      break;
-  } while (start != on);
-  if (g != num) {
-    pprintf(p, "\nYou aren't playing that game!!\n");
-    return -1;
-  }
-  return player_goto_board(p, on);
+	on = parray[p].simul_info.onBoard;
+	start = on;
+
+	do {
+		on++;
+
+		if (on >= parray[p].simul_info.numBoards)
+			on = 0;
+
+		if ((g = parray[p].simul_info.boards[on]) == num)
+			break;
+	} while (start != on);
+
+	if (g != num) {
+		pprintf(p, "\nYou aren't playing that game!!\n");
+		return -1;
+	}
+
+	return player_goto_board(p, on);
 }
 
 PUBLIC int
