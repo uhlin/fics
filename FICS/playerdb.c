@@ -1483,15 +1483,16 @@ player_pend_print(int p, pending *pend)
 	char	tmp[200] = { '\0' };
 
 	if (p == pend->whofrom) {
-		sprintf(outstr, "You are offering ");
+		(void)strlcpy(outstr, "You are offering ", sizeof outstr);
 	} else {
-		sprintf(outstr, "%s is offering ", parray[pend->whofrom].name);
+		snprintf(outstr, sizeof outstr, "%s is offering ",
+		    parray[pend->whofrom].name);
 	}
 
 	if (p == pend->whoto) {
 		/* null */;
 	} else {
-		sprintf(tmp, "%s ", parray[pend->whoto].name);
+		snprintf(tmp, sizeof tmp, "%s ", parray[pend->whoto].name);
 	}
 
 	if (strlcat(outstr, tmp, sizeof outstr) >= sizeof outstr) {
