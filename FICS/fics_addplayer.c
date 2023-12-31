@@ -101,7 +101,6 @@ main(int argc, char *argv[])
 	}
 
 	player_init(0);
-	srand(time(0));
 	p = player_new();
 	if (!player_read(p, funame)) {
 		fprintf(stderr, "%s already exists.\n", funame);
