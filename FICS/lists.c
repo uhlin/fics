@@ -21,7 +21,7 @@
 #include "talkproc.h"
 #include "utils.h"
 
-List *firstGlobalList = NULL;
+PRIVATE List *firstGlobalList = NULL;
 
 PRIVATE ListTable ListArray[] = {
 	{P_HEAD,	"admin"},
