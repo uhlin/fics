@@ -1410,27 +1410,31 @@ PUBLIC int player_remove_pendto(int p, int p1, int type)
   return 0;
 }
 
-PUBLIC int player_find_pendfrom(int p, int p1, int type)
+PUBLIC int
+player_find_pendfrom(int p, int p1, int type)
 {
-  int i;
+	for (int i = 0; i < parray[p].num_from; i++) {
+		if (parray[p].p_from_list[i].whofrom != p1 && p1 != -1)
+			continue;
+		if (type == PEND_ALL || parray[p].p_from_list[i].type == type)
+			return i;
+		if (type < 0 && parray[p].p_from_list[i].type != -type)
+			return i;
+		/*
+		 * The above "if" allows a type of -PEND_SIMUL to
+		 * match every request EXCEPT simuls, for example. I'm
+		 * doing this because Heringer does not want to
+		 * decline simul requests when he makes a move in a
+		 * sumul. -- hersco.
+		 */
 
-  for (i = 0; i < parray[p].num_from; i++) {
-    if (parray[p].p_from_list[i].whofrom != p1 && p1 != -1)
-      continue;
-    if (type == PEND_ALL || parray[p].p_from_list[i].type == type)
-      return i;
-    if (type < 0 && parray[p].p_from_list[i].type != -type)
-      return i;
-    /* The above "if" allows a type of -PEND_SIMUL to match every request
-       EXCEPT simuls, for example.  I'm doing this because Heringer does
-       not want to decline simul requests when he makes a move in a sumul.
-       -- hersco. */
-    if (type == PEND_BUGHOUSE
-        && parray[p].p_from_list[i].type == PEND_MATCH
-        && !strcmp(parray[p].p_from_list[i].char2, "bughouse"))
-      return i;
-  }
-  return -1;
+		if (type == PEND_BUGHOUSE &&
+		    parray[p].p_from_list[i].type == PEND_MATCH &&
+		    !strcmp(parray[p].p_from_list[i].char2, "bughouse"))
+			return i;
+	}
+
+	return -1;
 }
 
 PUBLIC int
