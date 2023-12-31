@@ -45,26 +45,24 @@
 PUBLIC player	 parray[PARRAY_SIZE];
 PUBLIC int	 p_num = 0;
 
-PRIVATE int get_empty_slot(void)
+PRIVATE int
+get_empty_slot(void)
 {
-  int i;
+	for (int i = 0; i < p_num; i++) {
+		if (parray[i].status == PLAYER_EMPTY)
+			return i;
+	}
 
-  for (i = 0; i < p_num; i++) {
-    if (parray[i].status == PLAYER_EMPTY) {
-/***  fprintf(stderr,"New player put in parray[%d/%d]\n", i, p_num-1);*/
-      return i;
-    }
-  }
+	p_num++;
 
-  p_num++;
+	if ((p_num + 1) >= PARRAY_SIZE) {
+		fprintf(stderr, "*** Bogus attempt to %s() past end of parray "
+		    "***\n", __func__);
+	}
 
-  if (p_num+1 >= PARRAY_SIZE) {
-    fprintf(stderr, "*** Bogus attempt to get_empty_slot() past end of parray ***\n");
-  }
+	parray[p_num - 1].status = PLAYER_EMPTY;
 
-/*** fprintf(stderr,"New player added in parray[%d]\n", p_num-1); */
-  parray[p_num - 1].status = PLAYER_EMPTY;
-  return p_num - 1;
+	return (p_num - 1);
 }
 
 PUBLIC void
