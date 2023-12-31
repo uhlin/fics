@@ -668,7 +668,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 		if (parray[p].num_plan > 0) {
 			for (i = 0; i < parray[p].num_plan; i++) {
-				fgets(tmp, MAX_LINE_SIZE, fp);
+				fgets(tmp, sizeof tmp, fp);
 
 				if (!(len = strlen(tmp))) {
 					fprintf(stderr, "FICS: Error bad plan "
@@ -691,7 +691,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 		if (parray[p].num_formula > 0) {
 			for (i = 0; i < parray[p].num_formula; i++) {
-				fgets(tmp, MAX_LINE_SIZE, fp);
+				fgets(tmp, sizeof tmp, fp);
 
 				if (!(len = strlen(tmp))) {
 					fprintf(stderr, "FICS: Error bad "
@@ -720,7 +720,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 		if (parray[p].numAlias > 0) {
 			for (i = 0; i < parray[p].numAlias; i++) {
-				fgets(tmp, MAX_LINE_SIZE, fp);
+				fgets(tmp, sizeof tmp, fp);
 
 				if (!(len = strlen(tmp))) {
 					fprintf(stderr, "FICS: Error bad alias "
@@ -750,7 +750,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, MAX_LINE_SIZE, fp);
+			fgets(tmp, sizeof tmp, fp);
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
@@ -765,7 +765,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, MAX_LINE_SIZE, fp);
+			fgets(tmp, sizeof tmp, fp);
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
@@ -780,7 +780,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, MAX_LINE_SIZE, fp);
+			fgets(tmp, sizeof tmp, fp);
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
@@ -795,7 +795,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, MAX_LINE_SIZE, fp);
+			fgets(tmp, sizeof tmp, fp);
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
