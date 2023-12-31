@@ -346,7 +346,7 @@ void
 ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 {
 	char	*tmp;
-	char	 tmp2[MAX_STRING_LENGTH];
+	char	 tmp2[MAX_STRING_LENGTH] = { '\0' };
 	int	 bs, ss, ws, ls, bugs;
 	int	 i, size_cens, size_noplay, size_not, size_gnot, size_chan, len;
 
