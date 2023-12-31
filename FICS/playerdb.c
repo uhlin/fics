@@ -1180,20 +1180,25 @@ PUBLIC int showstored(int p)
 }
 
 
-PUBLIC int player_count(int CountAdmins)
+PUBLIC int
+player_count(int CountAdmins)
 {
-  int count;
-  int i;
+	int	count;
+	int	i;
 
-  for (count = 0, i = 0; i < p_num; i++) {
-    if ((parray[i].status == PLAYER_PROMPT) &&
-        (CountAdmins || !in_list(i, L_ADMIN, parray[i].name)))
-      count++;
-  }
-  if (count > player_high)
-    player_high = count;
+	count = 0;
+	i = 0;
 
-  return count;
+	while (i < p_num) {
+		if (parray[i].status == PLAYER_PROMPT &&
+		    (CountAdmins || !in_list(i, L_ADMIN, parray[i].name)))
+			count++;
+		i++;
+	}
+
+	if (count > player_high)
+		player_high = count;
+	return count;
 }
 
 PUBLIC int
