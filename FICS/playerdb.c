@@ -977,17 +977,17 @@ PUBLIC int player_save(int p)
   return 0;
 }
 
-PUBLIC int player_find(int fd)
+PUBLIC int
+player_find(int fd)
 {
-  int i;
+	for (int i = 0; i < p_num; i++) {
+		if (parray[i].status == PLAYER_EMPTY)
+			continue;
+		if (parray[i].socket == fd)
+			return i;
+	}
 
-  for (i = 0; i < p_num; i++) {
-    if (parray[i].status == PLAYER_EMPTY)
-      continue;
-    if (parray[i].socket == fd)
-      return i;
-  }
-  return -1;
+	return -1;
 }
 
 PUBLIC int
