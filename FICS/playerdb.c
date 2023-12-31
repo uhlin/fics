@@ -823,19 +823,19 @@ PUBLIC int player_read(int p, char *name)
   return 0;
 }
 
-PUBLIC int player_delete(int p)
+PUBLIC int
+player_delete(int p)
 {
-  char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE];
 
-  if (!parray[p].registered) {	/* Player must not be registered */
-    return -1;
-  }
-/*  if (iamserver)
-    sprintf(fname, "%s.server/%c/%s", player_dir, parray[p].login[0], parray[p].login);
-  else */
-  sprintf(fname, "%s/%c/%s", player_dir, parray[p].login[0], parray[p].login);
-  unlink(fname);
-  return 0;
+	if (!parray[p].registered)	// Player must not be registered
+		return -1;
+
+	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	    parray[p].login[0], parray[p].login);
+	unlink(fname);
+
+	return 0;
 }
 
 PUBLIC int
