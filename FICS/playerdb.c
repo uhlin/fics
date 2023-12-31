@@ -44,6 +44,10 @@
 #include "talkproc.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 PUBLIC player	 parray[PARRAY_SIZE];
 PUBLIC int	 p_num = 0;
 
@@ -1490,7 +1494,10 @@ player_pend_print(int p, pending *pend)
 		sprintf(tmp, "%s ", parray[pend->whoto].name);
 	}
 
-	strcat(outstr, tmp);
+	if (strlcat(outstr, tmp, sizeof outstr) >= sizeof outstr) {
+		fprintf(stderr, "FICS: %s: warning: strlcat() truncated\n",
+		    __func__);
+	}
 
 	switch (pend->type) {
 	case PEND_MATCH:
@@ -1529,7 +1536,11 @@ player_pend_print(int p, pending *pend)
 		break;
 	}
 
-	strcat(outstr, tmp);
+	if (strlcat(outstr, tmp, sizeof outstr) >= sizeof outstr) {
+		fprintf(stderr, "FICS: %s: warning: strlcat() truncated\n",
+		    __func__);
+	}
+
 	pprintf(p, "%s\n", outstr);
 }
 
