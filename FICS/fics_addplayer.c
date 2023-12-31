@@ -28,10 +28,17 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+#include <string.h>
+
 #include "command.h"
 #include "fics_getsalt.h"
 #include "playerdb.h"
 #include "utils.h"
+
+#if __linux__
+#include <bsd/string.h>
+#endif
 
 #define PASSLEN 8
 
@@ -116,7 +123,9 @@ main(int argc, char *argv[])
 		password[i] = ('a' + arc4random_uniform(26));
 	password[i] = '\0';
 
-	strcpy(salt, fics_getsalt());
+	if (strlcpy(salt, fics_getsalt(), sizeof salt) >= sizeof salt)
+		errx(1, "salt truncated");
+
 	parray[p].passwd = xstrdup(crypt(password, salt));
 	parray[p].registered = 1;
 //	parray[p].network_player = !local;
