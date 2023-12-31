@@ -15,7 +15,7 @@ CXXFLAGS = -O2 -Wall -pipe -std=c++17
 CPPFLAGS = -D_DEFAULT_SOURCE=1
 
 LDFLAGS =
-LDLIBS = -lcrypt
+LDLIBS = -lbsd -lcrypt
 RM ?= @rm -f
 
 E = @echo
@@ -23,7 +23,7 @@ Q = @
 
 # addplayer
 AP_LDFLAGS =
-AP_LDLIBS = -lcrypt
+AP_LDLIBS = -lbsd -lcrypt
 
 # makerank
 MR_LDFLAGS =
