@@ -510,7 +510,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 }
 
 PRIVATE int
-got_attr_value_player(int p, char *attr, char *value, FILE * fp, char *file)
+got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 {
 	char	*tmp1;
 	char	 tmp[MAX_LINE_SIZE];
