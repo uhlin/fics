@@ -509,252 +509,309 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	}
 }
 
-PRIVATE int got_attr_value_player(int p, char *attr, char *value, FILE * fp, char *file)
+PRIVATE int
+got_attr_value_player(int p, char *attr, char *value, FILE * fp, char *file)
 {
-  int i, len;
-  char tmp[MAX_LINE_SIZE], *tmp1;
+	char	*tmp1;
+	char	 tmp[MAX_LINE_SIZE];
+	int	 i, len;
 
-  if (!strcmp(attr, "name:")) {
-    parray[p].name = xstrdup(value);
-  } else if (!strcmp(attr, "password:")) {
-    parray[p].passwd = xstrdup(value);
-  } else if (!strcmp(attr, "fullname:")) {
-    parray[p].fullName = xstrdup(value);
-  } else if (!strcmp(attr, "email:")) {
-    parray[p].emailAddress = xstrdup(value);
-  } else if (!strcmp(attr, "prompt:")) {
-    parray[p].prompt = xstrdup(value);
-  } else if (!strcmp(attr, "s_num:")) {
-    parray[p].s_stats.num = atoi(value);
-  } else if (!strcmp(attr, "s_win:")) {
-    parray[p].s_stats.win = atoi(value);
-  } else if (!strcmp(attr, "s_loss:")) {
-    parray[p].s_stats.los = atoi(value);
-  } else if (!strcmp(attr, "s_draw:")) {
-    parray[p].s_stats.dra = atoi(value);
-  } else if (!strcmp(attr, "s_rating:")) {
-    parray[p].s_stats.rating = atoi(value);
-  } else if (!strcmp(attr, "s_sterr:")) {
-    parray[p].s_stats.sterr = (atoi(value) / 10.0);
-  } else if (!strcmp(attr, "s_ltime:")) {
-    parray[p].s_stats.ltime = atoi(value);
-  } else if (!strcmp(attr, "s_best:")) {
-    parray[p].s_stats.best = atoi(value);
-  } else if (!strcmp(attr, "s_wbest:")) {
-    parray[p].s_stats.whenbest = atoi(value);
-  } else if (!strcmp(attr, "b_num:")) {
-    parray[p].b_stats.num = atoi(value);
-  } else if (!strcmp(attr, "b_win:")) {
-    parray[p].b_stats.win = atoi(value);
-  } else if (!strcmp(attr, "b_loss:")) {
-    parray[p].b_stats.los = atoi(value);
-  } else if (!strcmp(attr, "b_draw:")) {
-    parray[p].b_stats.dra = atoi(value);
-  } else if (!strcmp(attr, "b_rating:")) {
-    parray[p].b_stats.rating = atoi(value);
-  } else if (!strcmp(attr, "b_sterr:")) {
-    parray[p].b_stats.sterr = (atoi(value) / 10.0);
-  } else if (!strcmp(attr, "b_ltime:")) {
-    parray[p].b_stats.ltime = atoi(value);
-  } else if (!strcmp(attr, "b_best:")) {
-    parray[p].b_stats.best = atoi(value);
-  } else if (!strcmp(attr, "b_wbest:")) {
-    parray[p].b_stats.whenbest = atoi(value);
-  } else if (!strcmp(attr, "w_num:")) {
-    parray[p].w_stats.num = atoi(value);
-  } else if (!strcmp(attr, "w_win:")) {
-    parray[p].w_stats.win = atoi(value);
-  } else if (!strcmp(attr, "w_loss:")) {
-    parray[p].w_stats.los = atoi(value);
-  } else if (!strcmp(attr, "w_draw:")) {
-    parray[p].w_stats.dra = atoi(value);
-  } else if (!strcmp(attr, "w_rating:")) {
-    parray[p].w_stats.rating = atoi(value);
-  } else if (!strcmp(attr, "w_sterr:")) {
-    parray[p].w_stats.sterr = (atoi(value) / 10.0);
-  } else if (!strcmp(attr, "w_ltime:")) {
-    parray[p].w_stats.ltime = atoi(value);
-  } else if (!strcmp(attr, "w_best:")) {
-    parray[p].w_stats.best = atoi(value);
-  } else if (!strcmp(attr, "w_wbest:")) {
-    parray[p].w_stats.whenbest = atoi(value);
-  } else if (!strcmp(attr, "open:")) {
-    parray[p].open = atoi(value);
-  } else if (!strcmp(attr, "rated:")) {
-    parray[p].rated = atoi(value);
-  } else if (!strcmp(attr, "ropen:")) {
-    parray[p].ropen = atoi(value);
-  } else if (!strcmp(attr, "bell:")) {
-    parray[p].bell = atoi(value);
-  } else if (!strcmp(attr, "pgn:")) {
-    parray[p].pgn = atoi(value);
-  } else if (!strcmp(attr, "timeofreg:")) {
-    parray[p].timeOfReg = atoi(value);
-  } else if (!strcmp(attr, "totaltime:")) {
-    parray[p].totalTime = atoi(value);
-  } else if (!strcmp(attr, "notifiedby:")) {
-    parray[p].notifiedby = atoi(value);
-  } else if (!strcmp(attr, "i_login:")) {
-    parray[p].i_login = atoi(value);
-  } else if (!strcmp(attr, "i_game:")) {
-    parray[p].i_game = atoi(value);
-  } else if (!strcmp(attr, "i_shout:")) {
-    parray[p].i_shout = atoi(value);
-  } else if (!strcmp(attr, "i_cshout:")) {
-    parray[p].i_cshout = atoi(value);
-  } else if (!strcmp(attr, "i_tell:")) {
-    parray[p].i_tell = atoi(value);
-  } else if (!strcmp(attr, "i_kibitz:")) {
-    parray[p].i_kibitz = atoi(value);
-  } else if (!strcmp(attr, "kiblevel:")) {
-    parray[p].kiblevel = atoi(value);
-  } else if (!strcmp(attr, "private:")) {
-    parray[p].private = atoi(value);
-  } else if (!strcmp(attr, "jprivate:")) {
-    parray[p].jprivate = atoi(value);
-  } else if (!strcmp(attr, "automail:")) {
-    parray[p].automail = atoi(value);
-  } else if (!strcmp(attr, "i_mailmess:")) {
-    parray[p].i_mailmess = atoi(value);
-  } else if (!strcmp(attr, "style:")) {
-    parray[p].style = atoi(value);
-  } else if (!strcmp(attr, "d_time:")) {
-    parray[p].d_time = atoi(value);
-  } else if (!strcmp(attr, "d_inc:")) {
-    parray[p].d_inc = atoi(value);
-  } else if (!strcmp(attr, "d_height:")) {
-    parray[p].d_height = atoi(value);
-  } else if (!strcmp(attr, "d_width:")) {
-    parray[p].d_width = atoi(value);
-  } else if (!strcmp(attr, "language:")) {
-    parray[p].language = atoi(value);
-  } else if (!strcmp(attr, "admin_level:")) {
-    parray[p].adminLevel = atoi(value);
-    if (parray[p].adminLevel >= ADMIN_ADMIN)
-      parray[p].i_admin = 1;
-  } else if (!strcmp(attr, "i_admin:")) {
-/*    parray[p].i_admin = atoi(value);  */
-  } else if (!strcmp(attr, "computer:")) {
-/*    parray[p].computer = atoi(value); */
-  } else if (!strcmp(attr, "black_games:")) {
-    parray[p].num_black = atoi(value);
-  } else if (!strcmp(attr, "white_games:")) {
-    parray[p].num_white = atoi(value);
-  } else if (!strcmp(attr, "uscf:")) {
-/*    parray[p].uscfRating = atoi(value); */
-  } else if (!strcmp(attr, "muzzled:")) {	/* ignore these: obsolete */
-  } else if (!strcmp(attr, "cmuzzled:")) {	/* ignore these: obsolete */
-  } else if (!strcmp(attr, "highlight:")) {
-    parray[p].highlight = atoi(value);
-  } else if (!strcmp(attr, "network:")) {
-/*    parray[p].network_player = atoi(value); */
-  } else if (!strcmp(attr, "lasthost:")) {
-    parray[p].lastHost = atoi(value);
-  } else if (!strcmp(attr, "channel:")) {
-    list_addsub(p,"channel",value, 1);
-  } else if (!strcmp(attr, "num_comments:")) {
-    parray[p].num_comments = atoi(value);
-  } else if (!strcmp(attr, "num_plan:")) {
-    parray[p].num_plan = atoi(value);
-    if (parray[p].num_plan > 0) {
-      for (i = 0; i < parray[p].num_plan; i++) {
-	fgets(tmp, MAX_LINE_SIZE, fp);
-	if (!(len = strlen(tmp))) {
-	  fprintf(stderr, "FICS: Error bad plan in file %s\n", file);
-          i--;
-          parray[p].num_plan--;
+	if (!strcmp(attr, "name:")) {
+		parray[p].name = xstrdup(value);
+	} else if (!strcmp(attr, "password:")) {
+		parray[p].passwd = xstrdup(value);
+	} else if (!strcmp(attr, "fullname:")) {
+		parray[p].fullName = xstrdup(value);
+	} else if (!strcmp(attr, "email:")) {
+		parray[p].emailAddress = xstrdup(value);
+	} else if (!strcmp(attr, "prompt:")) {
+		parray[p].prompt = xstrdup(value);
+	} else if (!strcmp(attr, "s_num:")) {
+		parray[p].s_stats.num = atoi(value);
+	} else if (!strcmp(attr, "s_win:")) {
+		parray[p].s_stats.win = atoi(value);
+	} else if (!strcmp(attr, "s_loss:")) {
+		parray[p].s_stats.los = atoi(value);
+	} else if (!strcmp(attr, "s_draw:")) {
+		parray[p].s_stats.dra = atoi(value);
+	} else if (!strcmp(attr, "s_rating:")) {
+		parray[p].s_stats.rating = atoi(value);
+	} else if (!strcmp(attr, "s_sterr:")) {
+		parray[p].s_stats.sterr = (atoi(value) / 10.0);
+	} else if (!strcmp(attr, "s_ltime:")) {
+		parray[p].s_stats.ltime = atoi(value);
+	} else if (!strcmp(attr, "s_best:")) {
+		parray[p].s_stats.best = atoi(value);
+	} else if (!strcmp(attr, "s_wbest:")) {
+		parray[p].s_stats.whenbest = atoi(value);
+	} else if (!strcmp(attr, "b_num:")) {
+		parray[p].b_stats.num = atoi(value);
+	} else if (!strcmp(attr, "b_win:")) {
+		parray[p].b_stats.win = atoi(value);
+	} else if (!strcmp(attr, "b_loss:")) {
+		parray[p].b_stats.los = atoi(value);
+	} else if (!strcmp(attr, "b_draw:")) {
+		parray[p].b_stats.dra = atoi(value);
+	} else if (!strcmp(attr, "b_rating:")) {
+		parray[p].b_stats.rating = atoi(value);
+	} else if (!strcmp(attr, "b_sterr:")) {
+		parray[p].b_stats.sterr = (atoi(value) / 10.0);
+	} else if (!strcmp(attr, "b_ltime:")) {
+		parray[p].b_stats.ltime = atoi(value);
+	} else if (!strcmp(attr, "b_best:")) {
+		parray[p].b_stats.best = atoi(value);
+	} else if (!strcmp(attr, "b_wbest:")) {
+		parray[p].b_stats.whenbest = atoi(value);
+	} else if (!strcmp(attr, "w_num:")) {
+		parray[p].w_stats.num = atoi(value);
+	} else if (!strcmp(attr, "w_win:")) {
+		parray[p].w_stats.win = atoi(value);
+	} else if (!strcmp(attr, "w_loss:")) {
+		parray[p].w_stats.los = atoi(value);
+	} else if (!strcmp(attr, "w_draw:")) {
+		parray[p].w_stats.dra = atoi(value);
+	} else if (!strcmp(attr, "w_rating:")) {
+		parray[p].w_stats.rating = atoi(value);
+	} else if (!strcmp(attr, "w_sterr:")) {
+		parray[p].w_stats.sterr = (atoi(value) / 10.0);
+	} else if (!strcmp(attr, "w_ltime:")) {
+		parray[p].w_stats.ltime = atoi(value);
+	} else if (!strcmp(attr, "w_best:")) {
+		parray[p].w_stats.best = atoi(value);
+	} else if (!strcmp(attr, "w_wbest:")) {
+		parray[p].w_stats.whenbest = atoi(value);
+	} else if (!strcmp(attr, "open:")) {
+		parray[p].open = atoi(value);
+	} else if (!strcmp(attr, "rated:")) {
+		parray[p].rated = atoi(value);
+	} else if (!strcmp(attr, "ropen:")) {
+		parray[p].ropen = atoi(value);
+	} else if (!strcmp(attr, "bell:")) {
+		parray[p].bell = atoi(value);
+	} else if (!strcmp(attr, "pgn:")) {
+		parray[p].pgn = atoi(value);
+	} else if (!strcmp(attr, "timeofreg:")) {
+		parray[p].timeOfReg = atoi(value);
+	} else if (!strcmp(attr, "totaltime:")) {
+		parray[p].totalTime = atoi(value);
+	} else if (!strcmp(attr, "notifiedby:")) {
+		parray[p].notifiedby = atoi(value);
+	} else if (!strcmp(attr, "i_login:")) {
+		parray[p].i_login = atoi(value);
+	} else if (!strcmp(attr, "i_game:")) {
+		parray[p].i_game = atoi(value);
+	} else if (!strcmp(attr, "i_shout:")) {
+		parray[p].i_shout = atoi(value);
+	} else if (!strcmp(attr, "i_cshout:")) {
+		parray[p].i_cshout = atoi(value);
+	} else if (!strcmp(attr, "i_tell:")) {
+		parray[p].i_tell = atoi(value);
+	} else if (!strcmp(attr, "i_kibitz:")) {
+		parray[p].i_kibitz = atoi(value);
+	} else if (!strcmp(attr, "kiblevel:")) {
+		parray[p].kiblevel = atoi(value);
+	} else if (!strcmp(attr, "private:")) {
+		parray[p].private = atoi(value);
+	} else if (!strcmp(attr, "jprivate:")) {
+		parray[p].jprivate = atoi(value);
+	} else if (!strcmp(attr, "automail:")) {
+		parray[p].automail = atoi(value);
+	} else if (!strcmp(attr, "i_mailmess:")) {
+		parray[p].i_mailmess = atoi(value);
+	} else if (!strcmp(attr, "style:")) {
+		parray[p].style = atoi(value);
+	} else if (!strcmp(attr, "d_time:")) {
+		parray[p].d_time = atoi(value);
+	} else if (!strcmp(attr, "d_inc:")) {
+		parray[p].d_inc = atoi(value);
+	} else if (!strcmp(attr, "d_height:")) {
+		parray[p].d_height = atoi(value);
+	} else if (!strcmp(attr, "d_width:")) {
+		parray[p].d_width = atoi(value);
+	} else if (!strcmp(attr, "language:")) {
+		parray[p].language = atoi(value);
+	} else if (!strcmp(attr, "admin_level:")) {
+		parray[p].adminLevel = atoi(value);
+
+		if (parray[p].adminLevel >= ADMIN_ADMIN)
+			parray[p].i_admin = 1;
+	} else if (!strcmp(attr, "i_admin:")) {
+		/* parray[p].i_admin = atoi(value) */;
+	} else if (!strcmp(attr, "computer:")) {
+		/* parray[p].computer = atoi(value) */;
+	} else if (!strcmp(attr, "black_games:")) {
+		parray[p].num_black = atoi(value);
+	} else if (!strcmp(attr, "white_games:")) {
+		parray[p].num_white = atoi(value);
+	} else if (!strcmp(attr, "uscf:")) {
+		/* parray[p].uscfRating = atoi(value) */;
+	} else if (!strcmp(attr, "muzzled:")) {
+		/* obsolete */;
+	} else if (!strcmp(attr, "cmuzzled:")) {
+		/* obsolete */;
+	} else if (!strcmp(attr, "highlight:")) {
+		parray[p].highlight = atoi(value);
+	} else if (!strcmp(attr, "network:")) {
+		/* parray[p].network_player = atoi(value) */;
+	} else if (!strcmp(attr, "lasthost:")) {
+		parray[p].lastHost = atoi(value);
+	} else if (!strcmp(attr, "channel:")) {
+		list_addsub(p,"channel",value, 1);
+	} else if (!strcmp(attr, "num_comments:")) {
+		parray[p].num_comments = atoi(value);
+	} else if (!strcmp(attr, "num_plan:")) {
+		/*
+		 * num_plan
+		 */
+
+		parray[p].num_plan = atoi(value);
+
+		if (parray[p].num_plan > 0) {
+			for (i = 0; i < parray[p].num_plan; i++) {
+				fgets(tmp, MAX_LINE_SIZE, fp);
+
+				if (!(len = strlen(tmp))) {
+					fprintf(stderr, "FICS: Error bad plan "
+					    "in file %s\n", file);
+					i--;
+					parray[p].num_plan--;
+				} else {
+					tmp[len - 1] = '\0'; // Get rid of '\n'.
+					parray[p].planLines[i] = (len > 1 ?
+					    xstrdup(tmp) : NULL);
+				}
+			}
+		}
+	} else if (!strcmp(attr, "num_formula:")) {
+		/*
+		 * num_formula
+		 */
+
+		parray[p].num_formula = atoi(value);
+
+		if (parray[p].num_formula > 0) {
+			for (i = 0; i < parray[p].num_formula; i++) {
+				fgets(tmp, MAX_LINE_SIZE, fp);
+
+				if (!(len = strlen(tmp))) {
+					fprintf(stderr, "FICS: Error bad "
+					    "formula in file %s\n", file);
+					i--;
+					parray[p].num_formula--;
+				} else {
+					tmp[len - 1] = '\0'; // Get rid of '\n'.
+					parray[p].formulaLines[i] = (len > 1 ?
+					    xstrdup(tmp) : NULL);
+				}
+			}
+		}
+	} else if (!strcmp(attr, "formula:")) {
+		/*
+		 * formula
+		 */
+
+		parray[p].formula = xstrdup(value);
+	} else if (!strcmp(attr, "num_alias:")) {
+		/*
+		 * num_alias
+		 */
+
+		parray[p].numAlias = atoi(value);
+
+		if (parray[p].numAlias > 0) {
+			for (i = 0; i < parray[p].numAlias; i++) {
+				fgets(tmp, MAX_LINE_SIZE, fp);
+
+				if (!(len = strlen(tmp))) {
+					fprintf(stderr, "FICS: Error bad alias "
+					    "in file %s\n", file);
+					i--;
+					parray[p].numAlias--;
+				} else {
+					tmp[len - 1] = '\0'; // Get rid of '\n'.
+					tmp1 = tmp;
+					tmp1 = eatword(tmp1);
+					*tmp1 = '\0';
+					tmp1++;
+					tmp1 = eatwhite(tmp1);
+
+					parray[p].alias_list[i].comm_name =
+					    xstrdup(tmp);
+					parray[p].alias_list[i].alias =
+					    xstrdup(tmp1);
+				}
+			}
+		}
+	} else if (!strcmp(attr, "num_censor:")) {
+		/*
+		 * num_censor
+		 */
+
+		i = atoi(value);
+
+		while (i--) {
+			fgets(tmp, MAX_LINE_SIZE, fp);
+
+			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
+								// do occur!
+				fprintf(stderr, "FICS: Error bad censor in "
+				    "file %s\n", file);
+			} else {
+				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				list_add(p, L_CENSOR, tmp);
+			}
+		}
+	} else if (!strcmp(attr, "num_notify:")) {
+		i = atoi(value);
+
+		while (i--) {
+			fgets(tmp, MAX_LINE_SIZE, fp);
+
+			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
+								// do occur!
+				fprintf(stderr, "FICS: Error bad notify in "
+				    "file %s\n", file);
+			} else {
+				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				list_add(p, L_NOTIFY, tmp);
+			}
+		}
+	} else if (!strcmp(attr, "num_noplay:")) {
+		i = atoi(value);
+
+		while (i--) {
+			fgets(tmp, MAX_LINE_SIZE, fp);
+
+			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
+								// do occur!
+				fprintf(stderr, "FICS: Error bad noplay in "
+				    "file %s\n", file);
+			} else {
+				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				list_add(p, L_NOPLAY, tmp);
+			}
+		}
+	} else if (!strcmp(attr, "num_gnotify:")) {
+		i = atoi(value);
+
+		while (i--) {
+			fgets(tmp, MAX_LINE_SIZE, fp);
+
+			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
+								// do occur!
+				fprintf(stderr, "FICS: Error bad gnotify in "
+				    "file %s\n", file);
+			} else {
+				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				list_add(p, L_GNOTIFY, tmp);
+			}
+		}
 	} else {
-	  tmp[len - 1] = '\0';	/* Get rid of '\n' */
-	  parray[p].planLines[i] = (len > 1) ? xstrdup(tmp) : NULL;
+		fprintf(stderr, "FICS: Error bad attribute >%s< from file %s\n",
+		    attr, file);
 	}
-      }
-    }
-  } else if (!strcmp(attr, "num_formula:")) {
-    parray[p].num_formula = atoi(value);
-    if (parray[p].num_formula > 0) {
-      for (i = 0; i < parray[p].num_formula; i++) {
-	fgets(tmp, MAX_LINE_SIZE, fp);
-	if (!(len = strlen(tmp))) {
-	  fprintf(stderr, "FICS: Error bad formula in file %s\n", file);
-          i--;
-          parray[p].num_formula--;
-	} else {
-	  tmp[len - 1] = '\0';	/* Get rid of '\n' */
-	  parray[p].formulaLines[i] = (len > 1) ? xstrdup(tmp) : NULL;
-	}
-      }
-    }
-  } else if (!strcmp(attr, "formula:")) {
-    parray[p].formula = xstrdup(value);
-  } else if (!strcmp(attr, "num_alias:")) {
-    parray[p].numAlias = atoi(value);
-    if (parray[p].numAlias > 0) {
-      for (i = 0; i < parray[p].numAlias; i++) {
-	fgets(tmp, MAX_LINE_SIZE, fp);
-	if (!(len = strlen(tmp))) {
-	  fprintf(stderr, "FICS: Error bad alias in file %s\n", file);
-	  i--;
-	  parray[p].numAlias--;
-	} else {
-	  tmp[len - 1] = '\0';	/* Get rid of '\n' */
-	  tmp1 = tmp;
-	  tmp1 = eatword(tmp1);
-	  *tmp1 = '\0';
-	  tmp1++;
-	  tmp1 = eatwhite(tmp1);
-	  parray[p].alias_list[i].comm_name = xstrdup(tmp);
-	  parray[p].alias_list[i].alias = xstrdup(tmp1);
-	}
-      }
-    }
-  } else if (!strcmp(attr, "num_censor:")) {
-    i = atoi(value);
-    while (i--) {
-      fgets(tmp, MAX_LINE_SIZE, fp);
-      if ((!(len = strlen(tmp))) || (len == 1)) { /* blank lines do occur!! */
-        fprintf(stderr, "FICS: Error bad censor in file %s\n", file);
-      } else {
-        tmp[len - 1] = '\0';    /* Get rid of '\n' */
-        list_add(p, L_CENSOR, tmp);
-      }
-    }
-  } else if (!strcmp(attr, "num_notify:")) {
-    i = atoi(value);
-    while(i--) {
-      fgets(tmp, MAX_LINE_SIZE, fp);
-      if ((!(len = strlen(tmp))) || (len == 1)) { /* blank lines do occur!! */
-        fprintf(stderr, "FICS: Error bad notify in file %s\n", file);
-      } else {
-        tmp[len - 1] = '\0';    /* Get rid of '\n' */
-        list_add(p, L_NOTIFY, tmp);
-      }
-    }
-  } else if (!strcmp(attr, "num_noplay:")) {
-    i = atoi(value);
-    while(i--) {
-      fgets(tmp, MAX_LINE_SIZE, fp);
-      if ((!(len = strlen(tmp))) || (len == 1)) { /* blank lines do occur!! */
-        fprintf(stderr, "FICS: Error bad noplay in file %s\n", file);
-      } else {
-        tmp[len - 1] = '\0';    /* Get rid of '\n' */
-        list_add(p, L_NOPLAY, tmp);
-      }
-    }
-  } else if (!strcmp(attr, "num_gnotify:")) {
-    i = atoi(value);
-    while(i--) {
-      fgets(tmp, MAX_LINE_SIZE, fp);
-      if ((!(len = strlen(tmp)))  || (len == 1)) { /* blank lines do occur!! */
-        fprintf(stderr, "FICS: Error bad gnotify in file %s\n", file);
-      } else {
-        tmp[len - 1] = '\0';    /* Get rid of '\n' */
-        list_add(p, L_GNOTIFY, tmp);
-      }
-    }
-  } else {
-    fprintf(stderr, "FICS: Error bad attribute >%s< from file %s\n", attr, file);
-  }
-  return 0;
+
+	return 0;
 }
 
 PUBLIC int
