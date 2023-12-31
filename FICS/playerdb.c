@@ -1374,21 +1374,21 @@ PUBLIC void player_pend_print(int p, pending *pend)
   pprintf(p, "%s\n", outstr);
 }
 
-PUBLIC int player_find_pendto(int p, int p1, int type)
+PUBLIC int
+player_find_pendto(int p, int p1, int type)
 {
-  int i;
+	for (int i = 0; i < parray[p].num_to; i++) {
+		if (parray[p].p_to_list[i].whoto != p1 && p1 != -1)
+			continue;
+		if (type < 0 || parray[p].p_to_list[i].type == type)
+			return i;
+		if (type == PEND_BUGHOUSE &&
+		    parray[p].p_to_list[i].type == PEND_MATCH &&
+		    !strcmp(parray[p].p_to_list[i].char2, "bughouse"))
+			return i;
+	}
 
-  for (i = 0; i < parray[p].num_to; i++) {
-    if (parray[p].p_to_list[i].whoto != p1 && p1 != -1)
-      continue;
-    if (type < 0 || parray[p].p_to_list[i].type == type)
-      return i;
-    if (type == PEND_BUGHOUSE
-        && parray[p].p_to_list[i].type == PEND_MATCH
-        && !strcmp(parray[p].p_to_list[i].char2, "bughouse"))
-      return i;
-  }
-  return -1;
+	return -1;
 }
 
 PUBLIC int
