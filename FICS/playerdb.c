@@ -75,24 +75,27 @@ PUBLIC void player_array_init()
     parray[i].status = PLAYER_EMPTY;
 }
 
-PUBLIC void player_init(int startConsole)
+PUBLIC void
+player_init(int startConsole)
 {
-  int p;
+	int p;
 
-  if (startConsole) {
-    net_addConnection(0, 0);
-    p = player_new();
-    parray[p].login = xstrdup("console");
-    parray[p].name = xstrdup("console");
-    parray[p].passwd = xstrdup("*");
-    parray[p].fullName = xstrdup("The Operator");
-    parray[p].emailAddress = NULL;
-    parray[p].prompt = xstrdup("fics%");
-    parray[p].adminLevel = ADMIN_GOD;
-    parray[p].socket = 0;
-    parray[p].busy[0] = '\0';
-    pprintf_prompt(p, "\nLogged in on console.\n");
-  }
+	if (startConsole) {
+		net_addConnection(0, 0);
+		p = player_new();
+
+		parray[p].login		= xstrdup("console");
+		parray[p].name		= xstrdup("console");
+		parray[p].passwd	= xstrdup("*");
+		parray[p].fullName	= xstrdup("The Operator");
+		parray[p].emailAddress	= NULL;
+		parray[p].prompt	= xstrdup("fics%");
+		parray[p].adminLevel	= ADMIN_GOD;
+		parray[p].socket	= 0;
+		parray[p].busy[0]	= '\0';
+
+		pprintf_prompt(p, "\nLogged in on console.\n");
+	}
 }
 
 PUBLIC int
