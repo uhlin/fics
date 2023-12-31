@@ -1441,15 +1441,20 @@ PUBLIC int player_new_pendfrom(int p)
   return parray[p].num_from - 1;
 }
 
-PUBLIC int player_remove_pendfrom(int p, int p1, int type)
+PUBLIC int
+player_remove_pendfrom(int p, int p1, int type)
 {
-  int w;
-  if ((w = player_find_pendfrom(p, p1, type)) < 0)
-    return -1;
-  for (; w < parray[p].num_from - 1; w++)
-    parray[p].p_from_list[w] = parray[p].p_from_list[w + 1];
-  parray[p].num_from = parray[p].num_from - 1;
-  return 0;
+	int w;
+
+	if ((w = player_find_pendfrom(p, p1, type)) < 0)
+		return -1;
+
+	for (; w < (parray[p].num_from - 1); w++)
+		parray[p].p_from_list[w] = parray[p].p_from_list[w + 1];
+
+	parray[p].num_from = (parray[p].num_from - 1);
+
+	return 0;
 }
 
 PUBLIC int
