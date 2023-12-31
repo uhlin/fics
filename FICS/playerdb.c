@@ -1196,17 +1196,19 @@ PUBLIC int player_count(int CountAdmins)
   return count;
 }
 
-PUBLIC int player_idle(int p)
-{
-  if (parray[p].status != PLAYER_PROMPT)
-    return time(0) - parray[p].logon_time;
-  else
-    return time(0) - parray[p].last_command_time;
+PUBLIC int
+player_idle(int p)
+{ // XXX
+	if (parray[p].status != PLAYER_PROMPT)
+		return (time(NULL) - parray[p].logon_time);
+
+	return (time(NULL) - parray[p].last_command_time);
 }
 
-PUBLIC int player_ontime(int p)
-{
-  return time(0) - parray[p].logon_time;
+PUBLIC int
+player_ontime(int p)
+{ // XXX
+	return (time(NULL) - parray[p].logon_time);
 }
 
 PRIVATE void
