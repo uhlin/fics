@@ -67,12 +67,11 @@ PRIVATE int get_empty_slot(void)
   return p_num - 1;
 }
 
-PUBLIC void player_array_init()
+PUBLIC void
+player_array_init(void)
 {
-  int i;
-
-  for (i = 0; i < PARRAY_SIZE; i++)
-    parray[i].status = PLAYER_EMPTY;
+	for (int i = 0; i < PARRAY_SIZE; i++)
+		parray[i].status = PLAYER_EMPTY;
 }
 
 PUBLIC void
