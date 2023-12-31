@@ -1841,16 +1841,20 @@ PUBLIC int player_goto_simulgame_bynum(int p, int num)
   return player_goto_board(p, on);
 }
 
-PUBLIC int player_num_active_boards(int p)
+PUBLIC int
+player_num_active_boards(int p)
 {
-  int count = 0, i;
+	int count = 0;
 
-  if (!parray[p].simul_info.numBoards)
-    return 0;
-  for (i = 0; i < parray[p].simul_info.numBoards; i++)
-    if (parray[p].simul_info.boards[i] >= 0)
-      count++;
-  return count;
+	if (!parray[p].simul_info.numBoards)
+		return 0;
+
+	for (int i = 0; i < parray[p].simul_info.numBoards; i++) {
+		if (parray[p].simul_info.boards[i] >= 0)
+			count++;
+	}
+
+	return count;
 }
 
 PUBLIC int
