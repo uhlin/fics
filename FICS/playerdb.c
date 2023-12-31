@@ -513,7 +513,7 @@ PRIVATE int
 got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 {
 	char	*tmp1;
-	char	 tmp[MAX_LINE_SIZE];
+	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 	int	 i, len;
 
 	if (!strcmp(attr, "name:")) {
