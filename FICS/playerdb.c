@@ -757,70 +757,79 @@ PRIVATE int got_attr_value_player(int p, char *attr, char *value, FILE * fp, cha
   return 0;
 }
 
-PUBLIC int player_read(int p, char *name)
+PUBLIC int
+player_read(int p, char *name)
 {
-  char fname[MAX_FILENAME_SIZE];
-  char line[MAX_LINE_SIZE];
-  char *attr, *value;
-  FILE *fp;
-  int len;
-  int version = 0;
+	FILE	*fp;
+	char	*attr, *value;
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 line[MAX_LINE_SIZE];
+	int	 len;
+	int	 version = 0;
 
-  parray[p].login = stolower(xstrdup(name));
+	parray[p].login = stolower(xstrdup(name));
 
-  sprintf(fname, "%s/%c/%s", player_dir, parray[p].login[0], parray[p].login);
-  fp = fopen(fname, "r");
+	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	    parray[p].login[0], parray[p].login);
 
-  if (!fp) { /* unregistered player */
-    parray[p].name = xstrdup(name);
-    parray[p].registered = 0;
-    return -1;
-  }
+	if ((fp = fopen(fname, "r")) == NULL) { // Unregistered player
+		parray[p].name = xstrdup(name);
+		parray[p].registered = 0;
+		return -1;
+	}
 
-  parray[p].registered = 1; /* lets load the file */
+	parray[p].registered = 1; // Lets load the file
 
-  fgets(line, MAX_LINE_SIZE, fp); /* ok so which version file? */
+	fgets(line, MAX_LINE_SIZE, fp); // Ok, so which version file?
 
-  if (line[0] == 'v') {
-    sscanf(line, "%*c %d", &version);
-  }
+	if (line[0] == 'v')
+		sscanf(line, "%*c %d", &version);
+	if (version > 0)	// Quick method:
+		ReadV1PlayerFmt(p,&parray[p], fp, fname, version);
+	else {			// Do it the old SLOW way
+		do {
+			if (feof(fp))
+				break;
+			if ((len = strlen(line)) <= 1)
+				continue;
 
-  if (version > 0) {
-    ReadV1PlayerFmt(p,&parray[p], fp, fname, version); /* Quick method */
-  }
-  else /* do it the old SLOW way */
-   do {
-    if (feof(fp))
-      break;
-    if ((len = strlen(line)) <= 1)
-      continue;
-    line[len - 1] = '\0';
-    attr = eatwhite(line);
-    if (attr[0] == '#')
-      continue;			/* Comment */
-    value = eatword(attr);
-    if (!*value) {
-      fprintf(stderr, "FICS: Error reading file %s\n", fname);
-      continue;
-    }
-    *value = '\0';
-    value++;
-    value = eatwhite(value);
-    stolower(attr);
-    got_attr_value_player(p, attr, value, fp, fname);
-    fgets(line, MAX_LINE_SIZE, fp);
-   } while (!feof(fp));
+			line[len - 1] = '\0';
+			attr = eatwhite(line);
 
-  fclose(fp);
+			if (attr[0] == '#')
+				continue; // Comment
 
-  if (version == 0)
-   player_save (p); /* ensure old files are quickly converted eg when someone
-						fingers */
-  if (!parray[p].name) {
-    parray[p].name = xstrdup(name);
-    pprintf(p, "\n*** WARNING: Your Data file is corrupt. Please tell an admin ***\n");
-  }
-  return 0;
+			value = eatword(attr);
+
+			if (!*value) {
+				fprintf(stderr, "FICS: Error reading file %s\n",
+				    fname);
+				continue;
+			}
+
+			*value = '\0';
+			value++;
+			value = eatwhite(value);
+			stolower(attr);
+			got_attr_value_player(p, attr, value, fp, fname);
+			fgets(line, MAX_LINE_SIZE, fp);
+		} while (!feof(fp));
+	}
+
+	fclose(fp);
+
+	if (version == 0) {
+		player_save(p);	// Ensure old files are quickly converted e.g.
+				// when someone fingers.
+	}
+
+	if (!parray[p].name) {
+		parray[p].name = xstrdup(name);
+		pprintf(p, "\n*** WARNING: Your Data file is corrupt. "
+		    "Please tell an admin ***\n");
+	}
+
+	return 0;
 }
 
 PUBLIC int
