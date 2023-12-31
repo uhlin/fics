@@ -1323,55 +1323,65 @@ player_lastdisconnect(int p)
 	return last;
 }
 
-PUBLIC void player_pend_print(int p, pending *pend)
+PUBLIC void
+player_pend_print(int p, pending *pend)
 {
-  char outstr[200];
-  char tmp[200];
+	char	outstr[200];
+	char	tmp[200];
 
-  if (p == pend->whofrom) {
-    sprintf(outstr, "You are offering ");
-  } else {
-    sprintf(outstr, "%s is offering ", parray[pend->whofrom].name);
-  }
+	if (p == pend->whofrom) {
+		sprintf(outstr, "You are offering ");
+	} else {
+		sprintf(outstr, "%s is offering ", parray[pend->whofrom].name);
+	}
 
-  if (p == pend->whoto) {
-    strcpy(tmp, "");
-  } else {
-    sprintf(tmp, "%s ", parray[pend->whoto].name);
-  }
+	if (p == pend->whoto) {
+		strcpy(tmp, "");
+	} else {
+		sprintf(tmp, "%s ", parray[pend->whoto].name);
+	}
 
-  strcat(outstr, tmp);
-  switch (pend->type) {
-  case PEND_MATCH:
-    sprintf(tmp, "%s.", game_str(pend->param5, pend->param1 * 60, pend->param2, pend->param3 * 60, pend->param4, pend->char1, pend->char2));
-    break;
-  case PEND_DRAW:
-    sprintf(tmp, "a draw.\n");
-    break;
-  case PEND_PAUSE:
-    sprintf(tmp, "to pause the clock.\n");
-    break;
-  case PEND_ABORT:
-    sprintf(tmp, "to abort the game.\n");
-    break;
-  case PEND_TAKEBACK:
-    sprintf(tmp, "to takeback the last %d half moves.\n", pend->param1);
-    break;
-  case PEND_SIMUL:
-    sprintf(tmp, "to play a simul match.\n");
-    break;
-  case PEND_SWITCH:
-    sprintf(tmp, "to switch sides.\n");
-    break;
-  case PEND_ADJOURN:
-    sprintf(tmp, "an adjournment.\n");
-    break;
-  case PEND_PARTNER:
-    sprintf(tmp, "to be bughouse partners.\n");
-    break;
-  }
-  strcat(outstr, tmp);
-  pprintf(p, "%s\n", outstr);
+	strcat(outstr, tmp);
+
+	switch (pend->type) {
+	case PEND_MATCH:
+		sprintf(tmp, "%s.", game_str(pend->param5,
+		    (pend->param1 * 60),
+		    pend->param2,
+		    (pend->param3 * 60),
+		    pend->param4,
+		    pend->char1,
+		    pend->char2));
+		break;
+	case PEND_DRAW:
+		sprintf(tmp, "a draw.\n");
+		break;
+	case PEND_PAUSE:
+		sprintf(tmp, "to pause the clock.\n");
+		break;
+	case PEND_ABORT:
+		sprintf(tmp, "to abort the game.\n");
+		break;
+	case PEND_TAKEBACK:
+		sprintf(tmp, "to takeback the last %d half moves.\n",
+		    pend->param1);
+		break;
+	case PEND_SIMUL:
+		sprintf(tmp, "to play a simul match.\n");
+		break;
+	case PEND_SWITCH:
+		sprintf(tmp, "to switch sides.\n");
+		break;
+	case PEND_ADJOURN:
+		sprintf(tmp, "an adjournment.\n");
+		break;
+	case PEND_PARTNER:
+		sprintf(tmp, "to be bughouse partners.\n");
+		break;
+	}
+
+	strcat(outstr, tmp);
+	pprintf(p, "%s\n", outstr);
 }
 
 PUBLIC int
