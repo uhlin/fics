@@ -1103,31 +1103,36 @@ PUBLIC int player_notify_present(int p)
   return count;
 }
 
-PUBLIC int player_notify(int p, char *note1, char *note2)
-/* notify those interested that p has arrived/departed */
-{
-  int p1;
-  int count = 0;
+PUBLIC int
+player_notify(int p, char *note1, char *note2)
+{ // Notify those interested that 'p' has arrived/departed.
+	int	count = 0;
+	int	p1;
 
-  if (!parray[p].registered)
-    return count;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if ((player_notified(p1, p)) && (parray[p1].status == PLAYER_PROMPT)) {
-      if (parray[p1].bell)
-	pprintf_noformat(p1, "\007");
-      pprintf(p1, "\nNotification: ");
-      pprintf_highlight(p1, "%s", parray[p].name);
-      pprintf_prompt(p1, " has %s.\n", note1);
-      if (!count) {
-	pprintf(p, "Your %s was noted by:", note2);
-      }
-      count++;
-      pprintf(p, " %s", parray[p1].name);
-    }
-  }
-  if (count)
-    pprintf(p, ".\n");
-  return count;
+	if (!parray[p].registered)
+		return count;
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (player_notified(p1, p) && parray[p1].status ==
+		    PLAYER_PROMPT) {
+			if (parray[p1].bell)
+				pprintf_noformat(p1, "\007");
+
+			pprintf(p1, "\nNotification: ");
+			pprintf_highlight(p1, "%s", parray[p].name);
+			pprintf_prompt(p1, " has %s.\n", note1);
+
+			if (!count)
+				pprintf(p, "Your %s was noted by:", note2);
+			count++;
+
+			pprintf(p, " %s", parray[p1].name);
+		}
+	}
+
+	if (count)
+		pprintf(p, ".\n");
+	return count;
 }
 
 /*
