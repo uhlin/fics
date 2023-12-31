@@ -6,11 +6,11 @@
  */
 
 #include "stdinclude.h"
+#include "common.h"
 
 #include <string.h>
 
 #include "command.h"
-#include "common.h"
 #include "comproc.h"
 #include "gamedb.h"
 #include "lists.h"
