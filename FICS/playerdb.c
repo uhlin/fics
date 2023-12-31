@@ -1032,44 +1032,49 @@ PUBLIC int player_find_part_login(char *name)
   return found;
 }
 
-PUBLIC int player_censored(int p, int p1)
+PUBLIC int
+player_censored(int p, int p1)
 {
-  if (in_list(p, L_CENSOR, parray[p1].login))
-    return 1;
-  else
-    return 0;
+	if (in_list(p, L_CENSOR, parray[p1].login))
+		return 1;
+	return 0;
 }
 
-/* is p1 on p's notify list? */
-PUBLIC int player_notified(int p, int p1)
+/*
+ * Is p1 on p's notify list?
+ */
+PUBLIC int
+player_notified(int p, int p1)
 {
-  if (!parray[p1].registered)
-    return 0;
+	if (!parray[p1].registered)
+		return 0;
 
-  /* possible bug: p has just arrived! */
-  if (!parray[p].name)
-    return 0;
+	/* Possible bug: 'p' has just arrived! */
+	if (!parray[p].name)
+		return 0;
 
-  return (in_list(p, L_NOTIFY, parray[p1].login));
+	return in_list(p, L_NOTIFY, parray[p1].login);
 }
 
-PUBLIC void player_notify_departure(int p)
-/* Notify those with notifiedby set on a departure */
+PUBLIC void
+player_notify_departure(int p)
 {
-  int p1;
+	if (!parray[p].registered)
+		return;
 
-  if (!parray[p].registered)
-    return;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].notifiedby && !player_notified(p1, p) && player_notified(p, p1)
-          && (parray[p1].status == PLAYER_PROMPT)) {
-      if (parray[p1].bell)
-	pprintf_noformat(p1, "\007");
-      pprintf(p1, "\nNotification: ");
-      pprintf_highlight(p1, "%s", parray[p].name);
-      pprintf_prompt(p1, " has departed and isn't on your notify list.\n");
-    }
-  }
+	for (int p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].notifiedby &&
+		    !player_notified(p1, p) &&
+		    player_notified(p, p1) &&
+		    parray[p1].status == PLAYER_PROMPT) {
+			if (parray[p1].bell)
+				pprintf_noformat(p1, "\007");
+			pprintf(p1, "\nNotification: ");
+			pprintf_highlight(p1, "%s", parray[p].name);
+			pprintf_prompt(p1, " has departed and isn't on your "
+			    "notify list.\n");
+		}
+	}
 }
 
 PUBLIC int
