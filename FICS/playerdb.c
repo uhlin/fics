@@ -1433,12 +1433,15 @@ PUBLIC int player_find_pendfrom(int p, int p1, int type)
   return -1;
 }
 
-PUBLIC int player_new_pendfrom(int p)
+PUBLIC int
+player_new_pendfrom(int p)
 {
-  if (parray[p].num_from >= MAX_PENDING)
-    return -1;
-  parray[p].num_from++;
-  return parray[p].num_from - 1;
+	if (parray[p].num_from >= MAX_PENDING)
+		return -1;
+
+	parray[p].num_from++;
+
+	return (parray[p].num_from - 1);
 }
 
 PUBLIC int
