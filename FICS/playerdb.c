@@ -1501,7 +1501,7 @@ player_pend_print(int p, pending *pend)
 
 	switch (pend->type) {
 	case PEND_MATCH:
-		sprintf(tmp, "%s.", game_str(pend->param5,
+		snprintf(tmp, sizeof tmp, "%s.", game_str(pend->param5,
 		    (pend->param1 * 60),
 		    pend->param2,
 		    (pend->param3 * 60),
