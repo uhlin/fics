@@ -1750,26 +1750,39 @@ PUBLIC int com_getps(int p, param_list param)
   pprintf(p, "*status %s 0 %s*\n", parray[p1].name, parray[(parray[p1].opponent)].name);
   return COM_OK;
 }
-PUBLIC int com_limits(int p, param_list param)
+
+PUBLIC int
+com_limits(int p, param_list param)
 {
-  pprintf(p, "\nCurrent hardcoded limits:\n");
-  pprintf(p, "  Max number of players: %d\n", MAX_PLAYER);
-  pprintf(p, "  Max number of channels and max capacity: %d\n", MAX_CHANNELS);
-  pprintf(p, "  Max number of channels one can be in: %d\n", MAX_INCHANNELS);
-  pprintf(p, "  Max number of people on the notify list: %d\n", MAX_NOTIFY);
-  pprintf(p, "  Max number of aliases: %d\n", MAX_ALIASES - 1);
-  pprintf(p, "  Max number of games you can observe at a time: %d\n", MAX_OBSERVE);
-  pprintf(p, "  Max number of requests pending: %d\n", MAX_PENDING);
-  pprintf(p, "  Max number of people on the censor list: %d\n", MAX_CENSOR);
-  pprintf(p, "  Max number of people in a simul game: %d\n", MAX_SIMUL);
-  pprintf(p, "  Max number of messages one can receive: %d\n", MAX_MESSAGES);
-  pprintf(p, "  Min number of games to be active: %d\n", PROVISIONAL);
-  if ((parray[p].adminLevel < ADMIN_ADMIN) && (!titled_player(p,parray[p].login))) {
-    pprintf(p, "  Size of journal (entries): %d\n", MAX_JOURNAL);
-  } else {
-    pprintf(p, "  Size of journal (entries): 26\n");
-  }
-  pprintf(p, "\nAdmin settable limits:\n");
-  pprintf(p, "  Shout quota gives two shouts per %d seconds.\n", quota_time);
-  return COM_OK;
+	pprintf(p, "\nCurrent hardcoded limits:\n");
+	pprintf(p, "  Max number of players: %d\n", MAX_PLAYER);
+	pprintf(p, "  Max number of channels and max capacity: %d\n",
+	    MAX_CHANNELS);
+	pprintf(p, "  Max number of channels one can be in: %d\n",
+	    MAX_INCHANNELS);
+	pprintf(p, "  Max number of people on the notify list: %d\n",
+	    MAX_NOTIFY);
+	pprintf(p, "  Max number of aliases: %d\n", (MAX_ALIASES - 1));
+	pprintf(p, "  Max number of games you can observe at a time: %d\n",
+	    MAX_OBSERVE);
+	pprintf(p, "  Max number of requests pending: %d\n", MAX_PENDING);
+	pprintf(p, "  Max number of people on the censor list: %d\n",
+	    MAX_CENSOR);
+	pprintf(p, "  Max number of people in a simul game: %d\n", MAX_SIMUL);
+	pprintf(p, "  Max number of messages one can receive: %d\n",
+	    MAX_MESSAGES);
+	pprintf(p, "  Min number of games to be active: %d\n", PROVISIONAL);
+
+	if (parray[p].adminLevel < ADMIN_ADMIN &&
+	    !titled_player(p,parray[p].login)) {
+		pprintf(p, "  Size of journal (entries): %d\n", MAX_JOURNAL);
+	} else {
+		pprintf(p, "  Size of journal (entries): 26\n");
+	}
+
+	pprintf(p, "\nAdmin settable limits:\n");
+	pprintf(p, "  Shout quota gives two shouts per %d seconds.\n",
+	    quota_time);
+
+	return COM_OK;
 }
