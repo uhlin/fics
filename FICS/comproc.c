@@ -1715,27 +1715,31 @@ PUBLIC int com_handles(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_getpi(int p, param_list param)
+PUBLIC int
+com_getpi(int p, param_list param)
 {
-  int p1;
+	int p1;
 
-  if (!in_list(p, L_TD, parray[p].name)) {
-    pprintf(p, "Only TD programs are allowed to use this command.\n");
-    return COM_OK;
-  }
-  if (((p1 = player_find_bylogin(param[0].val.word)) < 0) || (parray[p1].registered == 0)) {
-    /* Darkside suggested not to return anything */
-    return COM_OK;
-  }
-  if (!parray[p1].registered) {
-    pprintf(p, "*getpi %s -1 -1 -1*\n", parray[p1].name);
-  } else {
-    pprintf(p, "*getpi %s %d %d %d*\n", parray[p1].name,
-	    parray[p1].w_stats.rating,
-	    parray[p1].b_stats.rating,
-	    parray[p1].s_stats.rating);
-  }
-  return COM_OK;
+	if (!in_list(p, L_TD, parray[p].name)) {
+		pprintf(p, "Only TD programs are allowed to use this command."
+		    "\n");
+		return COM_OK;
+	}
+
+	if ((p1 = player_find_bylogin(param[0].val.word)) < 0 ||
+	    parray[p1].registered == 0)
+		return COM_OK;
+
+	if (!parray[p1].registered) {
+		pprintf(p, "*getpi %s -1 -1 -1*\n", parray[p1].name);
+	} else {
+		pprintf(p, "*getpi %s %d %d %d*\n", parray[p1].name,
+		    parray[p1].w_stats.rating,
+		    parray[p1].b_stats.rating,
+		    parray[p1].s_stats.rating);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
