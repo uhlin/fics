@@ -80,17 +80,18 @@ main(int argc, char *argv[])
 				break;
 			}
 		} else {
-			if (!funame)
+			if (funame == NULL)
 				funame = argv[i];
-			else if (!fname)
+			else if (fname == NULL)
 				fname = argv[i];
-			else if (!email)
+			else if (email == NULL)
 				email = argv[i];
 			else
 				usage(argv[0]);
 		}
 	}
-	if (!funame || !fname || !email)
+
+	if (funame == NULL || fname == NULL || email == NULL)
 		usage(argv[0]);
 
 	/* Add the player here */
