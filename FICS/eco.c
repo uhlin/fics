@@ -363,7 +363,7 @@ com_eco(int p, param_list param)
 		if (garray[g1].status != GAME_EXAMINE && !pIsPlaying(p))
 			return COM_OK;
 	} else {
-		if ((g1 = GameNumFromParam (p, &p1, &param[0])) < 0)
+		if ((g1 = GameNumFromParam(p, &p1, &param[0])) < 0)
 			return COM_OK;
 		if (g1 >= g_num ||
 		    (garray[g1].status != GAME_ACTIVE &&
