@@ -1528,57 +1528,69 @@ PUBLIC int com_help(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_info(int p, param_list param)
+PUBLIC int
+com_info(int p, param_list param)
 {
-  int n;
-  char *filenames[1000];
+	char	*filenames[1000];
+	int	 n;
 
-  if ((n = search_directory(info_dir, NULL, filenames, 1000)) > 0)
-    display_directory(p, filenames, n);
-  return COM_OK;
+	if ((n = search_directory(info_dir, NULL, filenames, 1000)) > 0)
+		display_directory(p, filenames, n);
+	return COM_OK;
 }
 
-PRIVATE int FindAndShowFile(int p, param_list param, char *dir)
+PRIVATE int
+FindAndShowFile(int p, param_list param, char *dir)
 {
-  int i;
-  static char nullify = '\0';
-  char *iwant, *filenames[1000];	/* enough for all helpfile names */
+	char		*iwant, *filenames[1000];
+	int		 i;
+	static char	 nullify = '\0';
 
-  if (param[0].type == TYPE_NULL) {
-    iwant = &nullify;
-  } else {
-    iwant = param[0].val.word;
-    if (!safestring(iwant)) {
-      pprintf(p, "Illegal character in filename %s.\n", iwant);
-      return COM_OK;
-    }
-  }
+	if (param[0].type == TYPE_NULL) {
+		iwant = &nullify;
+	} else {
+		iwant = param[0].val.word;
 
-  i = search_directory(dir, iwant, filenames, 1000);
-  if (i == 0) {
-    pprintf(p, "No information available on \"%s\".\n", iwant);
-  } else if ((i == 1) || !strcmp(*filenames, iwant)) {
-    if (psend_file(p, dir, *filenames)) {
-      /* we should never reach this unless the file was just deleted */
-      pprintf(p, "File %s could not be found! ", *filenames);
-      pprintf(p, "Please inform an admin of this. Thank you.\n");
-    }
-  } else {
-    if (*iwant)
-      pprintf(p, "Matches:\n");
-    display_directory(p, filenames, i);
-  }
-  return COM_OK;
+		if (!safestring(iwant)) {
+			pprintf(p, "Illegal character in filename %s.\n",
+			    iwant);
+			return COM_OK;
+		}
+	}
+
+	i = search_directory(dir, iwant, filenames, 1000);
+
+	if (i == 0) {
+		pprintf(p, "No information available on \"%s\".\n", iwant);
+	} else if (i == 1 || !strcmp(*filenames, iwant)) {
+		if (psend_file(p, dir, *filenames)) {
+			/*
+			 * We should never reach this unless the file
+			 * was just deleted.
+			 */
+			pprintf(p, "File %s could not be found! ", *filenames);
+			pprintf(p, "Please inform an admin of this. "
+			    "Thank you.\n");
+		}
+	} else {
+		if (*iwant)
+			pprintf(p, "Matches:\n");
+		display_directory(p, filenames, i);
+	}
+
+	return COM_OK;
 }
 
-PUBLIC int com_uscf(int p, param_list param)
+PUBLIC int
+com_uscf(int p, param_list param)
 {
-  return FindAndShowFile (p, param, uscf_dir);
+	return FindAndShowFile(p, param, uscf_dir);
 }
 
-PUBLIC int com_adhelp(int p, param_list param)
+PUBLIC int
+com_adhelp(int p, param_list param)
 {
-  return FindAndShowFile (p, param, adhelp_dir);
+	return FindAndShowFile(p, param, adhelp_dir);
 }
 
 PUBLIC int
