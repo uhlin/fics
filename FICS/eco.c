@@ -11,13 +11,13 @@
 #include "playerdb.h"
 #include "utils.h"
 
-PUBLIC char *book_dir = DEFAULT_BOOK;
+PRIVATE char *book_dir = DEFAULT_BOOK;
 
-ECO_entry	*ECO_book[1096];
-NIC_entry	*NIC_book[1096];
-LONG_entry	*LONG_book[4096];
+PRIVATE ECO_entry	*ECO_book[1096];
+PRIVATE NIC_entry	*NIC_book[1096];
+PRIVATE LONG_entry	*LONG_book[4096];
 
-int ECO_entries, NIC_entries, LONG_entries;
+PRIVATE int ECO_entries, NIC_entries, LONG_entries;
 
 PRIVATE inline int
 fencmp(const unsigned char *pos1, const char *pos2)
