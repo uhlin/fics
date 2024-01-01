@@ -156,5 +156,5 @@ main(int argc, char *argv[])
 	    fics_hostname);
 
 	mail_string_to_address(email, "FICS Account Created", text);
-	exit(0);
+	return 0;
 }
