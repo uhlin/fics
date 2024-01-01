@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash			93/10/22	Created
    Markus Uhlin			23/12/09	Sorted the declarations
+   Markus Uhlin			24/01/01	Added argument lists
 */
 
 #ifndef _ADMINPROC_H
