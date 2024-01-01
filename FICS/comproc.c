@@ -1778,7 +1778,7 @@ com_limits(int p, param_list param)
 	pprintf(p, "  Min number of games to be active: %d\n", PROVISIONAL);
 
 	if (parray[p].adminLevel < ADMIN_ADMIN &&
-	    !titled_player(p,parray[p].login)) {
+	    !titled_player(p, parray[p].login)) {
 		pprintf(p, "  Size of journal (entries): %d\n", MAX_JOURNAL);
 	} else {
 		pprintf(p, "  Size of journal (entries): 26\n");
