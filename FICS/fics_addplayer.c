@@ -94,26 +94,21 @@ main(int argc, char *argv[])
 		usage(argv[0]);
 
 	/* Add the player here */
-	if (strlen(funame) >= MAX_LOGIN_NAME) {
-		fprintf(stderr, "Player name is too long\n");
-		exit(0);
-	}
-	if (strlen(funame) < 3) {
-		fprintf(stderr, "Player name is too short\n");
-		exit(0);
-	}
-	if (!alphastring(funame)) {
-		fprintf(stderr, "Illegal characters in player name. "
-		    "Only A-Za-z allowed.\n");
-		exit(0);
+	if (strlen(funame) >= MAX_LOGIN_NAME)
+		errx(1, "Player name is too long");
+	else if (strlen(funame) < 3)
+		errx(1, "Player name is too short");
+	else if (!alphastring(funame)) {
+		errx(1, "Illegal characters in player name. "
+		    "Only A-Za-z allowed.");
 	}
 
 	player_init(0);
 	p = player_new();
-	if (!player_read(p, funame)) {
-		fprintf(stderr, "%s already exists.\n", funame);
-		exit(0);
-	}
+
+	if (!player_read(p, funame))
+		errx(1, "%s already exists.", funame);
+
 	parray[p].name = xstrdup(funame);
 	parray[p].login = xstrdup(funame);
 	stolower(parray[p].login);
