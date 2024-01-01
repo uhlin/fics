@@ -213,11 +213,12 @@ create_news_index(int p, param_list param, int admin)
 		} else {
 			num_anews++;
 
-			sprintf(new_item, "%ld %d %s\n",
+			snprintf(new_item, sizeof new_item, "%ld %d %s\n",
 			    (long int)time(NULL),
 			    num_anews,
 			    param[0].val.string);
-			sprintf(filename, "%s/newadminnews.index", news_dir);
+			snprintf(filename, sizeof filename,
+			    "%s/newadminnews.index", news_dir);
 
 			if (add_item(new_item, filename)) {
 				pprintf(p, "Index for admin news item #%d "
@@ -236,8 +237,9 @@ create_news_index(int p, param_list param, int admin)
 		} else {
 			num_news++;
 
-			sprintf(filename, "%s/newnews.index", news_dir);
-			sprintf(new_item, "%ld %d %s\n",
+			snprintf(filename, sizeof filename, "%s/newnews.index",
+			    news_dir);
+			snprintf(new_item, sizeof new_item, "%ld %d %s\n",
 			    (long int)time(NULL),
 			    num_news,
 			    param[0].val.string);
