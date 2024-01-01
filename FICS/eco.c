@@ -1,8 +1,8 @@
 #include "stdinclude.h"
+#include "common.h"
 
 #include "board.h"
 #include "command.h"
-#include "common.h"
 #include "config.h"
 #include "eco.h"
 #include "gamedb.h"
