@@ -825,7 +825,9 @@ who_verbose(int p, int num, int plist[])
 			    p1WithAttrs);
 		} else {
 			ret = snprintf(tmp, sizeof tmp, " %-17s", p1WithAttrs);
+
 			too_long = (ret < 0 || (size_t)ret >= sizeof tmp);
+
 			if (too_long) {
 				fprintf(stderr, "FICS: %s: warning: "
 				    "snprintf truncated\n", __func__);
