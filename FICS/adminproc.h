@@ -58,7 +58,6 @@ extern int	com_checkTIMESEAL(int, param_list);
 extern int	com_cmuzzle(int, param_list);
 extern int	com_cnewsf(int, param_list);
 extern int	com_cnewsi(int, param_list);
-extern int	com_createadmnews(); // XXX
 extern int	com_muzzle(int, param_list);
 extern int	com_nuke(int, param_list);
 extern int	com_pose(int, param_list);
@@ -67,7 +66,6 @@ extern int	com_raisedead(int, param_list);
 extern int	com_remplayer(int, param_list);
 extern int	com_showcomment(int, param_list);
 extern int	com_summon(int, param_list);
-extern int	server_shutdown(); // XXX
 extern int	strcmpwild(char *, char *);
 
 #endif /* _ADMINPROC_H */
