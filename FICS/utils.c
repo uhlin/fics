@@ -1015,11 +1015,11 @@ t_mft(struct t_dirs *d)
 PUBLIC int
 search_directory(char *dir, char *filter, char **buffer, int buffersize)
 {
-	int cmp;
-	static char nullify = '\0';
-	static struct t_dirs *ramdirs = NULL;
-	struct stat statbuf;
-	struct t_dirs **i;
+	int			 cmp;
+	static char		 nullify = '\0';
+	static struct t_dirs	*ramdirs = NULL;
+	struct stat		 statbuf;
+	struct t_dirs**		 i;
 
 	t_buffer	= buffer;
 	t_buffersize	= buffersize;
