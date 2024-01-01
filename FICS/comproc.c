@@ -1701,18 +1701,21 @@ com_mailhelp(int p, param_list param)
 	return COM_OK;
 }
 
-PUBLIC int com_handles(int p, param_list param)
+PUBLIC int
+com_handles(int p, param_list param)
 {
-  char *buffer[1000];
-  char pdir[MAX_FILENAME_SIZE];
-  int count;
+	char	*buffer[1000];
+	char	 pdir[MAX_FILENAME_SIZE];
+	int	 count;
 
-  sprintf(pdir, "%s/%c", player_dir, param[0].val.word[0]);
-  count = search_directory(pdir, param[0].val.word, buffer, 1000);
-  pprintf(p, "Found %d names.\n", count);
-  if (count > 0)
-    display_directory(p, buffer, count);
-  return COM_OK;
+	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, param[0].val.word[0]);
+	count = search_directory(pdir, param[0].val.word, buffer, 1000);
+	pprintf(p, "Found %d names.\n", count);
+
+	if (count > 0)
+		display_directory(p, buffer, count);
+
+	return COM_OK;
 }
 
 PUBLIC int
