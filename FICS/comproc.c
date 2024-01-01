@@ -1738,17 +1738,21 @@ PUBLIC int com_getpi(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_getps(int p, param_list param)
+PUBLIC int
+com_getps(int p, param_list param)
 {
-  int p1;
+	int p1;
 
-  if ((((p1 = player_find_bylogin(param[0].val.word)) < 0) || (parray[p1].registered == 0)) || (parray[p1].game < 0)) {
+	if (((p1 = player_find_bylogin(param[0].val.word)) < 0 ||
+	    parray[p1].registered == 0) ||
+	    parray[p1].game < 0) {
+		pprintf(p, "*status %s 1*\n", param[0].val.word);
+		return COM_OK;
+	}
 
-    pprintf(p, "*status %s 1*\n", param[0].val.word);
-    return COM_OK;
-  }
-  pprintf(p, "*status %s 0 %s*\n", parray[p1].name, parray[(parray[p1].opponent)].name);
-  return COM_OK;
+	pprintf(p, "*status %s 0 %s*\n", parray[p1].name,
+	    parray[(parray[p1].opponent)].name);
+	return COM_OK;
 }
 
 PUBLIC int
