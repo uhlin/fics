@@ -195,45 +195,66 @@ PRIVATE int add_item(char *new_item, char *filename)
 }
 
 /*
- * create_news_index:  Adds a new item to either the general or admin news
- *                     index file, depending upon the admin switch.
+ * Adds a new item to either the general or admin news index file,
+ * depending upon the admin switch.
  */
-PRIVATE int create_news_index(int p, param_list param, int admin)
+PRIVATE int
+create_news_index(int p, param_list param, int admin)
 {
-  char filename[MAX_FILENAME_SIZE];
-  char new_item[MAX_LINE_SIZE];
+	char	 filename[MAX_FILENAME_SIZE] = { '\0' };
+	char	 new_item[MAX_LINE_SIZE] = { '\0' };
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  if (admin) {
-    if (strlen(param[0].val.string) > 50)
-      pprintf(p, "Sorry, you must limit an index to 50 charaters!  Admin news index not created.\n");
-    else {
-      num_anews++;
-      sprintf(new_item, "%d %d %s\n", (int) time(0), num_anews, param[0].val.string);
-      sprintf(filename, "%s/newadminnews.index", news_dir);
-      if (add_item(new_item, filename)) {
-	pprintf(p, "Index for admin news item #%d created.\n", num_anews);
-	pprintf(p, "Please use 'canewsf' to include more info.\n");
-      } else
-	pprintf(p, "Something went wrong creating item.\nNotify Marsalis.\n");
-    }
-  } else {
-    if (strlen(param[0].val.string) > 50)
-      pprintf(p, "Sorry, you must limit an index to 50 charaters!  News index not created.\n");
-    else {
-      num_news++;
-      sprintf(filename, "%s/newnews.index", news_dir);
-      sprintf(new_item, "%d %d %s\n", (int) time(0), num_news, param[0].val.string);
-      if (add_item(new_item, filename)) {
-        pprintf(p, "Index for news item #%d created.\n", num_news);
-        pprintf(p, "Please use 'cnewsf' to include more info.\n");
-      } else
-        pprintf(p, "Something went wrong creating item.\nNotify Marsalis.\n");
-    }
-  }
+	if (admin) {
+		if (strlen(param[0].val.string) > 50) {
+			pprintf(p, "Sorry, you must limit an index to 50 "
+			    "charaters! Admin news index not created.\n");
+		} else {
+			num_anews++;
 
-  return COM_OK;
+			sprintf(new_item, "%ld %d %s\n",
+			    (long int)time(NULL),
+			    num_anews,
+			    param[0].val.string);
+			sprintf(filename, "%s/newadminnews.index", news_dir);
+
+			if (add_item(new_item, filename)) {
+				pprintf(p, "Index for admin news item #%d "
+				    "created.\n", num_anews);
+				pprintf(p, "Please use 'canewsf' to include "
+				    "more info.\n");
+			} else {
+				pprintf(p, "Something went wrong creating item."
+				    "\nNotify Marsalis.\n");
+			}
+		}
+	} else {
+		if (strlen(param[0].val.string) > 50) {
+			pprintf(p, "Sorry, you must limit an index to 50 "
+			    "charaters! News index not created.\n");
+		} else {
+			num_news++;
+
+			sprintf(filename, "%s/newnews.index", news_dir);
+			sprintf(new_item, "%ld %d %s\n",
+			    (long int)time(NULL),
+			    num_news,
+			    param[0].val.string);
+
+			if (add_item(new_item, filename)) {
+				pprintf(p, "Index for news item #%d created.\n",
+				    num_news);
+				pprintf(p, "Please use 'cnewsf' to include "
+				    "more info.\n");
+			} else {
+				pprintf(p, "Something went wrong creating item."
+				    "\nNotify Marsalis.\n");
+			}
+		}
+	}
+
+	return COM_OK;
 }
 
 /* cnewsi
