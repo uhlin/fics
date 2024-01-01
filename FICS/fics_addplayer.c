@@ -109,11 +109,10 @@ main(int argc, char *argv[])
 	if (!player_read(p, funame))
 		errx(1, "%s already exists.", funame);
 
-	parray[p].name = xstrdup(funame);
-	parray[p].login = xstrdup(funame);
-	stolower(parray[p].login);
-	parray[p].fullName = xstrdup(fname);
-	parray[p].emailAddress = xstrdup(email);
+	parray[p].name		= xstrdup(funame);
+	parray[p].login		= stolower(xstrdup(funame));
+	parray[p].fullName	= xstrdup(fname);
+	parray[p].emailAddress	= xstrdup(email);
 
 	for (i = 0; i < PASSLEN; i++)
 		password[i] = ('a' + arc4random_uniform(26));
@@ -122,10 +121,10 @@ main(int argc, char *argv[])
 	if (strlcpy(salt, fics_getsalt(), sizeof salt) >= sizeof salt)
 		errx(1, "salt truncated");
 
-	parray[p].passwd = xstrdup(crypt(password, salt));
-	parray[p].registered = 1;
-//	parray[p].network_player = !local;
-	parray[p].rated = 1;
+	parray[p].passwd	= xstrdup(crypt(password, salt));
+	parray[p].registered	= 1;
+	parray[p].rated		= 1;
+
 	player_save(p);
 
 	printf("Added player account: >%s< >%s< >%s< >%s<\n",
