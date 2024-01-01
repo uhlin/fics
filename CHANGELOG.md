@@ -10,6 +10,7 @@ documented in this file.
   characters long (was 4).
 - Deleted non-existent functions from the header files.
 - Fixed unchecked return values
+- Made functions and variables private (aka static) where possible.
 - Reformatted code according to OpenBSD's KNF.
 - Replaced `rand()` calls with arc4random.
 - Replaced multiple `sprintf()` calls with `snprintf()`.
