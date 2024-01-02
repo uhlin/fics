@@ -1454,36 +1454,46 @@ PUBLIC int com_servers(int p, param_list param)
     "PORT"); for (i = 0; i < numServers; i++) pprintf(p, "%-30s%-7d\n",
     serverNames[i], serverPorts[i]); return COM_OK; } */
 
-PUBLIC int com_index(int p, param_list param)
+PUBLIC int
+com_index(int p, param_list param)
 {
-  int i;
-  char index_default[] = "_index";
-  char *iwant, *filenames[100];	/* enough for all index filenames */
+	char	*iwant, *filenames[100];
+	char	 index_default[] = "_index";
+	int	 i;
 
-  if (param[0].type == TYPE_NULL) {
-    iwant = index_default;
-  } else {
-    iwant = param[0].val.word;
-    if (!safestring(iwant)) {
-      pprintf(p, "Illegal character in category %s.\n", iwant);
-      return COM_OK;
-    }
-  }
+	if (param[0].type == TYPE_NULL) {
+		iwant = index_default;
+	} else {
+		iwant = param[0].val.word;
 
-  i = search_directory(index_dir, iwant, filenames, 1000);
-  if (i == 0) {
-    pprintf(p, "No index entry for \"%s\".\n", iwant);
-  } else if ((i == 1) || !strcmp(*filenames, iwant)) {
-    if (psend_file(p, index_dir, *filenames)) {
-      /* we should never reach this unless the file was just deleted */
-      pprintf(p, "Index file %s could not be found! ", *filenames);
-      pprintf(p, "Please inform an admin of this. Thank you.\n");
-    }
-  } else {
-    pprintf(p, "Matches:");
-    display_directory(p, filenames, i);
-  }
-  return COM_OK;
+		if (!safestring(iwant)) {
+			pprintf(p, "Illegal character in category %s.\n",
+			    iwant);
+			return COM_OK;
+		}
+	}
+
+	i = search_directory(index_dir, iwant, filenames, 1000);
+
+	if (i == 0) {
+		pprintf(p, "No index entry for \"%s\".\n", iwant);
+	} else if ((i == 1) || !strcmp(*filenames, iwant)) {
+		if (psend_file(p, index_dir, *filenames)) {
+			/*
+			 * We should never reach this unless the file
+			 * was just deleted.
+			 */
+			pprintf(p, "Index file %s could not be found! ",
+			    *filenames);
+			pprintf(p, "Please inform an admin of this. "
+			    "Thank you.\n");
+		}
+	} else {
+		pprintf(p, "Matches:");
+		display_directory(p, filenames, i);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
