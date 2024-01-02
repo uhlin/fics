@@ -1477,7 +1477,7 @@ com_index(int p, param_list param)
 
 	if (i == 0) {
 		pprintf(p, "No index entry for \"%s\".\n", iwant);
-	} else if ((i == 1) || !strcmp(*filenames, iwant)) {
+	} else if (i == 1 || !strcmp(*filenames, iwant)) {
 		if (psend_file(p, index_dir, *filenames)) {
 			/*
 			 * We should never reach this unless the file
