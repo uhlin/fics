@@ -15,7 +15,6 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)formula.o\
 	$(SRC_DIR)gamedb.o\
 	$(SRC_DIR)gameproc.o\
-	$(SRC_DIR)get_tcp_conn.o\
 	$(SRC_DIR)legal.o\
 	$(SRC_DIR)lists.o\
 	$(SRC_DIR)matchproc.o\
