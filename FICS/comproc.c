@@ -1457,7 +1457,7 @@ PUBLIC int com_servers(int p, param_list param)
 PUBLIC int
 com_index(int p, param_list param)
 {
-	char	*iwant, *filenames[100];
+	char	*iwant, *filenames[1000];
 	char	 index_default[] = "_index";
 	int	 i;
 
