@@ -1486,48 +1486,65 @@ PUBLIC int com_index(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_help(int p, param_list param)
+PUBLIC int
+com_help(int p, param_list param)
 {
-  int i, UseLang = parray[p].language;
-  char help_default[] = "_help";
-  char *iwant, *filenames[1000];	/* enough for all helpfile names */
+	char	*iwant, *filenames[1000];
+	char	 help_default[] = "_help";
+	int	 i, UseLang = parray[p].language;
 
-  if (param[0].type == TYPE_NULL) {
-    iwant = help_default;
-  } else {
-    iwant = param[0].val.word;
-    if (!safestring(iwant)) {
-      pprintf(p, "Illegal character in command %s.\n", iwant);
-      return COM_OK;
-    }
-  }
-  i = search_directory(help_dir[UseLang], iwant, filenames, 1000);
-  if (i == 0) {
-    if (UseLang != LANG_DEFAULT) {
-      i += search_directory(help_dir[LANG_DEFAULT], iwant, filenames, 1000);
-      if (i > 0) {
-        pprintf(p, "No help available in %s; using %s instead.\n",
-                Language(UseLang), Language(LANG_DEFAULT));
-        UseLang = LANG_DEFAULT;
-      }
-    }
-    if (i==0) {
-      pprintf(p, "No help available on \"%s\".\n", iwant);
-      return COM_OK;
-    }
-  }
-  if ((i == 1) || !strcmp(*filenames, iwant)) {
-    if (psend_file(p, help_dir[UseLang], *filenames)) {
-      /* we should never reach this unless the file was just deleted */
-      pprintf(p, "Helpfile %s could not be found! ", *filenames);
-      pprintf(p, "Please inform an admin of this. Thank you.\n");
-    }
-  } else {
-    pprintf(p, "Matches:");
-    display_directory(p, filenames, i);
-    pprintf(p, "[Type \"info\" for a list of FICS general information files.]\n");
-  }
-  return COM_OK;
+	if (param[0].type == TYPE_NULL) {
+		iwant = help_default;
+	} else {
+		iwant = param[0].val.word;
+
+		if (!safestring(iwant)) {
+			pprintf(p, "Illegal character in command %s.\n", iwant);
+			return COM_OK;
+		}
+	}
+
+	i = search_directory(help_dir[UseLang], iwant, filenames, 1000);
+
+	if (i == 0) {
+		if (UseLang != LANG_DEFAULT) {
+			i += search_directory(help_dir[LANG_DEFAULT], iwant,
+			    filenames, 1000);
+
+			if (i > 0) {
+				pprintf(p, "No help available in %s; using %s "
+				    "instead.\n",
+				    Language(UseLang),
+				    Language(LANG_DEFAULT));
+				UseLang = LANG_DEFAULT;
+			}
+		}
+
+		if (i == 0) {
+			pprintf(p, "No help available on \"%s\".\n", iwant);
+			return COM_OK;
+		}
+	}
+
+	if (i == 1 || !strcmp(*filenames, iwant)) {
+		if (psend_file(p, help_dir[UseLang], *filenames)) {
+			/*
+			 * We should never reach this unless the file
+			 * was just deleted.
+			 */
+			pprintf(p, "Helpfile %s could not be found! ",
+			    *filenames);
+			pprintf(p, "Please inform an admin of this. "
+			    "Thank you.\n");
+		}
+	} else {
+		pprintf(p, "Matches:");
+		display_directory(p, filenames, i);
+		pprintf(p, "[Type \"info\" for a list of FICS general "
+		    "information files.]\n");
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
