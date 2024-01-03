@@ -1473,7 +1473,8 @@ com_index(int p, param_list param)
 		}
 	}
 
-	i = search_directory(index_dir, iwant, filenames, 1000);
+	i = search_directory(index_dir, iwant, filenames,
+	    ARRAY_SIZE(filenames));
 
 	if (i == 0) {
 		pprintf(p, "No index entry for \"%s\".\n", iwant);
@@ -1514,12 +1515,13 @@ com_help(int p, param_list param)
 		}
 	}
 
-	i = search_directory(help_dir[UseLang], iwant, filenames, 1000);
+	i = search_directory(help_dir[UseLang], iwant, filenames,
+	    ARRAY_SIZE(filenames));
 
 	if (i == 0) {
 		if (UseLang != LANG_DEFAULT) {
 			i += search_directory(help_dir[LANG_DEFAULT], iwant,
-			    filenames, 1000);
+			    filenames, ARRAY_SIZE(filenames));
 
 			if (i > 0) {
 				pprintf(p, "No help available in %s; using %s "
@@ -1563,7 +1565,8 @@ com_info(int p, param_list param)
 	char	*filenames[1000];
 	int	 n;
 
-	if ((n = search_directory(info_dir, NULL, filenames, 1000)) > 0)
+	if ((n = search_directory(info_dir, NULL, filenames,
+	    ARRAY_SIZE(filenames))) > 0)
 		display_directory(p, filenames, n);
 	return COM_OK;
 }
@@ -1587,7 +1590,7 @@ FindAndShowFile(int p, param_list param, char *dir)
 		}
 	}
 
-	i = search_directory(dir, iwant, filenames, 1000);
+	i = search_directory(dir, iwant, filenames, ARRAY_SIZE(filenames));
 
 	if (i == 0) {
 		pprintf(p, "No information available on \"%s\".\n", iwant);
@@ -1643,7 +1646,8 @@ com_mailsource(int p, param_list param)
 	else
 		iwant = param[0].val.word;
 
-	if ((count = search_directory(source_dir, iwant, buffer, 1000)) == 0) {
+	if ((count = search_directory(source_dir, iwant, buffer,
+	    ARRAY_SIZE(buffer))) == 0) {
 		pprintf(p, "Found no source file matching \"%s\".\n", iwant);
 	} else if ((count == 1) || !strcmp(iwant, *buffer)) {
 		snprintf(subj, sizeof subj, "FICS source file from server "
@@ -1705,11 +1709,12 @@ com_mailhelp(int p, param_list param)
 	else
 		iwant = param[0].val.word;
 
-	count = search_directory(help_dir[lang], iwant, buffer, 1000);
+	count = search_directory(help_dir[lang], iwant, buffer,
+	    ARRAY_SIZE(buffer));
 
 	if (count == 0 && lang != LANG_DEFAULT) {
 		count += search_directory(help_dir[LANG_DEFAULT], iwant, buffer,
-		    1000);
+		    ARRAY_SIZE(buffer));
 
 		if (count > 0) {
 			pprintf(p, "No help available in %s; "
@@ -1750,7 +1755,9 @@ com_handles(int p, param_list param)
 	int	 count;
 
 	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, param[0].val.word[0]);
-	count = search_directory(pdir, param[0].val.word, buffer, 1000);
+
+	count = search_directory(pdir, param[0].val.word, buffer,
+	    ARRAY_SIZE(buffer));
 	pprintf(p, "Found %d names.\n", count);
 
 	if (count > 0)
