@@ -105,8 +105,8 @@ PUBLIC void
 rscan_news2(FILE *fp, int p, int num)
 {
 	char		*junkp;
-	char		 count[10];
-	char		 junk[MAX_LINE_SIZE];
+	char		 count[10] = { '\0' };
+	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	long int	 lval;
 	time_t		 crtime;
 
