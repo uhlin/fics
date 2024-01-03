@@ -1416,27 +1416,36 @@ PUBLIC int com_alias(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_unalias(int p, param_list param)
+PUBLIC int
+com_unalias(int p, param_list param)
 {
-  int al;
-  int i;
+	int al;
 
-  ASSERT(param[0].type == TYPE_WORD);
-  al = alias_lookup(param[0].val.word, parray[p].alias_list, parray[p].numAlias);
-  if (al < 0) {
-    pprintf(p, "You have no alias named '%s'.\n", param[0].val.word);
-  } else {
-    rfree(parray[p].alias_list[al].comm_name);
-    rfree(parray[p].alias_list[al].alias);
-    for (i = al; i < parray[p].numAlias; i++) {
-      parray[p].alias_list[i].comm_name = parray[p].alias_list[i + 1].comm_name;
-      parray[p].alias_list[i].alias = parray[p].alias_list[i + 1].alias;
-    }
-    parray[p].numAlias--;
-    parray[p].alias_list[parray[p].numAlias].comm_name = NULL;
-    pprintf(p, "Alias removed.\n");
-  }
-  return COM_OK;
+	ASSERT(param[0].type == TYPE_WORD);
+
+	al = alias_lookup(param[0].val.word, parray[p].alias_list,
+	    parray[p].numAlias);
+
+	if (al < 0) {
+		pprintf(p, "You have no alias named '%s'.\n",
+		    param[0].val.word);
+	} else {
+		rfree(parray[p].alias_list[al].comm_name);
+		rfree(parray[p].alias_list[al].alias);
+
+		for (int i = al; i < parray[p].numAlias; i++) {
+			parray[p].alias_list[i].comm_name =
+			    parray[p].alias_list[i + 1].comm_name;
+			parray[p].alias_list[i].alias =
+			    parray[p].alias_list[i + 1].alias;
+		}
+
+		parray[p].numAlias--;
+		parray[p].alias_list[parray[p].numAlias].comm_name = NULL;
+		pprintf(p, "Alias removed.\n");
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
