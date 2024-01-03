@@ -652,13 +652,13 @@ com_uptime(int p, param_list param)
 	pprintf(p, "\nAllocs: %u  Frees: %u  Allocs In Use: %u\n",
 	    malloc_count, free_count, (malloc_count - free_count));
 	if (parray[p].adminLevel >= ADMIN_ADMIN) {
-		pprintf(p, "\nplayer size:%d, game size:%d, con size:%d, "
+		pprintf(p, "\nplayer size:%zu, game size:%zu, con size:%d, "
 		    "g_num:%d\n", sizeof(player), sizeof(game), net_consize(),
 		    g_num);
 
 		getrusage(RUSAGE_SELF, &ru);
 
-		pprintf(p, "pagesize = %d, maxrss = %d, total = %d\n",
+		pprintf(p, "pagesize = %d, maxrss = %ld, total = %ld\n",
 		    getpagesize(),
 		    ru.ru_maxrss,
 		    (getpagesize() * ru.ru_maxrss));
