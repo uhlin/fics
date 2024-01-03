@@ -45,7 +45,7 @@ rmalloc(int byteSize)
 	malloc_count++;
 
 	if ((newptr = malloc(byteSize)) == NULL) {
-		fprintf(stderr, "Out of memory in malloc!\n");
+		fprintf(stderr, "Out of memory in %s()!\n", __func__);
 		abort();
 	}
 
@@ -60,13 +60,13 @@ rrealloc(void *ptr, int byteSize)
 #endif
 
 	if (ptr == NULL) {
-		fprintf(stderr, "Hoser! Null ptr passed to rrealloc!\n");
+		fprintf(stderr, "Hoser! Null ptr passed to %s()!\n", __func__);
 		return NULL;
 	} else {
 		void *newptr;
 
 		if ((newptr = realloc(ptr, byteSize)) == NULL) {
-			fprintf(stderr, "Out of memory in rrealloc!\n");
+			fprintf(stderr, "Out of memory in %s()!\n", __func__);
 			abort();
 		}
 
@@ -82,7 +82,7 @@ rfree(void *ptr)
 #endif
 
 	if (ptr == NULL) {
-		fprintf(stderr, "Hoser! Null ptr passed to rfree!\n");
+		fprintf(stderr, "Hoser! Null ptr passed to %s()!\n", __func__);
 	} else {
 		free_count++;
 		free(ptr);
