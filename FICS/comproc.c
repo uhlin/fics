@@ -113,9 +113,9 @@ rscan_news2(FILE *fp, int p, int num)
 	if (num == 0)
 		return;
 
-	fgets(junk, MAX_LINE_SIZE, fp);
+	;
 
-	if (feof(fp))
+	if (fgets(junk, sizeof junk, fp) == NULL || feof(fp))
 		return;
 
 	sscanf(junk, "%ld %s", &lval, count);
