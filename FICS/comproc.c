@@ -58,6 +58,10 @@
 #include "utils.h"
 #include "variable.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 #define WHO_OPEN         0x01
 #define WHO_CLOSED       0x02
 #define WHO_RATED        0x04
@@ -314,15 +318,15 @@ com_stats_andify(int *numbers, int howmany, char *dest)
 	*dest = '\0';
 
 	while (howmany--) {
-		sprintf(tmp, "%d", numbers[howmany]);
+		snprintf(tmp, sizeof tmp, "%d", numbers[howmany]);
 		strcat(dest, tmp);
 
 		if (howmany > 1)
-			sprintf(tmp, ", ");
+			strlcpy(tmp, ", ", sizeof tmp);
 		else if (howmany == 1)
-			sprintf(tmp, " and ");
+			strlcpy(tmp, " and ", sizeof tmp);
 		else
-			sprintf(tmp, ".\n");
+			strlcpy(tmp, ".\n", sizeof tmp);
 
 		strcat(dest, tmp);
 	}
