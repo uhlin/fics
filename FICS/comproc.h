@@ -22,6 +22,7 @@
    Richard Nash			93/10/22	Created
    Markus Uhlin			23/12/09	Fixed implicit ints
    Markus Uhlin			23/12/19	Sorted declarations
+   Markus Uhlin			24/01/03	Added argument lists
 */
 
 #ifndef _COMPROC_H
