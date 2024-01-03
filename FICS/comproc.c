@@ -1439,20 +1439,13 @@ PUBLIC int com_unalias(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_servers(int p, param_list param)
+PUBLIC int
+com_servers(int p, param_list param)
 {
-/*
-  int i;
-
-  ASSERT(param[0].type == TYPE_NULL);
-  if (numServers == 0) {
-         */ pprintf(p, "There are no other servers known to this server.\n");
-  return COM_OK;
+	pprintf(p, "There are no other servers known to this server.\n");
+	(void) param;
+	return COM_OK;
 }
- /* pprintf(p, "There are %d known servers.\n", numServers); pprintf(p, "(Not
-    all of these may be active)\n"); pprintf(p, "%-30s%-7s\n", "HOST",
-    "PORT"); for (i = 0; i < numServers; i++) pprintf(p, "%-30s%-7d\n",
-    serverNames[i], serverPorts[i]); return COM_OK; } */
 
 PUBLIC int
 com_index(int p, param_list param)
