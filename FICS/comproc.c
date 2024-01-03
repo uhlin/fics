@@ -1369,56 +1369,66 @@ PUBLIC int com_promote(int p, param_list param)
     return COM_OK_NOPROMPT;
 }
 
-PUBLIC int com_alias(int p, param_list param)
+PUBLIC int
+com_alias(int p, param_list param)
 {
-  int al;
+	int al;
 
-  if (param[0].type == TYPE_NULL) {
-    for (al = 0; al < parray[p].numAlias; al++) {
-      pprintf(p, "%s -> %s\n", parray[p].alias_list[al].comm_name,
-	      parray[p].alias_list[al].alias);
-    }
-    return COM_OK;
-  }
-  al = alias_lookup(param[0].val.word, parray[p].alias_list, parray[p].numAlias);
-  if (param[1].type == TYPE_NULL) {
-    if (al < 0) {
-      pprintf(p, "You have no alias named '%s'.\n", param[0].val.word);
-    } else {
-      pprintf(p, "%s -> %s\n", parray[p].alias_list[al].comm_name,
-	      parray[p].alias_list[al].alias);
-    }
-  } else {
-    if (al < 0) {
-      if (parray[p].numAlias >= MAX_ALIASES - 1) {
-	pprintf(p, "You have your maximum of %d aliases.\n", MAX_ALIASES - 1);
-      } else {
+	if (param[0].type == TYPE_NULL) {
+		for (al = 0; al < parray[p].numAlias; al++) {
+			pprintf(p, "%s -> %s\n",
+			    parray[p].alias_list[al].comm_name,
+			    parray[p].alias_list[al].alias);
+		}
 
-	if (!strcmp(param[0].val.string, "quit")) {	/* making sure they
-							   can't alias quit */
-	  pprintf(p, "You can't alias this command.\n");
-	} else if (!strcmp(param[0].val.string, "unalias")) {	/* making sure they
-								   can't alias unalias
-								   :) */
-	  pprintf(p, "You can't alias this command.\n");
-	} else {
-	  parray[p].alias_list[parray[p].numAlias].comm_name =
-	    xstrdup(param[0].val.word);
-	  parray[p].alias_list[parray[p].numAlias].alias =
-	    xstrdup(param[1].val.string);
-	  parray[p].numAlias++;
-	  pprintf(p, "Alias set.\n");
-
+		return COM_OK;
 	}
-      }
-    } else {
-      rfree(parray[p].alias_list[al].alias);
-      parray[p].alias_list[al].alias = xstrdup(param[1].val.string);
-      pprintf(p, "Alias replaced.\n");
-    }
-    parray[p].alias_list[parray[p].numAlias].comm_name = NULL;
-  }
-  return COM_OK;
+
+	al = alias_lookup(param[0].val.word, parray[p].alias_list,
+	    parray[p].numAlias);
+
+	if (param[1].type == TYPE_NULL) {
+		if (al < 0) {
+			pprintf(p, "You have no alias named '%s'.\n",
+			    param[0].val.word);
+		} else {
+			pprintf(p, "%s -> %s\n",
+			    parray[p].alias_list[al].comm_name,
+			    parray[p].alias_list[al].alias);
+		}
+	} else {
+		if (al < 0) {
+			if (parray[p].numAlias >= MAX_ALIASES - 1) {
+				pprintf(p, "You have your maximum of %d "
+				    "aliases.\n", (MAX_ALIASES - 1));
+			} else {
+				if (!strcmp(param[0].val.string, "quit")) {
+					pprintf(p, "You can't alias this "
+					    "command.\n");
+				} else if (!strcmp(param[0].val.string,
+				    "unalias")) {
+					pprintf(p, "You can't alias this "
+					    "command.\n");
+				} else {
+					parray[p].alias_list[parray[p].numAlias].comm_name =
+					    xstrdup(param[0].val.word);
+					parray[p].alias_list[parray[p].numAlias].alias =
+					    xstrdup(param[1].val.string);
+					parray[p].numAlias++;
+					pprintf(p, "Alias set.\n");
+				}
+			}
+		} else {
+			rfree(parray[p].alias_list[al].alias);
+			parray[p].alias_list[al].alias =
+			    xstrdup(param[1].val.string);
+			pprintf(p, "Alias replaced.\n");
+		}
+
+		parray[p].alias_list[parray[p].numAlias].comm_name = NULL;
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
