@@ -101,7 +101,6 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 			}
 
 			fgets(line, 99, fp);
-
 		} while (!done && !feof(fp));
 	}
 
