@@ -5,6 +5,7 @@ SRC_DIR := FICS/
 
 OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)algcheck.o\
+	$(SRC_DIR)assert_error.o\
 	$(SRC_DIR)board.o\
 	$(SRC_DIR)command.o\
 	$(SRC_DIR)comproc.o\
