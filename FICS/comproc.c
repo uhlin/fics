@@ -1282,39 +1282,42 @@ PUBLIC int com_refresh(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_prefresh(int p, param_list param)
+PUBLIC int
+com_prefresh(int p, param_list param)
 {
-  int retval, part = parray[p].partner;
+	int retval, part;
 
-  if (part < 0) {
-    pprintf(p, "You do not have a partner.\n");
-    return COM_OK;
-  }
-  retval = pcommand (p, "refresh %s", parray[part].name);
-  if (retval == COM_OK)
-    return COM_OK_NOPROMPT;
-  else
-    return retval;
+	if ((part = parray[p].partner) < 0) {
+		pprintf(p, "You do not have a partner.\n");
+		return COM_OK;
+	} else if ((retval = pcommand(p, "refresh %s", parray[part].name)) ==
+	    COM_OK)
+		return COM_OK_NOPROMPT;
+	return retval;
 }
 
-PUBLIC int com_open(int p, param_list param)
+PUBLIC int
+com_open(int p, param_list param)
 {
-  int retval;
-  ASSERT(param[0].type == TYPE_NULL);
-  if ((retval = pcommand(p, "set open")) != COM_OK)
-    return retval;
-  else
-    return COM_OK_NOPROMPT;
+	int retval;
+
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if ((retval = pcommand(p, "set open")) != COM_OK)
+		return retval;
+	return COM_OK_NOPROMPT;
 }
 
-PUBLIC int com_simopen(int p, param_list param)
+PUBLIC int
+com_simopen(int p, param_list param)
 {
-  int retval;
-  ASSERT(param[0].type == TYPE_NULL);
-  if ((retval = pcommand(p, "set simopen")) != COM_OK)
-    return retval;
-  else
-    return COM_OK_NOPROMPT;
+	int retval;
+
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if ((retval = pcommand(p, "set simopen")) != COM_OK)
+		return retval;
+	return COM_OK_NOPROMPT;
 }
 
 PUBLIC int
