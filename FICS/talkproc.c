@@ -294,7 +294,7 @@ PRIVATE int tell(int p, int p1, char *msg, int why, int ch)
            else
                pprintf(p1, "\n%s(%d)", parray[p].name, rating);
         else
-            pprintf(p1, "\n%s(----)", parray[p].name, rating);
+            pprintf(p1, "\n%s(----)", parray[p].name);
     else break;
 
     if (why == TELL_WHISPER)
@@ -613,7 +613,7 @@ com_inchannel(int p, param_list param)
 		pprintf(p, "%s is in the following channels:", parray[p1].name);
 
 		if (list_channels(p, p1))
-			pprintf(p, " No channels found.\n", parray[p1].name);
+			pprintf(p, " No channels found.\n");
 		return COM_OK;
 	} else {
 		sprintf(tmp, "%d", param[0].val.integer);
