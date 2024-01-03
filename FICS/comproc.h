@@ -28,6 +28,8 @@
 #ifndef _COMPROC_H
 #define _COMPROC_H
 
+#include "command.h"
+
 extern const int	none;
 extern const int	blitz_rat;
 extern const int	std_rat;
