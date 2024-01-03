@@ -191,9 +191,8 @@ com_news(int p, param_list param)
 
 		while (!feof(fp) && !found) {
 			junkp = junk;
-			fgets(junk, MAX_LINE_SIZE, fp);
 
-			if (feof(fp))
+			if (fgets(junk, sizeof junk, fp) == NULL || feof(fp))
 				break;
 
 			sscanf(junkp, "%ld %s", &lval, count);
