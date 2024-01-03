@@ -1317,24 +1317,28 @@ PUBLIC int com_simopen(int p, param_list param)
     return COM_OK_NOPROMPT;
 }
 
-PUBLIC int com_bell(int p, param_list param)
+PUBLIC int
+com_bell(int p, param_list param)
 {
-  int retval;
-  ASSERT(param[0].type == TYPE_NULL);
-  if ((retval = pcommand(p, "set bell")) != COM_OK)
-    return retval;
-  else
-    return COM_OK_NOPROMPT;
+	int retval;
+
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if ((retval = pcommand(p, "set bell")) != COM_OK)
+		return retval;
+	return COM_OK_NOPROMPT;
 }
 
-PUBLIC int com_flip(int p, param_list param)
+PUBLIC int
+com_flip(int p, param_list param)
 {
-  int retval;
-  ASSERT(param[0].type == TYPE_NULL);
-  if ((retval = pcommand(p, "set flip")) != COM_OK)
-    return retval;
-  else
-    return COM_OK_NOPROMPT;
+	int retval;
+
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if ((retval = pcommand(p, "set flip")) != COM_OK)
+		return retval;
+	return COM_OK_NOPROMPT;
 }
 
 PUBLIC int
