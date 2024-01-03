@@ -20,7 +20,9 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash	              	93/10/22	Created
+   Richard Nash                 93/10/22	Created
+   Markus Uhlin                 24/01/03	Added/deleted macros and
+						redefined ASSERT().
 */
 
 #ifndef _COMMON_H
