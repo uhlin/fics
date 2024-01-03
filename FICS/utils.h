@@ -24,6 +24,7 @@
    Markus Uhlin			23/12/10	Deleted check_emailaddr()
    Markus Uhlin			23/12/17	Added argument lists
    Markus Uhlin			23/12/28	Completed adding argument lists
+   Markus Uhlin			24/01/04	Added usage of PRINTFLIKE()
 */
 
 #ifndef _UTILS_H
