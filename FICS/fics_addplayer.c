@@ -49,7 +49,7 @@ PRIVATE char *email = NULL;
 
 PRIVATE int local = 1;
 
-PRIVATE void
+PRIVATE __dead void
 usage(char *progname)
 {
 	fprintf(stderr, "Usage: %s [-l] [-n] UserName FullName EmailAddress\n",
