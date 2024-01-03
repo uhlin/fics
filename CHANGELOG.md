@@ -11,6 +11,7 @@ documented in this file.
   characters long (was 4).
 - Deleted non-existent functions from the header files.
 - Deleted obsolete and unused code
+- Fixed incorrect buffer sizes
 - Fixed unchecked return values
 - Made functions and variables private (aka static) where possible.
 - Redefined `ASSERT()`
