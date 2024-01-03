@@ -725,59 +725,65 @@ AddPlayerLists(int p1, char *ptmp)
 		strcat(ptmp, "(B)");
 }
 
-PRIVATE void who_terse(int p, int num, int *plist, int type)
+PRIVATE void
+who_terse(int p, int num, int *plist, int type)
 {
-  char ptmp[80 + 20];		/* for highlight */
-  multicol *m = multicol_start(PARRAY_SIZE);
-  int i;
-  int p1;
-  int rat;
+	char		 ptmp[80 + 20] = { '\0' }; // for highlight
+	int		 i;
+	int		 p1;
+	int		 rat;
+	multicol	*m = multicol_start(PARRAY_SIZE);
 
-  /* altered DAV 3/15/95 */
+	for (i = 0; i < num; i++) {
+		p1 = plist[i];
 
-  for (i = 0; i < num; i++) {
-    p1 = plist[i];
+		if (type == blitz_rat)
+			rat = parray[p1].b_stats.rating;
+		else if (type == wild_rat)
+			rat = parray[p1].w_stats.rating;
+		else if (type == std_rat)
+			rat = parray[p1].s_stats.rating;
+		else if (type == light_rat)
+			rat = parray[p1].l_stats.rating;
 
-    if (type == blitz_rat)
-      rat = parray[p1].b_stats.rating;
-    else if (type == wild_rat)
-      rat = parray[p1].w_stats.rating;
-    else if (type == std_rat)
-      rat = parray[p1].s_stats.rating;
-    else if (type == light_rat)
-      rat = parray[p1].l_stats.rating;
+		if (type == none) {
+			sprintf(ptmp, "     ");
+		} else {
+			sprintf(ptmp, "%-4s", ratstrii(rat,
+			    parray[p1].registered));
 
-    if (type == none) {
-      sprintf(ptmp, "     ");
-    } else {
-      sprintf(ptmp, "%-4s", ratstrii(rat, parray[p1].registered));
-      if (parray[p1].simul_info.numBoards) {
-	strcat(ptmp, "~");
-      } else if ((parray[p1].game >= 0) && (garray[parray[p1].game].status == GAME_EXAMINE)) {
-        strcat(ptmp, "#");
-      } else if (parray[p1].game >= 0) {
-	strcat(ptmp, "^");
-      } else if (!parray[p1].open) {
-	strcat(ptmp, ":");
-      } else if (player_idle(p1) > 300) {
-	strcat(ptmp, ".");
-      } else {
-	strcat(ptmp, " ");
-      }
-    }
+			if (parray[p1].simul_info.numBoards) {
+				strcat(ptmp, "~");
+			} else if (parray[p1].game >= 0 &&
+			    garray[parray[p1].game].status == GAME_EXAMINE) {
+				strcat(ptmp, "#");
+			} else if (parray[p1].game >= 0) {
+				strcat(ptmp, "^");
+			} else if (!parray[p1].open) {
+				strcat(ptmp, ":");
+			} else if (player_idle(p1) > 300) {
+				strcat(ptmp, ".");
+			} else {
+				strcat(ptmp, " ");
+			}
+		}
 
-    if (p == p1) {
-      psprintf_highlight(p, ptmp + strlen(ptmp), "%s", parray[p1].name);
-    } else {
-      strcat(ptmp, parray[p1].name);
-    }
+		if (p == p1) {
+			psprintf_highlight(p, ptmp + strlen(ptmp), "%s",
+			    parray[p1].name);
+		} else {
+			strcat(ptmp, parray[p1].name);
+		}
 
-    AddPlayerLists(p1, ptmp);
-    multicol_store(m, ptmp);
-  }
-  multicol_pprint(m, p, 80, 2);
-  multicol_end(m);
-  pprintf(p, "\n %d players displayed (of %d). (*) indicates system administrator.\n", num, player_count(1));
+		AddPlayerLists(p1, ptmp);
+		multicol_store(m, ptmp);
+	}
+
+	multicol_pprint(m, p, 80, 2);
+	multicol_end(m);
+
+	pprintf(p, "\n %d players displayed (of %d). (*) indicates system "
+	    "administrator.\n", num, player_count(1));
 }
 
 PRIVATE void
