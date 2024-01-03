@@ -113,12 +113,10 @@ rscan_news2(FILE *fp, int p, int num)
 	if (num == 0)
 		return;
 
-	;
-
-	if (fgets(junk, sizeof junk, fp) == NULL || feof(fp))
+	if (fgets(junk, sizeof junk, fp) == NULL || feof(fp) ||
+	    sscanf(junk, "%ld %9s", &lval, count) != 2)
 		return;
 
-	sscanf(junk, "%ld %s", &lval, count);
 	rscan_news2(fp, p, num - 1);
 
 	junkp = junk;
