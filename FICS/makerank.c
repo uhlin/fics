@@ -187,9 +187,11 @@ SetComputers(int n)
 	char	 line[100];
 	int	 i = 0;
 
-	snprintf(line, sizeof line, "sort -f %s", COMPUTER_FILE);
-
-	if ((fpComp = popen(line, "r")) == NULL)
+	if (snprintf(line, sizeof line, "sort -f %s", COMPUTER_FILE) >=
+	    sizeof line) {
+		warnx("%s: snprintf truncated", __func__);
+		return 0;
+	} else if ((fpComp = popen(line, "r")) == NULL)
 		return 0;
 
 	while (i < n) {
