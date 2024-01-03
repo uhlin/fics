@@ -252,32 +252,36 @@ PUBLIC int com_quit(int p, param_list param)
   return COM_LOGOUT;
 }
 
-PUBLIC int com_set(int p, param_list param)
+PUBLIC int
+com_set(int p, param_list param)
 {
-  int result;
-  int which;
-  char *val;
+	char	*val;
+	int	 result;
+	int	 which;
 
-  if (param[1].type == TYPE_NULL)
-    val = NULL;
-  else
-    val = param[1].val.string;
-  result = var_set(p, param[0].val.word, val, &which);
-  switch (result) {
-  case VAR_OK:
-    break;
-  case VAR_BADVAL:
-    pprintf(p, "Bad value given for variable %s.\n", param[0].val.word);
-    break;
-  case VAR_NOSUCH:
-    pprintf(p, "No such variable name %s.\n", param[0].val.word);
-    break;
-  case VAR_AMBIGUOUS:
-    pprintf(p, "Ambiguous variable name %s.\n", param[0].val.word);
-    break;
-  }
-  /* player_save(p); */
-  return COM_OK;
+	if (param[1].type == TYPE_NULL)
+		val = NULL;
+	else
+		val = param[1].val.string;
+
+	result = var_set(p, param[0].val.word, val, &which);
+
+	switch (result) {
+	case VAR_OK:
+		break;
+	case VAR_BADVAL:
+		pprintf(p, "Bad value given for variable %s.\n",
+		    param[0].val.word);
+		break;
+	case VAR_NOSUCH:
+		pprintf(p, "No such variable name %s.\n", param[0].val.word);
+		break;
+	case VAR_AMBIGUOUS:
+		pprintf(p, "Ambiguous variable name %s.\n", param[0].val.word);
+		break;
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
