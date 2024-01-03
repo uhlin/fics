@@ -30,6 +30,7 @@
                                 well as with rating.
    Markus Uhlin                 23/12/10	Cleaned up the file
    Markus Uhlin                 23/12/10	Fixed compiler warnings
+   Markus Uhlin                 24/01/04	Fixed pprintf() calls
 */
 
 #include "stdinclude.h"
