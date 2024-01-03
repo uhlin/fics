@@ -37,12 +37,7 @@
 #define NULL ((void *)0)
 #endif
 
-#define SWAP(a,b,type) {\
-  type tmp; \
-  tmp = (a);\
-  (a) = (b);\
-  (b) = tmp;\
-}
+#define ARRAY_SIZE(_a) (sizeof((_a)) / sizeof((_a)[0]))
 
 #ifdef DEBUG
 #define ASSERT(expression) \
