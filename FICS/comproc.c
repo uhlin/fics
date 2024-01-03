@@ -589,49 +589,67 @@ com_password(int p, param_list param)
 	return COM_OK;
 }
 
-PUBLIC int com_uptime(int p, param_list param)
+PUBLIC int
+com_uptime(int p, param_list param)
 {
-  unsigned long uptime = time(NULL) - startuptime;
-  struct rusage ru;
-  int days  = (uptime / (60*60*24));
-  int hours = ((uptime % (60*60*24)) / (60*60));
-  int mins  = (((uptime % (60*60*24)) % (60*60)) / 60);
-  int secs  = (((uptime % (60*60*24)) % (60*60)) % 60);
+	int days, hours, mins, secs;
+	struct rusage ru;
+	unsigned long int uptime = (time(NULL) - startuptime);
 
-  pprintf(p, "Server location: %s   Server version : %s\n", fics_hostname,VERS_NUM);
-  pprintf(p, "The server has been up since %s.\n", strltime(&startuptime));
-  if ((days==0) && (hours==0) && (mins==0)) {
-    pprintf(p, "(Up for %d second%s)\n",
-               secs, (secs==1) ? "" : "s");
-  } else if ((days==0) && (hours==0)) {
-    pprintf(p, "(Up for %d minute%s and %d second%s)\n",
-               mins, (mins==1) ? "" : "s",
-               secs, (secs==1) ? "" : "s");
-  } else if (days==0) {
-    pprintf(p, "(Up for %d hour%s, %d minute%s and %d second%s)\n",
-               hours, (hours==1) ? "" : "s",
-               mins, (mins==1) ? "" : "s",
-               secs, (secs==1) ? "" : "s");
-  } else {
-    pprintf(p, "(Up for %d day%s, %d hour%s, %d minute%s and %d second%s)\n",
-               days, (days==1) ? "" : "s",
-               hours, (hours==1) ? "" : "s",
-               mins, (mins==1) ? "" : "s",
-               secs, (secs==1) ? "" : "s");
-  }
-  pprintf(p, "\nAllocs: %u  Frees: %u  Allocs In Use: %u\n",
-	  malloc_count, free_count, malloc_count - free_count);
-  if (parray[p].adminLevel >= ADMIN_ADMIN) {
-    pprintf(p, "\nplayer size:%d, game size:%d, con size:%d, g_num:%d\n",
-	    sizeof(player), sizeof(game), net_consize(), g_num);
-    getrusage(RUSAGE_SELF, &ru);
-    pprintf(p, "pagesize = %d, maxrss = %d, total = %d\n", getpagesize(), ru.ru_maxrss, getpagesize() * ru.ru_maxrss);
-  }
-  pprintf(p, "\nPlayer limit: %d\n", max_connections-10);
-  pprintf(p, "\nThere are currently %d players, with a high of %d since last restart.\n", player_count(1), player_high);
-  pprintf(p, "There are currently %d games, with a high of %d since last restart.\n", game_count(), game_high);
-  pprintf(p, "\nCompiled on %s\n", COMP_DATE);
-  return COM_OK;
+	days	= (uptime / (60*60*24));
+	hours	= ((uptime % (60*60*24)) / (60*60));
+	mins	= (((uptime % (60*60*24)) % (60*60)) / 60);
+	secs	= (((uptime % (60*60*24)) % (60*60)) % 60);
+
+	pprintf(p, "Server location: %s   Server version : %s\n", fics_hostname,
+	    VERS_NUM);
+	pprintf(p, "The server has been up since %s.\n",
+	    strltime(&startuptime));
+
+	if (days == 0 && hours == 0 && mins == 0) {
+		pprintf(p, "(Up for %d second%s)\n",
+		    secs, (secs == 1 ? "" : "s"));
+	} else if (days == 0 && hours == 0) {
+		pprintf(p, "(Up for %d minute%s and %d second%s)\n",
+		    mins, (mins == 1 ? "" : "s"),
+		    secs, (secs == 1 ? "" : "s"));
+	} else if (days == 0) {
+		pprintf(p, "(Up for %d hour%s, %d minute%s and %d second%s)\n",
+		    hours, (hours == 1 ? "" : "s"),
+		    mins, (mins == 1 ? "" : "s"),
+		    secs, (secs == 1 ? "" : "s"));
+	} else {
+		pprintf(p, "(Up for %d day%s, %d hour%s, %d minute%s and %d "
+		    "second%s)\n",
+		    days, (days == 1 ? "" : "s"),
+		    hours, (hours == 1 ? "" : "s"),
+		    mins, (mins == 1 ? "" : "s"),
+		    secs, (secs == 1 ? "" : "s"));
+	}
+
+	pprintf(p, "\nAllocs: %u  Frees: %u  Allocs In Use: %u\n",
+	    malloc_count, free_count, (malloc_count - free_count));
+	if (parray[p].adminLevel >= ADMIN_ADMIN) {
+		pprintf(p, "\nplayer size:%d, game size:%d, con size:%d, "
+		    "g_num:%d\n", sizeof(player), sizeof(game), net_consize(),
+		    g_num);
+
+		getrusage(RUSAGE_SELF, &ru);
+
+		pprintf(p, "pagesize = %d, maxrss = %d, total = %d\n",
+		    getpagesize(),
+		    ru.ru_maxrss,
+		    (getpagesize() * ru.ru_maxrss));
+	}
+
+	pprintf(p, "\nPlayer limit: %d\n", (max_connections - 10));
+	pprintf(p, "\nThere are currently %d players, with a high of %d "
+	    "since last restart.\n", player_count(1), player_high);
+	pprintf(p, "There are currently %d games, with a high of %d "
+	    "since last restart.\n", game_count(), game_high);
+	pprintf(p, "\nCompiled on %s\n", COMP_DATE);
+
+	return COM_OK;
 }
 
 PUBLIC int
