@@ -1247,39 +1247,47 @@ PUBLIC int com_who(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_refresh(int p, param_list param)
+PUBLIC int
+com_refresh(int p, param_list param)
 {
-  int g, p1;
+	int g, p1;
 
-  if (param[0].type == TYPE_NULL) {
-    if (parray[p].game >= 0) {
-      send_board_to(parray[p].game, p);
-    } else {			/* Do observing in here */
-      if (parray[p].num_observe) {
-	for (g = 0; g < parray[p].num_observe; g++) {
-	  send_board_to(parray[p].observe_list[g], p);
+	if (param[0].type == TYPE_NULL) {
+		if (parray[p].game >= 0) {
+			send_board_to(parray[p].game, p);
+		} else { /* Do observing in here */
+			if (parray[p].num_observe) {
+				for (g = 0; g < parray[p].num_observe; g++) {
+					send_board_to(parray[p].observe_list[g],
+					    p);
+				}
+			} else {
+				pprintf(p, "You are neither playing, observing "
+				    "nor examining a game.\n");
+				return COM_OK;
+			}
+		}
+	} else {
+		if ((g = GameNumFromParam(p, &p1, &param[0])) < 0)
+			return COM_OK;
+		if (g >= g_num ||
+		    (garray[g].status != GAME_ACTIVE &&
+		    garray[g].status != GAME_EXAMINE)) {
+			pprintf(p, "No such game.\n");
+		} else if (garray[g].private && parray[p].adminLevel ==
+		    ADMIN_USER) {
+			pprintf(p, "Sorry, game %d is a private game.\n",
+			    (g + 1));
+		} else {
+			if (garray[g].private) {
+				pprintf(p, "Refreshing PRIVATE game %d\n",
+				    (g + 1));
+			}
+			send_board_to(g, p);
+		}
 	}
-      } else {
-        pprintf(p, "You are neither playing, observing nor examining a game.\n");
-        return COM_OK;
-      }
-    }
-  } else {
-    g = GameNumFromParam (p, &p1, &param[0]);
-    if (g < 0)
-      return COM_OK;
-    if ((g >= g_num) || ((garray[g].status != GAME_ACTIVE)
-                        && (garray[g].status != GAME_EXAMINE))) {
-      pprintf(p, "No such game.\n");
-    } else if (garray[g].private && parray[p].adminLevel==ADMIN_USER) {
-      pprintf (p, "Sorry, game %d is a private game.\n", g+1);
-    } else {
-      if (garray[g].private)
-        pprintf(p, "Refreshing PRIVATE game %d\n", g+1);
-      send_board_to(g, p);
-    }
-  }
-  return COM_OK;
+
+	return COM_OK;
 }
 
 PUBLIC int
