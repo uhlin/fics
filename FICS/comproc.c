@@ -58,6 +58,18 @@
 #include "utils.h"
 #include "variable.h"
 
+#define WHO_OPEN         0x01
+#define WHO_CLOSED       0x02
+#define WHO_RATED        0x04
+#define WHO_UNRATED      0x08
+#define WHO_FREE         0x10
+#define WHO_PLAYING      0x20
+#define WHO_REGISTERED   0x40
+#define WHO_UNREGISTERED 0x80
+#define WHO_BUGTEAM      0x100
+
+#define WHO_ALL 0xff
+
 PUBLIC const int	none = 0;
 PUBLIC const int	blitz_rat = 1;
 PUBLIC const int	std_rat = 2;
@@ -689,18 +701,6 @@ PUBLIC int com_logons(int p, param_list param)
   }
   return plogins(p, fname);
 }
-
-#define WHO_OPEN 0x01
-#define WHO_CLOSED 0x02
-#define WHO_RATED 0x04
-#define WHO_UNRATED 0x08
-#define WHO_FREE 0x10
-#define WHO_PLAYING 0x20
-#define WHO_REGISTERED 0x40
-#define WHO_UNREGISTERED 0x80
-#define WHO_BUGTEAM 0x100
-
-#define WHO_ALL 0xff
 
 PRIVATE void
 AddPlayerLists(int p1, char *ptmp)
