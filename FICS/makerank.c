@@ -36,12 +36,9 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 		e->r[i].rating	= 0;
 	}
 
-	if ((fp = fopen(fileName, "r")) == NULL)
-		return 0;
-
-	fgets(line, 99, fp);
-
-	if (feof(fp))
+	if ((fp = fopen(fileName, "r")) == NULL ||
+	    fgets(line, sizeof line - 1, fp) == NULL ||
+	    feof(fp))
 		return 0;
 
 	if (!strcmp(line, "v 1\n")) {
