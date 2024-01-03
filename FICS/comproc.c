@@ -70,6 +70,8 @@
 
 #define WHO_ALL 0xff
 
+typedef int ((*who_cmp_t)(const void *, const void *));
+
 PUBLIC const int	none = 0;
 PUBLIC const int	blitz_rat = 1;
 PUBLIC const int	std_rat = 2;
@@ -1072,179 +1074,198 @@ sort_players(int players[PARRAY_SIZE], int ((*cmp_func)(const void *,
 	qsort(players, p_num, sizeof(int), cmp_func);
 }
 
-/* This is the of the most compliclicated commands in terms of parameters */
-PUBLIC int com_who(int p, param_list param)
+/*
+ * This is the of the most compliclicated commands in terms of
+ * parameters.
+ */
+PUBLIC int
+com_who(int p, param_list param)
 {
-  int style = 0;
-  float stop_perc = 1.0;
-  float start_perc = 0;
-  unsigned int sel_bits = WHO_ALL;
-  int sortlist[PARRAY_SIZE], plist[PARRAY_SIZE];
-  int ((*cmp_func) (const void *, const void *)) = blitz_cmp;
-  int startpoint;
-  int stoppoint;
-  int i, len;
-  int tmpI, tmpJ;
-  char c;
-  int p1, count, num_who;
-  int sort_type = blitz_rat;
+	char		 c;
+	float		 start_perc = 0;
+	float		 stop_perc = 1.0;
+	int		 i, len;
+	int		 p1, count, num_who;
+	int		 plist[PARRAY_SIZE];
+	int		 sort_type = blitz_rat;
+	int		 sortlist[PARRAY_SIZE];
+	int		 startpoint;
+	int		 stoppoint;
+	int		 style = 0;
+	int		 tmpI, tmpJ;
+	unsigned int	 sel_bits = WHO_ALL;
+	who_cmp_t	 cmp_func = blitz_cmp;
 
-  if (param[0].type != TYPE_NULL) {
-    len = strlen(param[0].val.string);
-    for (i = 0; i < len; i++) {
-      c = param[0].val.string[i];
-      if (isdigit(c)) {
-	if (i == 0 || !isdigit(param[0].val.string[i - 1])) {
-	  tmpI = c - '0';
-	  if (tmpI == 1) {
-	    start_perc = 0.0;
-	    stop_perc = 0.333333;
-	  } else if (tmpI == 2) {
-	    start_perc = 0.333333;
-	    stop_perc = 0.6666667;
-	  } else if (tmpI == 3) {
-	    start_perc = 0.6666667;
-	    stop_perc = 1.0;
-	  } else if ((i == len - 1) || (!isdigit(param[0].val.string[i + 1])))
-	    return COM_BADPARAMETERS;
-	} else {
-	  tmpI = c - '0';
-	  tmpJ = param[0].val.string[i - 1] - '0';
-	  if (tmpI == 0)
-	    return COM_BADPARAMETERS;
-	  if (tmpJ > tmpI)
-	    return COM_BADPARAMETERS;
-	  start_perc = ((float) tmpJ - 1.0) / (float) tmpI;
-	  stop_perc = ((float) tmpJ) / (float) tmpI;
+	if (param[0].type != TYPE_NULL) {
+		len = strlen(param[0].val.string);
+
+		for (i = 0; i < len; i++) {
+			c = param[0].val.string[i];
+
+			if (isdigit(c)) {
+				if (i == 0 || !isdigit(param[0].val.string[i - 1])) {
+					tmpI = (c - '0');
+
+					if (tmpI == 1) {
+						start_perc = 0.0;
+						stop_perc = 0.333333;
+					} else if (tmpI == 2) {
+						start_perc = 0.333333;
+						stop_perc = 0.6666667;
+					} else if (tmpI == 3) {
+						start_perc = 0.6666667;
+						stop_perc = 1.0;
+					} else if (i == (len - 1) ||
+					    !isdigit(param[0].val.string[i + 1]))
+						return COM_BADPARAMETERS;
+				} else {
+					tmpI = c - '0';
+					tmpJ = (param[0].val.string[i - 1] -
+					    '0');
+
+					if (tmpI == 0)
+						return COM_BADPARAMETERS;
+					if (tmpJ > tmpI)
+						return COM_BADPARAMETERS;
+
+					start_perc = ((float) tmpJ - 1.0) /
+					    (float) tmpI;
+					stop_perc = ((float) tmpJ) /
+					    (float) tmpI;
+				}
+			} else {
+				switch (c) {
+				case ' ':
+				case '\n':
+				case '\t':
+					break;
+				case 'o':
+					if (sel_bits == WHO_ALL)
+						sel_bits = WHO_OPEN;
+					else
+						sel_bits |= WHO_OPEN;
+					break;
+				case 'r':
+					if (sel_bits == WHO_ALL)
+						sel_bits = WHO_RATED;
+					else
+						sel_bits |= WHO_RATED;
+					break;
+				case 'f':
+					if (sel_bits == WHO_ALL)
+						sel_bits = WHO_FREE;
+					else
+						sel_bits |= WHO_FREE;
+					break;
+				case 'a':
+					if (sel_bits == WHO_ALL)
+						sel_bits = WHO_FREE | WHO_OPEN;
+					else
+						sel_bits |= (WHO_FREE | WHO_OPEN);
+					break;
+				case 'R':
+					if (sel_bits == WHO_ALL)
+						sel_bits = WHO_REGISTERED;
+					else
+						sel_bits |= WHO_REGISTERED;
+					break;
+				case 'l':	// Sort order
+					cmp_func	= alpha_cmp;
+					sort_type	= none;
+					break;
+				case 'A':	// Sort order
+					cmp_func	= alpha_cmp;
+					sort_type	= none;
+					break;
+				case 'w':	// Sort order
+					cmp_func	= wild_cmp;
+					sort_type	= wild_rat;
+					break;
+				case 's':	// Sort order
+					cmp_func	= stand_cmp;
+					sort_type	= std_rat;
+					break;
+				case 'b':	// Sort order
+					cmp_func	= blitz_cmp;
+					sort_type	= blitz_rat;
+					break;
+				case 'L':	// Sort order
+					cmp_func	= light_cmp;
+					sort_type	= light_rat;
+					break;
+				case 't':	// format
+					style = 0;
+					break;
+				case 'v':	// format
+					style = 1;
+					break;
+				case 'n':	// format
+					style = 2;
+					break;
+				case 'U':
+					if (sel_bits == WHO_ALL)
+						sel_bits = WHO_UNREGISTERED;
+					else
+						sel_bits |= WHO_UNREGISTERED;
+					break;
+				case 'B':
+					if (sel_bits == WHO_ALL)
+						sel_bits = WHO_BUGTEAM;
+					else
+						sel_bits |= WHO_BUGTEAM;
+					break;
+				default:
+					return COM_BADPARAMETERS;
+				}
+			}
+		}
 	}
-      } else {
-	switch (c) {
-        case ' ':
-        case '\n':
-        case '\t':
-          break;
-	case 'o':
-	  if (sel_bits == WHO_ALL)
-	    sel_bits = WHO_OPEN;
-	  else
-	    sel_bits |= WHO_OPEN;
-	  break;
-	case 'r':
-	  if (sel_bits == WHO_ALL)
-	    sel_bits = WHO_RATED;
-	  else
-	    sel_bits |= WHO_RATED;
-	  break;
-	case 'f':
-	  if (sel_bits == WHO_ALL)
-	    sel_bits = WHO_FREE;
-	  else
-	    sel_bits |= WHO_FREE;
-	  break;
-	case 'a':
-	  if (sel_bits == WHO_ALL)
-	    sel_bits = WHO_FREE | WHO_OPEN;
-	  else
-	    sel_bits |= (WHO_FREE | WHO_OPEN);
-	  break;
-	case 'R':
-	  if (sel_bits == WHO_ALL)
-	    sel_bits = WHO_REGISTERED;
-	  else
-	    sel_bits |= WHO_REGISTERED;
-	  break;
-	case 'l':		/* Sort order */
-	  cmp_func = alpha_cmp;
-	  sort_type = none;
-	  break;
-	case 'A':		/* Sort order */
-	  cmp_func = alpha_cmp;
-	  break;
-	case 'w':		/* Sort order */
-	  cmp_func = wild_cmp;
-	  sort_type = wild_rat;
-	  break;
-	case 's':		/* Sort order */
-	  cmp_func = stand_cmp;
-	  sort_type = std_rat;
-	  break;
-	case 'b':		/* Sort order */
-	  cmp_func = blitz_cmp;
-	  sort_type = blitz_rat;
-	  break;
-        case 'L':               /* Sort order */
-          cmp_func = light_cmp;
-          sort_type = light_rat;
-          break;
-	case 't':		/* format */
-	  style = 0;
-	  break;
-	case 'v':		/* format */
-	  style = 1;
-	  break;
-	case 'n':		/* format */
-	  style = 2;
-	  break;
-	case 'U':
-	  if (sel_bits == WHO_ALL)
-	    sel_bits = WHO_UNREGISTERED;
-	  else
-	    sel_bits |= WHO_UNREGISTERED;
-	  break;
-	case 'B':
-	  if (sel_bits == WHO_ALL)
-	    sel_bits = WHO_BUGTEAM;
-	  else
-	    sel_bits |= WHO_BUGTEAM;
-	  break;
+
+	sort_players(sortlist, cmp_func);
+	count = 0;
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (!who_ok(sortlist[p1], sel_bits))
+			continue;
+		count++;
+	}
+
+	startpoint	= floor((float) count * start_perc);
+	stoppoint	= ceil((float) count * stop_perc) - 1;
+	num_who		= 0;
+	count		= 0;
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (!who_ok(sortlist[p1], sel_bits))
+			continue;
+		if (count >= startpoint && count <= stoppoint)
+			plist[num_who++] = sortlist[p1];
+
+		count++;
+	}
+
+	if (num_who == 0) {
+		pprintf(p, "No logged in players match the flags in your who "
+		    "request.\n");
+		return COM_OK;
+	}
+
+	switch (style) {
+	case 0:		// terse
+		who_terse(p, num_who, plist, sort_type);
+		break;
+	case 1:		// verbose
+		who_verbose(p, num_who, plist);
+		break;
+	case 2:		// win-loss
+		who_winloss(p, num_who, plist);
+		break;
 	default:
-	  return COM_BADPARAMETERS;
-	  break;
+		return COM_BADPARAMETERS;
+		break;
 	}
-      }
-    }
-  }
-  sort_players(sortlist, cmp_func);
-  count = 0;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (!who_ok(sortlist[p1], sel_bits))
-      continue;
-    count++;
-  }
-  startpoint = floor((float) count * start_perc);
-  stoppoint = ceil((float) count * stop_perc) - 1;
-  num_who = 0;
-  count = 0;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (!who_ok(sortlist[p1], sel_bits))
-      continue;
-    if ((count >= startpoint) && (count <= stoppoint)) {
-      plist[num_who++] = sortlist[p1];
-    }
-    count++;
-  }
 
-  if (num_who == 0) {
-    pprintf(p, "No logged in players match the flags in your who request.\n");
-    return COM_OK;
-  }
-
-  switch (style) {
-  case 0:			/* terse */
-    who_terse(p, num_who, plist, sort_type);
-    break;
-  case 1:			/* verbose */
-    who_verbose(p, num_who, plist);
-    break;
-  case 2:			/* win-loss */
-    who_winloss(p, num_who, plist);
-    break;
-  default:
-    return COM_BADPARAMETERS;
-    break;
-  }
-
-  return COM_OK;
+	return COM_OK;
 }
 
 PUBLIC int
