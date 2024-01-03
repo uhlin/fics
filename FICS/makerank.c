@@ -12,6 +12,7 @@
 #include <bsd/string.h>
 #endif
 
+#include "common.h"
 #include "makerank.h"
 
 static ENTRY	**list;
@@ -31,7 +32,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 
 	e->computer = 0;
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < ARRAY_SIZE(e->r); i++) {
 		e->r[i].num	= 0;
 		e->r[i].rating	= 0;
 	}
