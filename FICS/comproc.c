@@ -238,18 +238,21 @@ com_news(int p, param_list param)
 	return COM_OK;
 }
 
-PUBLIC int com_quit(int p, param_list param)
+PUBLIC int
+com_quit(int p, param_list param)
 {
-  if ((parray[p].game >= 0) && (garray[parray[p].game].status == GAME_EXAMINE)) {
-    pcommand(p, "unexamine");
-  }
+	if (parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE)
+		pcommand(p, "unexamine");
+	if (parray[p].game >= 0) {
+		pprintf(p, "You can't quit while you are playing a game.\n"
+		    "Type 'resign' to resign the game, or you can request an "
+		    "abort with 'abort'.\n");
+		return COM_OK;
+	}
 
-  if (parray[p].game >= 0) {
-    pprintf(p, "You can't quit while you are playing a game.\nType 'resign' to resign the game, or you can request an abort with 'abort'.\n");
-    return COM_OK;
-  }
-  psend_logoutfile(p, mess_dir, MESS_LOGOUT);
-  return COM_LOGOUT;
+	psend_logoutfile(p, mess_dir, MESS_LOGOUT);
+	return COM_LOGOUT;
 }
 
 PUBLIC int
