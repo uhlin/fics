@@ -6,11 +6,14 @@ documented in this file.
 ## [Unreleased] ##
 - Added argument lists to many function declarations.
 - Added initialization of many variables.
+- Added usage of `ARRAY_SIZE()`
 - Changed the addplayer program to generate passwords that are 8
   characters long (was 4).
 - Deleted non-existent functions from the header files.
+- Deleted obsolete and unused code
 - Fixed unchecked return values
 - Made functions and variables private (aka static) where possible.
+- Redefined `ASSERT()`
 - Reformatted code according to OpenBSD's KNF.
 - Replaced `rand()` calls with arc4random.
 - Replaced multiple `sprintf()` calls with `snprintf()`.
