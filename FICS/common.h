@@ -26,8 +26,9 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
-#include "vers.h"
+#include "assert_error.h"
 #include "legal.h"
+#include "vers.h"
 
 #define PUBLIC
 #define PRIVATE static
@@ -45,12 +46,9 @@
 
 #ifdef DEBUG
 #define ASSERT(expression) \
-  while (((expression) ? 0  : \
-   (fprintf (stderr, "Assertion failed: file %s, line %d.\n", \
-      __FILE__, __LINE__), \
-    abort (), 0)))
+	((void) ((expression)||_assert_error(__FILE__, __LINE__)))
 #else
-#define ASSERT(expression) while(0)
-#endif /* DEBUG */
+#define ASSERT(expression) ((void) 0)
+#endif
 
 #endif /* _COMMON_H */
