@@ -41,6 +41,12 @@
 
 #define ARRAY_SIZE(_a) (sizeof((_a)) / sizeof((_a)[0]))
 
+#ifdef __GNUC__
+#define PRINTFLIKE(arg_no) __attribute__((format(printf, arg_no, arg_no + 1)))
+#else
+#define PRINTFLIKE(arg_no)
+#endif
+
 #ifdef DEBUG
 #define ASSERT(expression) \
 	((void) ((expression)||_assert_error(__FILE__, __LINE__)))
