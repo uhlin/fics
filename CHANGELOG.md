@@ -4,6 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added `PRINTFLIKE()` and fixed many format errors.
 - Added argument lists to many function declarations.
 - Added initialization of many variables.
 - Added usage of `ARRAY_SIZE()`
