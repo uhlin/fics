@@ -1359,14 +1359,17 @@ PUBLIC int com_style(int p, param_list param)
     return COM_OK_NOPROMPT;
 }
 
-PUBLIC int com_promote(int p, param_list param)
+PUBLIC int
+com_promote(int p, param_list param)
 {
-  int retval;
-  ASSERT(param[0].type == TYPE_WORD);
-  if ((retval = pcommand(p, "set promote %s", param[0].val.word)) != COM_OK)
-    return retval;
-  else
-    return COM_OK_NOPROMPT;
+	int retval;
+
+	ASSERT(param[0].type == TYPE_WORD);
+
+	if ((retval = pcommand(p, "set promote %s", param[0].val.word)) !=
+	    COM_OK)
+		return retval;
+	return COM_OK_NOPROMPT;
 }
 
 PUBLIC int
