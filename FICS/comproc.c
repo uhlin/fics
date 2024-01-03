@@ -1098,8 +1098,7 @@ alpha_cmp(const void *pp1, const void *pp2)
 }
 
 PRIVATE void
-sort_players(int players[PARRAY_SIZE], int ((*cmp_func)(const void *,
-    const void *)))
+sort_players(int players[PARRAY_SIZE], who_cmp_t cmp_func)
 {
 	for (int i = 0; i < p_num; i++)
 		players[i] = i;
