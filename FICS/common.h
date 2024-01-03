@@ -23,6 +23,7 @@
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 24/01/03	Added/deleted macros and
 						redefined ASSERT().
+   Markus Uhlin                 24/01/04	Added PRINTFLIKE().
 */
 
 #ifndef _COMMON_H
