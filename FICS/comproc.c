@@ -1063,15 +1063,13 @@ PRIVATE int alpha_cmp(const void *pp1, const void *pp2)
   return strcmp(parray[p1].login, parray[p2].login);
 }
 
-PUBLIC void sort_players(int players[PARRAY_SIZE],
-			  int ((*cmp_func) (const void *, const void *)))
+PRIVATE void
+sort_players(int players[PARRAY_SIZE], int ((*cmp_func)(const void *,
+    const void *)))
 {
-  int i;
-
-  for (i = 0; i < p_num; i++) {
-    players[i] = i;
-  }
-  qsort(players, p_num, sizeof(int), cmp_func);
+	for (int i = 0; i < p_num; i++)
+		players[i] = i;
+	qsort(players, p_num, sizeof(int), cmp_func);
 }
 
 /* This is the of the most compliclicated commands in terms of parameters */
