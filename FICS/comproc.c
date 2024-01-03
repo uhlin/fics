@@ -702,24 +702,25 @@ PUBLIC int com_logons(int p, param_list param)
 
 #define WHO_ALL 0xff
 
-void AddPlayerLists (int p1, char *ptmp)
+PRIVATE void
+AddPlayerLists(int p1, char *ptmp)
 {
-  if ((parray[p1].adminLevel >= 10) && (parray[p1].i_admin))
-    strcat(ptmp, "(*)");
-  if (in_list(p1, L_COMPUTER, parray[p1].name))
-    strcat(ptmp, "(C)");
-  if (in_list(p1, L_FM, parray[p1].name))
-    strcat(ptmp, "(FM)");
-  if (in_list(p1, L_IM, parray[p1].name))
-    strcat(ptmp, "(IM)");
-  if (in_list(p1, L_GM, parray[p1].name))
-    strcat(ptmp, "(GM)");
-  if (in_list(p1, L_TD, parray[p1].name))
-    strcat(ptmp, "(TD)");
-  if (in_list(p1, L_TEAMS, parray[p1].name))
-    strcat(ptmp, "(T)");
-  if (in_list(p1, L_BLIND, parray[p1].name))
-    strcat(ptmp, "(B)");
+	if (parray[p1].adminLevel >= 10 && parray[p1].i_admin)
+		strcat(ptmp, "(*)");
+	if (in_list(p1, L_COMPUTER, parray[p1].name))
+		strcat(ptmp, "(C)");
+	if (in_list(p1, L_FM, parray[p1].name))
+		strcat(ptmp, "(FM)");
+	if (in_list(p1, L_IM, parray[p1].name))
+		strcat(ptmp, "(IM)");
+	if (in_list(p1, L_GM, parray[p1].name))
+		strcat(ptmp, "(GM)");
+	if (in_list(p1, L_TD, parray[p1].name))
+		strcat(ptmp, "(TD)");
+	if (in_list(p1, L_TEAMS, parray[p1].name))
+		strcat(ptmp, "(T)");
+	if (in_list(p1, L_BLIND, parray[p1].name))
+		strcat(ptmp, "(B)");
 }
 
 PRIVATE void who_terse(int p, int num, int *plist, int type)
