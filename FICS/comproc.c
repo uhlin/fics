@@ -264,20 +264,23 @@ PUBLIC int com_set(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int FindPlayer(int p, char* name, int *p1, int *connected)
+PUBLIC int
+FindPlayer(int p, char *name, int *p1, int *connected)
 {
-  *p1 = player_search(p, name);
-  if (*p1 == 0)
-    return 0;
-  if (*p1 < 0) {		/* player had to be connected and will be
-			   removed later */
-    *connected = 0;
-    *p1 = (-*p1) - 1;
-  } else {
-    *connected = 1;
-    *p1 = *p1 - 1;
-  }
-  return 1;
+	*p1 = player_search(p, name);
+
+	if (*p1 == 0)
+		return 0;
+	if (*p1 < 0) {	// The player had to be connected and will be removed
+			// later.
+		*connected = 0;
+		*p1 = (-*p1) - 1;
+	} else {
+		*connected = 1;
+		*p1 = *p1 - 1;
+	}
+
+	return 1;
 }
 
 PRIVATE void com_stats_andify(int *numbers, int howmany, char *dest)
