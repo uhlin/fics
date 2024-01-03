@@ -864,60 +864,57 @@ who_verbose(int p, int num, int plist[])
 	pprintf(p, " +---------------------------------------------------------------+\n");
 }
 
-PRIVATE void who_winloss(p, num, plist)
-int p;
-int num;
-int plist[];
+PRIVATE void
+who_winloss(int p, int num, int plist[])
 {
-  int i, p1;
-  char playerLine[255], tmp[255];	/* for highlight */
-  char p1WithAttrs[255];
+	char	p1WithAttrs[255];
+	char	playerLine[255];
+	char	tmp[255];
+	int	p1;
 
-  pprintf(p,
-	  "Name               Stand     win loss draw   Blitz    win loss draw    idle\n"
-    );
-  pprintf(p,
-	  "----------------   -----     -------------   -----    -------------    ----\n"
-    );
+	pprintf(p, "Name               Stand     win loss draw   Blitz    win loss draw    idle\n");
+	pprintf(p, "----------------   -----     -------------   -----    -------------    ----\n");
 
-  for (i = 0; i < num; i++) {
-    playerLine[0] = '\0';
-    p1 = plist[i];
+	for (int i = 0; i < num; i++) {
+		playerLine[0] = '\0';
+		p1 = plist[i];
 
-    /* Modified by hersco to include lists in 'who n.' */
-    strcpy (p1WithAttrs, parray[p1].name);
-    AddPlayerLists(p1, p1WithAttrs);
-    p1WithAttrs[17] = '\0';
+		/* Modified by hersco to include lists in 'who n.' */
+		strcpy(p1WithAttrs, parray[p1].name);
+		AddPlayerLists(p1, p1WithAttrs);
+		p1WithAttrs[17] = '\0';
 
-    if (p1 == p) {
-      psprintf_highlight(p, playerLine, "%-17s", p1WithAttrs);
-    } else {
-      sprintf(playerLine, "%-17s", p1WithAttrs);
-    }
-    sprintf(tmp, "  %4s     %4d %4d %4d   ",
-	    ratstrii(parray[p1].s_stats.rating, parray[p1].registered),
-	    (int) parray[p1].s_stats.win,
-	    (int) parray[p1].s_stats.los,
-	    (int) parray[p1].s_stats.dra);
-    strcat(playerLine, tmp);
+		if (p1 == p) {
+			psprintf_highlight(p, playerLine, "%-17s", p1WithAttrs);
+		} else {
+			sprintf(playerLine, "%-17s", p1WithAttrs);
+		}
 
-    sprintf(tmp, "%4s    %4d %4d %4d   ",
-	    ratstrii(parray[p1].b_stats.rating, parray[p1].registered),
-	    (int) parray[p1].b_stats.win,
-	    (int) parray[p1].b_stats.los,
-	    (int) parray[p1].b_stats.dra);
-    strcat(playerLine, tmp);
+		snprintf(tmp, sizeof tmp, "  %4s     %4d %4d %4d   ",
+		    ratstrii(parray[p1].s_stats.rating, parray[p1].registered),
+		    parray[p1].s_stats.win,
+		    parray[p1].s_stats.los,
+		    parray[p1].s_stats.dra);
+		strcat(playerLine, tmp);
 
-    if (player_idle(p1) >= 60) {
-      sprintf(tmp, "%5s\n", hms(player_idle(p1), 0, 0, 0));
-    } else {
-      sprintf(tmp, "     \n");
-    }
-    strcat(playerLine, tmp);
+		snprintf(tmp, sizeof tmp, "%4s    %4d %4d %4d   ",
+		    ratstrii(parray[p1].b_stats.rating, parray[p1].registered),
+		    parray[p1].b_stats.win,
+		    parray[p1].b_stats.los,
+		    parray[p1].b_stats.dra);
+		strcat(playerLine, tmp);
 
-    pprintf(p, "%s", playerLine);
-  }
-  pprintf(p, "    %3d Players Displayed.\n", num);
+		if (player_idle(p1) >= 60) {
+			sprintf(tmp, "%5s\n", hms(player_idle(p1), 0, 0, 0));
+		} else {
+			sprintf(tmp, "     \n");
+		}
+
+		strcat(playerLine, tmp);
+		pprintf(p, "%s", playerLine);
+	}
+
+	pprintf(p, "    %3d Players Displayed.\n", num);
 }
 
 PRIVATE int who_ok(int p, unsigned int sel_bits)
