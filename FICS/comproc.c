@@ -27,6 +27,8 @@
    Markus Uhlin			23/12/17	Reformatted com_stats()
    Markus Uhlin			23/12/19	Usage of 'time_t'
    Markus Uhlin			23/12/23	Fixed crypt()
+   Markus Uhlin			24/01/03	Added usage of ARRAY_SIZE() and
+						reformatted functions.
 */
 
 #include "stdinclude.h"
