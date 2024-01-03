@@ -607,7 +607,7 @@ com_password(int p, param_list param)
 		parray[p].passwd = NULL;
 	}
 
-	strcpy(salt, fics_getsalt());
+	strlcpy(salt, fics_getsalt(), sizeof salt);
 	parray[p].passwd = xstrdup(crypt(newpassword, salt));
 
 	pprintf(p, "Password changed to \"%s\".\n", newpassword);
