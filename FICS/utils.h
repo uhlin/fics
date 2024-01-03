@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 
+#include "common.h" /* PRINTFLIKE() */
 #include "multicol.h"
 
 #define MAX_WORD_SIZE 1024
@@ -83,18 +84,19 @@ extern int		 mail_file_to_address(char *, char *, char *);
 extern int		 mail_file_to_user(int, char *, char *);
 extern int		 mail_string_to_address(char *, char *, char *);
 extern int		 mail_string_to_user(int, char *, char *);
-extern int		 pcommand(int, char *, ...);
+extern int		 pcommand(int, char *, ...) PRINTFLIKE(2);
 extern int		 pmore_file(int);
-extern int		 pprintf(int, char *, ...);
-extern int		 pprintf_highlight(int, char *, ...);
-extern int		 pprintf_noformat(int, char *, ...);
-extern int		 pprintf_prompt(int, char *, ...);
+extern int		 pprintf(int, char *, ...) PRINTFLIKE(2);
+extern int		 pprintf_highlight(int, char *, ...) PRINTFLIKE(2);
+extern int		 pprintf_noformat(int, char *, ...) PRINTFLIKE(2);
+extern int		 pprintf_prompt(int, char *, ...) PRINTFLIKE(2);
 extern int		 printablestring(char *);
 extern int		 psend_command(int, char *, char *);
 extern int		 psend_file(int, char *, char *);
 extern int		 psend_logoutfile(int, char *, char *);
 extern int		 psend_raw_file(int, char *, char *);
-extern int		 psprintf_highlight(int, char *, char *, ...);
+extern int		 psprintf_highlight(int, char *, char *, ...)
+			     PRINTFLIKE(3);
 extern int		 safechar(int);
 extern int		 safestring(char *);
 extern int		 search_directory(char *, char *, char **, int);
