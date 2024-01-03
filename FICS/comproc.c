@@ -299,23 +299,26 @@ FindPlayer(int p, char *name, int *p1, int *connected)
 	return 1;
 }
 
-PRIVATE void com_stats_andify(int *numbers, int howmany, char *dest)
+PRIVATE void
+com_stats_andify(int *numbers, int howmany, char *dest)
 {
-  char tmp[10];
+	char tmp[10] = { '\0' };
 
-  *dest = '\0';
-  while (howmany--) {
-    sprintf(tmp, "%d", numbers[howmany]);
-    strcat(dest, tmp);
-    if (howmany > 1)
-      sprintf(tmp, ", ");
-    else if (howmany == 1)
-      sprintf(tmp, " and ");
-    else
-      sprintf(tmp, ".\n");
-    strcat(dest, tmp);
-  }
-  return;
+	*dest = '\0';
+
+	while (howmany--) {
+		sprintf(tmp, "%d", numbers[howmany]);
+		strcat(dest, tmp);
+
+		if (howmany > 1)
+			sprintf(tmp, ", ");
+		else if (howmany == 1)
+			sprintf(tmp, " and ");
+		else
+			sprintf(tmp, ".\n");
+
+		strcat(dest, tmp);
+	}
 }
 
 PRIVATE void
