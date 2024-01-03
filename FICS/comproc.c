@@ -318,20 +318,28 @@ PRIVATE void com_stats_andify(int *numbers, int howmany, char *dest)
   return;
 }
 
-PRIVATE void com_stats_rating(char *hdr, statistics * stats, char *dest)
+PRIVATE void
+com_stats_rating(char *hdr, statistics *stats, char *dest)
 {
-  char tmp[100];
+	char tmp[100] = { '\0' };
 
-  sprintf(dest, "%-10s%4s    %5.1f   %4d   %4d   %4d   %4d",
-	  hdr, ratstr(stats->rating), stats->sterr, stats->win, stats->los, stats->dra, stats->num);
-  if (stats->whenbest) {
-    sprintf(tmp, "   %d", stats->best);
-    strcat(dest, tmp);
-    strftime(tmp, sizeof(tmp), " (%d-%b-%y)", localtime((time_t *) & stats->whenbest));
-    strcat(dest, tmp);
-  }
-  strcat(dest, "\n");
-  return;
+	sprintf(dest, "%-10s%4s    %5.1f   %4d   %4d   %4d   %4d", hdr,
+	    ratstr(stats->rating),
+	    stats->sterr,
+	    stats->win,
+	    stats->los,
+	    stats->dra,
+	    stats->num);
+
+	if (stats->whenbest) {
+		sprintf(tmp, "   %d", stats->best);
+		strcat(dest, tmp);
+		strftime(tmp, sizeof tmp, " (%d-%b-%y)",
+		    localtime((time_t *) &stats->whenbest));
+		strcat(dest, tmp);
+	}
+
+	strcat(dest, "\n");
 }
 
 PUBLIC int
