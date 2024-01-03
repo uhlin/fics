@@ -128,8 +128,10 @@ LoadEntries(void)
 
 	for (letter1 = 'a'; letter1 <= 'z'; letter1++) {
 		printf("Loading %c's.\n", letter1);
-		sprintf(pathInput, "%s/%c", DEFAULT_PLAYERS, letter1);
-		sprintf(command, "ls -1 %s", pathInput);
+
+		snprintf(pathInput, sizeof pathInput, "%s/%c", DEFAULT_PLAYERS,
+		    letter1);
+		snprintf(command, sizeof command, "ls -1 %s", pathInput);
 
 		if ((fpPlayerList = popen(command, "r")) == NULL)
 			continue;
@@ -147,8 +149,9 @@ LoadEntries(void)
 				printf("File %c/%s: wrong directory.\n",
 				    letter1, e.name);
 			} else {
-				sprintf(pathInput, "%s/%c/%s", DEFAULT_PLAYERS,
-				    letter1, e.name);
+				snprintf(pathInput, sizeof pathInput,
+				    "%s/%c/%s", DEFAULT_PLAYERS, letter1,
+				    e.name);
 
 				if (GetPlayerInfo(pathInput, &e)) {
 					if ((list[n] = malloc(sizeof(ENTRY))) ==
@@ -184,7 +187,7 @@ SetComputers(int n)
 	char	 line[100];
 	int	 i = 0;
 
-	sprintf(line, "sort -f %s", COMPUTER_FILE);
+	snprintf(line, sizeof line, "sort -f %s", COMPUTER_FILE);
 
 	if ((fpComp = popen(line, "r")) == NULL)
 		return 0;
@@ -255,7 +258,8 @@ makerank(void)
 		qsort(sortme, sortnum, sizeof(ENTRY *), sortfunc);
 
 		printf("Saving to file.\n");
-		sprintf(fName, "%s/rank.%s", DEFAULT_STATS, rnames[rtype]);
+		snprintf(fName, sizeof fName, "%s/rank.%s", DEFAULT_STATS,
+		    rnames[rtype]);
 
 		if ((fp = fopen(fName, "w")) == NULL)
 			err(1, "%s: fopen", __func__);
