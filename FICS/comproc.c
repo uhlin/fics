@@ -918,45 +918,55 @@ who_winloss(int p, int num, int plist[])
 	pprintf(p, "    %3d Players Displayed.\n", num);
 }
 
-PRIVATE int who_ok(int p, unsigned int sel_bits)
+PRIVATE int
+who_ok(int p, unsigned int sel_bits)
 {
-  int p2;
-  if (parray[p].status != PLAYER_PROMPT)
-    return 0;
-  if (sel_bits == WHO_ALL)
-    return 1;
-  if (sel_bits & WHO_OPEN)
-    if (!parray[p].open)
-      return 0;
-  if (sel_bits & WHO_CLOSED)
-    if (parray[p].open)
-      return 0;
-  if (sel_bits & WHO_RATED)
-    if (!parray[p].rated)
-      return 0;
-  if (sel_bits & WHO_UNRATED)
-    if (parray[p].rated)
-      return 0;
-  if (sel_bits & WHO_FREE)
-    if (parray[p].game >= 0)
-      return 0;
-  if (sel_bits & WHO_PLAYING)
-    if (parray[p].game < 0)
-      return 0;
-  if (sel_bits & WHO_REGISTERED)
-    if (!parray[p].registered)
-      return 0;
-  if (sel_bits & WHO_UNREGISTERED)
-    if (parray[p].registered)
-      return 0;
-  if (sel_bits & WHO_BUGTEAM) {
-    p2 = parray[p].partner;
-    if (p2 < 0 || parray[p2].partner != p)
-      return 0;
-    }
-  return 1;
-}
+	int p2;
 
+	if (parray[p].status != PLAYER_PROMPT)
+		return 0;
+	if (sel_bits == WHO_ALL)
+		return 1;
+
+	if (sel_bits & WHO_OPEN) {
+		if (!parray[p].open)
+			return 0;
+	}
+	if (sel_bits & WHO_CLOSED) {
+		if (parray[p].open)
+			return 0;
+	}
+	if (sel_bits & WHO_RATED) {
+		if (!parray[p].rated)
+			return 0;
+	}
+	if (sel_bits & WHO_UNRATED) {
+		if (parray[p].rated)
+			return 0;
+	}
+	if (sel_bits & WHO_FREE) {
+		if (parray[p].game >= 0)
+			return 0;
+	}
+	if (sel_bits & WHO_PLAYING) {
+		if (parray[p].game < 0)
+			return 0;
+	}
+	if (sel_bits & WHO_REGISTERED) {
+		if (!parray[p].registered)
+			return 0;
+	}
+	if (sel_bits & WHO_UNREGISTERED) {
+		if (parray[p].registered)
+			return 0;
+	}
+	if (sel_bits & WHO_BUGTEAM) {
+		if ((p2 = parray[p].partner) < 0 || parray[p2].partner != p)
+			return 0;
+	}
+
+	return 1;
+}
 
 PRIVATE int
 blitz_cmp(const void *pp1, const void *pp2)
