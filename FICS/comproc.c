@@ -1050,19 +1050,21 @@ PRIVATE int wild_cmp(const void *pp1, const void *pp2)
   return strcmp(parray[p1].login, parray[p2].login);
 }
 
-PRIVATE int alpha_cmp(const void *pp1, const void *pp2)
+PRIVATE int
+alpha_cmp(const void *pp1, const void *pp2)
 {
-  register int p1 = *(int *) pp1;
-  register int p2 = *(int *) pp2;
-  if (parray[p1].status != PLAYER_PROMPT) {
-    if (parray[p2].status != PLAYER_PROMPT)
-      return 0;
-    else
-      return -1;
-  }
-  if (parray[p2].status != PLAYER_PROMPT)
-    return 1;
-  return strcmp(parray[p1].login, parray[p2].login);
+	register int	p1 = *(int *) pp1;
+	register int	p2 = *(int *) pp2;
+
+	if (parray[p1].status != PLAYER_PROMPT) {
+		if (parray[p2].status != PLAYER_PROMPT)
+			return 0;
+		else
+			return -1;
+	}
+	if (parray[p2].status != PLAYER_PROMPT)
+		return 1;
+	return strcmp(parray[p1].login, parray[p2].login);
 }
 
 PRIVATE void
