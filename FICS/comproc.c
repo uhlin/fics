@@ -311,7 +311,7 @@ FindPlayer(int p, char *name, int *p1, int *connected)
 }
 
 PRIVATE void
-com_stats_andify(int *numbers, int howmany, char *dest)
+com_stats_andify(int *numbers, int howmany, char *dest, size_t dsize)
 {
 	char tmp[10] = { '\0' };
 
@@ -319,7 +319,7 @@ com_stats_andify(int *numbers, int howmany, char *dest)
 
 	while (howmany--) {
 		snprintf(tmp, sizeof tmp, "%d", numbers[howmany]);
-		strcat(dest, tmp);
+		strlcat(dest, tmp, dsize);
 
 		if (howmany > 1)
 			strlcpy(tmp, ", ", sizeof tmp);
@@ -328,7 +328,10 @@ com_stats_andify(int *numbers, int howmany, char *dest)
 		else
 			strlcpy(tmp, ".\n", sizeof tmp);
 
-		strcat(dest, tmp);
+		if (strlcat(dest, tmp, dsize) >= dsize) {
+			(void) fprintf(stderr, "FICS: %s: warning: strlcat() "
+			    "truncated\n", __func__);
+		}
 	}
 }
 
@@ -404,7 +407,7 @@ com_stats(int p, param_list param)
 		}
 		pprintf(p, "%s is giving a simul: game%s ", parray[p1].name,
 		    (t > 1 ? "s" : ""));
-		com_stats_andify(numbers, t, tmp);
+		com_stats_andify(numbers, t, tmp, sizeof tmp);
 		pprintf(p, tmp);
 	} else if (parray[p1].game >= 0) {
 		g = parray[p1].game;
@@ -443,7 +446,7 @@ com_stats(int p, param_list param)
 		if (t) {
 			pprintf(p, "%s is observing game%s ", parray[p1].name,
 			    (t > 1 ? "s" : ""));
-			com_stats_andify(numbers, t, tmp);
+			com_stats_andify(numbers, t, tmp, sizeof tmp);
 			pprintf(p, tmp);
 		}
 	}
