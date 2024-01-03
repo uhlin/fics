@@ -66,6 +66,8 @@ PUBLIC const int	light_rat = 4;
 
 PUBLIC int num_news = -1;
 
+PRIVATE char *inout_string[] = { "login", "logout" };
+
 PUBLIC int
 com_rating_recalc(int p, param_list param)
 {
@@ -628,10 +630,6 @@ com_date(int p, param_list param)
 
 	return COM_OK;
 }
-
-char *inout_string[] = {
-  "login", "logout"
-};
 
 PRIVATE int
 plogins(int p, char *fname)
