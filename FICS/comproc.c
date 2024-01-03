@@ -512,12 +512,12 @@ com_stats(int p, param_list param)
 		timeToStr[strlen(timeToStr) - 1] = '\0';
 		pprintf(p, "\n");
 
-		onTime = ((time(0) - parray[p1].logon_time) +
+		onTime = ((time(NULL) - parray[p1].logon_time) +
 		    parray[p1].totalTime);
 
 		pprintf(p, "Total time on-line: %s\n", hms_desc(onTime) );
 		pprintf(p, "%% of life on-line:  %3.1f  (since %s)\n", // XXX
-		    (double) ((onTime * 100) / (double) (time(0) -
+		    (double) ((onTime * 100) / (double) (time(NULL) -
 		    parray[p1].timeOfReg)),
 		    timeToStr);
 	}
@@ -589,7 +589,7 @@ com_password(int p, param_list param)
 
 PUBLIC int com_uptime(int p, param_list param)
 {
-  unsigned long uptime = time(0) - startuptime;
+  unsigned long uptime = time(NULL) - startuptime;
   struct rusage ru;
   int days  = (uptime / (60*60*24));
   int hours = ((uptime % (60*60*24)) / (60*60));
