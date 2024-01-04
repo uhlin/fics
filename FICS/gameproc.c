@@ -224,7 +224,7 @@ PUBLIC void game_ended(int g, int winner, int why)
       if (!parray[p].i_game && !player_is_observe(p, g))
 	continue;
       pprintf_noformat(p, outstr);
-      pprintf_prompt(p, "");
+      pprintf_prompt(p, "%s", "");
     }
   }
   if ((garray[g].rated) && (rate_change)) {
@@ -258,9 +258,9 @@ PUBLIC void game_ended(int g, int winner, int why)
     parray[garray[g].white].opponent = -1;
     parray[garray[g].black].opponent = -1;
     if (garray[g].white != commanding_player)
-      pprintf_prompt(garray[g].white, "");
+      pprintf_prompt(garray[g].white, "%s", "");
     if (garray[g].black != commanding_player)
-      pprintf_prompt(garray[g].black, "");
+      pprintf_prompt(garray[g].black, "%s", "");
     if (parray[garray[g].white].simul_info.numBoards) {
       player_simul_over(garray[g].white, g, whiteResult);
     }
@@ -1213,7 +1213,7 @@ PUBLIC int com_takeback(int p, param_list param)
     } else {
       if (garray[g].numHalfMoves < nHalfMoves) {
 	pprintf(p, "There are only %d half moves in your game.\n", garray[g].numHalfMoves);
-	pprintf_prompt(parray[p].opponent, "\n%s has declined the takeback request.\n", parray[p].name, nHalfMoves);
+	pprintf_prompt(parray[p].opponent, "\n%s has declined the takeback request.\n", parray[p].name);
 	return COM_OK;
       }
       pprintf(p, "You disagree on the number of half-moves to takeback.\n");
