@@ -28,7 +28,7 @@ output_shut_mess(void)
 	fprintf(stderr, "FICS: Shutting down at %s\n", strltime(&shuttime));
 }
 
-PUBLIC void
+PUBLIC __dead void
 ShutDown(void)
 {
 	time_t shuttime = time(NULL);
