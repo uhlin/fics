@@ -15,6 +15,7 @@ documented in this file.
 - Fixed incorrect buffer sizes
 - Fixed unchecked return values
 - Made functions and variables private (aka static) where possible.
+- Marked functions that doesn't return `__dead`.
 - Redefined `ASSERT()`
 - Reformatted code according to OpenBSD's KNF.
 - Replaced `rand()` calls with arc4random.
