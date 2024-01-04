@@ -87,7 +87,7 @@ GetArgs(int argc, char *argv[])
 	}
 }
 
-PRIVATE void
+PRIVATE __dead void
 TerminateServer(int sig)
 {
 	fprintf(stderr, "FICS: Got signal %d\n", sig);
