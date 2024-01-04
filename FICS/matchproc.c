@@ -777,7 +777,7 @@ PUBLIC int com_match(int p, param_list param)
     pprintf(p1, "\n%s updates the match request.\n", parray[p].name);
   } else {
     pprintf(p, "Issuing: ");
-    pprintf(p1, "\n", parray[p].name);
+    pprintf(p1, "\n"); // XXX: 'parray[p].name'
   }
 
   pprintf(p, "%s (%s) %s", parray[p].name,
