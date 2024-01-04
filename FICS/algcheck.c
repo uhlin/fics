@@ -23,11 +23,11 @@
 */
 
 #include "stdinclude.h"
-
 #include "common.h"
+
 #include "algcheck.h"
-#include "movecheck.h"
 #include "board.h"
+#include "movecheck.h"
 #include "utils.h"
 
 /* Well, lets see if I can list the possibilities
