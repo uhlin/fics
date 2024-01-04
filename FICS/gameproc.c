@@ -23,6 +23,7 @@
    Dave Herscovici		95/11/26	Split into two files;
    						Second is 'obsproc.c'.
    Markus Uhlin			23/12/16	Fixed compiler warnings
+   Markus Uhlin			24/01/04	Fixed pprintf_prompt() calls
 */
 
 #include "stdinclude.h"
