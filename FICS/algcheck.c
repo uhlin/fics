@@ -299,6 +299,73 @@ PUBLIC int alg_parse_move(char *mstr, game_state_t * gs, move_t * mt)
   return MOVE_OK;
 }
 
+PRIVATE void
+not_pawn(game_state_t *gs, move_t *mt, game_state_t *fakeMove, const int piece,
+	 char *tmp, char *mStr, size_t tmp_size, size_t mStr_size)
+{
+	int ambig, r_ambig, f_ambig;
+
+	ambig = r_ambig = f_ambig = 0;
+
+	for (int r = 0; r < 8; r++) {
+		for (int f = 0; f < 8; f++) {
+			if (gs->board[f][r] != NOPIECE &&
+			    iscolor(gs->board[f][r], gs->onMove) &&
+			    piecetype(gs->board[f][r]) == piece &&
+			    (f != mt->fromFile || r != mt->fromRank)) {
+				if (legal_move(gs, f, r, mt->toFile,
+				    mt->toRank)) {
+					fakeMove = gs;
+					fakeMove->board[f][r] = NOPIECE;
+					fakeMove->onMove =
+					    CToggle(fakeMove->onMove);
+					gs->onMove = CToggle(gs->onMove);
+
+					/*
+					 * New bracketing below to try
+					 * to fix 'ambiguous move'
+					 * bug.
+					 */
+
+					if (in_check(gs) || !in_check(fakeMove))
+						ambig++;
+
+					if (f == mt->fromFile) {
+						f_ambig++;
+						ambig++;
+					}
+					if (r == mt->fromRank) {
+						r_ambig++;
+						ambig++;
+					}
+
+					gs->onMove = CToggle(gs->onMove);
+				}
+			}
+		} /* for */
+	} /* for */
+
+	if (ambig > 0) {
+		/*
+		 * Ambiguity in short notation. Need to add file, rank
+		 * or _both_ in notation.
+		 */
+
+		if (f_ambig == 0) {
+			sprintf(tmp, "%c", (mt->fromFile + 'a'));
+			strcat(mStr, tmp);
+		} else if (r_ambig == 0) {
+			sprintf(tmp, "%d", (mt->fromRank + 1));
+			strcat(mStr, tmp);
+		} else {
+			sprintf(tmp, "%c%d",
+			    (mt->fromFile + 'a'),
+			    (mt->fromRank + 1));
+			strcat(mStr, tmp);
+		}
+	}
+}
+
 /*
  * Soso: rewrote alg_unparse function.  Algebraic deparser - sets the
  * 'mStr' variable with move description in short notation. Used in
@@ -309,8 +376,7 @@ alg_unparse(game_state_t *gs, move_t *mt)
 {
 	char		tmp[20] = { '\0' };
 	game_state_t	fakeMove;
-	int		ambig, r_ambig, f_ambig;
-	int		piece, f, r;
+	int		piece;
 	static char	mStr[20] = { '\0' };
 
 	if (mt->fromFile == ALG_DROP) {
@@ -369,76 +435,9 @@ alg_unparse(game_state_t *gs, move_t *mt)
 		 */
 
 		if (piece != PAWN) {
-			ambig = r_ambig = f_ambig = 0;
-
-			for (r = 0; r < 8; r++) {
-				for (f = 0; f < 8; f++) {
-					if (gs->board[f][r] != NOPIECE &&
-					    iscolor(gs->board[f][r], gs->onMove) &&
-					    piecetype(gs->board[f][r]) == piece &&
-					    (f != mt->fromFile ||
-					    r != mt->fromRank)) {
-						if (legal_move(gs, f, r,
-						    mt->toFile, mt->toRank)) {
-							fakeMove = *gs;
-							fakeMove.board[f][r] =
-							    NOPIECE;
-							fakeMove.onMove =
-							    CToggle(fakeMove.onMove);
-
-							gs->onMove =
-							    CToggle(gs->onMove);
-
-							/*
-							 * New
-							 * bracketing
-							 * below to
-							 * try to fix
-							 * 'ambiguous
-							 * move' bug.
-							 */
-							if (in_check(gs) ||
-							    !in_check(&fakeMove))
-								ambig++;
-
-							if (f == mt->fromFile) {
-								f_ambig++;
-								ambig++;
-							}
-							if (r == mt->fromRank) {
-								r_ambig++;
-								ambig++;
-							}
-
-							gs->onMove =
-							    CToggle(gs->onMove);
-						}
-					}
-				} /* for */
-			} /* for */
-
-			if (ambig > 0) {
-				/*
-				 * Ambiguity in short notation. need
-				 * to add file, rank or _both_ in
-				 * notation.
-				 */
-
-				if (f_ambig == 0) {
-					sprintf(tmp, "%c",
-					    (mt->fromFile + 'a'));
-					strcat(mStr, tmp);
-				} else if (r_ambig == 0) {
-					sprintf(tmp, "%d", (mt->fromRank + 1));
-					strcat(mStr, tmp);
-				} else {
-					sprintf(tmp, "%c%d",
-					    (mt->fromFile + 'a'),
-					    (mt->fromRank + 1));
-					strcat(mStr, tmp);
-				}
-			}
-		}
+			not_pawn(gs, mt, &fakeMove, piece, &tmp[0], &mStr[0],
+			    sizeof tmp, sizeof mStr);
+		} /* not pawn */
 
 		if (gs->board[mt->toFile][mt->toRank] != NOPIECE ||
 		    (piece == PAWN && mt->fromFile != mt->toFile))
