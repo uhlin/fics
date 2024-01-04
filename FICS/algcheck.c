@@ -444,7 +444,7 @@ alg_unparse(game_state_t *gs, move_t *mt)
 			strcat(mStr, "x");
 	}
 
-	sprintf(tmp, "%c%d", mt->toFile + 'a', mt->toRank + 1);
+	sprintf(tmp, "%c%d", (mt->toFile + 'a'), (mt->toRank + 1));
 	strcat(mStr, tmp);
 
 	if (piece == PAWN && mt->piecePromotionTo != NOPIECE) {
