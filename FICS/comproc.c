@@ -29,6 +29,8 @@
    Markus Uhlin			23/12/23	Fixed crypt()
    Markus Uhlin			24/01/03	Added usage of ARRAY_SIZE() and
 						reformatted functions.
+   Markus Uhlin			24/01/06	Fixed potentially insecure
+						format strings.
 */
 
 #include "stdinclude.h"
