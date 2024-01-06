@@ -451,7 +451,7 @@ alg_unparse(game_state_t *gs, move_t *mt)
 		if (mt->fromFile == ALG_DROP) {
 			strcpy(mStr,"P");
 		} else if (mt->fromFile != mt->toFile) {
-			sprintf(tmp, "%c", (mt->fromFile + 'a'));
+			snprintf(tmp, sizeof tmp, "%c", (mt->fromFile + 'a'));
 			strcpy(mStr, tmp);
 		}
 		break;
@@ -493,7 +493,7 @@ alg_unparse(game_state_t *gs, move_t *mt)
 			strcat(mStr, "x");
 	}
 
-	sprintf(tmp, "%c%d", (mt->toFile + 'a'), (mt->toRank + 1));
+	snprintf(tmp, sizeof tmp, "%c%d", (mt->toFile + 'a'), (mt->toRank + 1));
 	strcat(mStr, tmp);
 
 	if (piece == PAWN && mt->piecePromotionTo != NOPIECE) {
