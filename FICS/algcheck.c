@@ -401,13 +401,13 @@ not_pawn(game_state_t *gs, move_t *mt, game_state_t *fakeMove, const int piece,
 		 */
 
 		if (f_ambig == 0) {
-			sprintf(tmp, "%c", (mt->fromFile + 'a'));
+			snprintf(tmp, tmp_size, "%c", (mt->fromFile + 'a'));
 			strcat(mStr, tmp);
 		} else if (r_ambig == 0) {
-			sprintf(tmp, "%d", (mt->fromRank + 1));
+			snprintf(tmp, tmp_size, "%d", (mt->fromRank + 1));
 			strcat(mStr, tmp);
 		} else {
-			sprintf(tmp, "%c%d",
+			snprintf(tmp, tmp_size, "%c%d",
 			    (mt->fromFile + 'a'),
 			    (mt->fromRank + 1));
 			strcat(mStr, tmp);
