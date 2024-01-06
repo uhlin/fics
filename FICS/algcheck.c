@@ -430,6 +430,7 @@ alg_unparse(game_state_t *gs, move_t *mt)
 	char		tmp[20] = { '\0' };
 	game_state_t	fakeMove;
 	int		piece;
+	size_t		ret = 0;
 	static char	mStr[20] = { '\0' };
 
 	if (mt->fromFile == ALG_DROP) {
@@ -498,7 +499,12 @@ alg_unparse(game_state_t *gs, move_t *mt)
 	}
 
 	snprintf(tmp, sizeof tmp, "%c%d", (mt->toFile + 'a'), (mt->toRank + 1));
-	strlcat(mStr, tmp, sizeof mStr);
+	ret = strlcat(mStr, tmp, sizeof mStr);
+
+	if (ret >= sizeof mStr) {
+		fprintf(stderr, "FICS: %s (line %d): warning: "
+		    "strlcat() truncated\n", __func__, __LINE__);
+	}
 
 	if (piece == PAWN && mt->piecePromotionTo != NOPIECE) {
 		strlcat(mStr, "=", sizeof mStr); /* = before promoting piece */
@@ -527,8 +533,14 @@ alg_unparse(game_state_t *gs, move_t *mt)
 	execute_move(&fakeMove, mt, 0);
 	fakeMove.onMove = CToggle(fakeMove.onMove);
 
-	if (in_check(&fakeMove))
-		strlcat(mStr, "+", sizeof mStr);
+	if (in_check(&fakeMove)) {
+		ret = strlcat(mStr, "+", sizeof mStr);
+
+		if (ret >= sizeof mStr) {
+			fprintf(stderr, "FICS: %s (line %d): warning: "
+			    "strlcat() truncated\n", __func__, __LINE__);
+		}
+	}
 
 	return mStr;
 }
