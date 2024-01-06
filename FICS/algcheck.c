@@ -21,6 +21,9 @@
    name		email		yy/mm/dd	Change
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 24/01/04	Reformatted functions
+   Markus Uhlin                 24/01/06	Switched to usage of strlcpy,
+						strlcat and snprintf. Also added
+						truncation checks.
 */
 
 #include "stdinclude.h"
