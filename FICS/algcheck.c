@@ -406,15 +406,15 @@ not_pawn(game_state_t *gs, move_t *mt, game_state_t *fakeMove, const int piece,
 
 		if (f_ambig == 0) {
 			snprintf(tmp, tmp_size, "%c", (mt->fromFile + 'a'));
-			strcat(mStr, tmp);
+			strlcat(mStr, tmp, mStr_size);
 		} else if (r_ambig == 0) {
 			snprintf(tmp, tmp_size, "%d", (mt->fromRank + 1));
-			strcat(mStr, tmp);
+			strlcat(mStr, tmp, mStr_size);
 		} else {
 			snprintf(tmp, tmp_size, "%c%d",
 			    (mt->fromFile + 'a'),
 			    (mt->fromRank + 1));
-			strcat(mStr, tmp);
+			strlcat(mStr, tmp, mStr_size);
 		}
 	}
 }
@@ -480,7 +480,7 @@ alg_unparse(game_state_t *gs, move_t *mt)
 	} /* switch */
 
 	if (mt->fromFile == ALG_DROP) {
-		strcat(mStr, DROP_STR);
+		strlcat(mStr, DROP_STR, sizeof mStr);
 	} else {
 		/*
 		 * Checks for ambiguity in short notation (Ncb3, R8e8
@@ -494,27 +494,27 @@ alg_unparse(game_state_t *gs, move_t *mt)
 
 		if (gs->board[mt->toFile][mt->toRank] != NOPIECE ||
 		    (piece == PAWN && mt->fromFile != mt->toFile))
-			strcat(mStr, "x");
+			strlcat(mStr, "x", sizeof mStr);
 	}
 
 	snprintf(tmp, sizeof tmp, "%c%d", (mt->toFile + 'a'), (mt->toRank + 1));
-	strcat(mStr, tmp);
+	strlcat(mStr, tmp, sizeof mStr);
 
 	if (piece == PAWN && mt->piecePromotionTo != NOPIECE) {
-		strcat(mStr, "="); /* = before promoting piece */
+		strlcat(mStr, "=", sizeof mStr); /* = before promoting piece */
 
 		switch (piecetype(mt->piecePromotionTo)) {
 		case KNIGHT:
-			strcat(mStr, "N");
+			strlcat(mStr, "N", sizeof mStr);
 			break;
 		case BISHOP:
-			strcat(mStr, "B");
+			strlcat(mStr, "B", sizeof mStr);
 			break;
 		case ROOK:
-			strcat(mStr, "R");
+			strlcat(mStr, "R", sizeof mStr);
 			break;
 		case QUEEN:
-			strcat(mStr, "Q");
+			strlcat(mStr, "Q", sizeof mStr);
 			break;
 		default:
 			break;
@@ -528,7 +528,7 @@ alg_unparse(game_state_t *gs, move_t *mt)
 	fakeMove.onMove = CToggle(fakeMove.onMove);
 
 	if (in_check(&fakeMove))
-		strcat(mStr, "+");
+		strlcat(mStr, "+", sizeof mStr);
 
 	return mStr;
 }
