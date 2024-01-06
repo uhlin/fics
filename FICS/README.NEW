@@ -24,7 +24,7 @@ Information on changes may not be exact or complete.
          fics_hostname now takes it's contents from SERVER_NAME,
          which should nwo be a DNS resolvable hostname.
          fics_addplayer new account message modernized to include
-         brief instructions on how to connect to the server and 
+         brief instructions on how to connect to the server and
          and warn about the use of anauthorzied duplicate accounts.
 	 both adminproc.c and fics_addplayer modified.
 
@@ -143,7 +143,7 @@ Information on changes may not be exact or complete.
 1.2.1    bug fixes.
          admin gods can only use pose.
          siteinfo shown
-1.2      notifiedby flag	 
+1.2      notifiedby flag
          remplayer, asethandle, raisedead written
          nuke improved
          query disabled
@@ -153,7 +153,7 @@ Information on changes may not be exact or complete.
 	 (*) shown if level 10 admin
          level 60 given title Assistant superuser.
          who A, who l, who U, who R
-         Look of announce and other stuff improved.     
+         Look of announce and other stuff improved.
 1.0	 Original Nash code.
 -----------------------------------------------------------------------------
 Here is a more stable, hopefully more portable release of the
@@ -169,4 +169,3 @@ And Most thanks to red (Richard Nash) for the original code!
 
 -- Uploaded by Shane Hudson (Shane on FICS).
 Thanks to everyone for their support of FICS.
-
