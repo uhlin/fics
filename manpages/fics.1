@@ -1,0 +1,40 @@
+.\" -*- mode: nroff; -*-
+.\"
+.\" SPDX-FileCopyrightText: Copyright 2024 Markus Uhlin
+.\" SPDX-License-Identifier: ISC
+.\"
+.Dd January 6, 2024
+.Dt SWIRC 1
+.Os
+.Sh NAME
+.Nm fics
+.Nd free internet chess server fork
+.Sh SYNOPSIS
+.Nm fics
+.Bk -words
+.Op Fl h
+.Op Fl p Ar port
+.Ek
+.Sh DESCRIPTION
+.Nm
+is a free internet chess server originally developed by Richard Nash
+in the mid 90's.
+This manual page however documents a fork of
+.Nm
+developed by the
+.Lk https://www.rpblc.net/ RPBLC
+computing network.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl h
+Outputs the program usage.
+.It Fl p Ar port
+Which port shall the chess server listen on?
+(The default is 5000.)
+.El
+.Sh SEE ALSO
+.Xr fics_addplayer 1 , Xr makerank 1
+.Sh AUTHORS
+This manual page was written by
+.An Markus Uhlin
+.Aq Mt maxxe@rpblc.net
