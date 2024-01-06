@@ -12,6 +12,8 @@ documented in this file.
   characters long (was 4).
 - Deleted non-existent functions from the header files.
 - Deleted obsolete and unused code
+- Fixed format strings that weren't string literals. Potentially
+  insecure.
 - Fixed incorrect buffer sizes
 - Fixed unchecked return values
 - Made functions and variables private (aka static) where possible.
