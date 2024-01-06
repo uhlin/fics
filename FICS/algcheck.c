@@ -78,113 +78,135 @@ char *alg_list[] = {
 #define ALG_UNKNOWN -1
 /* #define ALG_DROP    -2	IanO: this is in board.h, used in movecheck.c */
 
-PRIVATE int get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr, int *bishconfusion)
+PRIVATE int
+get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr,
+	      int *bishconfusion)
 {
-  char tmp[1024];
-  char *s;
-  int i, j, len;
-  char c;
-  int matchVal = -1;
-  int lpiece, lff, lfr, ltf, ltr;
+	char	*s;
+	char	 c;
+	char	 tmp[1024] = { '\0' };
+	int	 i, j, len;
+	int	 lpiece, lff, lfr, ltf, ltr;
+	int	 matchVal = -1;
 
-  *bishconfusion = 0;
-  strcpy(tmp, str);
-  if ((s = index(tmp, '+'))) {	/* Cut off any check marks */
-    *s = '\0';
-  }
-  if ((s = index(tmp, '='))) {	/* Cut off any promotion marks */
-    *s = '\0';
-  }
-  *piece = *ff = *fr = *tf = *tr = ALG_UNKNOWN;
-  len = strlen(tmp);
-  for (i = 0; alg_list[i]; i++) {
-    lpiece = lff = lfr = ltf = ltr = ALG_UNKNOWN;
-    if (strlen(alg_list[i]) != len)
-      continue;
-    for (j = len - 1; j >= 0; j--) {
-      switch (alg_list[i][j]) {
-      case 'f':
-	if ((tmp[j] < 'a') || (tmp[j] > 'h'))
-	  goto nomatch;
-	if (ltf == ALG_UNKNOWN)
-	  ltf = tmp[j] - 'a';
+	*bishconfusion = 0;
+	strcpy(tmp, str);
+
+	if ((s = strchr(tmp, '+')) != NULL) {	// Cut off any check marks
+		*s = '\0';
+	}
+	if ((s = strchr(tmp, '=')) != NULL) {	// Cut off any promotion marks
+		*s = '\0';
+	}
+
+	*piece = *ff = *fr = *tf = *tr = ALG_UNKNOWN;
+	len = strlen(tmp);
+
+	for (i = 0; alg_list[i]; i++) {
+		lpiece = lff = lfr = ltf = ltr = ALG_UNKNOWN;
+
+		if (strlen(alg_list[i]) != len)
+			continue;
+
+		for (j = len - 1; j >= 0; j--) {
+			switch (alg_list[i][j]) {
+			case 'f':
+				if (tmp[j] < 'a' || tmp[j] > 'h')
+					goto nomatch;
+
+				if (ltf == ALG_UNKNOWN)
+					ltf = (tmp[j] - 'a');
+				else
+					lff = (tmp[j] - 'a');
+				break;
+			case 'r':
+				if (tmp[j] < '1' || tmp[j] > '8')
+					goto nomatch;
+
+				if (ltr == ALG_UNKNOWN)
+					ltr = (tmp[j] - '1');
+				else
+					lfr = (tmp[j] - '1');
+				break;
+			case 'p':
+				if (isupper(tmp[j]))
+					c = tolower(tmp[j]);
+				else
+					c = tmp[j];
+
+				if (c == 'k')
+					lpiece = KING;
+				else if (c == 'q')
+					lpiece = QUEEN;
+				else if (c == 'r')
+					lpiece = ROOK;
+				else if (c == 'b')
+					lpiece = BISHOP;
+				else if (c == 'n')
+					lpiece = KNIGHT;
+				else if (c == 'p')
+					lpiece = PAWN;
+				else
+					goto nomatch;
+				break;
+			case 'x':
+				if (tmp[j] != 'x' && tmp[j] != 'X')
+					goto nomatch;
+				break;
+			case '@':
+				if (tmp[j] != '@' && tmp[j] != '*')
+					goto nomatch;
+				lff = lfr = ALG_DROP;
+				break;
+			case '#':
+				if (tmp[j] != '#')
+					goto nomatch;
+				lff = lfr = ALG_DROP;
+				break;
+			default:
+				fprintf(stderr, "Unknown character in "
+				    "algebraic parsing\n");
+				break;
+			}
+		}
+
+		if (lpiece == ALG_UNKNOWN)
+			lpiece = PAWN;
+
+		if (lpiece == PAWN && lfr == ALG_UNKNOWN) { // ffr or ff
+			if (lff != ALG_UNKNOWN) {
+				if (lff == ltf)
+					goto nomatch;
+				if ((lff - ltf) != 1 && (ltf - lff) != 1)
+					goto nomatch;
+			}
+		}
+
+		*piece = lpiece; // We have a match
+
+		*tf = ltf;
+		*tr = ltr;
+		*ff = lff;
+		*fr = lfr;
+
+		if (matchVal != -1) {
+			/*
+			 * We have two matches, it must be that Bxc4
+			 * vs. bxc4 problem. Or it could be the Bc4 vs
+			 * bc4 problem.
+			 */
+			*bishconfusion = 1;
+		}
+
+		matchVal = i;
+
+	  nomatch:;
+	}
+
+	if (matchVal != -1)
+		return MS_ALG;
 	else
-	  lff = tmp[j] - 'a';
-	break;
-      case 'r':
-	if ((tmp[j] < '1') || (tmp[j] > '8'))
-	  goto nomatch;
-	if (ltr == ALG_UNKNOWN)
-	  ltr = tmp[j] - '1';
-	else
-	  lfr = tmp[j] - '1';
-	break;
-      case 'p':
-	if (isupper(tmp[j]))
-	  c = tolower(tmp[j]);
-	else
-	  c = tmp[j];
-	if (c == 'k')
-	  lpiece = KING;
-	else if (c == 'q')
-	  lpiece = QUEEN;
-	else if (c == 'r')
-	  lpiece = ROOK;
-	else if (c == 'b')
-	  lpiece = BISHOP;
-	else if (c == 'n')
-	  lpiece = KNIGHT;
-	else if (c == 'p')
-	  lpiece = PAWN;
-	else
-	  goto nomatch;
-	break;
-      case 'x':
-	if ((tmp[j] != 'x') && (tmp[j] != 'X'))
-	  goto nomatch;
-	break;
-      case '@':
-	if (tmp[j] != '@' && tmp[j] != '*')
-	  goto nomatch;
-	lff = lfr = ALG_DROP;
-	break;
-      case '#':
-	if (tmp[j] != '#')
-	  goto nomatch;
-	lff = lfr = ALG_DROP;
-	break;
-      default:
-	fprintf(stderr, "Unknown character in algebraic parsing\n");
-	break;
-      }
-    }
-    if (lpiece == ALG_UNKNOWN)
-      lpiece = PAWN;
-    if (lpiece == PAWN && (lfr == ALG_UNKNOWN)) {	/* ffr or ff */
-      if (lff != ALG_UNKNOWN) {
-	if (lff == ltf)
-	  goto nomatch;
-	if ((lff - ltf != 1) && (ltf - lff != 1))
-	  goto nomatch;
-      }
-    }
-    *piece = lpiece;		/* We have a match */
-    *tf = ltf;
-    *tr = ltr;
-    *ff = lff;
-    *fr = lfr;
-    if (matchVal != -1) {
-      /* We have two matches, it must be that Bxc4 vs. bxc4 problem */
-      /* Or it could be the Bc4 vs bc4 problem */
-      *bishconfusion = 1;
-    }
-    matchVal = i;
-nomatch:;
-  }
-  if (matchVal != -1)
-    return MS_ALG;
-  else
-    return MS_NOTMOVE;
+		return MS_NOTMOVE;
 }
 
 PUBLIC int
