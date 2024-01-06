@@ -29,6 +29,8 @@
 #include "board.h"
 #endif
 
+#define ALG_UNKNOWN -1
+
 #define DROP_CHAR	'@' /* used by algcheck.c and movecheck.c */
 #define DROP_STR	"@"
 

@@ -75,9 +75,6 @@ char *alg_list[] = {
 	NULL
 };
 
-#define ALG_UNKNOWN -1
-/* #define ALG_DROP    -2	IanO: this is in board.h, used in movecheck.c */
-
 PRIVATE int
 get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr,
 	      int *bishconfusion)
