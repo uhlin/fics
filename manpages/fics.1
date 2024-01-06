@@ -32,6 +32,18 @@ Outputs the program usage.
 Which port shall the chess server listen on?
 (The default is 5000.)
 .El
+.Sh FICS CLIENT
+While it's possible to play chess via the terminal by connecting to a
+server using
+.Xr telnet 1 ,
+it can be a lot easier to play with a GUI client like
+.Xr xboard 1 .
+To connect to a server by using
+.Xr xboard 1 ,
+try:
+.Bd -literal -offset indent
+xboard -ics -icshost server.hostname.com
+.Ed
 .Sh SEE ALSO
 .Xr fics_addplayer 1 , Xr makerank 1
 .Sh AUTHORS
