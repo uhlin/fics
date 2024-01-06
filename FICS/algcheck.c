@@ -31,6 +31,10 @@
 #include "movecheck.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 /* Well, lets see if I can list the possibilities
  * Piece moves
  * Ne4
@@ -87,7 +91,7 @@ get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr,
 	int	 matchVal = -1;
 
 	*bishconfusion = 0;
-	strcpy(tmp, str);
+	strlcpy(tmp, str, sizeof tmp);
 
 	if ((s = strchr(tmp, '+')) != NULL) {	// Cut off any check marks
 		*s = '\0';
@@ -435,43 +439,43 @@ alg_unparse(game_state_t *gs, move_t *mt)
 	}
 
 	if (piece == KING && (mt->fromFile == 4 && mt->toFile == 6)) {
-		strcpy(mStr, "O-O");
+		strlcpy(mStr, "O-O", sizeof mStr);
 		goto check;
 	}
 
 	if (piece == KING && (mt->fromFile == 4 && mt->toFile == 2)) {
-		strcpy(mStr, "O-O-O");
+		strlcpy(mStr, "O-O-O", sizeof mStr);
 		goto check;
 	}
 
-	strcpy(mStr, "");
+	mStr[0] = '\0';
 
 	switch (piece) {
 	case PAWN:
 		if (mt->fromFile == ALG_DROP) {
-			strcpy(mStr,"P");
+			strlcpy(mStr, "P", sizeof mStr);
 		} else if (mt->fromFile != mt->toFile) {
 			snprintf(tmp, sizeof tmp, "%c", (mt->fromFile + 'a'));
-			strcpy(mStr, tmp);
+			strlcpy(mStr, tmp, sizeof mStr);
 		}
 		break;
 	case KNIGHT:
-		strcpy(mStr, "N");
+		strlcpy(mStr, "N", sizeof mStr);
 		break;
 	case BISHOP:
-		strcpy(mStr, "B");
+		strlcpy(mStr, "B", sizeof mStr);
 		break;
 	case ROOK:
-		strcpy(mStr, "R");
+		strlcpy(mStr, "R", sizeof mStr);
 		break;
 	case QUEEN:
-		strcpy(mStr, "Q");
+		strlcpy(mStr, "Q", sizeof mStr);
 		break;
 	case KING:
-		strcpy(mStr, "K");
+		strlcpy(mStr, "K", sizeof mStr);
 		break;
 	default:
-		strcpy(mStr, "");
+		strlcpy(mStr, "", sizeof mStr);
 		break;
 	} /* switch */
 
