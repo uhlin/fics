@@ -405,7 +405,7 @@ com_stats(int p, param_list param)
 		pprintf(p, "%s is giving a simul: game%s ", parray[p1].name,
 		    (t > 1 ? "s" : ""));
 		com_stats_andify(numbers, t, tmp, sizeof tmp);
-		pprintf(p, tmp);
+		pprintf(p, "%s", tmp);
 	} else if (parray[p1].game >= 0) {
 		g = parray[p1].game;
 
@@ -444,7 +444,7 @@ com_stats(int p, param_list param)
 			pprintf(p, "%s is observing game%s ", parray[p1].name,
 			    (t > 1 ? "s" : ""));
 			com_stats_andify(numbers, t, tmp, sizeof tmp);
-			pprintf(p, tmp);
+			pprintf(p, "%s", tmp);
 		}
 	}
 
@@ -459,13 +459,13 @@ com_stats(int p, param_list param)
 		    "total   best\n");
 
 		com_stats_rating("Blitz", &parray[p1].b_stats, tmp);
-		pprintf(p, tmp);
+		pprintf(p, "%s", tmp);
 		com_stats_rating("Standard", &parray[p1].s_stats, tmp);
-		pprintf(p, tmp);
+		pprintf(p, "%s", tmp);
 		com_stats_rating("Lightning", &parray[p1].l_stats, tmp);
-		pprintf(p, tmp);
+		pprintf(p, "%s", tmp);
 		com_stats_rating("Wild", &parray[p1].w_stats, tmp);
-		pprintf(p, tmp);
+		pprintf(p, "%s", tmp);
 	}
 
 	pprintf(p, "\n");
