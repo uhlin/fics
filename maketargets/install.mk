@@ -1,10 +1,11 @@
-# SPDX-FileCopyrightText: 2023 Markus Uhlin <maxxe@rpblc.net>
+# SPDX-FileCopyrightText: 2023-2024 Markus Uhlin <maxxe@rpblc.net>
 # SPDX-License-Identifier: ISC
 
 # Don't provide a default value for DESTDIR. It should be empty.
 DESTDIR ?=
 
 BINDIR = $(DESTDIR)$(PREFIX)/bin
+MANDIR = $(DESTDIR)/usr/local/man/man1
 
 install-init:
 	install -d $(BINDIR)
@@ -44,6 +45,12 @@ install-init:
 	install -d $(DESTDIR)$(FICS_HOME)/games/history
 	install -d $(DESTDIR)$(FICS_HOME)/games/journal
 	install -d $(DESTDIR)$(FICS_HOME)/players
+
+install-manpages:
+	install -d $(MANDIR)
+	install -m 0444 $(ROOT)manpages/fics.1 $(MANDIR)
+	install -m 0444 $(ROOT)manpages/fics_addplayer.1 $(MANDIR)
+	install -m 0444 $(ROOT)manpages/makerank.1 $(MANDIR)
 
 install: install-init
 	$(ROOT)scripts/i-data-admin.sh $(ROOT)data/admin \
