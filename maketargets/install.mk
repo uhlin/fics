@@ -46,7 +46,11 @@ install-init:
 	install -d $(DESTDIR)$(FICS_HOME)/games/journal
 	install -d $(DESTDIR)$(FICS_HOME)/players
 
-install-manpages:
+MP_DEPS = $(ROOT)manpages/fics.1\
+	$(ROOT)manpages/fics_addplayer.1\
+	$(ROOT)manpages/makerank.1
+
+install-manpages: $(MP_DEPS)
 	install -d $(MANDIR)
 	install -m 0444 $(ROOT)manpages/fics.1 $(MANDIR)
 	install -m 0444 $(ROOT)manpages/fics_addplayer.1 $(MANDIR)
