@@ -26,10 +26,10 @@
 */
 
 #include "stdinclude.h"
+#include "common.h"
 
 #include "algcheck.h"
 #include "board.h"
-#include "common.h"
 #include "gamedb.h"
 #include "movecheck.h"
 #include "network.h"
