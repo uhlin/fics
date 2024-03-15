@@ -7,6 +7,7 @@ documented in this file.
 - Added `PRINTFLIKE()` and fixed many format errors.
 - Added argument lists to many function declarations.
 - Added initialization of many variables.
+- Added newly written manual pages.
 - Added usage of `ARRAY_SIZE()`
 - Changed the addplayer program to generate passwords that are 8
   characters long (was 4).
