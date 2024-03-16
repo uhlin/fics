@@ -593,62 +593,64 @@ PRIVATE void possible_king_moves(game_state_t * gs,
 }
 
 /* Doesn't check for check */
-PUBLIC int legal_move(game_state_t * gs,
-		       int fFile, int fRank,
-		       int tFile, int tRank)
+PUBLIC int
+legal_move(game_state_t *gs,
+    int fFile, int fRank,
+    int tFile, int tRank)
 {
-  int move_piece;
-  int legal;
+	int	legal;
+	int	move_piece;
 
-  if (fFile == ALG_DROP) {
-    move_piece = fRank;
-    if (move_piece == KING)
-      return 0;
-    if (gs->holding[gs->onMove==WHITE ? 0 : 1][move_piece-1] == 0)
-      return 0;
-    if (gs->board[tFile][tRank] != NOPIECE)
-      return 0;
-    if (move_piece == PAWN && (tRank == 0 || tRank == 7))
-      return 0;
-    return 1;
-  } else {
-    move_piece = piecetype(gs->board[fFile][fRank]);
-  }
-  if (gs->board[fFile][fRank] == NOPIECE)
-    return 0;
-  if (!iscolor(gs->board[fFile][fRank], gs->onMove))	/* Wrong color */
-    return 0;
-  if ((gs->board[tFile][tRank] != NOPIECE) &&
-      iscolor(gs->board[tFile][tRank], gs->onMove))	/* Can't capture own */
-    return 0;
-  if ((fFile == tFile) && (fRank == tRank))	/* Same square */
-    return 0;
-  switch (move_piece) {
-  case PAWN:
-    legal = legal_pawn_move(gs, fFile, fRank, tFile, tRank);
-    break;
-  case KNIGHT:
-    legal = legal_knight_move(gs, fFile, fRank, tFile, tRank);
-    break;
-  case BISHOP:
-    legal = legal_bishop_move(gs, fFile, fRank, tFile, tRank);
-    break;
-  case ROOK:
-    legal = legal_rook_move(gs, fFile, fRank, tFile, tRank);
-    break;
-  case QUEEN:
-    legal = legal_queen_move(gs, fFile, fRank, tFile, tRank);
-    break;
-  case KING:
-    legal = legal_king_move(gs, fFile, fRank, tFile, tRank);
-    break;
-  default:
-    return 0;
-    break;
-  }
-  return legal;
+	if (fFile == ALG_DROP) {
+		if ((move_piece = fRank) == KING)
+			return 0;
+		if (gs->holding[gs->onMove == WHITE ? 0 : 1][move_piece - 1]
+		    == 0)
+			return 0;
+		if (gs->board[tFile][tRank] != NOPIECE)
+			return 0;
+		if (move_piece == PAWN && (tRank == 0 || tRank == 7))
+			return 0;
+		return 1;
+	} else {
+		move_piece = piecetype(gs->board[fFile][fRank]);
+	}
+
+	if (gs->board[fFile][fRank] == NOPIECE)
+		return 0;
+	if (!iscolor(gs->board[fFile][fRank], gs->onMove))  // Wrong color
+		return 0;
+	if (gs->board[tFile][tRank] != NOPIECE &&
+	    iscolor(gs->board[tFile][tRank], gs->onMove))   // Can't capture own
+		return 0;
+	if (fFile == tFile && fRank == tRank)	// Same square
+		return 0;
+
+	switch (move_piece) {
+	case PAWN:
+		legal = legal_pawn_move(gs, fFile, fRank, tFile, tRank);
+		break;
+	case KNIGHT:
+		legal = legal_knight_move(gs, fFile, fRank, tFile, tRank);
+		break;
+	case BISHOP:
+		legal = legal_bishop_move(gs, fFile, fRank, tFile, tRank);
+		break;
+	case ROOK:
+		legal = legal_rook_move(gs, fFile, fRank, tFile, tRank);
+		break;
+	case QUEEN:
+		legal = legal_queen_move(gs, fFile, fRank, tFile, tRank);
+		break;
+	case KING:
+		legal = legal_king_move(gs, fFile, fRank, tFile, tRank);
+		break;
+	default:
+		return 0;
+	}
+
+	return legal;
 }
-
 
 /*
  * This fills in the rest of the mt structure once it is determined
