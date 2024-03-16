@@ -552,26 +552,30 @@ PRIVATE void possible_queen_moves(game_state_t * gs,
   possible_bishop_moves(gs, onf, onr, posf, posr, numpos);
 }
 
-PRIVATE void possible_king_moves(game_state_t * gs,
-				  int onf, int onr,
-				  int *posf, int *posr, int *numpos)
+PRIVATE void
+possible_king_moves(game_state_t *gs, int onf, int onr, int *posf, int *posr,
+    int *numpos)
 {
-  static int kingJumps[8][2] = {{-1, -1}, {0, -1}, {1, -1}, {-1, 1},
-  {0, 1}, {1, 1}, {-1, 0}, {1, 0}};
-  int f, r;
-  int j;
+	int		f, r;
+	int		j;
+	static int	kingJumps[8][2] = {
+		{-1, -1}, {0, -1}, {1, -1}, {-1, 1}, {0, 1}, {1, 1}, {-1, 0},
+		{1, 0}
+	};
 
-  for (j = 0; j < 8; j++) {
-    f = kingJumps[j][0] + onf;
-    r = kingJumps[j][1] + onr;
-    if ((f < 0) || (f > 7))
-      continue;
-    if ((r < 0) || (r > 7))
-      continue;
-    if ((gs->board[f][r] == NOPIECE) ||
-	(iscolor(gs->board[f][r], CToggle(gs->onMove))))
-      add_pos(f, r, posf, posr, numpos);
-  }
+	for (j = 0; j < 8; j++) {
+		f = kingJumps[j][0] + onf;
+		r = kingJumps[j][1] + onr;
+
+		if (f < 0 || f > 7)
+			continue;
+		if (r < 0 || r > 7)
+			continue;
+
+		if (gs->board[f][r] == NOPIECE || iscolor(gs->board[f][r],
+		    CToggle(gs->onMove)))
+			add_pos(f, r, posf, posr, numpos);
+	}
 }
 
 /* Doesn't check for check */
