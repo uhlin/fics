@@ -22,6 +22,8 @@
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/10	Fixed the includes
    Markus Uhlin                 23/12/12	Revamped the file
+   Markus Uhlin                 24/03/16	Fixed unbounded string copying
+						and marked usage() '__dead'.
 */
 
 #include "stdinclude.h"
