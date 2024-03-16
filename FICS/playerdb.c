@@ -26,6 +26,9 @@
    Markus Uhlin                 23/12/25	Reformatted functions
    Markus Uhlin                 23/12/31	Completed reformation of all
 						functions and much more...
+   Markus Uhlin                 24/03/16	Replaced unbounded string
+						handling functions and added
+						truncation checks.
 */
 
 #include "stdinclude.h"
