@@ -1125,260 +1125,351 @@ execute_move(game_state_t *gs, move_t *mt, int check_game_status)
 	return MOVE_OK;
 }
 
-PUBLIC int backup_move(int g, int mode)
+PRIVATE void
+piecetype_rook(int g, int mode, game_state_t *gs, move_t *m, move_t **m1)
 {
-  game_state_t *gs;
-  move_t *m, *m1;
-  int now, i;
+	int i;
 
-  if (garray[g].link >= 0)	/*IanO: not implemented for bughouse yet */
-    return MOVE_ILLEGAL;
-  if (garray[g].numHalfMoves < 1)
-    return MOVE_ILLEGAL;
-  gs = &garray[g].game_state;
-  m = (mode==REL_GAME) ? &garray[g].moveList[garray[g].numHalfMoves - 1] :
-                         &garray[g].examMoveList[garray[g].numHalfMoves - 1];
-  if (m->toFile < 0) {
-    return MOVE_ILLEGAL;
-  }
-  gs->board[m->fromFile][m->fromRank] = gs->board[m->toFile][m->toRank];
-  if (m->piecePromotionTo != NOPIECE) {
-    gs->board[m->fromFile][m->fromRank] = PAWN |
-      colorval(gs->board[m->fromFile][m->fromRank]);
-  }
-  /******************
-     When takeback a _first_ move of rook, the ??rmoved variable
-     must be cleared . To check, if the move is first, we should
-     scan moveList.
-  *******************/
-  if (piecetype(gs->board[m->fromFile][m->fromRank]) == ROOK) {
-    if (m->color == WHITE) {
-      if ((m->fromFile == 0) && (m->fromRank == 0)) {
-	for (i = 2; i < garray[g].numHalfMoves - 1; i += 2) {
-	  m1 = (mode==REL_GAME) ? &garray[g].moveList[i] : &garray[g].examMoveList[i];
-	  if ((m1->fromFile == 0) && (m1->fromRank == 0))
-	    break;
-	}
-	if (i == garray[g].numHalfMoves - 1)
-	  gs->wqrmoved = 0;
-      }
-      if ((m->fromFile == 7) && (m->fromRank == 0)) {
-	for (i = 2; i < garray[g].numHalfMoves - 1; i += 2) {
-	  m1 = (mode==REL_GAME) ? &garray[g].moveList[i] : &garray[g].examMoveList[i];
-	  if ((m1->fromFile == 7) && (m1->fromRank == 0))
-	    break;
-	}
-	if (i == garray[g].numHalfMoves - 1)
-	  gs->wkrmoved = 0;
-      }
-    } else {
-      if ((m->fromFile == 0) && (m->fromRank == 7)) {
-	for (i = 3; i < garray[g].numHalfMoves - 1; i += 2) {
-	  m1 = (mode==REL_GAME) ? &garray[g].moveList[i] : &garray[g].examMoveList[i];
-	  if ((m1->fromFile == 0) && (m1->fromRank == 0))
-	    break;
-	}
-	if (i == garray[g].numHalfMoves - 1)
-	  gs->bqrmoved = 0;
-      }
-      if ((m->fromFile == 7) && (m->fromRank == 7)) {
-	for (i = 3; i < garray[g].numHalfMoves - 1; i += 2) {
-	  m1 = (mode==REL_GAME) ? &garray[g].moveList[i] : &garray[g].examMoveList[i];
-	  if ((m1->fromFile == 7) && (m1->fromRank == 0))
-	    break;
-	}
-	if (i == garray[g].numHalfMoves - 1)
-	  gs->bkrmoved = 0;
-      }
-    }
-  }
-  if (piecetype(gs->board[m->fromFile][m->fromRank]) == KING) {
-    gs->board[m->toFile][m->toRank] = m->pieceCaptured;
+	if (m->color == WHITE) {
+		if (m->fromFile == 0 && m->fromRank == 0) {
+			for (i = 2; i < garray[g].numHalfMoves - 1; i += 2) {
+				*m1 = ((mode == REL_GAME)
+				       ? &garray[g].moveList[i]
+				       : &garray[g].examMoveList[i]);
 
-    if (m->toFile - m->fromFile == 2) {
-      gs->board[7][m->fromRank] = ROOK |
-	colorval(gs->board[m->fromFile][m->fromRank]);
-      gs->board[5][m->fromRank] = NOPIECE;
+				if ((*m1)->fromFile == 0 &&
+				    (*m1)->fromRank == 0)
+					break;
+			}
 
-      /********
-         If takeback a castling, the appropriates ??moved variables
-         must be cleared
-      ********/
-      if (m->color == WHITE) {
-	gs->wkmoved = 0;
-	gs->wkrmoved = 0;
-      } else {
-	gs->bkmoved = 0;
-	gs->bkrmoved = 0;
-      }
-      goto cleanupMove;
-    }
-    if (m->fromFile - m->toFile == 2) {
-      gs->board[0][m->fromRank] = ROOK |
-	colorval(gs->board[m->fromFile][m->fromRank]);
-      gs->board[3][m->fromRank] = NOPIECE;
+			if (i == (garray[g].numHalfMoves - 1))
+				gs->wqrmoved = 0;
+		}
 
-      /**********
-         If takeback a castling, the appropriate ??moved variables
-         must be cleared
-      ***********/
-      if (m->color == WHITE) {
-	gs->wkmoved = 0;
-	gs->wqrmoved = 0;
-      } else {
-	gs->bkmoved = 0;
-	gs->bqrmoved = 0;
-      }
-      goto cleanupMove;
-    }
-    /******************
-       When takeback a _first_ move of king (not the castling),
-       the ?kmoved variable must be cleared . To check, if the move is first,
-       we should scan moveList.
-    *******************/
+		if (m->fromFile == 7 && m->fromRank == 0) {
+			for (i = 2; i < garray[g].numHalfMoves - 1; i += 2) {
+				*m1 = ((mode == REL_GAME)
+				       ? &garray[g].moveList[i]
+				       : &garray[g].examMoveList[i]);
 
-    if (m->color == WHITE) {
+				if ((*m1)->fromFile == 7 &&
+				    (*m1)->fromRank == 0)
+					break;
+			}
 
-      if ((m->fromFile == 4) && (m->fromRank == 0)) {
-	for (i = 2; i < garray[g].numHalfMoves - 1; i += 2) {
-	  m1 = (mode==REL_GAME) ? &garray[g].moveList[i] : &garray[g].examMoveList[i];
-	  if ((m1->fromFile == 4) && (m1->fromRank == 0))
-	    break;
+			if (i == (garray[g].numHalfMoves - 1))
+				gs->wkrmoved = 0;
+		}
+	} else {
+		if (m->fromFile == 0 && m->fromRank == 7) {
+			for (i = 3; i < garray[g].numHalfMoves - 1; i += 2) {
+				*m1 = ((mode == REL_GAME)
+				       ? &garray[g].moveList[i]
+				       : &garray[g].examMoveList[i]);
+
+				if ((*m1)->fromFile == 0 &&
+				    (*m1)->fromRank == 0)
+					break;
+			}
+
+			if (i == (garray[g].numHalfMoves - 1))
+				gs->bqrmoved = 0;
+		}
+
+		if (m->fromFile == 7 && m->fromRank == 7) {
+			for (i = 3; i < garray[g].numHalfMoves - 1; i += 2) {
+				*m1 = ((mode == REL_GAME)
+				       ? &garray[g].moveList[i]
+				       : &garray[g].examMoveList[i]);
+
+				if ((*m1)->fromFile == 7 &&
+				    (*m1)->fromRank == 0)
+					break;
+			}
+
+			if (i == (garray[g].numHalfMoves - 1))
+				gs->bkrmoved = 0;
+		}
 	}
-	if (i == garray[g].numHalfMoves - 1)
-	  gs->wkmoved = 0;
-      }
-    } else {
-      if ((m->fromFile == 4) && (m->fromRank == 7)) {
-	for (i = 3; i < garray[g].numHalfMoves - 1; i += 2) {
-	  m1 = (mode==REL_GAME) ? &garray[g].moveList[i] : &garray[g].examMoveList[i];
-	  if ((m1->fromFile == 4) && (m1->fromRank == 7))
-	    break;
-	}
-	if (i == garray[g].numHalfMoves - 1)
-	  gs->bkmoved = 0;
-      }
-    }
-  }
-  if (m->enPassant) {		/* Do enPassant */
-    gs->board[m->toFile][m->fromRank] = PAWN |
-      (colorval(gs->board[m->fromFile][m->fromRank]) == WHITE ? BLACK : WHITE);
-    gs->board[m->toFile][m->toRank] = NOPIECE;
-    /* Should set the enpassant array, but I don't care right now */
-    goto cleanupMove;
-  }
-  gs->board[m->toFile][m->toRank] = m->pieceCaptured;
-cleanupMove:
-  if (garray[g].status != GAME_EXAMINE) {
-    game_update_time(g);
-  }
-  garray[g].numHalfMoves--;
-  if (garray[g].status != GAME_EXAMINE) {
-    if (garray[g].wInitTime) {	/* Don't update times in untimed games */
-      now = tenth_secs();
+}
 
 #ifdef TIMESEAL
+PRIVATE void
+backup_move_timeseal_block(int g, move_t *m)
+{
+	if (m->color == WHITE) {
+		if (con[parray[garray[g].white].socket].timeseal) {
+			garray[g].wRealTime += (m->tookTime * 100);
+			garray[g].wRealTime -= (garray[g].wIncrement * 100);
+			garray[g].wTime = (garray[g].wRealTime / 100);
 
-      if (m->color == WHITE) {
-        if (con[parray[garray[g].white].socket].timeseal) {  /* white uses timeseal? */
-          garray[g].wRealTime += (m->tookTime * 100);
-          garray[g].wRealTime -= (garray[g].wIncrement * 100);
-          garray[g].wTime = garray[g].wRealTime / 100;
-          if (con[parray[garray[g].black].socket].timeseal) { /* opp uses timeseal? */
-            garray[g].bTime = garray[g].bRealTime / 100;
-	  } else {    /* opp has no timeseal */
-            garray[g].bTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-	  }
-	} else {  /* white has no timeseal */
-          garray[g].wTime += m->tookTime;
-          garray[g].wTime -= garray[g].wIncrement;
-          if (con[parray[garray[g].black].socket].timeseal) { /* opp uses timeseal? */
-            garray[g].bTime = garray[g].bRealTime / 100;
-	  } else {    /* opp has no timeseal */
-            garray[g].bTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-	  }
-	}
-      } else {
-        if (con[parray[garray[g].black].socket].timeseal) {  /* black uses timeseal? */
-          garray[g].bRealTime += (m->tookTime * 100);
-          garray[g].bRealTime -= (garray[g].wIncrement * 100);
-          garray[g].bTime = garray[g].bRealTime / 100;
-          if (con[parray[garray[g].white].socket].timeseal) { /* opp uses timeseal? */
-            garray[g].wTime = garray[g].wRealTime / 100;
-	  } else {    /* opp has no timeseal */
-            garray[g].wTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-	  }
-	} else {  /* black has no timeseal */
-          garray[g].bTime += m->tookTime;
-          if (!garray[g].bIncrement)
-            garray[g].bTime -= garray[g].wIncrement;
-          else
-  	    garray[g].bTime -= garray[g].bIncrement;
-          if (con[parray[garray[g].white].socket].timeseal) { /* opp uses timeseal? */
-            garray[g].wTime = garray[g].wRealTime / 100;
-	  } else {    /* opp has no timeseal */
-            garray[g].wTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-	  }
-	}
-      }
+			if (con[parray[garray[g].black].socket].timeseal) {
+				garray[g].bTime = (garray[g].bRealTime / 100);
+			} else {   // Opp has no timeseal
+				garray[g].bTime += (garray[g].lastDecTime -
+						    garray[g].lastMoveTime);
+			}
+		} else { // White has no timeseal
+			garray[g].wTime += m->tookTime;
+			garray[g].wTime -= garray[g].wIncrement;
 
+			if (con[parray[garray[g].black].socket].timeseal) {
+				garray[g].bTime = (garray[g].bRealTime / 100);
+			} else {   // Opp has no timeseal
+				garray[g].bTime += (garray[g].lastDecTime -
+						    garray[g].lastMoveTime);
+			}
+		}
+	} else {
+		if (con[parray[garray[g].black].socket].timeseal) {
+			garray[g].bRealTime += (m->tookTime * 100);
+			garray[g].bRealTime -= (garray[g].wIncrement * 100);
+			garray[g].bTime = (garray[g].bRealTime / 100);
+
+			if (con[parray[garray[g].white].socket].timeseal) {
+				garray[g].wTime = (garray[g].wRealTime / 100);
+			} else {   // Opp has no timeseal
+				garray[g].wTime += (garray[g].lastDecTime -
+						    garray[g].lastMoveTime);
+			}
+		} else { // Black has no timeseal
+			garray[g].bTime += m->tookTime;
+
+			if (!garray[g].bIncrement)
+				garray[g].bTime -= garray[g].wIncrement;
+			else
+				garray[g].bTime -= garray[g].bIncrement;
+
+			if (con[parray[garray[g].white].socket].timeseal) {
+				garray[g].wTime = (garray[g].wRealTime / 100);
+			} else {   // Opp has no timeseal
+				garray[g].wTime += (garray[g].lastDecTime -
+						    garray[g].lastMoveTime);
+			}
+		}
+	}
+}
+#endif // TIMESEAL
+
+PUBLIC int
+backup_move(int g, int mode)
+{
+	game_state_t	*gs;
+	int		 now, i;
+	move_t		*m, *m1;
+
+	if (garray[g].link >= 0)   // Not implemented for bughouse yet.
+		return MOVE_ILLEGAL;
+	if (garray[g].numHalfMoves < 1)
+		return MOVE_ILLEGAL;
+
+	gs = &garray[g].game_state;
+	m = ((mode == REL_GAME)
+	     ? &garray[g].moveList[garray[g].numHalfMoves - 1]
+	     : &garray[g].examMoveList[garray[g].numHalfMoves - 1]);
+
+	if (m->toFile < 0)
+		return MOVE_ILLEGAL;
+
+	gs->board[m->fromFile][m->fromRank] = gs->board[m->toFile][m->toRank];
+
+	if (m->piecePromotionTo != NOPIECE) {
+		gs->board[m->fromFile][m->fromRank] = (PAWN |
+		    colorval(gs->board[m->fromFile][m->fromRank]));
+	}
+
+	/*
+	 * When take back a _first_ move of rook, the ??rmoved
+	 * variable must be cleared. To check if the move is first we
+	 * should the scan move list.
+	 */
+	if (piecetype(gs->board[m->fromFile][m->fromRank]) == ROOK)
+		piecetype_rook(g, mode, gs, m, &m1);
+
+	if (piecetype(gs->board[m->fromFile][m->fromRank]) == KING) {
+		gs->board[m->toFile][m->toRank] = m->pieceCaptured;
+
+		if (m->toFile - m->fromFile == 2) {
+			gs->board[7][m->fromRank] = (ROOK |
+			    colorval(gs->board[m->fromFile][m->fromRank]));
+			gs->board[5][m->fromRank] = NOPIECE;
+
+			/*
+			 * If take back a castling, the appropriates
+			 * ??moved variables must be cleared.
+			 */
+			if (m->color == WHITE) {
+				gs->wkmoved = 0;
+				gs->wkrmoved = 0;
+			} else {
+				gs->bkmoved = 0;
+				gs->bkrmoved = 0;
+			}
+
+			goto cleanupMove;
+		}
+
+		if (m->fromFile - m->toFile == 2) {
+			gs->board[0][m->fromRank] = (ROOK |
+			    colorval(gs->board[m->fromFile][m->fromRank]));
+			gs->board[3][m->fromRank] = NOPIECE;
+
+			/*
+			 * If take back a castling, the appropriate
+			 * ??moved variables must be cleared.
+			 */
+			if (m->color == WHITE) {
+				gs->wkmoved = 0;
+				gs->wqrmoved = 0;
+			} else {
+				gs->bkmoved = 0;
+				gs->bqrmoved = 0;
+			}
+
+			goto cleanupMove;
+		}
+
+		/*
+		 * When take back a _first_ move of king (not the
+		 * castling), the ?kmoved variable must be cleared. To
+		 * check if the move is first we should scan the move
+		 * list.
+		 */
+		if (m->color == WHITE) {
+			if (m->fromFile == 4 && m->fromRank == 0) {
+				for (i = 2;
+				    i < garray[g].numHalfMoves - 1;
+				    i += 2) {
+					m1 = ((mode == REL_GAME)
+					      ? &garray[g].moveList[i]
+					      : &garray[g].examMoveList[i]);
+
+					if (m1->fromFile == 4 &&
+					    m1->fromRank == 0)
+						break;
+				}
+
+				if (i == (garray[g].numHalfMoves - 1))
+					gs->wkmoved = 0;
+			}
+		} else {
+			if (m->fromFile == 4 && m->fromRank == 7) {
+				for (i = 3;
+				    i < garray[g].numHalfMoves - 1;
+				    i += 2) {
+					m1 = ((mode == REL_GAME)
+					      ? &garray[g].moveList[i]
+					      : &garray[g].examMoveList[i]);
+
+					if (m1->fromFile == 4 &&
+					    m1->fromRank == 7)
+						break;
+				}
+
+				if (i == (garray[g].numHalfMoves - 1))
+					gs->bkmoved = 0;
+			}
+		}
+	}
+
+	if (m->enPassant) {
+		if (colorval(gs->board[m->fromFile][m->fromRank]) == WHITE)
+			gs->board[m->toFile][m->fromRank] = (PAWN | BLACK);
+		else
+			gs->board[m->toFile][m->fromRank] = (PAWN | WHITE);
+
+		gs->board[m->toFile][m->toRank] = NOPIECE;
+		/*
+		 * Should set the enpassant array. But I don't care
+		 * right now.
+		 */
+		goto cleanupMove;
+	}
+
+	gs->board[m->toFile][m->toRank] = m->pieceCaptured;
+
+  cleanupMove:
+
+	if (garray[g].status != GAME_EXAMINE)
+		game_update_time(g);
+
+	garray[g].numHalfMoves--;
+
+	if (garray[g].status != GAME_EXAMINE) {
+		if (garray[g].wInitTime) {	// Don't update times in untimed
+						// games.
+			now = tenth_secs();
+#ifdef TIMESEAL
+			backup_move_timeseal_block(g, m);
 #else
+			if (m->color == WHITE) {
+				garray[g].wTime   += m->tookTime;
+				garray[g].wTime   = (garray[g].wTime -
+						     garray[g].wIncrement);
+				garray[g].bTime   +=
+				    (garray[g].lastDecTime -
+				     garray[g].lastMoveTime);
+			} else {
+				garray[g].bTime += m->tookTime;
 
-      if (m->color == WHITE) {
-        garray[g].wTime += m->tookTime;
-        garray[g].wTime = garray[g].wTime - garray[g].wIncrement;
-        garray[g].bTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-      } else {
-        garray[g].bTime += m->tookTime;
-        if (!garray[g].bIncrement)
-          garray[g].bTime = garray[g].bTime - garray[g].wIncrement;
-        else
-	  garray[g].bTime = garray[g].bTime - garray[g].bIncrement;
-        garray[g].wTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-      }
+				if (!garray[g].bIncrement) {
+					garray[g].bTime =
+					    (garray[g].bTime -
+					     garray[g].wIncrement);
+				} else {
+					garray[g].bTime =
+					    (garray[g].bTime -
+					     garray[g].bIncrement);
+				}
 
+				garray[g].wTime += (garray[g].lastDecTime -
+						    garray[g].lastMoveTime);
+			}
 #endif
 
-      if (garray[g].numHalfMoves == 0)
-        garray[g].timeOfStart = now;
-      garray[g].lastMoveTime = now;
-      garray[g].lastDecTime = now;
-    }
-  }
-  if (gs->onMove == BLACK)
-    gs->onMove = WHITE;
-  else {
-    gs->onMove = BLACK;
-    gs->moveNum--;
-  }
+			if (garray[g].numHalfMoves == 0)
+				garray[g].timeOfStart = now;
+			garray[g].lastMoveTime = now;
+			garray[g].lastDecTime = now;
+		}
+	}
 
-  /******* Here begins the patch : ********************************
-     Takeback of last move is done already, it's time to update enpassant
-     array.  (patch from Soso, added by Sparky 3/17/95)
-  ********/
+	if (gs->onMove == BLACK) {
+		gs->onMove = WHITE;
+	} else {
+		gs->onMove = BLACK;
+		gs->moveNum--;
+	}
 
-  if (garray[g].numHalfMoves > 0) {
-    m1 = (mode==REL_GAME) ? &garray[g].moveList[garray[g].numHalfMoves - 1] :
-                            &garray[g].examMoveList[garray[g].numHalfMoves - 1];
-    if (piecetype(gs->board[m1->toFile][m1->toRank]) == PAWN) {
-      if ((m1->toRank - m1->fromRank) == 2) {
-	if ((m1->toFile < 7) && gs->board[m1->toFile + 1][3] == B_PAWN) {
-	  gs->ep_possible[1][m1->toFile + 1] = -1;
+	/*
+	 * Takeback of last move is done already. It's time to update
+	 * enpassant array...
+	 */
+	if (garray[g].numHalfMoves > 0) {
+		m1 = ((mode == REL_GAME)
+		      ? &garray[g].moveList[garray[g].numHalfMoves - 1]
+		      : &garray[g].examMoveList[garray[g].numHalfMoves - 1]);
+
+		if (piecetype(gs->board[m1->toFile][m1->toRank]) == PAWN) {
+			if ((m1->toRank - m1->fromRank) == 2) {
+				if (m1->toFile < 7 &&
+				    gs->board[m1->toFile + 1][3] == B_PAWN)
+					gs->ep_possible[1][m1->toFile + 1] = -1;
+				if (m1->toFile - 1 >= 0 &&
+				    gs->board[m1->toFile - 1][3] == B_PAWN)
+					gs->ep_possible[1][m1->toFile - 1] = 1;
+			}
+
+			if ((m1->toRank - m1->fromRank) == -2) {
+				if (m1->toFile < 7 &&
+				    gs->board[m1->toFile + 1][4] == W_PAWN)
+					gs->ep_possible[0][m1->toFile + 1] = -1;
+				if (m1->toFile - 1 >= 0 &&
+				    gs->board[m1->toFile - 1][4] == W_PAWN)
+					gs->ep_possible[0][m1->toFile - 1] = 1;
+			}
+		}
 	}
-	if ((m1->toFile - 1 >= 0) && gs->board[m1->toFile - 1][3] == B_PAWN) {
-	  gs->ep_possible[1][m1->toFile - 1] = 1;
-	}
-      }
-      if ((m1->toRank - m1->fromRank) == -2) {
-	if ((m1->toFile < 7) && gs->board[m1->toFile + 1][4] == W_PAWN) {
-	  gs->ep_possible[0][m1->toFile + 1] = -1;
-	}
-	if ((m1->toFile - 1 >= 0) && gs->board[m1->toFile - 1][4] == W_PAWN) {
-	  gs->ep_possible[0][m1->toFile - 1] = 1;
-	}
-      }
-    }
-  }
-  /************** and here's the end **************/
-  return MOVE_OK;
+
+	return MOVE_OK;
 }
