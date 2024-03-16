@@ -2303,11 +2303,11 @@ player_add_message(int top, int fromp, char *message)
 	pprintf(fromp, "\nThe following message was sent ");
 
 	if (parray[top].i_mailmess) {
-		sprintf(subj, "FICS message from %s at FICS %s "
+		snprintf(subj, sizeof subj, "FICS message from %s at FICS %s "
 		    "(Do not reply by mail)", parray[fromp].name,
 		    fics_hostname);
-		sprintf(messbody, "%s at %s: %s\n", parray[fromp].name,
-		    strltime(&t), message);
+		snprintf(messbody, sizeof messbody, "%s at %s: %s\n",
+		    parray[fromp].name, strltime(&t), message);
 		mail_string_to_user(top, subj, messbody);
 		pprintf(fromp, "(and emailed) ");
 	}
@@ -2859,8 +2859,8 @@ player_num_comments(int p)
 
 	if (!parray[p].registered)
 		return 0;
-	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
-	    parray[p].login, "comments");
+	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
+	    parray[p].login[0], parray[p].login, "comments");
 	return lines_file(fname);
 }
 
@@ -2874,7 +2874,7 @@ player_add_comment(int p_by, int p_to, char *comment)
 	if (!parray[p_to].registered)
 		return -1;
 
-	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
+	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    parray[p_to].login[0], parray[p_to].login, "comments");
 
 	if ((fp = fopen(fname, "a")) == NULL)
@@ -2891,7 +2891,7 @@ player_show_comments(int p, int p1)
 {
 	char fname[MAX_FILENAME_SIZE];
 
-	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
+	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    parray[p1].login[0], parray[p1].login, "comments");
 	psend_file(p, NULL, fname);
 	return 0;
