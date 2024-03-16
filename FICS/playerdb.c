@@ -2256,10 +2256,18 @@ player_simul_over(int p, int g, int result)
 }
 
 PRIVATE void
-GetMsgFile(int p, char *fName)
+GetMsgFile(int p, char *fName, const size_t size, const char *func)
 {
-	sprintf(fName, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
-	    parray[p].login, STATS_MESSAGES);
+	int ret, too_long;
+
+	ret = snprintf(fName, size, "%s/player_data/%c/%s.%s", stats_dir,
+	    parray[p].login[0], parray[p].login, STATS_MESSAGES);
+	too_long = (ret < 0 || (size_t)ret >= size);
+
+	if (too_long) {
+		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		    func);
+	}
 }
 
 PUBLIC int
@@ -2270,7 +2278,7 @@ player_num_messages(int p)
 	if (!parray[p].registered)
 		return 0;
 
-	GetMsgFile(p, fname);
+	GetMsgFile(p, fname, sizeof fname, __func__);
 
 	return lines_file(fname);
 }
@@ -2289,7 +2297,7 @@ player_add_message(int top, int fromp, char *message)
 	if (!parray[fromp].registered)
 		return -1;
 
-	GetMsgFile(top, fname);
+	GetMsgFile(top, fname, sizeof fname, __func__);
 
 	if (lines_file(fname) >= MAX_MESSAGES && parray[top].adminLevel == 0)
 		return -1;
@@ -2384,7 +2392,7 @@ LoadMsgs(int p, int which, textlist **Head)
 	textlist**	 Cur = Head;
 
 	*Head = NULL;
-	GetMsgFile(p, fName);
+	GetMsgFile(p, fName, sizeof fName, __func__);
 
 	if ((fp = fopen(fName, "r")) == NULL)
 		return -1;
@@ -2422,7 +2430,7 @@ LoadMsgRange(int p, int start, int end, textlist **Head)
 	textlist**	 Cur = Head;
 
 	*Head = NULL;
-	GetMsgFile(p, fName);
+	GetMsgFile(p, fName, sizeof fName, __func__);
 
 	if ((fp = fopen(fName, "r")) == NULL) {
 		pprintf(p, "You have no messages.\n");
@@ -2463,7 +2471,7 @@ WriteMsgFile(int p, textlist *Head)
 	char		 fName[MAX_FILENAME_SIZE];
 	textlist	*Cur;
 
-	GetMsgFile(p, fName);
+	GetMsgFile(p, fName, sizeof fName, __func__);
 
 	if ((fp = fopen(fName, "w")) == NULL)
 		return 0;
@@ -2623,7 +2631,7 @@ player_clear_messages(int p)
 
 	if (!parray[p].registered)
 		return -1;
-	GetMsgFile(p, fname);
+	GetMsgFile(p, fname, sizeof fname, __func__);
 	unlink(fname);
 	return 0;
 }
