@@ -377,8 +377,8 @@ PUBLIC int
 psend_raw_file(int p, char *dir, char *file)
 {
 	FILE	*fp;
-	char	 fname[MAX_FILENAME_SIZE];
-	char	 tmp[MAX_LINE_SIZE];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 	int	 num;
 
 	if (dir)
@@ -402,8 +402,8 @@ PUBLIC int
 psend_file(int p, char *dir, char *file)
 {
 	FILE	*fp;
-	char	 fname[MAX_FILENAME_SIZE];
-	char	 tmp[MAX_LINE_SIZE];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 	int	 lcount = (parray[p].d_height - 1);
 
 	if (parray[p].last_file)
@@ -444,8 +444,8 @@ PUBLIC int
 psend_logoutfile(int p, char *dir, char *file)
 {
 	FILE	*fp;
-	char	 fname[MAX_FILENAME_SIZE];
-	char	 tmp[MAX_LINE_SIZE];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 
 	if (parray[p].last_file)
 		rfree(parray[p].last_file);
