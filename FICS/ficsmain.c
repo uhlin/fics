@@ -52,7 +52,7 @@
 PUBLIC int	port;
 PUBLIC int	withConsole;
 
-PRIVATE void usage(char *);
+PRIVATE __dead void usage(char *);
 
 PRIVATE void
 BrokenPipe(int sig)
@@ -119,7 +119,7 @@ main_event_loop(void)
 	}
 }
 
-PRIVATE void
+PRIVATE __dead void
 usage(char *progname)
 {
 	fprintf(stderr, "Usage: %s [-p port] [-C] [-h]\n", progname);
