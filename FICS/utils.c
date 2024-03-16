@@ -156,9 +156,9 @@ mail_string_to_address(char *addr, char *subj, char *str)
 	char	 com[1000];
 
 #ifdef SENDMAILPROG
-	sprintf(com, "%s\n", SENDMAILPROG);
+	snprintf(com, sizeof com, "%s\n", SENDMAILPROG);
 #else
-	sprintf(com, "%s -s \"%s\" %s", MAILPROGRAM, subj, addr);
+	snprintf(com, sizeof com, "%s -s \"%s\" %s", MAILPROGRAM, subj, addr);
 #endif
 
 	fp = popen(com, "w");
@@ -200,9 +200,10 @@ mail_file_to_address(char *addr, char *subj, char *fname)
 	(void) tmp;
 
 #ifdef SENDMAILPROG
-	sprintf(com, "%s\n", SENDMAILPROG);
+	snprintf(com, sizeof com, "%s\n", SENDMAILPROG);
 #else
-	sprintf(com, "%s -s \"%s\" %s < %s&", MAILPROGRAM, subj, addr, fname);
+	snprintf(com, sizeof com, "%s -s \"%s\" %s < %s&", MAILPROGRAM, subj,
+	    addr, fname);
 #endif
 	if ((fp1 = popen(com, "w")) == NULL)
 		return -1;
@@ -620,17 +621,19 @@ hms_desc(int t)
 	secs	= ((t % (60 * 60 * 24)) % (60 * 60)) % 60;
 
 	if (days == 0 && hours == 0 && mins == 0) {
-		sprintf(tstr, "%d sec%s", secs, (secs == 1 ? "" : "s"));
+		snprintf(tstr, sizeof tstr, "%d sec%s", secs, (secs == 1 ? "" :
+		    "s"));
 	} else if (days == 0 && hours == 0) {
-		sprintf(tstr, "%d min%s", mins, (mins == 1 ? "" : "s"));
+		snprintf(tstr, sizeof tstr, "%d min%s", mins, (mins == 1 ? "" :
+		    "s"));
 	} else if (days == 0) {
-		sprintf(tstr, "%d hr%s, %d min%s, %d sec%s",
+		snprintf(tstr, sizeof tstr, "%d hr%s, %d min%s, %d sec%s",
 		    hours, (hours == 1 ? "" : "s"),
 		    mins, (mins == 1 ? "" : "s"),
 		    secs, (secs == 1 ? "" : "s"));
 	} else {
-		sprintf(tstr, "%d day%s, %d hour%s, %d minute%s and "
-		    "%d second%s",
+		snprintf(tstr, sizeof tstr, "%d day%s, %d hour%s, %d minute%s "
+		    "and %d second%s",
 		    days, (days == 1 ? "" : "s"),
 		    hours, (hours == 1 ? "" : "s"),
 		    mins, (mins == 1 ? "" : "s"),
@@ -654,17 +657,17 @@ hms(int t, int showhour, int showseconds, int spaces)
 
 	if (h || showhour) {
 		if (spaces)
-			sprintf(tstr, "%d : %02d", h, m);
+			snprintf(tstr, sizeof tstr, "%d : %02d", h, m);
 		else
-			sprintf(tstr, "%d:%02d", h, m);
+			snprintf(tstr, sizeof tstr, "%d:%02d", h, m);
 	} else {
-		sprintf(tstr, "%d", m);
+		snprintf(tstr, sizeof tstr, "%d", m);
 	}
 	if (showseconds) {
 		if (spaces)
-			sprintf(tmp, " : %02d", s);
+			snprintf(tmp, sizeof tmp, " : %02d", s);
 		else
-			sprintf(tmp, ":%02d", s);
+			snprintf(tmp, sizeof tmp, ":%02d", s);
 		strcat(tstr, tmp);
 	}
 	return tstr;
@@ -700,7 +703,7 @@ fix_time(char *old_time)
 	}
 	date[2] = '\0';
 
-	sprintf(new_time, "%s, %s %s", day, month, date);
+	snprintf(new_time, sizeof new_time, "%s, %s %s", day, month, date);
 
 	return &new_time[0];
 }
@@ -877,7 +880,7 @@ dotQuad(unsigned int a)
 	static char	 tmp[20];
 	unsigned char	*aa = (unsigned char *) &a;
 
-	sprintf(tmp, "%d.%d.%d.%d", aa[0], aa[1], aa[2], aa[3]);
+	snprintf(tmp, sizeof tmp, "%d.%d.%d.%d", aa[0], aa[1], aa[2], aa[3]);
 	return tmp;
 }
 
@@ -907,9 +910,9 @@ ratstr(int rat)
 	if (on == 20)
 		on = 0;
 	if (rat) {
-		sprintf(tmp[on], "%4d", rat);
+		snprintf(tmp[on], sizeof tmp[on], "%4d", rat);
 	} else {
-		sprintf(tmp[on], "----");
+		snprintf(tmp[on], sizeof tmp[on], "----");
 	}
 
 	on++;
@@ -925,12 +928,12 @@ ratstrii(int rat, int reg)
 	if (on == 20)
 		on = 0;
 	if (rat) {
-		sprintf(tmp[on], "%4d", rat);
+		snprintf(tmp[on], sizeof tmp[on], "%4d", rat);
 	} else {
 		if (reg) {
-			sprintf(tmp[on], "----");
+			snprintf(tmp[on], sizeof tmp[on], "----");
 		} else {
-			sprintf(tmp[on], "++++");
+			snprintf(tmp[on], sizeof tmp[on], "++++");
 		}
 	}
 
