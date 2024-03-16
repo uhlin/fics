@@ -1284,11 +1284,74 @@ update_enpassant_array(int g, int mode, game_state_t *gs)
 	}
 }
 
+PRIVATE void
+clean_up_doit(int g, int mode, game_state_t *gs, move_t *m)
+{
+	unsigned int now;
+
+	if (garray[g].status != GAME_EXAMINE)
+		game_update_time(g);
+
+	garray[g].numHalfMoves--;
+
+	if (garray[g].status != GAME_EXAMINE) {
+		if (garray[g].wInitTime) {	// Don't update times in untimed
+						// games.
+			now = tenth_secs();
+#ifdef TIMESEAL
+			backup_move_timeseal_block(g, m);
+#else
+			if (m->color == WHITE) {
+				garray[g].wTime   += m->tookTime;
+				garray[g].wTime   = (garray[g].wTime -
+						     garray[g].wIncrement);
+				garray[g].bTime   +=
+				    (garray[g].lastDecTime -
+				     garray[g].lastMoveTime);
+			} else {
+				garray[g].bTime += m->tookTime;
+
+				if (!garray[g].bIncrement) {
+					garray[g].bTime =
+					    (garray[g].bTime -
+					     garray[g].wIncrement);
+				} else {
+					garray[g].bTime =
+					    (garray[g].bTime -
+					     garray[g].bIncrement);
+				}
+
+				garray[g].wTime += (garray[g].lastDecTime -
+						    garray[g].lastMoveTime);
+			}
+#endif
+
+			if (garray[g].numHalfMoves == 0)
+				garray[g].timeOfStart = now;
+			garray[g].lastMoveTime = now;
+			garray[g].lastDecTime = now;
+		}
+	}
+
+	if (gs->onMove == BLACK) {
+		gs->onMove = WHITE;
+	} else {
+		gs->onMove = BLACK;
+		gs->moveNum--;
+	}
+
+	/*
+	 * Take back of last move is done already. It's time to update
+	 * enpassant array...
+	 */
+	update_enpassant_array(g, mode, gs);
+}
+
 PUBLIC int
 backup_move(int g, int mode)
 {
 	game_state_t	*gs;
-	int		 now, i;
+	int		 i;
 	move_t		*m, *m1;
 
 	if (garray[g].link >= 0)   // Not implemented for bughouse yet.
@@ -1412,6 +1475,7 @@ backup_move(int g, int mode)
 			gs->board[m->toFile][m->fromRank] = (PAWN | WHITE);
 
 		gs->board[m->toFile][m->toRank] = NOPIECE;
+
 		/*
 		 * Should set the enpassant array. But I don't care
 		 * right now.
@@ -1423,62 +1487,7 @@ backup_move(int g, int mode)
 
   cleanupMove:
 
-	if (garray[g].status != GAME_EXAMINE)
-		game_update_time(g);
-
-	garray[g].numHalfMoves--;
-
-	if (garray[g].status != GAME_EXAMINE) {
-		if (garray[g].wInitTime) {	// Don't update times in untimed
-						// games.
-			now = tenth_secs();
-#ifdef TIMESEAL
-			backup_move_timeseal_block(g, m);
-#else
-			if (m->color == WHITE) {
-				garray[g].wTime   += m->tookTime;
-				garray[g].wTime   = (garray[g].wTime -
-						     garray[g].wIncrement);
-				garray[g].bTime   +=
-				    (garray[g].lastDecTime -
-				     garray[g].lastMoveTime);
-			} else {
-				garray[g].bTime += m->tookTime;
-
-				if (!garray[g].bIncrement) {
-					garray[g].bTime =
-					    (garray[g].bTime -
-					     garray[g].wIncrement);
-				} else {
-					garray[g].bTime =
-					    (garray[g].bTime -
-					     garray[g].bIncrement);
-				}
-
-				garray[g].wTime += (garray[g].lastDecTime -
-						    garray[g].lastMoveTime);
-			}
-#endif
-
-			if (garray[g].numHalfMoves == 0)
-				garray[g].timeOfStart = now;
-			garray[g].lastMoveTime = now;
-			garray[g].lastDecTime = now;
-		}
-	}
-
-	if (gs->onMove == BLACK) {
-		gs->onMove = WHITE;
-	} else {
-		gs->onMove = BLACK;
-		gs->moveNum--;
-	}
-
-	/*
-	 * Takeback of last move is done already. It's time to update
-	 * enpassant array...
-	 */
-	update_enpassant_array(g, mode, gs);
+	clean_up_doit(g, mode, gs, m);
 
 	return MOVE_OK;
 }
