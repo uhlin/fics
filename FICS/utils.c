@@ -668,7 +668,7 @@ hms(int t, int showhour, int showseconds, int spaces)
 			snprintf(tmp, sizeof tmp, " : %02d", s);
 		else
 			snprintf(tmp, sizeof tmp, ":%02d", s);
-		strcat(tstr, tmp);
+		strlcat(tstr, tmp, sizeof tstr);
 	}
 	return tstr;
 }
