@@ -1418,11 +1418,18 @@ player_lastconnect(int p)
 	char		 ipstr[20];
 	char		 loginName[MAX_LOGIN_NAME];
 	int		 inout, registered;
+	int		 ret, too_long;
 	long int	 lval;
 	time_t		 last = 0;
 
-	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
-	    parray[p].login, STATS_LOGONS);
+	ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+	    stats_dir, parray[p].login[0], parray[p].login, STATS_LOGONS);
+	too_long = (ret < 0 || (size_t)ret >= sizeof fname);
+
+	if (too_long) {
+		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		    __func__);
+	}
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return 0;
@@ -1454,11 +1461,18 @@ player_lastdisconnect(int p)
 	char		 ipstr[20];
 	char		 loginName[MAX_LOGIN_NAME];
 	int		 inout, registered;
+	int		 ret, too_long;
 	long int	 lval;
 	time_t		 last = 0;
 
-	sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
-	    parray[p].login, STATS_LOGONS);
+	ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+	    stats_dir, parray[p].login[0], parray[p].login, STATS_LOGONS);
+	too_long = (ret < 0 || (size_t)ret >= sizeof fname);
+
+	if (too_long) {
+		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		    __func__);
+	}
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return 0;
