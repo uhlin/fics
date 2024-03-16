@@ -35,6 +35,10 @@
 #include "rmalloc.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 struct t_tree {
 	struct t_tree	*left, *right;
 	char		 name;
@@ -378,9 +382,9 @@ psend_raw_file(int p, char *dir, char *file)
 	int	 num;
 
 	if (dir)
-		sprintf(fname, "%s/%s", dir, file);
+		snprintf(fname, sizeof fname, "%s/%s", dir, file);
 	else
-		strcpy(fname, file);
+		strlcpy(fname, file, sizeof fname);
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
@@ -408,9 +412,9 @@ psend_file(int p, char *dir, char *file)
 	parray[p].last_file_byte = 0L;
 
 	if (dir)
-		sprintf(fname, "%s/%s", dir, file);
+		snprintf(fname, sizeof fname, "%s/%s", dir, file);
 	else
-		strcpy(fname, file);
+		strlcpy(fname, file, sizeof fname);
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
@@ -449,9 +453,9 @@ psend_logoutfile(int p, char *dir, char *file)
 	parray[p].last_file_byte = 0L;
 
 	if (dir)
-		sprintf(fname, "%s/%s", dir, file);
+		snprintf(fname, sizeof fname, "%s/%s", dir, file);
 	else
-		strcpy(fname, file);
+		strlcpy(fname, file, sizeof fname);
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
@@ -840,7 +844,7 @@ file_wplayer(char *fname)
 	char		*ptr;
 	static char	 tmp[MAX_FILENAME_SIZE];
 
-	strcpy(tmp, fname);
+	strlcpy(tmp, fname, sizeof tmp);
 
 	if ((ptr = rindex(tmp, '-')) == NULL)
 		return "";
