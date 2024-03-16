@@ -757,7 +757,7 @@ PUBLIC int legal_andcheck_move(game_state_t * gs,
 }
 
 PUBLIC int
-in_check(game_state_t * gs)
+in_check(game_state_t *gs)
 {
 	int	f, r;
 	int	kf = -1, kr = -1;
