@@ -24,6 +24,8 @@
    Markus Uhlin			23/12/10	Deleted check_emailaddr()
    Markus Uhlin			23/12/17	Reformatted functions
    Markus Uhlin			23/12/25	Revised
+   Markus Uhlin			24/03/16	Replaced unbounded string
+						handling functions.
 */
 
 #include "stdinclude.h"
