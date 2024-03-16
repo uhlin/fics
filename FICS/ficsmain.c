@@ -44,6 +44,10 @@
 #include "talkproc.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 /* Arguments */
 PUBLIC int	port;
 PUBLIC int	withConsole;
@@ -148,7 +152,7 @@ main(int argc, char *argv[])
 	}
 
 	startuptime = time(NULL);
-	strcpy(fics_hostname, SERVER_HOSTNAME);
+	strlcpy(fics_hostname, SERVER_HOSTNAME, sizeof fics_hostname);
 	game_high = 0;
 	player_high = 0;
 	quota_time = 60;
