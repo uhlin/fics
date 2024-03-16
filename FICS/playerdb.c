@@ -1529,29 +1529,29 @@ player_pend_print(int p, pending *pend)
 		    pend->char2));
 		break;
 	case PEND_DRAW:
-		sprintf(tmp, "a draw.\n");
+		strlcpy(tmp, "a draw.\n", sizeof tmp);
 		break;
 	case PEND_PAUSE:
-		sprintf(tmp, "to pause the clock.\n");
+		strlcpy(tmp, "to pause the clock.\n", sizeof tmp);
 		break;
 	case PEND_ABORT:
-		sprintf(tmp, "to abort the game.\n");
+		strlcpy(tmp, "to abort the game.\n", sizeof tmp);
 		break;
 	case PEND_TAKEBACK:
-		sprintf(tmp, "to takeback the last %d half moves.\n",
-		    pend->param1);
+		snprintf(tmp, sizeof tmp, "to takeback the last %d "
+		    "half moves.\n", pend->param1);
 		break;
 	case PEND_SIMUL:
-		sprintf(tmp, "to play a simul match.\n");
+		strlcpy(tmp, "to play a simul match.\n", sizeof tmp);
 		break;
 	case PEND_SWITCH:
-		sprintf(tmp, "to switch sides.\n");
+		strlcpy(tmp, "to switch sides.\n", sizeof tmp);
 		break;
 	case PEND_ADJOURN:
-		sprintf(tmp, "an adjournment.\n");
+		strlcpy(tmp, "an adjournment.\n", sizeof tmp);
 		break;
 	case PEND_PARTNER:
-		sprintf(tmp, "to be bughouse partners.\n");
+		strlcpy(tmp, "to be bughouse partners.\n", sizeof tmp);
 		break;
 	}
 
