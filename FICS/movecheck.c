@@ -875,64 +875,68 @@ has_legal_move(game_state_t *gs)
 	return 0;
 }
 
-/* This will end up being a very complicated function */
-PUBLIC int parse_move(char *mstr, game_state_t * gs, move_t * mt, int promote)
+PUBLIC int
+parse_move(char *mstr, game_state_t *gs, move_t *mt, int promote)
 {
-  int type = is_move(mstr);
-  int result;
+	int	result;
+	int	type = is_move(mstr);
 
-  mt->color = gs->onMove;
-  switch (type) {
-  case MS_NOTMOVE:
-    return MOVE_ILLEGAL;
-    break;
-  case MS_COMP:
-    mt->fromFile = mstr[0] - 'a';
-    mt->fromRank = mstr[1] - '1';
-    mt->toFile = mstr[2] - 'a';
-    mt->toRank = mstr[3] - '1';
-    break;
-  case MS_COMPDASH:
-    mt->fromFile = mstr[0] - 'a';
-    mt->fromRank = mstr[1] - '1';
-    mt->toFile = mstr[3] - 'a';
-    mt->toRank = mstr[4] - '1';
-    break;
-  case MS_KCASTLE:
-    mt->fromFile = 4;
-    mt->toFile = 6;
-    if (gs->onMove == WHITE) {
-      mt->fromRank = 0;
-      mt->toRank = 0;
-    } else {
-      mt->fromRank = 7;
-      mt->toRank = 7;
-    }
-    break;
-  case MS_QCASTLE:
-    mt->fromFile = 4;
-    mt->toFile = 2;
-    if (gs->onMove == WHITE) {
-      mt->fromRank = 0;
-      mt->toRank = 0;
-    } else {
-      mt->fromRank = 7;
-      mt->toRank = 7;
-    }
-    break;
-  case MS_ALG:
-    /* Fills in the mt structure */
-    if ((result = alg_parse_move(mstr, gs, mt)) != MOVE_OK)
-      return result;
-    break;
-  default:
-    return MOVE_ILLEGAL;
-    break;
-  }
-  if (!legal_move(gs, mt->fromFile, mt->fromRank, mt->toFile, mt->toRank)) {
-    return MOVE_ILLEGAL;
-  }
-  return move_calculate(gs, mt, promote);
+	mt->color = gs->onMove;
+
+	switch (type) {
+	case MS_NOTMOVE:
+		return MOVE_ILLEGAL;
+	case MS_COMP:
+		mt->fromFile = mstr[0] - 'a';
+		mt->fromRank = mstr[1] - '1';
+		mt->toFile = mstr[2] - 'a';
+		mt->toRank = mstr[3] - '1';
+		break;
+	case MS_COMPDASH:
+		mt->fromFile = mstr[0] - 'a';
+		mt->fromRank = mstr[1] - '1';
+		mt->toFile = mstr[3] - 'a';
+		mt->toRank = mstr[4] - '1';
+		break;
+	case MS_KCASTLE:
+		mt->fromFile = 4;
+		mt->toFile = 6;
+
+		if (gs->onMove == WHITE) {
+			mt->fromRank = 0;
+			mt->toRank = 0;
+		} else {
+			mt->fromRank = 7;
+			mt->toRank = 7;
+		}
+
+		break;
+	case MS_QCASTLE:
+		mt->fromFile = 4;
+		mt->toFile = 2;
+
+		if (gs->onMove == WHITE) {
+			mt->fromRank = 0;
+			mt->toRank = 0;
+		} else {
+			mt->fromRank = 7;
+			mt->toRank = 7;
+		}
+
+		break;
+	case MS_ALG:
+		/* Fills in the mt structure */
+		if ((result = alg_parse_move(mstr, gs, mt)) != MOVE_OK)
+			return result;
+		break;
+	default:
+		return MOVE_ILLEGAL;
+	}
+
+	if (!legal_move(gs, mt->fromFile, mt->fromRank, mt->toFile, mt->toRank))
+		return MOVE_ILLEGAL;
+
+	return move_calculate(gs, mt, promote);
 }
 
 /*
