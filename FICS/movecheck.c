@@ -1251,6 +1251,39 @@ backup_move_timeseal_block(int g, move_t *m)
 }
 #endif // TIMESEAL
 
+PRIVATE void
+update_enpassant_array(int g, int mode, game_state_t *gs)
+{
+	move_t *m1;
+
+	if (!(garray[g].numHalfMoves > 0))
+		return;
+
+	m1 = ((mode == REL_GAME)
+	      ? &garray[g].moveList[garray[g].numHalfMoves - 1]
+	      : &garray[g].examMoveList[garray[g].numHalfMoves - 1]);
+
+	if (piecetype(gs->board[m1->toFile][m1->toRank]) == PAWN) {
+		if ((m1->toRank - m1->fromRank) == 2) {
+			if (m1->toFile < 7 &&
+			    gs->board[m1->toFile + 1][3] == B_PAWN)
+				gs->ep_possible[1][m1->toFile + 1] = -1;
+			if (m1->toFile - 1 >= 0 &&
+			    gs->board[m1->toFile - 1][3] == B_PAWN)
+				gs->ep_possible[1][m1->toFile - 1] = 1;
+		}
+
+		if ((m1->toRank - m1->fromRank) == -2) {
+			if (m1->toFile < 7 &&
+			    gs->board[m1->toFile + 1][4] == W_PAWN)
+				gs->ep_possible[0][m1->toFile + 1] = -1;
+			if (m1->toFile - 1 >= 0 &&
+			    gs->board[m1->toFile - 1][4] == W_PAWN)
+				gs->ep_possible[0][m1->toFile - 1] = 1;
+		}
+	}
+}
+
 PUBLIC int
 backup_move(int g, int mode)
 {
@@ -1445,31 +1478,7 @@ backup_move(int g, int mode)
 	 * Takeback of last move is done already. It's time to update
 	 * enpassant array...
 	 */
-	if (garray[g].numHalfMoves > 0) {
-		m1 = ((mode == REL_GAME)
-		      ? &garray[g].moveList[garray[g].numHalfMoves - 1]
-		      : &garray[g].examMoveList[garray[g].numHalfMoves - 1]);
-
-		if (piecetype(gs->board[m1->toFile][m1->toRank]) == PAWN) {
-			if ((m1->toRank - m1->fromRank) == 2) {
-				if (m1->toFile < 7 &&
-				    gs->board[m1->toFile + 1][3] == B_PAWN)
-					gs->ep_possible[1][m1->toFile + 1] = -1;
-				if (m1->toFile - 1 >= 0 &&
-				    gs->board[m1->toFile - 1][3] == B_PAWN)
-					gs->ep_possible[1][m1->toFile - 1] = 1;
-			}
-
-			if ((m1->toRank - m1->fromRank) == -2) {
-				if (m1->toFile < 7 &&
-				    gs->board[m1->toFile + 1][4] == W_PAWN)
-					gs->ep_possible[0][m1->toFile + 1] = -1;
-				if (m1->toFile - 1 >= 0 &&
-				    gs->board[m1->toFile - 1][4] == W_PAWN)
-					gs->ep_possible[0][m1->toFile - 1] = 1;
-			}
-		}
-	}
+	update_enpassant_array(g, mode, gs);
 
 	return MOVE_OK;
 }
