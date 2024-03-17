@@ -340,46 +340,53 @@ PRIVATE void add_pos(int tof, int tor, int *posf, int *posr, int *numpos)
   (*numpos)++;
 }
 
-PRIVATE void possible_pawn_moves(game_state_t * gs,
-				  int onf, int onr,
-				  int *posf, int *posr, int *numpos)
+PRIVATE void
+possible_pawn_moves(game_state_t *gs, int onf, int onr, int *posf, int *posr,
+    int *numpos)
 {
-  if (gs->onMove == WHITE) {
-    if (gs->board[onf][onr + 1] == NOPIECE) {
-      add_pos(onf, onr + 1, posf, posr, numpos);
-      if ((onr == 1) && (gs->board[onf][onr + 2] == NOPIECE))
-	add_pos(onf, onr + 2, posf, posr, numpos);
-    }
-    if ((onf > 0) && (gs->board[onf - 1][onr + 1] != NOPIECE) &&
-	(iscolor(gs->board[onf - 1][onr + 1], BLACK)))
-      add_pos(onf - 1, onr + 1, posf, posr, numpos);
-    if ((onf < 7) && (gs->board[onf + 1][onr + 1] != NOPIECE) &&
-	(iscolor(gs->board[onf + 1][onr + 1], BLACK)))
-      add_pos(onf + 1, onr + 1, posf, posr, numpos);
-    if (gs->ep_possible[0][onf] == -1)
-      add_pos(onf - 1, onr + 1, posf, posr, numpos);
-    if (gs->ep_possible[0][onf] == 1)
-      add_pos(onf + 1, onr + 1, posf, posr, numpos);
-  } else {
-    if (gs->board[onf][onr - 1] == NOPIECE) {
-      add_pos(onf, onr - 1, posf, posr, numpos);
-      if ((onr == 6) && (gs->board[onf][onr - 2] == NOPIECE))
-	add_pos(onf, onr - 2, posf, posr, numpos);
-    }
-    if ((onf > 0) && (gs->board[onf - 1][onr - 1] != NOPIECE) &&
-	(iscolor(gs->board[onf - 1][onr - 1], WHITE)))
-      add_pos(onf - 1, onr - 1, posf, posr, numpos);
-/* loon: changed what looks like a typo, here's the original line:
-      add_pos(onf - 1, onr + 1, posf, posr, numpos);
-*/
-    if ((onf < 7) && (gs->board[onf + 1][onr - 1] != NOPIECE) &&
-	(iscolor(gs->board[onf + 1][onr - 1], WHITE)))
-      add_pos(onf + 1, onr - 1, posf, posr, numpos);
-    if (gs->ep_possible[1][onf] == -1)
-      add_pos(onf - 1, onr - 1, posf, posr, numpos);
-    if (gs->ep_possible[1][onf] == 1)
-      add_pos(onf + 1, onr - 1, posf, posr, numpos);
-  }
+	if (gs->onMove == WHITE) {
+		if (gs->board[onf][onr + 1] == NOPIECE) {
+			add_pos(onf, onr + 1, posf, posr, numpos);
+
+			if (onr == 1 && gs->board[onf][onr + 2] == NOPIECE)
+				add_pos(onf, onr + 2, posf, posr, numpos);
+		}
+
+		if (onf > 0 &&
+		    gs->board[onf - 1][onr + 1] != NOPIECE &&
+		    iscolor(gs->board[onf - 1][onr + 1], BLACK))
+			add_pos(onf - 1, onr + 1, posf, posr, numpos);
+		if (onf < 7 &&
+		    gs->board[onf + 1][onr + 1] != NOPIECE &&
+		    iscolor(gs->board[onf + 1][onr + 1], BLACK))
+			add_pos(onf + 1, onr + 1, posf, posr, numpos);
+
+		if (gs->ep_possible[0][onf] == -1)
+			add_pos(onf - 1, onr + 1, posf, posr, numpos);
+		if (gs->ep_possible[0][onf] == 1)
+			add_pos(onf + 1, onr + 1, posf, posr, numpos);
+	} else {
+		if (gs->board[onf][onr - 1] == NOPIECE) {
+			add_pos(onf, onr - 1, posf, posr, numpos);
+
+			if (onr == 6 && gs->board[onf][onr - 2] == NOPIECE)
+				add_pos(onf, onr - 2, posf, posr, numpos);
+		}
+
+		if (onf > 0 &&
+		    gs->board[onf - 1][onr - 1] != NOPIECE &&
+		    iscolor(gs->board[onf - 1][onr - 1], WHITE))
+			add_pos(onf - 1, onr - 1, posf, posr, numpos);
+		if (onf < 7 &&
+		    gs->board[onf + 1][onr - 1] != NOPIECE &&
+		    iscolor(gs->board[onf + 1][onr - 1], WHITE))
+			add_pos(onf + 1, onr - 1, posf, posr, numpos);
+
+		if (gs->ep_possible[1][onf] == -1)
+			add_pos(onf - 1, onr - 1, posf, posr, numpos);
+		if (gs->ep_possible[1][onf] == 1)
+			add_pos(onf + 1, onr - 1, posf, posr, numpos);
+	}
 }
 
 PRIVATE void
