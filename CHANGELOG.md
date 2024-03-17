@@ -22,7 +22,8 @@ documented in this file.
 - Redefined `ASSERT()`
 - Reformatted code according to OpenBSD's KNF.
 - Replaced `rand()` calls with arc4random.
-- Replaced _multiple_ `sprintf()` calls with `snprintf()`.
+- Replaced _multiple_ `sprintf()` calls with `snprintf()` + truncation
+  checks.
 - Replaced _multiple_ occurrences of `strcpy()` and `strcat()` with
   size-bounded versions.
 
