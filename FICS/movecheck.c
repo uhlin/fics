@@ -177,21 +177,24 @@ PRIVATE int legal_pawn_move( game_state_t *gs, int ff, int fr, int tf, int tr )
   return 0;
 }
 
-PRIVATE int legal_knight_move(game_state_t * gs, int ff, int fr, int tf, int tr)
+PRIVATE int
+legal_knight_move(game_state_t *gs, int ff, int fr, int tf, int tr)
 {
-  int dx, dy;
+	int	dx, dy;
 
-  dx = ff - tf;
-  dy = fr - tr;
-  if ((dx == 2) || (dx == -2)) {
-    if ((dy == -1) || (dy == 1))
-      return 1;
-  }
-  if ((dy == 2) || (dy == -2)) {
-    if ((dx == -1) || (dx == 1))
-      return 1;
-  }
-  return 0;
+	dx = ff - tf;
+	dy = fr - tr;
+
+	if (dx == 2 || dx == -2) {
+		if (dy == -1 || dy == 1)
+			return 1;
+	}
+	if (dy == 2 || dy == -2) {
+		if (dx == -1 || dx == 1)
+			return 1;
+	}
+
+	return 0;
 }
 
 PRIVATE int
