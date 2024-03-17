@@ -13,6 +13,10 @@
 #include "shutdown.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 PRIVATE char	 downer[1024];
 PRIVATE char	 reason[1024];
 
@@ -163,7 +167,7 @@ com_shutdown(int p, param_list param)
 	int	 p1, secs;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-	strcpy(downer, parray[p].name);
+	strlcpy(downer, parray[p].name, sizeof downer);
 	shutdownStartTime = time(0);
 
 	if (shutdownTime) {   // Cancel any pending shutdowns
@@ -238,7 +242,7 @@ com_shutdown(int p, param_list param)
 	if (shutdownTime <= 0)
 		ShutDown();
 	if (param[1].type == TYPE_STRING)
-		strcpy(reason, param[1].val.string);
+		strlcpy(reason, param[1].val.string, sizeof reason);
 	else
 		reason[0] = '\0';	// No reason - perhaps admin is in a
 					// bad mood? :)
@@ -279,7 +283,7 @@ server_shutdown(int secs, char *why)
 		return 0;
 	}
 
-	strcpy(downer, "Automatic");
+	strlcpy(downer, "Automatic", sizeof downer);
 	shutdownTime = secs;
 	shutdownStartTime = time(NULL);
 
