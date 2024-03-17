@@ -145,6 +145,10 @@ InitPieceLoop(board_t b, int *f, int *r, int color)
 {
 	*f = 0;
 	*r = -1;
+
+	/* XXX: not referenced */
+	(void) b;
+	(void) color;
 	return 1;
 }
 
