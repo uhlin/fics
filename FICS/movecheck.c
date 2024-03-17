@@ -382,26 +382,30 @@ PRIVATE void possible_pawn_moves(game_state_t * gs,
   }
 }
 
-PRIVATE void possible_knight_moves(game_state_t * gs,
-				    int onf, int onr,
-				    int *posf, int *posr, int *numpos)
+PRIVATE void
+possible_knight_moves(game_state_t *gs, int onf, int onr, int *posf, int *posr,
+    int *numpos)
 {
-  static int knightJumps[8][2] = {{-1, 2}, {1, 2}, {2, -1}, {2, 1},
-  {-1, -2}, {1, -2}, {-2, 1}, {-2, -1}};
-  int f, r;
-  int j;
+	int		f, r;
+	int		j;
+	static int	knightJumps[8][2] = {
+		{-1, 2}, {1, 2}, {2, -1}, {2, 1}, {-1, -2}, {1, -2}, {-2, 1},
+		{-2, -1}
+	};
 
-  for (j = 0; j < 8; j++) {
-    f = knightJumps[j][0] + onf;
-    r = knightJumps[j][1] + onr;
-    if ((f < 0) || (f > 7))
-      continue;
-    if ((r < 0) || (r > 7))
-      continue;
-    if ((gs->board[f][r] == NOPIECE) ||
-	(iscolor(gs->board[f][r], CToggle(gs->onMove))))
-      add_pos(f, r, posf, posr, numpos);
-  }
+	for (j = 0; j < 8; j++) {
+		f = knightJumps[j][0] + onf;
+		r = knightJumps[j][1] + onr;
+
+		if (f < 0 || f > 7)
+			continue;
+		if (r < 0 || r > 7)
+			continue;
+
+		if (gs->board[f][r] == NOPIECE || iscolor(gs->board[f][r],
+		    CToggle(gs->onMove)))
+			add_pos(f, r, posf, posr, numpos);
+	}
 }
 
 PRIVATE void
