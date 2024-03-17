@@ -291,46 +291,65 @@ PRIVATE int is_square_attacked (game_state_t *gs, int kf, int kr)
     else return 0;
 }
 
-PRIVATE int legal_king_move(game_state_t * gs, int ff, int fr, int tf, int tr)
+PRIVATE int
+legal_king_move(game_state_t *gs, int ff, int fr, int tf, int tr)
 {
-  if (gs->onMove == WHITE) {
-    /* King side castling */
-    if ((fr == 0) && (tr == 0) && (ff == 4) && (tf == 6) && !gs->wkmoved
-	&& (!gs->wkrmoved) && (gs->board[5][0] == NOPIECE) &&
-	(gs->board[6][0] == NOPIECE) && (gs->board[7][0] == W_ROOK) &&
-	(!is_square_attacked(gs, 4, 0)) && (!is_square_attacked(gs, 5, 0))) {
-      return 1;
-    }
-    /* Queen side castling */
-    if ((fr == 0) && (tr == 0) && (ff == 4) && (tf == 2) && !gs->wkmoved
-	&& (!gs->wqrmoved) && (gs->board[3][0] == NOPIECE) &&
-	(gs->board[2][0] == NOPIECE) && (gs->board[1][0] == NOPIECE) &&
-	(gs->board[0][0] == W_ROOK) &&
-	(!is_square_attacked(gs, 4, 0)) && (!is_square_attacked(gs, 3, 0))) {
-      return 1;
-    }
-  } else {			/* Black */
-    /* King side castling */
-    if ((fr == 7) && (tr == 7) && (ff == 4) && (tf == 6) && !gs->bkmoved
-	&& (!gs->bkrmoved) && (gs->board[5][7] == NOPIECE) &&
-	(gs->board[6][7] == NOPIECE) && (gs->board[7][7] == B_ROOK) &&
-	(!is_square_attacked(gs, 4, 7)) && (!is_square_attacked(gs, 5, 7))) {
-      return 1;
-    }
-    /* Queen side castling */
-    if ((fr == 7) && (tr == 7) && (ff == 4) && (tf == 2) && (!gs->bkmoved)
-	&& (!gs->bqrmoved) && (gs->board[3][7] == NOPIECE) &&
-	(gs->board[2][7] == NOPIECE) && (gs->board[1][7] == NOPIECE) &&
-	(gs->board[0][7] == B_ROOK) &&
-	(!is_square_attacked(gs, 4, 7)) && (!is_square_attacked(gs, 3, 7))) {
-      return 1;
-    }
-  }
-  if (((ff - tf) > 1) || ((tf - ff) > 1))
-    return 0;
-  if (((fr - tr) > 1) || ((tr - fr) > 1))
-    return 0;
-  return 1;
+	if (gs->onMove == WHITE) {
+		/* King side castling */
+		if (fr == 0 && tr == 0 && ff == 4 && tf == 6 &&
+		    !gs->wkmoved &&
+		    !gs->wkrmoved &&
+		    gs->board[5][0] == NOPIECE &&
+		    gs->board[6][0] == NOPIECE &&
+		    gs->board[7][0] == W_ROOK &&
+		    !is_square_attacked(gs, 4, 0) &&
+		    !is_square_attacked(gs, 5, 0))
+			return 1;
+
+		/* Queen side castling */
+		if (fr == 0 && tr == 0 && ff == 4 && tf == 2 &&
+		    !gs->wkmoved &&
+		    !gs->wqrmoved &&
+		    gs->board[3][0] == NOPIECE &&
+		    gs->board[2][0] == NOPIECE &&
+		    gs->board[1][0] == NOPIECE &&
+		    gs->board[0][0] == W_ROOK &&
+		    !is_square_attacked(gs, 4, 0) &&
+		    !is_square_attacked(gs, 3, 0))
+			return 1;
+	} else {	/* Black */
+		/* King side castling */
+		if (fr == 7 && tr == 7 && ff == 4 && tf == 6 &&
+		    !gs->bkmoved &&
+		    !gs->bkrmoved &&
+		    gs->board[5][7] == NOPIECE &&
+		    gs->board[6][7] == NOPIECE &&
+		    gs->board[7][7] == B_ROOK &&
+		    !is_square_attacked(gs, 4, 7) &&
+		    !is_square_attacked(gs, 5, 7))
+			return 1;
+
+		/* Queen side castling */
+		if (fr == 7 && tr == 7 && ff == 4 && tf == 2 &&
+		    !gs->bkmoved &&
+		    !gs->bqrmoved &&
+		    gs->board[3][7] == NOPIECE &&
+		    gs->board[2][7] == NOPIECE &&
+		    gs->board[1][7] == NOPIECE &&
+		    gs->board[0][7] == B_ROOK &&
+		    !is_square_attacked(gs, 4, 7) &&
+		    !is_square_attacked(gs, 3, 7))
+			return 1;
+	}
+
+	if ((ff - tf) > 1 ||
+	    (tf - ff) > 1)
+		return 0;
+	if ((fr - tr) > 1 ||
+	    (tr - fr) > 1)
+		return 0;
+
+	return 1;
 }
 
 PRIVATE void
