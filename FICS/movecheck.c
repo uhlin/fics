@@ -333,11 +333,12 @@ PRIVATE int legal_king_move(game_state_t * gs, int ff, int fr, int tf, int tr)
   return 1;
 }
 
-PRIVATE void add_pos(int tof, int tor, int *posf, int *posr, int *numpos)
+PRIVATE void
+add_pos(int tof, int tor, int *posf, int *posr, int *numpos)
 {
-  posf[*numpos] = tof;
-  posr[*numpos] = tor;
-  (*numpos)++;
+	posf[*numpos] = tof;
+	posr[*numpos] = tor;
+	(*numpos)++;
 }
 
 PRIVATE void
