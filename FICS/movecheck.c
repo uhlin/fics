@@ -25,6 +25,7 @@
    Markus Uhlin                 23/12/24	Fixed dead assignment
    Markus Uhlin                 24/03/16	Refactored and reformatted
 						functions.
+   Markus Uhlin                 24/03/17	Replaced sprintf() calls
 */
 
 #include "stdinclude.h"
