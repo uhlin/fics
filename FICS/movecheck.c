@@ -229,44 +229,49 @@ PRIVATE int legal_bishop_move(game_state_t * gs, int ff, int fr, int tf, int tr)
   return 1;
 }
 
-PRIVATE int legal_rook_move(game_state_t * gs, int ff, int fr, int tf, int tr)
+PRIVATE int
+legal_rook_move(game_state_t *gs, int ff, int fr, int tf, int tr)
 {
-  int i;
-  int start, stop;
+	int	i;
+	int	start, stop;
 
-  if (ff == tf) {
-    if (((fr - tr) == 1) || ((tr - fr) == 1))
-      return 1;
-    if (fr < tr) {
-      start = fr + 1;
-      stop = tr - 1;
-    } else {
-      start = tr + 1;
-      stop = fr - 1;
-    }
-    for (i = start; i <= stop; i++) {
-      if (gs->board[ff][i] != NOPIECE)
+	if (ff == tf) {
+		if ((fr - tr) == 1 || (tr - fr) == 1)
+			return 1;
+		if (fr < tr) {
+			start = fr + 1;
+			stop = tr - 1;
+		} else {
+			start = tr + 1;
+			stop = fr - 1;
+		}
+
+		for (i = start; i <= stop; i++) {
+			if (gs->board[ff][i] != NOPIECE)
+				return 0;
+		}
+
+		return 1;
+	} else if (fr == tr) {
+		if ((ff - tf) == 1 || (tf - ff) == 1)
+			return 1;
+		if (ff < tf) {
+			start = ff + 1;
+			stop = tf - 1;
+		} else {
+			start = tf + 1;
+			stop = ff - 1;
+		}
+
+		for (i = start; i <= stop; i++) {
+			if (gs->board[i][fr] != NOPIECE)
+				return 0;
+		}
+
+		return 1;
+	}
+
 	return 0;
-    }
-    return 1;
-  } else if (fr == tr) {
-    if (((ff - tf) == 1) || ((tf - ff) == 1))
-      return 1;
-    if (ff < tf) {
-      start = ff + 1;
-      stop = tf - 1;
-    } else {
-      start = tf + 1;
-      stop = ff - 1;
-    }
-    for (i = start; i <= stop; i++) {
-      if (gs->board[i][fr] != NOPIECE)
-	return 0;
-    }
-    return 1;
-  } else {
-    return 0;
-  }
 }
 
 PRIVATE int
