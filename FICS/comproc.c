@@ -51,7 +51,6 @@
 #include "lists.h"
 #include "multicol.h"
 #include "network.h"
-#include "network.h"
 #include "obsproc.h"
 #include "playerdb.h"
 #include "ratings.h"
