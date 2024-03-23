@@ -24,6 +24,7 @@
 */
 
 #include "stdinclude.h"
+#include "common.h"
 
 #include <sys/resource.h>
 
@@ -31,7 +32,6 @@
 
 #include "board.h"
 #include "command.h"
-#include "common.h"
 #include "comproc.h"
 #include "config.h"
 #include "eco.h"
