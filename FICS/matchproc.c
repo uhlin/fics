@@ -1093,28 +1093,37 @@ PUBLIC int com_withdraw(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_pending(int p, param_list param)
+PUBLIC int
+com_pending(int p, param_list param)
 {
-  int i;
+	int i;
 
-  if (!parray[p].num_to) {
-    pprintf(p, "There are no offers pending TO other players.\n");
-  } else {
-    pprintf(p, "Offers TO other players:\n");
-    for (i = 0; i < parray[p].num_to; i++) {
-      pprintf(p, "   ");
-      player_pend_print(p, &parray[p].p_to_list[i]);
-    }
-  }
-  if (!parray[p].num_from) {
-    pprintf(p, "\nThere are no offers pending FROM other players.\n");
-  } else {
-    pprintf(p, "\nOffers FROM other players:\n");
-    for (i = 0; i < parray[p].num_from; i++) {
-      pprintf(p, " %d: ", i + 1);
-      player_pend_print(p, &parray[p].p_from_list[i]);
-    }
-    pprintf(p, "\nIf you wish to accept any of these offers type 'accept n'\nor just 'accept' if there is only one offer.\n");
-  }
-  return COM_OK;
+	if (!parray[p].num_to) {
+		pprintf(p, "There are no offers pending TO other players.\n");
+	} else {
+		pprintf(p, "Offers TO other players:\n");
+
+		for (i = 0; i < parray[p].num_to; i++) {
+			pprintf(p, "   ");
+			player_pend_print(p, &parray[p].p_to_list[i]);
+		}
+	}
+
+	if (!parray[p].num_from) {
+		pprintf(p, "\nThere are no offers pending FROM other players."
+		    "\n");
+	} else {
+		pprintf(p, "\nOffers FROM other players:\n");
+
+		for (i = 0; i < parray[p].num_from; i++) {
+			pprintf(p, " %d: ", i + 1);
+			player_pend_print(p, &parray[p].p_from_list[i]);
+		}
+
+		pprintf(p, "\nIf you wish to accept any of these offers type "
+		    "'accept n'\nor just 'accept' if there is only one offer."
+		    "\n");
+	}
+
+	return COM_OK;
 }
