@@ -7,7 +7,6 @@
 #include "common.h"
 
 #include "command.h"
-#include "ficsmain.h"
 #include "network.h"
 #include "playerdb.h"
 #include "shutdown.h"
