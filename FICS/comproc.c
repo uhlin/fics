@@ -385,7 +385,7 @@ com_stats(int p, param_list param)
 	if (connected && parray[p1].status == PLAYER_PROMPT) {
 		snprintf(tmp, sizeof tmp, "On for: %s",
 		    hms_desc(player_ontime(p1)));
-		strcat(line, tmp);
+		strlcat(line, tmp, sizeof line);
 		snprintf(tmp, sizeof tmp, "   Idle: %s\n",
 		    hms_desc(player_idle(p1)));
 	} else {
@@ -396,7 +396,7 @@ com_stats(int p, param_list param)
 			strlcpy(tmp, "(Never connected.)\n", sizeof tmp);
 	}
 
-	strcat(line, tmp);
+	strlcat(line, tmp, sizeof line);
 	pprintf(p, "%s", line);
 
 	if (parray[p1].simul_info.numBoards) {
@@ -805,18 +805,18 @@ who_terse(int p, int num, int *plist, int type)
 			    parray[p1].registered));
 
 			if (parray[p1].simul_info.numBoards) {
-				strcat(ptmp, "~");
+				strlcat(ptmp, "~", sizeof ptmp);
 			} else if (parray[p1].game >= 0 &&
 			    garray[parray[p1].game].status == GAME_EXAMINE) {
-				strcat(ptmp, "#");
+				strlcat(ptmp, "#", sizeof ptmp);
 			} else if (parray[p1].game >= 0) {
-				strcat(ptmp, "^");
+				strlcat(ptmp, "^", sizeof ptmp);
 			} else if (!parray[p1].open) {
-				strcat(ptmp, ":");
+				strlcat(ptmp, ":", sizeof ptmp);
 			} else if (player_idle(p1) > 300) {
-				strcat(ptmp, ".");
+				strlcat(ptmp, ".", sizeof ptmp);
 			} else {
-				strcat(ptmp, " ");
+				strlcat(ptmp, " ", sizeof ptmp);
 			}
 		}
 
@@ -824,7 +824,7 @@ who_terse(int p, int num, int *plist, int type)
 			psprintf_highlight(p, ptmp + strlen(ptmp), "%s",
 			    parray[p1].name);
 		} else {
-			strcat(ptmp, parray[p1].name);
+			strlcat(ptmp, parray[p1].name, sizeof ptmp);
 		}
 
 		AddPlayerLists(p1, ptmp);
@@ -860,14 +860,14 @@ who_verbose(int p, int num, int plist[])
 		else
 			strlcpy(tmp, "   ", sizeof tmp);
 
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 
 		if (!parray[p1].open)
 			strlcpy(tmp, "X", sizeof tmp);
 		else
 			strlcpy(tmp, " ", sizeof tmp);
 
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 
 		if (parray[p1].registered) {
 			if (parray[p1].rated)
@@ -878,7 +878,7 @@ who_verbose(int p, int num, int plist[])
 			strlcpy(tmp, "U", sizeof tmp);
 		}
 
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 		strlcpy(p1WithAttrs, parray[p1].name, sizeof p1WithAttrs);
 		AddPlayerLists(p1, p1WithAttrs);
 		p1WithAttrs[17] = '\0';
@@ -898,14 +898,14 @@ who_verbose(int p, int num, int plist[])
 			}
 		}
 
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 		snprintf(tmp, sizeof tmp, " %4s        %-4s        %5s  ",
 		    ratstrii(parray[p1].s_stats.rating,
 		    parray[p1].registered),
 		    ratstrii(parray[p1].b_stats.rating,
 		    parray[p1].registered),
 		    hms(player_ontime(p1), 0, 0, 0));
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 
 		if (player_idle(p1) >= 60) {
 			snprintf(tmp, sizeof tmp, "%5s   |\n",
@@ -914,7 +914,7 @@ who_verbose(int p, int num, int plist[])
 			strlcpy(tmp, "        |\n", sizeof tmp);
 		}
 
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 		pprintf(p, "%s", playerLine);
 	}
 
@@ -955,14 +955,14 @@ who_winloss(int p, int num, int plist[])
 		    parray[p1].s_stats.win,
 		    parray[p1].s_stats.los,
 		    parray[p1].s_stats.dra);
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 
 		snprintf(tmp, sizeof tmp, "%4s    %4d %4d %4d   ",
 		    ratstrii(parray[p1].b_stats.rating, parray[p1].registered),
 		    parray[p1].b_stats.win,
 		    parray[p1].b_stats.los,
 		    parray[p1].b_stats.dra);
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 
 		if (player_idle(p1) >= 60) {
 			snprintf(tmp, sizeof tmp, "%5s\n", hms(player_idle(p1),
@@ -971,7 +971,7 @@ who_winloss(int p, int num, int plist[])
 			strlcpy(tmp, "     \n", sizeof tmp);
 		}
 
-		strcat(playerLine, tmp);
+		strlcat(playerLine, tmp, sizeof playerLine);
 		pprintf(p, "%s", playerLine);
 	}
 
