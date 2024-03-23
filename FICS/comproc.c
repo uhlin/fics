@@ -336,11 +336,11 @@ com_stats_andify(int *numbers, int howmany, char *dest, size_t dsize)
 }
 
 PRIVATE void
-com_stats_rating(char *hdr, statistics *stats, char *dest)
+com_stats_rating(char *hdr, statistics *stats, char *dest, const size_t dsize)
 {
 	char tmp[100] = { '\0' };
 
-	sprintf(dest, "%-10s%4s    %5.1f   %4d   %4d   %4d   %4d", hdr,
+	snprintf(dest, dsize, "%-10s%4s    %5.1f   %4d   %4d   %4d   %4d", hdr,
 	    ratstr(stats->rating),
 	    stats->sterr,
 	    stats->win,
@@ -464,13 +464,15 @@ com_stats(int p, param_list param)
 		pprintf(p, "\n         rating     RD     win   loss   draw  "
 		    "total   best\n");
 
-		com_stats_rating("Blitz", &parray[p1].b_stats, tmp);
+		com_stats_rating("Blitz", &parray[p1].b_stats, tmp, sizeof tmp);
 		pprintf(p, "%s", tmp);
-		com_stats_rating("Standard", &parray[p1].s_stats, tmp);
+		com_stats_rating("Standard", &parray[p1].s_stats, tmp,
+		    sizeof tmp);
 		pprintf(p, "%s", tmp);
-		com_stats_rating("Lightning", &parray[p1].l_stats, tmp);
+		com_stats_rating("Lightning", &parray[p1].l_stats, tmp,
+		    sizeof tmp);
 		pprintf(p, "%s", tmp);
-		com_stats_rating("Wild", &parray[p1].w_stats, tmp);
+		com_stats_rating("Wild", &parray[p1].w_stats, tmp, sizeof tmp);
 		pprintf(p, "%s", tmp);
 	}
 
