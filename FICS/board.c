@@ -25,6 +25,8 @@
    Markus Uhlin                 23/12/28	Replaced rand() calls
    Markus Uhlin                 24/03/23	Replaced unbounded string
 						handling functions.
+   Markus Uhlin                 24/03/24	Fixed format strings that
+						weren't string literals.
 */
 
 #include "stdinclude.h"
@@ -216,8 +218,8 @@ update_holding(int g, int pieceCaptured)
 			continue;
 
 		if (player_is_observe(pl, g) || parray[pl].game == g) {
-			pprintf_prompt(pl, (IsMachineStyle(parray[pl].style) ?
-			    tmp1 : tmp2));
+			pprintf_prompt(pl, "%s",
+			    (IsMachineStyle(parray[pl].style) ? tmp1 : tmp2));
 		}
 	}
 }
