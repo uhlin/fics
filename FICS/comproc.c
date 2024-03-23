@@ -31,6 +31,8 @@
 						reformatted functions.
    Markus Uhlin			24/01/06	Fixed potentially insecure
 						format strings.
+   Markus Uhlin			24/03/23	Size-bounded string handling
+						plus truncation checks.
 */
 
 #include "stdinclude.h"
