@@ -764,24 +764,24 @@ com_logons(int p, param_list param)
 }
 
 PRIVATE void
-AddPlayerLists(int p1, char *ptmp)
+AddPlayerLists(int p1, char *ptmp, const size_t size)
 {
 	if (parray[p1].adminLevel >= 10 && parray[p1].i_admin)
-		strcat(ptmp, "(*)");
+		strlcat(ptmp, "(*)", size);
 	if (in_list(p1, L_COMPUTER, parray[p1].name))
-		strcat(ptmp, "(C)");
+		strlcat(ptmp, "(C)", size);
 	if (in_list(p1, L_FM, parray[p1].name))
-		strcat(ptmp, "(FM)");
+		strlcat(ptmp, "(FM)", size);
 	if (in_list(p1, L_IM, parray[p1].name))
-		strcat(ptmp, "(IM)");
+		strlcat(ptmp, "(IM)", size);
 	if (in_list(p1, L_GM, parray[p1].name))
-		strcat(ptmp, "(GM)");
+		strlcat(ptmp, "(GM)", size);
 	if (in_list(p1, L_TD, parray[p1].name))
-		strcat(ptmp, "(TD)");
+		strlcat(ptmp, "(TD)", size);
 	if (in_list(p1, L_TEAMS, parray[p1].name))
-		strcat(ptmp, "(T)");
+		strlcat(ptmp, "(T)", size);
 	if (in_list(p1, L_BLIND, parray[p1].name))
-		strcat(ptmp, "(B)");
+		strlcat(ptmp, "(B)", size);
 }
 
 PRIVATE void
@@ -834,7 +834,7 @@ who_terse(int p, int num, int *plist, int type)
 			strlcat(ptmp, parray[p1].name, sizeof ptmp);
 		}
 
-		AddPlayerLists(p1, ptmp);
+		AddPlayerLists(p1, ptmp, sizeof ptmp);
 		multicol_store(m, ptmp);
 	}
 
@@ -887,7 +887,7 @@ who_verbose(int p, int num, int plist[])
 
 		strlcat(playerLine, tmp, sizeof playerLine);
 		strlcpy(p1WithAttrs, parray[p1].name, sizeof p1WithAttrs);
-		AddPlayerLists(p1, p1WithAttrs);
+		AddPlayerLists(p1, p1WithAttrs, sizeof p1WithAttrs);
 		p1WithAttrs[17] = '\0';
 
 		if (p == p1) {
@@ -947,7 +947,7 @@ who_winloss(int p, int num, int plist[])
 
 		/* Modified by hersco to include lists in 'who n.' */
 		strlcpy(p1WithAttrs, parray[p1].name, sizeof p1WithAttrs);
-		AddPlayerLists(p1, p1WithAttrs);
+		AddPlayerLists(p1, p1WithAttrs, sizeof p1WithAttrs);
 		p1WithAttrs[17] = '\0';
 
 		if (p1 == p) {
