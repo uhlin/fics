@@ -836,9 +836,9 @@ who_terse(int p, int num, int *plist, int type)
 PRIVATE void
 who_verbose(int p, int num, int plist[])
 {
-	char	 p1WithAttrs[255];
-	char	 playerLine[255];
-	char	 tmp[255];
+	char	 p1WithAttrs[255] = { '\0' };
+	char	 playerLine[255] = { '\0' };
+	char	 tmp[255] = { '\0' };
 	int	 p1;
 	int	 ret, too_long;
 
@@ -848,7 +848,7 @@ who_verbose(int p, int num, int plist[])
 
 	for (int i = 0; i < num; i++) {
 		p1 = plist[i];
-		strcpy(playerLine, " |");
+		strlcpy(playerLine, " |", sizeof playerLine);
 
 		if (parray[p1].game >= 0)
 			sprintf(tmp, "%3d", parray[p1].game + 1);
@@ -874,12 +874,12 @@ who_verbose(int p, int num, int plist[])
 		}
 
 		strcat(playerLine, tmp);
-		strcpy(p1WithAttrs, parray[p1].name);
+		strlcpy(p1WithAttrs, parray[p1].name, sizeof p1WithAttrs);
 		AddPlayerLists(p1, p1WithAttrs);
 		p1WithAttrs[17] = '\0';
 
 		if (p == p1) {
-			strcpy(tmp, " ");
+			strlcpy(tmp, " ", sizeof tmp);
 			psprintf_highlight(p, tmp + strlen(tmp), "%-17s",
 			    p1WithAttrs);
 		} else {
@@ -921,9 +921,9 @@ who_verbose(int p, int num, int plist[])
 PRIVATE void
 who_winloss(int p, int num, int plist[])
 {
-	char	p1WithAttrs[255];
-	char	playerLine[255];
-	char	tmp[255];
+	char	p1WithAttrs[255] = { '\0' };
+	char	playerLine[255] = { '\0' };
+	char	tmp[255] = { '\0' };
 	int	p1;
 
 	pprintf(p, "Name               Stand     win loss draw   Blitz    win loss draw    idle\n");
@@ -934,7 +934,7 @@ who_winloss(int p, int num, int plist[])
 		p1 = plist[i];
 
 		/* Modified by hersco to include lists in 'who n.' */
-		strcpy(p1WithAttrs, parray[p1].name);
+		strlcpy(p1WithAttrs, parray[p1].name, sizeof p1WithAttrs);
 		AddPlayerLists(p1, p1WithAttrs);
 		p1WithAttrs[17] = '\0';
 
