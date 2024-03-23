@@ -23,6 +23,8 @@
    Markus Uhlin                 23/12/17	Fixed compiler warnings
    Markus Uhlin                 23/12/23	Reformatted all functions
    Markus Uhlin                 23/12/28	Replaced rand() calls
+   Markus Uhlin                 24/03/23	Replaced unbounded string
+						handling functions.
 */
 
 #include "stdinclude.h"
