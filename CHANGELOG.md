@@ -13,6 +13,7 @@ documented in this file.
   characters long (was 4).
 - Deleted non-existent functions from the header files.
 - Deleted obsolete and unused code
+- Deleted unused includes.
 - Fixed format strings that weren't string literals. Potentially
   insecure.
 - Fixed incorrect buffer sizes
