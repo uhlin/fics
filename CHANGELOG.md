@@ -15,7 +15,7 @@ documented in this file.
 - Deleted obsolete and unused code
 - Deleted unused includes.
 - Fixed format strings that weren't string literals. Potentially
-  insecure.
+  insecure. (_Multiple_ occurrences.)
 - Fixed incorrect buffer sizes
 - Fixed unchecked return values
 - Made functions and variables private (aka static) where possible.
