@@ -19,9 +19,9 @@
 PRIVATE char	 downer[1024];
 PRIVATE char	 reason[1024];
 
-PRIVATE int	 lastTimeLeft;
-PRIVATE int	 shutdownStartTime;
-PRIVATE int	 shutdownTime = 0;
+PRIVATE time_t	 lastTimeLeft;
+PRIVATE time_t	 shutdownStartTime;
+PRIVATE time_t	 shutdownTime = 0;
 
 PUBLIC void
 output_shut_mess(void)
@@ -167,7 +167,7 @@ com_shutdown(int p, param_list param)
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 	strlcpy(downer, parray[p].name, sizeof downer);
-	shutdownStartTime = time(0);
+	shutdownStartTime = time(NULL);
 
 	if (shutdownTime) {   // Cancel any pending shutdowns
 		for (p1 = 0; p1 < p_num; p1++) {
@@ -258,10 +258,10 @@ com_shutdown(int p, param_list param)
 			    "%s. ****\n", reason);
 		}
 
-		pprintf(p1, "    **** Server going down in %d minutes and %d "
+		pprintf(p1, "    **** Server going down in %ld minutes and %ld "
 		    "seconds. ****\n",
-		    (shutdownTime / 60),
-		    (shutdownTime % 60));
+		    (long int)(shutdownTime / 60),
+		    (long int)(shutdownTime % 60));
 		if (p != p1)  // fix double prompt - DAV
 			pprintf_prompt(p1, "\n");
 		else
@@ -291,10 +291,10 @@ server_shutdown(int secs, char *why)
 			continue;
 		pprintf(p1, "\n\n    **** Automatic Server shutdown. ****\n");
 		pprintf(p1, "%s\n", why);
-		pprintf_prompt(p1, "    **** Server going down in %d minutes "
-		    "and %d seconds. ****\n\n",
-		    (shutdownTime / 60),
-		    shutdownTime - ((shutdownTime / 60) * 60));
+		pprintf_prompt(p1, "    **** Server going down in %ld minutes "
+		    "and %ld seconds. ****\n\n",
+		    (long int)(shutdownTime / 60),
+		    (long int)(shutdownTime - ((shutdownTime / 60) * 60)));
 	}
 
 	fprintf(stderr, "FICS:    **** Automatic Server shutdown. ****\n");
