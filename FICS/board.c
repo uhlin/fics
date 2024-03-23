@@ -156,7 +156,7 @@ append_holding_machine(char *buf, int g, int c, int p)
 
 	snprintf(tmp, sizeof tmp, "<b1> game %d white [%s] black [", (g + 1),
 	    holding_str(gs->holding[0]));
-	strcat(tmp, holding_str(gs->holding[1]));
+	strlcat(tmp, holding_str(gs->holding[1]), sizeof tmp);
 	strcat(buf, tmp);
 
 	if (p) {
@@ -292,43 +292,45 @@ genstyle(game_state_t *b, move_t *ml, char *wp[], char *bp[],
 		inc	= 1;
 	}
 
-	strcat(bstring, top);
+	strlcat(bstring, top, sizeof bstring);
 
 	for (f = first, count = 7; f != last + inc; f += inc, count--) {
 		snprintf(tmp, sizeof tmp, "     %d  %s", f + 1, start);
-		strcat(bstring, tmp);
+		strlcat(bstring, tmp, sizeof bstring);
 
 		for (r = last; r != first - inc; r = r - inc) {
 			if (square_color(r, f) == WHITE)
-				strcat(bstring, wsqr);
+				strlcat(bstring, wsqr, sizeof bstring);
 			else
-				strcat(bstring, bsqr);
+				strlcat(bstring, bsqr, sizeof bstring);
 
 			if (piecetype(b->board[r][f]) == NOPIECE) {
 				if (square_color(r, f) == WHITE)
-					strcat(bstring, bp[0]);
+					strlcat(bstring, bp[0], sizeof bstring);
 				else
-					strcat(bstring, wp[0]);
+					strlcat(bstring, wp[0], sizeof bstring);
 			} else {
 				if (colorval(b->board[r][f]) == WHITE) {
-					strcat(bstring,
-					    wp[piecetype(b->board[r][f])]);
+					strlcat(bstring,
+					    wp[piecetype(b->board[r][f])],
+					    sizeof bstring);
 				} else {
-					strcat(bstring,
-					    bp[piecetype(b->board[r][f])]);
+					strlcat(bstring,
+					    bp[piecetype(b->board[r][f])],
+					    sizeof bstring);
 				}
 			}
 		}
 
 		snprintf(tmp, sizeof tmp, "%s", end);
-		strcat(bstring, tmp);
+		strlcat(bstring, tmp, sizeof bstring);
 
 		switch (count) {
 		case 7:
 			snprintf(tmp, sizeof tmp, "     Move # : %d (%s)",
 			    b->moveNum,
 			    CString(b->onMove));
-			strcat(bstring, tmp);
+			strlcat(bstring, tmp, sizeof bstring);
 			break;
 		case 6:
 			if (garray[b->gameNum].numHalfMoves > 0) {
@@ -338,7 +340,7 @@ genstyle(game_state_t *b, move_t *ml, char *wp[], char *bp[],
 				    "'%s'",
 				    CString(CToggle(b->onMove)), move_and_time
 				    (&ml[garray[b->gameNum].numHalfMoves - 1]));
-				strcat(bstring, tmp);
+				strlcat(bstring, tmp, sizeof bstring);
 			}
 			break;
 		case 5:
@@ -346,39 +348,39 @@ genstyle(game_state_t *b, move_t *ml, char *wp[], char *bp[],
 		case 4:
 			snprintf(tmp, sizeof tmp, "     Black Clock : %s",
 			    tenth_str((bTime > 0 ? bTime : 0), 1));
-			strcat(bstring, tmp);
+			strlcat(bstring, tmp, sizeof bstring);
 			break;
 		case 3:
 			snprintf(tmp, sizeof tmp, "     White Clock : %s",
 			    tenth_str((wTime > 0 ? wTime : 0), 1));
-			strcat(bstring, tmp);
+			strlcat(bstring, tmp, sizeof bstring);
 			break;
 		case 2:
 			snprintf(tmp, sizeof tmp, "     Black Strength : %d",
 			    bs);
-			strcat(bstring, tmp);
+			strlcat(bstring, tmp, sizeof bstring);
 			break;
 		case 1:
 			snprintf(tmp, sizeof tmp, "     White Strength : %d",
 			    ws);
-			strcat(bstring, tmp);
+			strlcat(bstring, tmp, sizeof bstring);
 			break;
 		case 0:
 			break;
 		} // switch
 
-		strcat(bstring, "\n");
+		strlcat(bstring, "\n", sizeof bstring);
 
 		if (count != 0)
-			strcat(bstring, mid);
+			strlcat(bstring, mid, sizeof bstring);
 		else
-			strcat(bstring, top);
+			strlcat(bstring, top, sizeof bstring);
 	} // for
 
 	if (orient == WHITE)
-		strcat(bstring, label);
+		strlcat(bstring, label, sizeof bstring);
 	else
-		strcat(bstring, blabel);
+		strlcat(bstring, blabel, sizeof bstring);
 	return 0;
 }
 
@@ -681,19 +683,21 @@ style8(game_state_t *b, move_t *ml)
 	    garray[b->gameNum].black_name,
 	    (orient == WHITE ? ":" : "*"));
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	for (r = 0; r < 8; r++) {
 		for (f = 0; f < 8; f++) {
 			if (b->board[f][r] == NOPIECE) {
-				strcat(bstring, " ");
+				strlcat(bstring, " ", sizeof bstring);
 			} else {
 				if (colorval(b->board[f][r]) == WHITE) {
-					strcat(bstring, wpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, wpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				} else {
-					strcat(bstring, bpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, bpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				}
 			}
 		}
@@ -715,7 +719,7 @@ style8(game_state_t *b, move_t *ml)
 	    ? tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0)
 	    : "0:00"));
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 	return 0;
 }
 
@@ -732,11 +736,11 @@ style9(game_state_t *b, move_t *ml)
 	snprintf(tmp, sizeof tmp, "\nMove     %-23s%s\n",
 	    garray[b->gameNum].white_name,
 	    garray[b->gameNum].black_name);
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	strlcpy(tmp, "----     --------------         --------------\n",
 	    sizeof tmp);
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	startmove = ((garray[b->gameNum].numHalfMoves - 3) / 2) * 2;
 
@@ -749,20 +753,20 @@ style9(game_state_t *b, move_t *ml)
 	while (i < garray[b->gameNum].numHalfMoves && count < 4) {
 		if (!(i & 0x01)) {
 			snprintf(tmp, sizeof tmp, "  %2d     ", (i / 2 + 1));
-			strcat(bstring, tmp);
+			strlcat(bstring, tmp, sizeof bstring);
 		}
 
 		snprintf(tmp, sizeof tmp, "%-23s", move_and_time(&ml[i]));
-		strcat(bstring, tmp);
+		strlcat(bstring, tmp, sizeof bstring);
 
 		if (i & 0x01)
-			strcat(bstring, "\n");
+			strlcat(bstring, "\n", sizeof bstring);
 		i++;
 		count++;
 	}
 
 	if (i & 0x01)
-		strcat(bstring, "\n");
+		strlcat(bstring, "\n", sizeof bstring);
 	return 0;
 }
 
@@ -779,29 +783,31 @@ style10(game_state_t *b, move_t *ml)
 
 	board_calc_strength(b, &ws, &bs);
 	strlcpy(tmp, "<10>\n", sizeof tmp);
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	for (r = 7; r >= 0; r--) {
-		strcat(bstring, "|");
+		strlcat(bstring, "|", sizeof bstring);
 
 		for (f = 0; f < 8; f++) {
 			if (b->board[f][r] == NOPIECE) {
-				strcat(bstring, " ");
+				strlcat(bstring, " ", sizeof bstring);
 			} else {
 				if (colorval(b->board[f][r]) == WHITE) {
-					strcat(bstring, wpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, wpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				} else {
-					strcat(bstring, bpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, bpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				}
 			}
 		}
 
-		strcat(bstring, "|\n");
+		strlcat(bstring, "|\n", sizeof bstring);
 	}
 
-	strcat(bstring, (b->onMove == WHITE ? "W " : "B "));
+	strlcat(bstring, (b->onMove == WHITE ? "W " : "B "), sizeof bstring);
 
 	if (garray[b->gameNum].numHalfMoves) {
 		snprintf(tmp, sizeof tmp, "%d ",
@@ -810,7 +816,7 @@ style10(game_state_t *b, move_t *ml)
 		strlcpy(tmp, "-1 ", sizeof tmp);
 	}
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	snprintf(tmp, sizeof tmp, "%d %d %d %d %d\n",
 	    !(b->wkmoved || b->wkrmoved),
@@ -821,7 +827,7 @@ style10(game_state_t *b, move_t *ml)
 	    (garray[b->gameNum].numHalfMoves -
 	    (b->lastIrreversable == -1 ? 0 : b->lastIrreversable)));
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	ret = snprintf(tmp, sizeof tmp, "%d %s %s %d %d %d %d %d %d %d %d %s "
 	    "(%s) %s %d\n",
@@ -858,10 +864,10 @@ style10(game_state_t *b, move_t *ml)
 		    __func__);
 	}
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	strlcpy(tmp, ">10<\n", sizeof tmp);
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	return 0;
 }
@@ -887,19 +893,21 @@ style11(game_state_t *b, move_t *ml)
 	    garray[b->gameNum].black_name,
 	    (orient == WHITE ? ":" : "*"));
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	for (r = 0; r < 8; r++) {
 		for (f = 0; f < 8; f++) {
 			if (b->board[f][r] == NOPIECE) {
-				strcat(bstring, " ");
+				strlcat(bstring, " ", sizeof bstring);
 			} else {
 				if (colorval(b->board[f][r]) == WHITE) {
-					strcat(bstring, wpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, wpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				} else {
-					strcat(bstring, bpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, bpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				}
 			}
 		}
@@ -921,7 +929,7 @@ style11(game_state_t *b, move_t *ml)
 	    ? tenth_str(ml[garray[b->gameNum].numHalfMoves - 1].tookTime, 0)
 	    : "0:00"));
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 	return 0;
 }
 
@@ -942,22 +950,24 @@ style12(game_state_t *b, move_t *ml)
 	for (r = 7; r >= 0; r--) {
 		for (f = 0; f < 8; f++) {
 			if (b->board[f][r] == NOPIECE) {
-				strcat(bstring, "-");
+				strlcat(bstring, "-", sizeof bstring);
 			} else {
 				if (colorval(b->board[f][r]) == WHITE) {
-					strcat(bstring, wpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, wpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				} else {
-					strcat(bstring, bpstring
-					    [piecetype(b->board[f][r])]);
+					strlcat(bstring, bpstring
+					    [piecetype(b->board[f][r])],
+					    sizeof bstring);
 				}
 			}
 		}
 
-		strcat(bstring, " ");
+		strlcat(bstring, " ", sizeof bstring);
 	}
 
-	strcat(bstring, (b->onMove == WHITE ? "W " : "B "));
+	strlcat(bstring, (b->onMove == WHITE ? "W " : "B "), sizeof bstring);
 
 	if (garray[b->gameNum].numHalfMoves) {
 		snprintf(tmp, sizeof tmp, "%d ",
@@ -966,7 +976,7 @@ style12(game_state_t *b, move_t *ml)
 		strlcpy(tmp, "-1 ", sizeof tmp);
 	}
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	snprintf(tmp, sizeof tmp, "%d %d %d %d %d ",
 	    !(b->wkmoved || b->wkrmoved),
@@ -976,7 +986,7 @@ style12(game_state_t *b, move_t *ml)
 
 	    (garray[b->gameNum].numHalfMoves -
 	    (b->lastIrreversable == -1 ? 0 : b->lastIrreversable)));
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	ret = snprintf(tmp, sizeof tmp, "%d %s %s %d %d %d %d %d %d %d %d %s "
 	    "(%s) %s %d\n",
@@ -1013,7 +1023,7 @@ style12(game_state_t *b, move_t *ml)
 		    __func__);
 	}
 
-	strcat(bstring, tmp);
+	strlcat(bstring, tmp, sizeof bstring);
 
 	return 0;
 }
