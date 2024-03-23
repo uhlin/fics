@@ -133,14 +133,14 @@ com_news(int p, param_list param)
 {
 	FILE		*fp;
 	char		*junkp;
-	char		 count[10];
-	char		 filename[MAX_FILENAME_SIZE];
-	char		 junk[MAX_LINE_SIZE];
+	char		 count[10] = { '\0' };
+	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
+	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	int		 found = 0;
 	long int	 lval;
 	time_t		 crtime;
 
-	sprintf(filename, "%s/newnews.index", news_dir);
+	snprintf(filename, sizeof filename, "%s/newnews.index", news_dir);
 
 	if ((fp = fopen(filename, "r")) == NULL) {
 		fprintf(stderr, "Can\'t find news index.\n");
@@ -221,7 +221,8 @@ com_news(int p, param_list param)
 		 * File exists - show it
 		 */
 
-		sprintf(filename, "%s/news.%s", news_dir, param[0].val.word);
+		snprintf(filename, sizeof filename, "%s/news.%s", news_dir,
+		    param[0].val.word);
 
 		if ((fp = fopen(filename, "r")) == NULL) {
 			pprintf(p, "No more info.\n");
@@ -229,7 +230,8 @@ com_news(int p, param_list param)
 		}
 
 		fclose(fp);
-		sprintf(filename, "news.%s", param[0].val.word);
+		snprintf(filename, sizeof filename, "news.%s",
+		    param[0].val.word);
 
 		if (psend_file(p, news_dir, filename) < 0) {
 			pprintf(p, "Internal error - couldn't send news file!"
@@ -347,7 +349,7 @@ com_stats_rating(char *hdr, statistics *stats, char *dest)
 	    stats->num);
 
 	if (stats->whenbest) {
-		sprintf(tmp, "   %d", stats->best);
+		snprintf(tmp, sizeof tmp, "   %d", stats->best);
 		strcat(dest, tmp);
 		strftime(tmp, sizeof tmp, " (%d-%b-%y)",
 		    localtime((time_t *) &stats->whenbest));
@@ -362,8 +364,8 @@ com_stats(int p, param_list param)
 {
 #define NUMBERS_SIZE \
 	(MAX_OBSERVE > MAX_SIMUL ? MAX_OBSERVE : MAX_SIMUL)
-	char		 line[255];
-	char		 tmp[255];
+	char		 line[255] = { '\0' };
+	char		 tmp[255] = { '\0' };
 	int		 g, i;
 	int		 numbers[NUMBERS_SIZE];
 	int		 onTime;
@@ -378,17 +380,20 @@ com_stats(int p, param_list param)
 		connected = 1;
 	}
 
-	sprintf(line, "\nStatistics for %-11s ", parray[p1].name);
+	snprintf(line, sizeof line, "\nStatistics for %-11s ", parray[p1].name);
 
 	if (connected && parray[p1].status == PLAYER_PROMPT) {
-		sprintf(tmp, "On for: %s", hms_desc(player_ontime(p1)));
+		snprintf(tmp, sizeof tmp, "On for: %s",
+		    hms_desc(player_ontime(p1)));
 		strcat(line, tmp);
-		sprintf(tmp, "   Idle: %s\n", hms_desc(player_idle(p1)));
+		snprintf(tmp, sizeof tmp, "   Idle: %s\n",
+		    hms_desc(player_idle(p1)));
 	} else {
-		if ((t = player_lastdisconnect(p1)))
-			sprintf(tmp, "(Last disconnected %s):\n", strltime(&t));
-		else
-			sprintf(tmp, "(Never connected.)\n");
+		if ((t = player_lastdisconnect(p1))) {
+			snprintf(tmp, sizeof tmp, "(Last disconnected %s):\n",
+			    strltime(&t));
+		} else
+			strlcpy(tmp, "(Never connected.)\n", sizeof tmp);
 	}
 
 	strcat(line, tmp);
@@ -794,9 +799,9 @@ who_terse(int p, int num, int *plist, int type)
 			rat = parray[p1].l_stats.rating;
 
 		if (type == none) {
-			sprintf(ptmp, "     ");
+			strlcpy(ptmp, "     ", sizeof ptmp);
 		} else {
-			sprintf(ptmp, "%-4s", ratstrii(rat,
+			snprintf(ptmp, sizeof ptmp, "%-4s", ratstrii(rat,
 			    parray[p1].registered));
 
 			if (parray[p1].simul_info.numBoards) {
@@ -851,26 +856,26 @@ who_verbose(int p, int num, int plist[])
 		strlcpy(playerLine, " |", sizeof playerLine);
 
 		if (parray[p1].game >= 0)
-			sprintf(tmp, "%3d", parray[p1].game + 1);
+			snprintf(tmp, sizeof tmp, "%3d", parray[p1].game + 1);
 		else
-			sprintf(tmp, "   ");
+			strlcpy(tmp, "   ", sizeof tmp);
 
 		strcat(playerLine, tmp);
 
 		if (!parray[p1].open)
-			sprintf(tmp, "X");
+			strlcpy(tmp, "X", sizeof tmp);
 		else
-			sprintf(tmp, " ");
+			strlcpy(tmp, " ", sizeof tmp);
 
 		strcat(playerLine, tmp);
 
 		if (parray[p1].registered) {
 			if (parray[p1].rated)
-				sprintf(tmp, " ");
+				strlcpy(tmp, " ", sizeof tmp);
 			else
-				sprintf(tmp, "u");
+				strlcpy(tmp, "u", sizeof tmp);
 		} else {
-			sprintf(tmp, "U");
+			strlcpy(tmp, "U", sizeof tmp);
 		}
 
 		strcat(playerLine, tmp);
@@ -894,7 +899,7 @@ who_verbose(int p, int num, int plist[])
 		}
 
 		strcat(playerLine, tmp);
-		sprintf(tmp, " %4s        %-4s        %5s  ",
+		snprintf(tmp, sizeof tmp, " %4s        %-4s        %5s  ",
 		    ratstrii(parray[p1].s_stats.rating,
 		    parray[p1].registered),
 		    ratstrii(parray[p1].b_stats.rating,
@@ -903,10 +908,10 @@ who_verbose(int p, int num, int plist[])
 		strcat(playerLine, tmp);
 
 		if (player_idle(p1) >= 60) {
-			sprintf(tmp, "%5s   |\n",
+			snprintf(tmp, sizeof tmp, "%5s   |\n",
 			    hms(player_idle(p1), 0, 0, 0));
 		} else {
-			sprintf(tmp, "        |\n");
+			strlcpy(tmp, "        |\n", sizeof tmp);
 		}
 
 		strcat(playerLine, tmp);
@@ -941,7 +946,8 @@ who_winloss(int p, int num, int plist[])
 		if (p1 == p) {
 			psprintf_highlight(p, playerLine, "%-17s", p1WithAttrs);
 		} else {
-			sprintf(playerLine, "%-17s", p1WithAttrs);
+			snprintf(playerLine, sizeof playerLine, "%-17s",
+			    p1WithAttrs);
 		}
 
 		snprintf(tmp, sizeof tmp, "  %4s     %4d %4d %4d   ",
@@ -959,9 +965,10 @@ who_winloss(int p, int num, int plist[])
 		strcat(playerLine, tmp);
 
 		if (player_idle(p1) >= 60) {
-			sprintf(tmp, "%5s\n", hms(player_idle(p1), 0, 0, 0));
+			snprintf(tmp, sizeof tmp, "%5s\n", hms(player_idle(p1),
+			    0, 0, 0));
 		} else {
-			sprintf(tmp, "     \n");
+			strlcpy(tmp, "     \n", sizeof tmp);
 		}
 
 		strcat(playerLine, tmp);
