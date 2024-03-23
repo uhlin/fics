@@ -92,6 +92,9 @@ PRIVATE char *inout_string[] = { "login", "logout" };
 PUBLIC int
 com_rating_recalc(int p, param_list param)
 {
+	(void) p;	// maybe not referenced
+	(void) param;	// not referenced
+
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 	rating_recalc();
 	return COM_OK;
@@ -100,6 +103,9 @@ com_rating_recalc(int p, param_list param)
 PUBLIC int
 com_more(int p, param_list param)
 {
+	// not referenced
+	(void) param;
+
 	pmore_file(p);
 	return COM_OK;
 }
@@ -247,6 +253,9 @@ com_news(int p, param_list param)
 PUBLIC int
 com_quit(int p, param_list param)
 {
+	// not referenced
+	(void) param;
+
 	if (parray[p].game >= 0 && garray[parray[p].game].status ==
 	    GAME_EXAMINE)
 		pcommand(p, "unexamine");
@@ -631,6 +640,8 @@ com_uptime(int p, param_list param)
 	struct rusage ru;
 	unsigned long int uptime = (time(NULL) - startuptime);
 
+	(void) param; // XXX: unused
+
 	days	= (uptime / (60*60*24));
 	hours	= ((uptime % (60*60*24)) / (60*60));
 	mins	= (((uptime % (60*60*24)) % (60*60)) / 60);
@@ -692,6 +703,8 @@ com_date(int p, param_list param)
 {
 	time_t t = time(NULL);
 
+	(void) param; // XXX: unused
+
 	pprintf(p, "Local time     - %s\n", strltime(&t));
 	pprintf(p, "Greenwich time - %s\n", strgtime(&t));
 
@@ -741,6 +754,8 @@ PUBLIC int
 com_llogons(int p, param_list param)
 {
 	char fname[MAX_FILENAME_SIZE] = { '\0' };
+
+	(void) param; // XXX: unused
 
 	snprintf(fname, sizeof fname, "%s/%s", stats_dir, STATS_LOGONS);
 	return plogins(p, fname);
@@ -1402,6 +1417,8 @@ com_prefresh(int p, param_list param)
 {
 	int retval, part;
 
+	(void) param;
+
 	if ((part = parray[p].partner) < 0) {
 		pprintf(p, "You do not have a partner.\n");
 		return COM_OK;
@@ -1416,6 +1433,7 @@ com_open(int p, param_list param)
 {
 	int retval;
 
+	(void) param;
 	ASSERT(param[0].type == TYPE_NULL);
 
 	if ((retval = pcommand(p, "set open")) != COM_OK)
@@ -1428,6 +1446,7 @@ com_simopen(int p, param_list param)
 {
 	int retval;
 
+	(void) param;
 	ASSERT(param[0].type == TYPE_NULL);
 
 	if ((retval = pcommand(p, "set simopen")) != COM_OK)
@@ -1440,6 +1459,7 @@ com_bell(int p, param_list param)
 {
 	int retval;
 
+	(void) param;
 	ASSERT(param[0].type == TYPE_NULL);
 
 	if ((retval = pcommand(p, "set bell")) != COM_OK)
@@ -1452,6 +1472,7 @@ com_flip(int p, param_list param)
 {
 	int retval;
 
+	(void) param;
 	ASSERT(param[0].type == TYPE_NULL);
 
 	if ((retval = pcommand(p, "set flip")) != COM_OK)
@@ -1462,6 +1483,9 @@ com_flip(int p, param_list param)
 PUBLIC int
 com_highlight(int p, param_list param)
 {
+	// XXX: unused
+	(void) param;
+
 	pprintf(p, "Obsolete command. Please do set highlight <0-15>.\n");
 	return COM_OK;
 }
@@ -1704,6 +1728,9 @@ com_info(int p, param_list param)
 {
 	char	*filenames[1000];
 	int	 n;
+
+	// XXX: unused
+	(void) param;
 
 	if ((n = search_directory(info_dir, NULL, filenames,
 	    ARRAY_SIZE(filenames))) > 0)
@@ -1953,6 +1980,9 @@ com_getps(int p, param_list param)
 PUBLIC int
 com_limits(int p, param_list param)
 {
+	// XXX: unused
+	(void) param;
+
 	pprintf(p, "\nCurrent hardcoded limits:\n");
 	pprintf(p, "  Max number of players: %d\n", MAX_PLAYER);
 	pprintf(p, "  Max number of channels and max capacity: %d\n",
