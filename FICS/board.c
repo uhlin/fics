@@ -170,14 +170,15 @@ append_holding_machine(char *buf, const size_t size, int g, int c, int p)
 }
 
 PRIVATE char *
-append_holding_display(char *buf, game_state_t *gs, int white)
+append_holding_display(char *buf, const size_t size, game_state_t *gs,
+    int white)
 {
 	if (white)
-		strcat(buf, "White holding: [");
+		strlcat(buf, "White holding: [", size);
 	else
-		strcat(buf, "Black holding: [");
-	strcat(buf, holding_str(gs->holding[white ? 0 : 1]));
-	strcat(buf, "]\n");
+		strlcat(buf, "Black holding: [", size);
+	strlcat(buf, holding_str(gs->holding[white ? 0 : 1]), size);
+	strlcat(buf, "]\n", size);
 	return buf;
 }
 
@@ -246,8 +247,10 @@ board_to_string(char *wn, char *bn, int wt, int bt, game_state_t *b, move_t *ml,
 	} else
 		bstring[0] = '\0';
 
-	if (bh && !IsMachineStyle(style))
-		append_holding_display(bstring, b, (orientation == BLACK));
+	if (bh && !IsMachineStyle(style)) {
+		append_holding_display(bstring, sizeof bstring, b,
+		    (orientation == BLACK));
+	}
 	if (styleFuncs[style] (b, ml))
 		return NULL;
 	if (bh) {
@@ -255,7 +258,7 @@ board_to_string(char *wn, char *bn, int wt, int bt, game_state_t *b, move_t *ml,
 			append_holding_machine(bstring, sizeof bstring,
 			    b->gameNum, 0, 0);
 		else {
-			append_holding_display(bstring, b,
+			append_holding_display(bstring, sizeof bstring, b,
 			    (orientation == WHITE));
 		}
 	}
