@@ -350,13 +350,16 @@ com_stats_rating(char *hdr, statistics *stats, char *dest, const size_t dsize)
 
 	if (stats->whenbest) {
 		snprintf(tmp, sizeof tmp, "   %d", stats->best);
-		strcat(dest, tmp);
+		strlcat(dest, tmp, dsize);
 		strftime(tmp, sizeof tmp, " (%d-%b-%y)",
 		    localtime((time_t *) &stats->whenbest));
-		strcat(dest, tmp);
+		strlcat(dest, tmp, dsize);
 	}
 
-	strcat(dest, "\n");
+	if (strlcat(dest, "\n", dsize) >= dsize) {
+		(void) fprintf(stderr, "FICS: %s (line %d): warning: strlcat() "
+		    "truncated\n", __func__, __LINE__);
+	}
 }
 
 PUBLIC int
