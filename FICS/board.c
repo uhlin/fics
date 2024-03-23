@@ -151,7 +151,7 @@ holding_str(int *holding)
 }
 
 PRIVATE char *
-append_holding_machine(char *buf, int g, int c, int p)
+append_holding_machine(char *buf, const size_t size, int g, int c, int p)
 {
 	char		 tmp[50] = { '\0' };
 	game_state_t	*gs = &garray[g].game_state;
@@ -159,13 +159,13 @@ append_holding_machine(char *buf, int g, int c, int p)
 	snprintf(tmp, sizeof tmp, "<b1> game %d white [%s] black [", (g + 1),
 	    holding_str(gs->holding[0]));
 	strlcat(tmp, holding_str(gs->holding[1]), sizeof tmp);
-	strcat(buf, tmp);
+	strlcat(buf, tmp, size);
 
 	if (p) {
 		snprintf(tmp, sizeof tmp, "] <- %c%s\n", "WB"[c], wpstring[p]);
-		strcat(buf, tmp);
+		strlcat(buf, tmp, size);
 	} else
-		strcat(buf, "]\n");
+		strlcat(buf, "]\n", size);
 	return buf;
 }
 
@@ -202,7 +202,7 @@ update_holding(int g, int pieceCaptured)
 	gs->holding[c][p - 1]++;
 
 	tmp1[0] = '\0';
-	append_holding_machine(tmp1, g, c, p);
+	append_holding_machine(tmp1, sizeof tmp1, g, c, p);
 
 	snprintf(tmp2, sizeof tmp2, "Game %d %s received: %s -> [%s]\n",
 	    (g + 1),
@@ -252,7 +252,8 @@ board_to_string(char *wn, char *bn, int wt, int bt, game_state_t *b, move_t *ml,
 		return NULL;
 	if (bh) {
 		if (IsMachineStyle(style))
-			append_holding_machine(bstring, b->gameNum, 0, 0);
+			append_holding_machine(bstring, sizeof bstring,
+			    b->gameNum, 0, 0);
 		else {
 			append_holding_display(bstring, b,
 			    (orientation == WHITE));
