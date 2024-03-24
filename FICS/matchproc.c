@@ -1055,42 +1055,50 @@ PUBLIC int com_decline(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_withdraw(int p, param_list param)
+PUBLIC int
+com_withdraw(int p, param_list param)
 {
-  int withdrawNum;
-  int p1 = -1, type = -1;
-  int count;
+	int	count;
+	int	p1 = -1;
+	int	type = -1;
+	int	withdrawNum;
 
-  if (parray[p].num_to == 0) {
-    pprintf(p, "You have no pending offers to other players.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL) {
-    if (parray[p].num_to == 1) {
-      p1 = parray[p].p_to_list[0].whoto;
-      type = parray[p].p_to_list[0].type;
-    } else {
-      pprintf(p, "You have more than one pending offer. Please specify which one\nyou wish to withdraw.\n'Pending' will give you the list.\n");
-      return COM_OK;
-    }
-  } else {
-    if (param[0].type == TYPE_WORD) {
-      if (!WordToOffer (p, param[0].val.word, &type, &p1))
-        return COM_OK;
-    } else {			/* Must be an integer */
-      withdrawNum = param[0].val.integer - 1;
-      if (withdrawNum >= parray[p].num_to || withdrawNum < 0) {
-	pprintf(p, "Invalid offer number. Must be between 1 and %d.\n", parray[p].num_to);
+	if (parray[p].num_to == 0) {
+		pprintf(p, "You have no pending offers to other players.\n");
+		return COM_OK;
+	}
+
+	if (param[0].type == TYPE_NULL) {
+		if (parray[p].num_to == 1) {
+			p1 = parray[p].p_to_list[0].whoto;
+			type = parray[p].p_to_list[0].type;
+		} else {
+			pprintf(p, "You have more than one pending offer. "
+			    "Please specify which one\nyou wish to withdraw.\n"
+			    "'Pending' will give you the list.\n");
+			return COM_OK;
+		}
+	} else {
+		if (param[0].type == TYPE_WORD) {
+			if (!WordToOffer (p, param[0].val.word, &type, &p1))
+				return COM_OK;
+		} else { // Must be an integer
+			withdrawNum = param[0].val.integer - 1;
+
+			if (withdrawNum >= parray[p].num_to || withdrawNum < 0) {
+				pprintf(p, "Invalid offer number. Must be "
+				    "between 1 and %d.\n", parray[p].num_to);
+				return COM_OK;
+			}
+
+			p1 = parray[p].p_to_list[withdrawNum].whoto;
+			type = parray[p].p_to_list[withdrawNum].type;
+		}
+	}
+
+	if ((count = player_withdraw_offers(p, p1, type)) != 1)
+		pprintf(p, "%d offers withdrawn\n", count);
 	return COM_OK;
-      }
-      p1 = parray[p].p_to_list[withdrawNum].whoto;
-      type = parray[p].p_to_list[withdrawNum].type;
-    }
-  }
-  count = player_withdraw_offers(p, p1, type);
-  if (count != 1)
-    pprintf(p, "%d offers withdrawn\n", count);
-  return COM_OK;
 }
 
 PUBLIC int
