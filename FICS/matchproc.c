@@ -1042,7 +1042,7 @@ com_decline(int p, param_list param)
 		}
 	} else {
 		if (param[0].type == TYPE_WORD) {
-			if (!WordToOffer (p, param[0].val.word, &type, &p1))
+			if (!WordToOffer(p, param[0].val.word, &type, &p1))
 				return COM_OK;
 		} else { // Must be an integer
 			declineNum = param[0].val.integer - 1;
@@ -1088,7 +1088,7 @@ com_withdraw(int p, param_list param)
 		}
 	} else {
 		if (param[0].type == TYPE_WORD) {
-			if (!WordToOffer (p, param[0].val.word, &type, &p1))
+			if (!WordToOffer(p, param[0].val.word, &type, &p1))
 				return COM_OK;
 		} else { // Must be an integer
 			withdrawNum = param[0].val.integer - 1;
