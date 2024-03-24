@@ -984,37 +984,43 @@ PUBLIC int com_accept(int p, param_list param)
   return COM_OK_NOPROMPT;
 }
 
-int WordToOffer (int p, char *Word, int *type, int *p1)
+PRIVATE int
+WordToOffer(int p, char *Word, int *type, int *p1)
 {
-  /* Convert draw adjourn match takeback abort pause
-     simmatch switch partner or <name> to offer type. */
-  if (!strcmp(Word, "match")) {
-    *type = PEND_MATCH;
-  } else if (!strcmp(Word, "draw")) {
-    *type = PEND_DRAW;
-  } else if (!strcmp(Word, "pause")) {
-    *type = PEND_PAUSE;
-  } else if (!strcmp(Word, "abort")) {
-    *type = PEND_ABORT;
-  } else if (!strcmp(Word, "takeback")) {
-    *type = PEND_TAKEBACK;
-  } else if (!strcmp(Word, "adjourn")) {
-    *type = PEND_ADJOURN;
-  } else if (!strcmp(Word, "switch")) {
-    *type = PEND_SWITCH;
-  } else if (!strcmp(Word, "simul")) {
-    *type = PEND_SIMUL;
-  } else if (!strcmp(Word, "partner")) {
-    *type = PEND_PARTNER;
-  } else if (!strcmp(Word, "all")) {
-  } else {
-    *p1 = player_find_part_login(Word);
-    if (*p1 < 0) {
-      pprintf(p, "No user named \"%s\" is logged in.\n", Word);
-      return 0;
-    }
-  }
-  return 1;
+	/*
+	 * Convert draw adjourn match takeback abort pause simmatch
+	 * switch partner or <name> to offer type.
+	 */
+
+	if (!strcmp(Word, "match")) {
+		*type = PEND_MATCH;
+	} else if (!strcmp(Word, "draw")) {
+		*type = PEND_DRAW;
+	} else if (!strcmp(Word, "pause")) {
+		*type = PEND_PAUSE;
+	} else if (!strcmp(Word, "abort")) {
+		*type = PEND_ABORT;
+	} else if (!strcmp(Word, "takeback")) {
+		*type = PEND_TAKEBACK;
+	} else if (!strcmp(Word, "adjourn")) {
+		*type = PEND_ADJOURN;
+	} else if (!strcmp(Word, "switch")) {
+		*type = PEND_SWITCH;
+	} else if (!strcmp(Word, "simul")) {
+		*type = PEND_SIMUL;
+	} else if (!strcmp(Word, "partner")) {
+		*type = PEND_PARTNER;
+	} else if (!strcmp(Word, "all")) {
+		;
+	} else {
+		if ((*p1 = player_find_part_login(Word)) < 0) {
+			pprintf(p, "No user named \"%s\" is logged in.\n",
+			    Word);
+			return 0;
+		}
+	}
+
+	return 1;
 }
 
 PUBLIC int
