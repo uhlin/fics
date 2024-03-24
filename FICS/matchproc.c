@@ -1017,42 +1017,50 @@ int WordToOffer (int p, char *Word, int *type, int *p1)
   return 1;
 }
 
-PUBLIC int com_decline(int p, param_list param)
+PUBLIC int
+com_decline(int p, param_list param)
 {
-  int declineNum;
-  int p1 = -1, type = -1;
-  int count;
+	int	count;
+	int	declineNum;
+	int	p1 = -1;
+	int	type = -1;
 
-  if (parray[p].num_from == 0) {
-    pprintf(p, "You have no pending offers from other players.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL) {
-    if (parray[p].num_from == 1) {
-      p1 = parray[p].p_from_list[0].whofrom;
-      type = parray[p].p_from_list[0].type;
-    } else {
-      pprintf(p, "You have more than one pending offer. Please specify which one\nyou wish to decline.\n'Pending' will give you the list.\n");
-      return COM_OK;
-    }
-  } else {
-    if (param[0].type == TYPE_WORD) {
-      if (!WordToOffer (p, param[0].val.word, &type, &p1))
-        return COM_OK;
-    } else {			/* Must be an integer */
-      declineNum = param[0].val.integer - 1;
-      if (declineNum >= parray[p].num_from || declineNum < 0) {
-	pprintf(p, "Invalid offer number. Must be between 1 and %d.\n", parray[p].num_from);
+	if (parray[p].num_from == 0) {
+		pprintf(p, "You have no pending offers from other players.\n");
+		return COM_OK;
+	}
+
+	if (param[0].type == TYPE_NULL) {
+		if (parray[p].num_from == 1) {
+			p1 = parray[p].p_from_list[0].whofrom;
+			type = parray[p].p_from_list[0].type;
+		} else {
+			pprintf(p, "You have more than one pending offer. "
+			    "Please specify which one\nyou wish to decline.\n"
+			    "'Pending' will give you the list.\n");
+			return COM_OK;
+		}
+	} else {
+		if (param[0].type == TYPE_WORD) {
+			if (!WordToOffer (p, param[0].val.word, &type, &p1))
+				return COM_OK;
+		} else { // Must be an integer
+			declineNum = param[0].val.integer - 1;
+
+			if (declineNum >= parray[p].num_from || declineNum < 0) {
+				pprintf(p, "Invalid offer number. Must be "
+				    "between 1 and %d.\n", parray[p].num_from);
+				return COM_OK;
+			}
+
+			p1 = parray[p].p_from_list[declineNum].whofrom;
+			type = parray[p].p_from_list[declineNum].type;
+		}
+	}
+
+	if ((count = player_decline_offers(p, p1, type)) != 1)
+		pprintf(p, "%d offers declined\n", count);
 	return COM_OK;
-      }
-      p1 = parray[p].p_from_list[declineNum].whofrom;
-      type = parray[p].p_from_list[declineNum].type;
-    }
-  }
-  count = player_decline_offers(p, p1, type);
-  if (count != 1)
-    pprintf(p, "%d offers declined\n", count);
-  return COM_OK;
 }
 
 PUBLIC int
