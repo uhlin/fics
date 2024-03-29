@@ -881,107 +881,115 @@ PUBLIC int com_match(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_accept(int p, param_list param)
+PUBLIC int
+com_accept(int p, param_list param)
 {
-  int acceptNum = -1;
-  int from;
-  int type = -1;
-  int p1;
+	int	acceptNum = -1;
+	int	from;
+	int	p1;
+	int	type = -1;
 
-  if (parray[p].num_from == 0) {
-    pprintf(p, "You have no offers to accept.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL) {
-    if (parray[p].num_from != 1) {
-      pprintf(p, "You have more than one offer to accept.\nUse \"pending\" to see them and \"accept n\" to choose which one.\n");
-      return COM_OK;
-    }
-    acceptNum = 0;
-  } else if (param[0].type == TYPE_INT) {
-    if ((param[0].val.integer < 1) || (param[0].val.integer > parray[p].num_from)) {
-      pprintf(p, "Out of range. Use \"pending\" to see the list of offers.\n");
-      return COM_OK;
-    }
-    acceptNum = param[0].val.integer - 1;
-  } else if (param[0].type == TYPE_WORD) {
-    if (!strcmp(param[0].val.word, "draw")) {
-      type = PEND_DRAW;
-    } else if (!strcmp(param[0].val.word, "pause")) {
-      type = PEND_PAUSE;
-    } else if (!strcmp(param[0].val.word, "adjourn")) {
-      type = PEND_ADJOURN;
-    } else if (!strcmp(param[0].val.word, "abort")) {
-      type = PEND_ABORT;
-    } else if (!strcmp(param[0].val.word, "takeback")) {
-      type = PEND_TAKEBACK;
-    } else if (!strcmp(param[0].val.word, "simmatch")) {
-      type = PEND_SIMUL;
-    } else if (!strcmp(param[0].val.word, "switch")) {
-      type = PEND_SWITCH;
-    } else if (!strcmp(param[0].val.word, "partner")) {
-      type = PEND_PARTNER;
-    }
+	if (parray[p].num_from == 0) {
+		pprintf(p, "You have no offers to accept.\n");
+		return COM_OK;
+	}
 
-#if 0    /* I don't think 'accept all' makes sense. -- hersco */
-    if (!strcmp(param[0].val.word, "all")) {
-      while (parray[p].num_from != 0) {
-	pcommand(p, "accept 1");
-      }
-      return COM_OK;
-    }
-#endif
+	if (param[0].type == TYPE_NULL) {
+		if (parray[p].num_from != 1) {
+			pprintf(p, "You have more than one offer to accept.\n"
+			    "Use \"pending\" to see them and \"accept n\" to "
+			    "choose which one.\n");
+			return COM_OK;
+		}
 
-    if (type >= 0) {
-      if ((acceptNum = player_find_pendfrom(p, -1, type)) < 0) {
-	pprintf(p, "There are no pending %s offers.\n", param[0].val.word);
-	return COM_OK;
-      }
-    } else {			/* Word must be a name */
-      p1 = player_find_part_login(param[0].val.word);
-      if (p1 < 0) {
-	pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-	return COM_OK;
-      }
-      if ((acceptNum = player_find_pendfrom(p, p1, -1)) < 0) {
-	pprintf(p, "There are no pending offers from %s.\n", parray[p1].name);
-	return COM_OK;
-      }
-    }
-  }
-  from = parray[p].p_from_list[acceptNum].whofrom;
+		acceptNum = 0;
+	} else if (param[0].type == TYPE_INT) {
+		if (param[0].val.integer < 1 ||
+		    param[0].val.integer > parray[p].num_from) {
+			pprintf(p, "Out of range. Use \"pending\" to see "
+			    "the list of offers.\n");
+			return COM_OK;
+		}
 
-  switch (parray[p].p_from_list[acceptNum].type) {
-  case PEND_MATCH:
-    accept_match(p, from);
-    return (COM_OK);
-    break;
-  case PEND_DRAW:
-    pcommand(p, "draw");
-    break;
-  case PEND_PAUSE:
-    pcommand(p, "pause");
-    break;
-  case PEND_ABORT:
-    pcommand(p, "abort");
-    break;
-  case PEND_TAKEBACK:
-    pcommand(p, "takeback %d", parray[p].p_from_list[acceptNum].param1);
-    break;
-  case PEND_SIMUL:
-    pcommand(p, "simmatch %s", parray[from].name);
-    break;
-  case PEND_SWITCH:
-    pcommand(p, "switch");
-    break;
-  case PEND_ADJOURN:
-    pcommand(p, "adjourn");
-    break;
-  case PEND_PARTNER:
-    pcommand(p, "partner %s", parray[from].name);
-    break;
-  }
-  return COM_OK_NOPROMPT;
+		acceptNum = (param[0].val.integer - 1);
+	} else if (param[0].type == TYPE_WORD) {
+		if (!strcmp(param[0].val.word, "draw")) {
+			type = PEND_DRAW;
+		} else if (!strcmp(param[0].val.word, "pause")) {
+			type = PEND_PAUSE;
+		} else if (!strcmp(param[0].val.word, "adjourn")) {
+			type = PEND_ADJOURN;
+		} else if (!strcmp(param[0].val.word, "abort")) {
+			type = PEND_ABORT;
+		} else if (!strcmp(param[0].val.word, "takeback")) {
+			type = PEND_TAKEBACK;
+		} else if (!strcmp(param[0].val.word, "simmatch")) {
+			type = PEND_SIMUL;
+		} else if (!strcmp(param[0].val.word, "switch")) {
+			type = PEND_SWITCH;
+		} else if (!strcmp(param[0].val.word, "partner")) {
+			type = PEND_PARTNER;
+		}
+
+		if (type >= 0) {
+			acceptNum = player_find_pendfrom(p, -1, type);
+
+			if (acceptNum < 0) {
+				pprintf(p, "There are no pending %s offers.\n",
+				    param[0].val.word);
+				return COM_OK;
+			}
+		} else {	// Word must be a name
+			p1 = player_find_part_login(param[0].val.word);
+
+			if (p1 < 0) {
+				pprintf(p, "No user named \"%s\" is logged "
+				    "in.\n", param[0].val.word);
+				return COM_OK;
+			}
+
+			if ((acceptNum = player_find_pendfrom(p, p1, -1)) < 0) {
+				pprintf(p, "There are no pending offers from "
+				    "%s.\n", parray[p1].name);
+				return COM_OK;
+			}
+		}
+	}
+
+	from = parray[p].p_from_list[acceptNum].whofrom;
+
+	switch (parray[p].p_from_list[acceptNum].type) {
+	case PEND_MATCH:
+		accept_match(p, from);
+		return COM_OK;
+	case PEND_DRAW:
+		pcommand(p, "draw");
+		break;
+	case PEND_PAUSE:
+		pcommand(p, "pause");
+		break;
+	case PEND_ABORT:
+		pcommand(p, "abort");
+		break;
+	case PEND_TAKEBACK:
+		pcommand(p, "takeback %d",
+		    parray[p].p_from_list[acceptNum].param1);
+		break;
+	case PEND_SIMUL:
+		pcommand(p, "simmatch %s", parray[from].name);
+		break;
+	case PEND_SWITCH:
+		pcommand(p, "switch");
+		break;
+	case PEND_ADJOURN:
+		pcommand(p, "adjourn");
+		break;
+	case PEND_PARTNER:
+		pcommand(p, "partner %s", parray[from].name);
+		break;
+	}
+
+	return COM_OK_NOPROMPT;
 }
 
 PRIVATE int
