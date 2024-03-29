@@ -441,444 +441,593 @@ PRIVATE int accept_match(int p, int p1)
   return COM_OK;
 }
 
-PUBLIC int com_match(int p, param_list param)
+struct print_bh_context {
+	int pp;
+	int pp1;
+
+	int rated;
+	int type;
+	int white;
+
+	char *board;
+	char *category;
+
+	int binc;
+	int bt;
+
+	int winc;
+	int wt;
+};
+
+PRIVATE void
+print_bughouse(int p, int p1, struct print_bh_context *ctx, char *colorstr[])
 {
-  int adjourned;		/* adjourned game? */
-  int g;			/* more adjourned game junk */
-  int p1;
-  int bh=0, pp, pp1;
-  int pendfrom, pendto;
-  int ppend, p1pend;
-  int wt = -1;			/* white start time */
-  int winc = -1;		/* white increment */
-  int bt = -1;			/* black start time */
-  int binc = -1;		/* black increment */
-  int rated = -1;		/* 1 = rated, 0 = unrated */
-  int white = -1;		/* 1 = want white, 0 = want black */
-  char category[100], board[100], parsebuf[100];
-  char *val;
-  textlist *clauses = NULL;
-  int type;
-  int confused = 0;
-  char *colorstr[] = {"", "[black] ", "[white] "};
-  char *adjustr[] = {"", " (adjourned)"};
+	const int pp = ctx->pp;
+	const int pp1 = ctx->pp1;
 
-  if ((parray[p].game >= 0) && (garray[parray[p].game].status == GAME_EXAMINE)) {
-    pprintf(p, "You can't challenge while you are examining a game.\n");
-    return COM_OK;
-  }
-  if (parray[p].game >= 0) {
-    pprintf(p, "You can't challenge while you are playing a game.\n");
-    return COM_OK;
-  }
-  stolower(param[0].val.word);
-  p1 = player_find_part_login(param[0].val.word);
-  if (p1 < 0) {
-    pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-    return COM_OK;
-  }
-  if (p1 == p) {		/* Allowing to match yourself to enter
-				   analysis mode */
-    ExamineScratch (p, param);
-    return COM_OK;
-  }
-  if (parray[p].open == 0) {
-    parray[p].open = 1;
-    pprintf(p, "Setting you open for matches.\n");
-  }
-  if (!parray[p1].open) {
-    pprintf(p, "Player \"%s\" is not open to match requests.\n", parray[p1].name);
-    return COM_OK;
-  }
-  if (parray[p1].game >= 0) {
-    pprintf(p, "Player \"%s\" is involved in another game.\n", parray[p1].name);
-    return COM_OK;
-  }
-/* look for an adjourned game between p and p1 */
-  g = game_new();
-  adjourned = (game_read(g, p, p1) >= 0) || (game_read(g, p1, p) >= 0);
-  if (adjourned) {
-    type = garray[g].type;
-    wt = garray[g].wInitTime / 600;
-    bt = garray[g].bInitTime / 600;
-    winc = garray[g].wIncrement / 10;
-    binc = garray[g].bIncrement / 10;
-    rated = garray[g].rated;
-  }
-  game_remove(g);
+	// pp
+	pprintf(pp, "\nYour bughouse partner issuing %s (%s) %s",
+	    parray[p].name,
+	    ratstrii(GetRating(&parray[p], ctx->type), parray[p].registered),
+	    colorstr[ctx->white + 1]);
+	pprintf_highlight(pp, "%s", parray[p1].name);
+	pprintf(pp, " (%s) %s.\n",
+	    ratstrii(GetRating(&parray[p1], ctx->type), parray[p1].registered),
+	    game_str(ctx->rated, ctx->wt * 60, ctx->winc,
+	    ctx->bt * 60, ctx->binc,
+	    ctx->category, ctx->board));
 
-  pendto = player_find_pendto(p, p1, PEND_MATCH);
-  pendfrom = player_find_pendfrom(p, p1, PEND_MATCH);
-  category[0] = '\0';
-  board[0] = '\0';
+	pprintf(pp, "Your game would be ");
+	pprintf_highlight(pp, "%s", parray[pp1].name);
+	pprintf_prompt(pp, " (%s) %s%s (%s) %s.\n",
+	    ratstrii(GetRating(&parray[pp1], ctx->type), parray[pp1].registered),
+	    colorstr[ctx->white + 1],
+	    parray[pp].name,
+	    ratstrii(GetRating(&parray[pp], ctx->type), parray[pp].registered),
+	    game_str(ctx->rated, ctx->wt * 60, ctx->winc,
+	    ctx->bt * 60, ctx->binc,
+	    ctx->category, ctx->board));
 
-  if (!adjourned) {
-    if (in_list(p1, L_NOPLAY, parray[p].login)) {
-      pprintf(p, "You are on %s's noplay list.\n", parray[p1].name);
-      return COM_OK;
-    }
-    if (player_censored(p1, p)) {
-      pprintf(p, "Player \"%s\" is censoring you.\n", parray[p1].name);
-      return COM_OK;
-    }
-    if (player_censored(p, p1)) {
-      pprintf(p, "You are censoring \"%s\".\n", parray[p1].name);
-      return COM_OK;
-    }
-    if (param[1].type != TYPE_NULL) {
-      int numba;		/* temp for atoi() */
+	if (parray[pp].bell == 1)
+		pprintf_noformat(pp, "\007");
 
-      val = param[1].val.string;
-      while (!confused && (sscanf(val, " %99s", parsebuf) == 1)) {
-	val = eatword(eatwhite(val));
-	if ((category[0] != '\0') && (board[0] == '\0'))
-	  strcpy(board, parsebuf);
-	else if (isdigit(*parsebuf)) {
-	  if ((numba = atoi(parsebuf)) < 0) {
-	    pprintf(p, "You can't specify negative time controls.\n");
-	    return COM_OK;
-	  } else if (numba > 1000) {
-	    pprintf(p, "You can't specify time or inc above 1000.\n");
- 	    return COM_OK;
-	  } else if (wt == -1) {
-	    wt = numba;
-	  } else if (winc == -1) {
-	    winc = numba;
-	  } else if (bt == -1) {
-	    bt = numba;
-	  } else if (binc == -1) {
-	    binc = numba;
-	  } else {
-	    confused = 1;
-	  }
-	} else if (strstr("rated", parsebuf) != NULL) {
-	  if (rated == -1)
-	    rated = 1;
-	  else
-	    confused = 1;
-	} else if (strstr("unrated", parsebuf) != NULL) {
-	  if (rated == -1)
-	    rated = 0;
-	  else
-	    confused = 1;
-	} else if (strstr("white", parsebuf) != NULL) {
-	  if (white == -1)
-	    white = 1;
-	  else
-	    confused = 1;
-	} else if (strstr("black", parsebuf) != NULL) {
-	  if (white == -1)
-	    white = 0;
-	  else
-	    confused = 1;
-	} else if (category[0] == '\0')
-	  strcpy(category, parsebuf);
-	else
-	  confused = 1;
-      }
-      if (confused) {
-	pprintf(p, "Can't interpret %s in match command.\n", parsebuf);
-	return COM_OK;
-      }
-    }
-    rated = ((rated == -1) ? parray[p].rated : rated) && parray[p1].registered && parray[p].registered;
-    if (winc == -1)
-      winc = (wt == -1) ? parray[p].d_inc : 0;	/* match 5 == match 5 0 */
-    if (wt == -1)
-      wt = parray[p].d_time;
-    if (bt == -1)
-      bt = wt;
-    if (binc == -1)
-      binc = winc;
+	// pp1
+	pprintf(pp1, "\nYour bughouse partner was challenged ");
+	pprintf_highlight(pp1, "%s", parray[p].name);
+	pprintf(pp1, " (%s) %s",
+	    ratstrii(GetRating(&parray[p], ctx->type), parray[p].registered),
+	    colorstr[ctx->white + 1]);
+	pprintf(pp1, "%s (%s) %s.\n",
+	    parray[p1].name,
+	    ratstrii(GetRating(&parray[p1], ctx->type), parray[p1].registered),
+	    game_str(ctx->rated, ctx->wt * 60, ctx->winc,
+	    ctx->bt * 60, ctx->binc,
+	    ctx->category, ctx->board));
 
-    if (!strcmp(category,"bughouse")) { /* save mentioning wild */
-       (strcpy(board,"bughouse"));
-       (strcpy(category,"wild"));
-      }
-    if (category[0] && !board[0]) {
-      pprintf(p, "You must specify a board and a category.\n");
-      return COM_OK;
-    }
-    if (category[0]) {
-      char fname[MAX_FILENAME_SIZE];
+	pprintf(pp1, "Your game would be %s (%s) %s",
+	    parray[pp1].name,
+	    ratstrii(GetRating(&parray[pp1], ctx->type), parray[pp1].registered),
+	    colorstr[ctx->white + 1]);
+	pprintf_highlight(pp1, "%s", parray[pp].name);
+	pprintf_prompt(pp1, " (%s) %s.\n",
+	    ratstrii(GetRating(&parray[pp], ctx->type), parray[pp].registered),
+	    game_str(ctx->rated, ctx->wt * 60, ctx->winc,
+	    ctx->bt * 60, ctx->binc,
+	    ctx->category, ctx->board));
 
-      sprintf(fname, "%s/%s/%s", board_dir, category, board);
-      if (!file_exists(fname)) {
-	pprintf(p, "No such category/board: %s/%s\n", category, board);
-	return COM_OK;
-      }
-    }
-    if ((pendfrom < 0) && (parray[p1].ropen == 0) && (rated != parray[p1].rated)) {
-      pprintf(p, "%s only wants to play %s games.\n", parray[p1].name,
-	      rstr[parray[p1].rated]);
-      pprintf_highlight(p1, "Ignoring");
-      pprintf(p1, " %srated match request from %s.\n",
-	      (parray[p1].rated ? "un" : ""), parray[p].name);
-      return COM_OK;
-    }
-    type = game_isblitz(wt, winc, bt, binc, category, board);
+	if (parray[pp1].bell == 1)
+		pprintf_noformat(pp1, "\007");
+}
 
-#if 0
-    if (rated && (type == TYPE_STAND || type == TYPE_BLITZ || type == TYPE_WILD)) {
-      if (parray[p].network_player == parray[p1].network_player) {
-	rated = 1;
-      } else {
-	pprintf(p, "Network vs. local player forced to not rated\n");
-	rated = 0;
-      }
-    }
-#endif
+PUBLIC int
+com_match(int p, param_list param)
+{
+	char		 board[100] = { '\0' };
+	char		 category[100] = { '\0' };
+	char		 parsebuf[100] = { '\0' };
+	char		*adjustr[] = { "", " (adjourned)" };
+	char		*colorstr[] = { "", "[black] ", "[white] " };
+	char		*val;
+	int		 adjourned;	// adjourned game?
+	int		 bh = 0, pp, pp1;
+	int		 binc = -1;	// black increment
+	int		 bt = -1;	// black start time
+	int		 confused = 0;
+	int		 g;		// more adjourned game junk
+	int		 p1;
+	int		 pendfrom, pendto;
+	int		 ppend, p1pend;
+	int		 rated = -1;	// 1 = rated, 0 = unrated
+	int		 type;
+	int		 white = -1;	// 1 = want white, 0 = want black
+	int		 winc = -1;	// white increment
+	int		 wt = -1;	// white start time
+	textlist	*clauses = NULL;
 
-    if (rated && (type == TYPE_WILD) && (!strcmp(board,"bughouse"))) {
-      pprintf(p, "Game is bughouse - reverting to unrated\n");
-      rated = 0; /* will need to kill wild and make TYPE_BUGHOUSE */
-    }
-    if (rated && (type == TYPE_NONSTANDARD)) {
-      pprintf(p, "Game is non-standard - reverting to unrated\n");
-      rated = 0;
-    }
-    if (rated && (type == TYPE_UNTIMED)) {
-      pprintf(p, "Game is untimed - reverting to unrated\n");
-      rated = 0;
-    }
-    /* Now check formula. */
-    if ((pendfrom < 0 || param[1].type != TYPE_NULL)
-        && !GameMatchesFormula(p, p1, wt, winc, bt, binc,
-                               rated, type, &clauses)) {
-      pprintf(p, "Match request does not fit formula for %s:\n",
-	      parray[p1].name);
-      pprintf(p, "%s's formula: %s\n", parray[p1].name, parray[p1].formula);
-      ShowClauses (p, p1, clauses);
-      ClearTextList(clauses);
-      pprintf_highlight(p1, "Ignoring");
-      pprintf_prompt(p1, " (formula): %s (%d) %s (%d) %s.\n",
-		     parray[p].name,
-		     GetRating(&parray[p], type),
-		     parray[p1].name,
-		     GetRating(&parray[p1], type),
-	    game_str(rated, wt * 60, winc, bt * 60, binc, category, board));
-      return COM_OK;
-    }
-    if (type == TYPE_WILD && strcmp(board, "bughouse") == 0) {
-      bh = 1;
-      pp = parray[p].partner;
-      pp1 = parray[p1].partner;
+	if (parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE) {
+		pprintf(p, "You can't challenge while you are examining a game."
+		    "\n");
+		return COM_OK;
+	}
+	if (parray[p].game >= 0) {
+		pprintf(p, "You can't challenge while you are playing a game."
+		    "\n");
+		return COM_OK;
+	}
 
-      if (pp < 0) {
-        pprintf(p, "You have no partner for bughouse.\n");
-        return COM_OK;
-      }
-      if (pp1 < 0) {
-        pprintf(p, "Your opponent has no partner for bughouse.\n");
-        return COM_OK;
-      }
-      if (pp == pp1) {
-        pprintf(p, "You and your opponent both chose the same partner!\n");
-        return COM_OK;
-      }
-      if (pp == p1 || pp1 == p) {
-        pprintf(p, "You and your opponent can't choose each other as partners!\n");
-        return COM_OK;
-      }
-      if (parray[pp].partner != p) {
-      	pprintf(p, "Your partner hasn't chosen you as his partner!\n");
-      	return COM_OK;
-      }
-      if (parray[pp1].partner != p1) {
-      	pprintf(p, "Your opponent's partner hasn't chosen your opponent as his partner!\n");
-      	return COM_OK;
-      }
-      if (!parray[pp].open || parray[pp].game >= 0) {
-      	pprintf(p, "Your partner isn't open to play right now.\n");
-      	return COM_OK;
-      }
-      if (!parray[pp1].open || parray[pp1].game >= 0) {
-      	pprintf(p, "Your opponent's partner isn't open to play right now.\n");
-      	return COM_OK;
-      }
-      /* Bypass NOPLAY lists, censored lists, ratedness, privacy, and formula for now */
-      /*  Active challenger/ee will determine these. */
-    }
-    /* Ok match offer will be made */
+	stolower(param[0].val.word);
+	p1 = player_find_part_login(param[0].val.word);
 
-  }				/* adjourned games shouldn't have to worry
-				   about that junk? */
-  if (pendto >= 0) {
-    pprintf(p, "Updating offer already made to \"%s\".\n", parray[p1].name);
-  }
-  if (pendfrom >= 0) {
-    if (pendto >= 0) {
-      pprintf(p, "Internal error\n");
-      fprintf(stderr, "FICS: This shouldn't happen. You can't have a match pending from and to the same person.\n");
-      return COM_OK;
-    }
-    if (adjourned || ((wt == parray[p].p_from_list[pendfrom].param1) &&
-		      (winc == parray[p].p_from_list[pendfrom].param2) &&
-		      (bt == parray[p].p_from_list[pendfrom].param3) &&
-		      (binc == parray[p].p_from_list[pendfrom].param4) &&
-		      (rated == parray[p].p_from_list[pendfrom].param5) &&
-		      ((white == -1) || (white + parray[p].p_from_list[pendfrom].param6 == 1)) &&
-	       (!strcmp(category, parray[p].p_from_list[pendfrom].char1)) &&
-		 (!strcmp(board, parray[p].p_from_list[pendfrom].char2)))) {
-      /* Identical match, should accept! */
-      accept_match(p, p1);
-      return COM_OK;
-    } else {
-      player_remove_pendfrom(p, p1, PEND_MATCH);
-      player_remove_pendto(p1, p, PEND_MATCH);
-    }
-  }
-  if (pendto < 0) {
-    ppend = player_new_pendto(p);
-    if (ppend < 0) {
-      pprintf(p, "Sorry you can't have any more pending matches.\n");
-      return COM_OK;
-    }
-    p1pend = player_new_pendfrom(p1);
-    if (p1pend < 0) {
-      pprintf(p, "Sorry %s can't have any more pending matches.\n", parray[p1].name);
-      parray[p].num_to = parray[p].num_to - 1;
-      return COM_OK;
-    }
-  } else {
-    ppend = pendto;
-    p1pend = player_find_pendfrom(p1, p, PEND_MATCH);
-  }
-  parray[p].p_to_list[ppend].param1 = wt;
-  parray[p].p_to_list[ppend].param2 = winc;
-  parray[p].p_to_list[ppend].param3 = bt;
-  parray[p].p_to_list[ppend].param4 = binc;
-  parray[p].p_to_list[ppend].param5 = rated;
-  parray[p].p_to_list[ppend].param6 = white;
-  strcpy(parray[p].p_to_list[ppend].char1, category);
-  strcpy(parray[p].p_to_list[ppend].char2, board);
-  parray[p].p_to_list[ppend].type = PEND_MATCH;
-  parray[p].p_to_list[ppend].whoto = p1;
-  parray[p].p_to_list[ppend].whofrom = p;
+	if (p1 < 0) {
+		pprintf(p, "No user named \"%s\" is logged in.\n",
+		    param[0].val.word);
+		return COM_OK;
+	}
+	if (p1 == p) {	// Allowing to match yourself to enter analysis mode
+		ExamineScratch (p, param);
+		return COM_OK;
+	}
 
-  parray[p1].p_from_list[p1pend].param1 = wt;
-  parray[p1].p_from_list[p1pend].param2 = winc;
-  parray[p1].p_from_list[p1pend].param3 = bt;
-  parray[p1].p_from_list[p1pend].param4 = binc;
-  parray[p1].p_from_list[p1pend].param5 = rated;
-  parray[p1].p_from_list[p1pend].param6 = white;
-  strcpy(parray[p1].p_from_list[p1pend].char1, category);
-  strcpy(parray[p1].p_from_list[p1pend].char2, board);
-  parray[p1].p_from_list[p1pend].type = PEND_MATCH;
-  parray[p1].p_from_list[p1pend].whoto = p1;
-  parray[p1].p_from_list[p1pend].whofrom = p;
+	if (parray[p].open == 0) {
+		parray[p].open = 1;
+		pprintf(p, "Setting you open for matches.\n");
+	}
+	if (!parray[p1].open) {
+		pprintf(p, "Player \"%s\" is not open to match requests.\n",
+		    parray[p1].name);
+		return COM_OK;
+	}
+	if (parray[p1].game >= 0) {
+		pprintf(p, "Player \"%s\" is involved in another game.\n",
+		    parray[p1].name);
+		return COM_OK;
+	}
 
-  if (pendfrom >= 0) {
-    pprintf(p, "Declining offer from %s and offering new match parameters.\n", parray[p1].name);
-    pprintf(p1, "\n%s declines your match offer a match with these parameters:", parray[p].name);
-  }
-  if (pendto >= 0) {
-    pprintf(p, "Updating match request to: ");
-    pprintf(p1, "\n%s updates the match request.\n", parray[p].name);
-  } else {
-    pprintf(p, "Issuing: ");
-    pprintf(p1, "\n"); // XXX: 'parray[p].name'
-  }
+	// Look for an adjourned game between p and p1
+	g = game_new();
+	adjourned = (game_read(g, p, p1) >= 0 || game_read(g, p1, p) >= 0);
 
-  pprintf(p, "%s (%s) %s", parray[p].name,
-	  ratstrii(GetRating(&parray[p], type), parray[p].registered),
-	  colorstr[white + 1]);
-  pprintf_highlight(p, "%s", parray[p1].name);
-  pprintf(p, " (%s) %s%s.\n",
-	  ratstrii(GetRating(&parray[p1], type), parray[p1].registered),
-	  game_str(rated, wt * 60, winc, bt * 60, binc, category, board),
-	  adjustr[adjourned]);
-  pprintf(p1, "Challenge: ");
-  pprintf_highlight(p1, "%s", parray[p].name);
-  pprintf(p1, " (%s) %s", ratstrii(GetRating(&parray[p], type), parray[p].registered), colorstr[white + 1]);
-  pprintf(p1, "%s (%s) %s%s.\n", parray[p1].name,
-	  ratstrii(GetRating(&parray[p1], type), parray[p1].registered),
-	  game_str(rated, wt * 60, winc, bt * 60, binc, category, board),
-	  adjustr[adjourned]);
-  if (parray[p1].bell == 1)
-    pprintf_noformat(p1, "\007");
+	if (adjourned) {
+		type = garray[g].type;
+		wt = garray[g].wInitTime / 600;
+		bt = garray[g].bInitTime / 600;
+		winc = garray[g].wIncrement / 10;
+		binc = garray[g].bIncrement / 10;
+		rated = garray[g].rated;
+	}
 
-  if (bh) {
-    pprintf(pp, "\nYour bughouse partner issuing %s (%s) %s",
-	    parray[p].name, ratstrii(GetRating(&parray[p], type),
-	    parray[p].registered), colorstr[white + 1]);
-    pprintf_highlight(pp, "%s", parray[p1].name);
-    pprintf(pp, " (%s) %s.\n",
+	game_remove(g);
+	pendto		= player_find_pendto(p, p1, PEND_MATCH);
+	pendfrom	= player_find_pendfrom(p, p1, PEND_MATCH);
+	category[0]	= '\0';
+	board[0]	= '\0';
+
+	if (!adjourned) {
+		if (in_list(p1, L_NOPLAY, parray[p].login)) {
+			pprintf(p, "You are on %s's noplay list.\n",
+			    parray[p1].name);
+			return COM_OK;
+		}
+		if (player_censored(p1, p)) {
+			pprintf(p, "Player \"%s\" is censoring you.\n",
+			    parray[p1].name);
+			return COM_OK;
+		}
+		if (player_censored(p, p1)) {
+			pprintf(p, "You are censoring \"%s\".\n",
+			    parray[p1].name);
+			return COM_OK;
+		}
+
+		if (param[1].type != TYPE_NULL) {
+			int	numba; // temp for atoi()
+
+			val = param[1].val.string;
+
+			while (!confused &&
+			    sscanf(val, " %99s", parsebuf) == 1) {
+
+				val = eatword(eatwhite(val));
+
+				if (category[0] != '\0' && board[0] == '\0') {
+					strcpy(board, parsebuf);
+				} else if (isdigit(*parsebuf)) {
+					if ((numba = atoi(parsebuf)) < 0) {
+						pprintf(p, "You can't specify "
+						    "negative time controls."
+						    "\n");
+						return COM_OK;
+					} else if (numba > 1000) {
+						pprintf(p, "You can't specify "
+						    "time or inc above 1000."
+						    "\n");
+						return COM_OK;
+					} else if (wt == -1) {
+						wt = numba;
+					} else if (winc == -1) {
+						winc = numba;
+					} else if (bt == -1) {
+						bt = numba;
+					} else if (binc == -1) {
+						binc = numba;
+					} else {
+						confused = 1;
+					}
+				} else if (strstr("rated", parsebuf) != NULL) {
+					if (rated == -1)
+						rated = 1;
+					else
+						confused = 1;
+				} else if (strstr("unrated", parsebuf) != NULL) {
+					if (rated == -1)
+						rated = 0;
+					else
+						confused = 1;
+				} else if (strstr("white", parsebuf) != NULL) {
+					if (white == -1)
+						white = 1;
+					else
+						confused = 1;
+				} else if (strstr("black", parsebuf) != NULL) {
+					if (white == -1)
+						white = 0;
+					else
+						confused = 1;
+				} else if (category[0] == '\0') {
+					strcpy(category, parsebuf);
+				} else {
+					confused = 1;
+				}
+			} /* while */
+
+			if (confused) {
+				pprintf(p, "Can't interpret %s in match "
+				    "command.\n", parsebuf);
+				return COM_OK;
+			}
+		}
+
+		rated = (rated == -1 ? parray[p].rated : rated) &&
+		    parray[p1].registered && parray[p].registered;
+
+		if (winc == -1)
+			winc = (wt == -1 ? parray[p].d_inc : 0);
+		if (wt == -1)
+			wt = parray[p].d_time;
+		if (bt == -1)
+			bt = wt;
+		if (binc == -1)
+			binc = winc;
+
+		if (!strcmp(category, "bughouse")) {	// save mentioning wild
+			strcpy(board, "bughouse");
+			strcpy(category, "wild");
+		}
+
+		if (category[0] && !board[0]) {
+			pprintf(p, "You must specify a board and a category."
+			    "\n");
+			return COM_OK;
+		}
+
+		if (category[0]) {
+			char	fname[MAX_FILENAME_SIZE] = { '\0' };
+
+			(void) snprintf(fname, sizeof fname, "%s/%s/%s",
+			    board_dir, category, board);
+
+			if (!file_exists(fname)) {
+				pprintf(p, "No such category/board: %s/%s\n",
+				    category, board);
+				return COM_OK;
+			}
+		}
+
+		if (pendfrom < 0 && parray[p1].ropen == 0 && rated !=
+		    parray[p1].rated) {
+			pprintf(p, "%s only wants to play %s games.\n",
+			    parray[p1].name,
+			    rstr[parray[p1].rated]);
+			pprintf_highlight(p1, "Ignoring");
+			pprintf(p1, " %srated match request from %s.\n",
+			    (parray[p1].rated ? "un" : ""),
+			    parray[p].name);
+
+			return COM_OK;
+		}
+
+		type = game_isblitz(wt, winc, bt, binc, category, board);
+
+		if (rated && type == TYPE_WILD && !strcmp(board, "bughouse")) {
+			pprintf(p, "Game is bughouse - "
+			    "reverting to unrated\n");
+			rated = 0;	// will need to kill wild and make
+					// TYPE_BUGHOUSE
+		}
+		if (rated && type == TYPE_NONSTANDARD) {
+			pprintf(p, "Game is non-standard - "
+			    "reverting to unrated\n");
+			rated = 0;
+		}
+		if (rated && type == TYPE_UNTIMED) {
+			pprintf(p, "Game is untimed - "
+			    "reverting to unrated\n");
+			rated = 0;
+		}
+
+		// Now check formula.
+		if ((pendfrom < 0 || param[1].type != TYPE_NULL) &&
+		    !GameMatchesFormula(p, p1, wt, winc, bt, binc, rated, type,
+		    &clauses)) {
+			pprintf(p, "Match request does not fit formula for "
+			    "%s:\n", parray[p1].name);
+			pprintf(p, "%s's formula: %s\n",
+			    parray[p1].name,
+			    parray[p1].formula);
+
+			ShowClauses(p, p1, clauses);
+			ClearTextList(clauses);
+
+			pprintf_highlight(p1, "Ignoring");
+			pprintf_prompt(p1, " (formula): %s (%d) %s (%d) %s.\n",
+			    parray[p].name,
+			    GetRating(&parray[p], type),
+			    parray[p1].name,
+			    GetRating(&parray[p1], type),
+			    game_str(rated, wt * 60, winc, bt * 60, binc,
+			    category, board));
+
+			return COM_OK;
+		}
+
+		if (type == TYPE_WILD && strcmp(board, "bughouse") == 0) {
+			bh	= 1;
+			pp	= parray[p].partner;
+			pp1	= parray[p1].partner;
+
+			if (pp < 0) {
+				pprintf(p, "You have no partner for bughouse."
+				    "\n");
+				return COM_OK;
+			}
+			if (pp1 < 0) {
+				pprintf(p, "Your opponent has no partner for "
+				    "bughouse.\n");
+				return COM_OK;
+			}
+			if (pp == pp1) {
+				pprintf(p, "You and your opponent both chose "
+				    "the same partner!\n");
+				return COM_OK;
+			}
+			if (pp == p1 || pp1 == p) {
+				pprintf(p, "You and your opponent can't choose "
+				    "each other as partners!\n");
+				return COM_OK;
+			}
+			if (parray[pp].partner != p) {
+				pprintf(p, "Your partner hasn't chosen you as "
+				    "his partner!\n");
+				return COM_OK;
+			}
+			if (parray[pp1].partner != p1) {
+				pprintf(p, "Your opponent's partner hasn't "
+				    "chosen your opponent as his partner!\n");
+				return COM_OK;
+			}
+			if (!parray[pp].open || parray[pp].game >= 0) {
+				pprintf(p, "Your partner isn't open to play "
+				    "right now.\n");
+				return COM_OK;
+			}
+			if (!parray[pp1].open || parray[pp1].game >= 0) {
+				pprintf(p, "Your opponent's partner isn't "
+				    "open to play right now.\n");
+				return COM_OK;
+			}
+
+			/*
+			 * Bypass NOPLAY lists, censored lists,
+			 * ratedness, privacy, and formula for
+			 * now. Active challenger/ee will determine
+			 * these.
+			 */
+		}
+
+		// Ok match offer will be made
+	} // !adjourned
+
+	if (pendto >= 0) {
+		pprintf(p, "Updating offer already made to \"%s\".\n",
+		    parray[p1].name);
+	}
+
+	if (pendfrom >= 0) {
+		if (pendto >= 0) {
+			pprintf(p, "Internal error\n");
+			fprintf(stderr, "FICS: This shouldn't happen. "
+			    "You can't have a match pending from and to the "
+			    "same person.\n");
+			return COM_OK;
+		}
+
+		if (adjourned ||
+		    (wt == parray[p].p_from_list[pendfrom].param1 &&
+		    winc == parray[p].p_from_list[pendfrom].param2 &&
+		    bt == parray[p].p_from_list[pendfrom].param3 &&
+		    binc == parray[p].p_from_list[pendfrom].param4 &&
+		    rated == parray[p].p_from_list[pendfrom].param5 &&
+		    (white == -1 ||
+		    white + parray[p].p_from_list[pendfrom].param6 == 1) &&
+		    !strcmp(category, parray[p].p_from_list[pendfrom].char1) &&
+		    !strcmp(board, parray[p].p_from_list[pendfrom].char2))) {
+			// Identical match - should accept!
+			accept_match(p, p1);
+			return COM_OK;
+		} else {
+			player_remove_pendfrom(p, p1, PEND_MATCH);
+			player_remove_pendto(p1, p, PEND_MATCH);
+		}
+	}
+
+	if (pendto < 0) {
+		if ((ppend = player_new_pendto(p)) < 0) {
+			pprintf(p, "Sorry you can't have any more pending "
+			    "matches.\n");
+			return COM_OK;
+		}
+
+		if ((p1pend = player_new_pendfrom(p1)) < 0) {
+			pprintf(p, "Sorry %s can't have any more pending "
+			    "matches.\n", parray[p1].name);
+			parray[p].num_to = parray[p].num_to - 1;
+			return COM_OK;
+		}
+	} else {
+		ppend = pendto;
+		p1pend = player_find_pendfrom(p1, p, PEND_MATCH);
+	}
+
+	parray[p].p_to_list[ppend].param1 = wt;
+	parray[p].p_to_list[ppend].param2 = winc;
+	parray[p].p_to_list[ppend].param3 = bt;
+	parray[p].p_to_list[ppend].param4 = binc;
+	parray[p].p_to_list[ppend].param5 = rated;
+	parray[p].p_to_list[ppend].param6 = white;
+	strcpy(parray[p].p_to_list[ppend].char1, category);
+	strcpy(parray[p].p_to_list[ppend].char2, board);
+	parray[p].p_to_list[ppend].type = PEND_MATCH;
+	parray[p].p_to_list[ppend].whoto = p1;
+	parray[p].p_to_list[ppend].whofrom = p;
+
+	parray[p1].p_from_list[p1pend].param1 = wt;
+	parray[p1].p_from_list[p1pend].param2 = winc;
+	parray[p1].p_from_list[p1pend].param3 = bt;
+	parray[p1].p_from_list[p1pend].param4 = binc;
+	parray[p1].p_from_list[p1pend].param5 = rated;
+	parray[p1].p_from_list[p1pend].param6 = white;
+	strcpy(parray[p1].p_from_list[p1pend].char1, category);
+	strcpy(parray[p1].p_from_list[p1pend].char2, board);
+	parray[p1].p_from_list[p1pend].type = PEND_MATCH;
+	parray[p1].p_from_list[p1pend].whoto = p1;
+	parray[p1].p_from_list[p1pend].whofrom = p;
+
+	if (pendfrom >= 0) {
+		pprintf(p, "Declining offer from %s and offering new match "
+		    "parameters.\n", parray[p1].name);
+		pprintf(p1, "\n%s declines your match offer a match with these "
+		    "parameters:", parray[p].name);
+	}
+
+	if (pendto >= 0) {
+		pprintf(p, "Updating match request to: ");
+		pprintf(p1, "\n%s updates the match request.\n", parray[p].name);
+	} else {
+		pprintf(p, "Issuing: ");
+		pprintf(p1, "\n"); // XXX: 'parray[p].name'
+	}
+
+	pprintf(p, "%s (%s) %s",
+	    parray[p].name,
+	    ratstrii(GetRating(&parray[p], type), parray[p].registered),
+	    colorstr[white + 1]);
+	pprintf_highlight(p, "%s", parray[p1].name);
+	pprintf(p, " (%s) %s%s.\n",
 	    ratstrii(GetRating(&parray[p1], type), parray[p1].registered),
-	    game_str(rated, wt * 60, winc, bt * 60, binc, category, board));
-    pprintf(pp, "Your game would be ");
-    pprintf_highlight(pp, "%s", parray[pp1].name);
-    pprintf_prompt(pp, " (%s) %s%s (%s) %s.\n",
-	  ratstrii(GetRating(&parray[pp1], type), parray[pp1].registered),
-	  colorstr[white + 1], parray[pp].name,
-	  ratstrii(GetRating(&parray[pp], type), parray[pp].registered),
-	  game_str(rated, wt * 60, winc, bt * 60, binc, category, board));
-    if (parray[pp].bell == 1)
-      pprintf_noformat(pp, "\007");
-
-    pprintf(pp1, "\nYour bughouse partner was challenged ");
-    pprintf_highlight(pp1, "%s", parray[p].name);
-    pprintf(pp1, " (%s) %s", ratstrii(GetRating(&parray[p], type), parray[p].registered), colorstr[white + 1]);
-    pprintf(pp1, "%s (%s) %s.\n", parray[p1].name,
+	    game_str(rated, wt * 60, winc, bt * 60, binc, category, board),
+	    adjustr[adjourned]);
+	pprintf(p1, "Challenge: ");
+	pprintf_highlight(p1, "%s", parray[p].name);
+	pprintf(p1, " (%s) %s",
+	    ratstrii(GetRating(&parray[p], type), parray[p].registered),
+	    colorstr[white + 1]);
+	pprintf(p1, "%s (%s) %s%s.\n",
+	    parray[p1].name,
 	    ratstrii(GetRating(&parray[p1], type), parray[p1].registered),
-	    game_str(rated, wt * 60, winc, bt * 60, binc, category, board));
-    pprintf(pp1, "Your game would be %s (%s) %s", parray[pp1].name,
-	  ratstrii(GetRating(&parray[pp1], type), parray[pp1].registered),
-	  colorstr[white + 1]);
-    pprintf_highlight(pp1, "%s", parray[pp].name);
-    pprintf_prompt(pp1, " (%s) %s.\n",
-	  ratstrii(GetRating(&parray[pp], type), parray[pp].registered),
-	  game_str(rated, wt * 60, winc, bt * 60, binc, category, board));
-    if (parray[pp1].bell == 1)
-      pprintf_noformat(pp1, "\007");
-  }
+	    game_str(rated, wt * 60, winc, bt * 60, binc, category, board),
+	    adjustr[adjourned]);
 
-  if (in_list(p, L_COMPUTER, parray[p].name)) {
-    pprintf(p1, "--** %s is a ", parray[p].name);
-    pprintf_highlight(p1, "computer");
-    pprintf(p1, " **--\n");
-  }
-  if (in_list(p, L_COMPUTER, parray[p1].name)) {
-    pprintf(p, "--** %s is a ", parray[p1].name);
-    pprintf_highlight(p, "computer");
-    pprintf(p, " **--\n");
-  }
-  if (in_list(p, L_ABUSER, parray[p].name)) {
-    pprintf(p1, "--** %s is in the ", parray[p].name);
-    pprintf_highlight(p1, "abuser");
-    pprintf(p1, " list **--\n");
-  }
-  if (in_list(p, L_ABUSER, parray[p1].name)) {
-    pprintf(p, "--** %s is in the ", parray[p1].name);
-    pprintf_highlight(p, "abuser");
-    pprintf(p, " list **--\n");
-  }
-  if (rated) {
-    int win, draw, loss;
-    double newsterr;
+	if (parray[p1].bell == 1)
+		pprintf_noformat(p1, "\007");
 
-    rating_sterr_delta(p1, p, type, time(0), RESULT_WIN, &win, &newsterr);
-    rating_sterr_delta(p1, p, type, time(0), RESULT_DRAW, &draw, &newsterr);
-    rating_sterr_delta(p1, p, type, time(0), RESULT_LOSS, &loss, &newsterr);
-    pprintf(p1, "Your %s rating will change:  Win: %s%d,  Draw: %s%d,  Loss: %s%d\n",
-	    bstr[type],
-	    (win >= 0) ? "+" : "", win,
-	    (draw >= 0) ? "+" : "", draw,
-	    (loss >= 0) ? "+" : "", loss);
-    pprintf(p1, "Your new RD will be %5.1f\n", newsterr);
+	if (bh) {
+		struct print_bh_context ctx = {
+			.pp = pp,
+			.pp1 = pp1,
+			.rated		= rated,
+			.type		= type,
+			.white		= white,
+			.board		= &board[0],
+			.category	= &category[0],
+			.binc	= binc,
+			.bt	= bt,
+			.winc	= winc,
+			.wt	= wt,
+		};
 
-    rating_sterr_delta(p, p1, type, time(0), RESULT_WIN, &win, &newsterr);
-    rating_sterr_delta(p, p1, type, time(0), RESULT_DRAW, &draw, &newsterr);
-    rating_sterr_delta(p, p1, type, time(0), RESULT_LOSS, &loss, &newsterr);
-    pprintf(p, "Your %s rating will change:  Win: %s%d,  Draw: %s%d,  Loss: %s%d\n",
-	    bstr[type],
-	    (win >= 0) ? "+" : "", win,
-	    (draw >= 0) ? "+" : "", draw,
-	    (loss >= 0) ? "+" : "", loss);
-    pprintf(p, "Your new RD will be %5.1f\n", newsterr);
-  }
-  pprintf_prompt(p1, "You can \"accept\" or \"decline\", or propose different parameters.\n");
-  return COM_OK;
+		print_bughouse(p, p1, &ctx, colorstr);
+	}
+
+	if (in_list(p, L_COMPUTER, parray[p].name)) {
+		pprintf(p1, "--** %s is a ", parray[p].name);
+		pprintf_highlight(p1, "computer");
+		pprintf(p1, " **--\n");
+	}
+	if (in_list(p, L_COMPUTER, parray[p1].name)) {
+		pprintf(p, "--** %s is a ", parray[p1].name);
+		pprintf_highlight(p, "computer");
+		pprintf(p, " **--\n");
+	}
+	if (in_list(p, L_ABUSER, parray[p].name)) {
+		pprintf(p1, "--** %s is in the ", parray[p].name);
+		pprintf_highlight(p1, "abuser");
+		pprintf(p1, " list **--\n");
+	}
+	if (in_list(p, L_ABUSER, parray[p1].name)) {
+		pprintf(p, "--** %s is in the ", parray[p1].name);
+		pprintf_highlight(p, "abuser");
+		pprintf(p, " list **--\n");
+	}
+
+	if (rated) {
+		double	newsterr;
+		int	win, draw, loss;
+
+		rating_sterr_delta(p1, p, type, time(NULL), RESULT_WIN, &win,
+		    &newsterr);
+		rating_sterr_delta(p1, p, type, time(NULL), RESULT_DRAW, &draw,
+		    &newsterr);
+		rating_sterr_delta(p1, p, type, time(NULL), RESULT_LOSS, &loss,
+		    &newsterr);
+
+		pprintf(p1, "Your %s rating will change:  "
+		    "Win: %s%d,  Draw: %s%d,  Loss: %s%d\n",
+		    bstr[type],
+		    (win >= 0 ? "+" : ""), win,
+		    (draw >= 0 ? "+" : ""), draw,
+		    (loss >= 0 ? "+" : ""), loss);
+		pprintf(p1, "Your new RD will be %5.1f\n", newsterr);
+
+		rating_sterr_delta(p, p1, type, time(NULL), RESULT_WIN, &win,
+		    &newsterr);
+		rating_sterr_delta(p, p1, type, time(NULL), RESULT_DRAW, &draw,
+		    &newsterr);
+		rating_sterr_delta(p, p1, type, time(NULL), RESULT_LOSS, &loss,
+		    &newsterr);
+
+		pprintf(p, "Your %s rating will change:  "
+		    "Win: %s%d,  Draw: %s%d,  Loss: %s%d\n",
+		    bstr[type],
+		    (win >= 0 ? "+" : ""), win,
+		    (draw >= 0 ? "+" : ""), draw,
+		    (loss >= 0 ? "+" : ""), loss);
+		pprintf(p, "Your new RD will be %5.1f\n", newsterr);
+	}
+
+	pprintf_prompt(p1, "You can \"accept\" or \"decline\", or propose "
+	    "different parameters.\n");
+	return COM_OK;
 }
 
 PUBLIC int
