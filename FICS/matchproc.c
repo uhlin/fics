@@ -48,6 +48,10 @@
 #include "talkproc.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 struct print_bh_context {
 	int pp;
 	int pp1;
@@ -123,8 +127,10 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 	garray[g].white = white_player;
 	garray[g].black = black_player;
 
-	strcpy(garray[g].white_name, parray[white_player].name);
-	strcpy(garray[g].black_name, parray[black_player].name);
+	strlcpy(garray[g].white_name, parray[white_player].name,
+	    sizeof(garray[g].white_name));
+	strlcpy(garray[g].black_name, parray[black_player].name,
+	    sizeof(garray[g].black_name));
 
 	garray[g].status	= GAME_ACTIVE;
 	garray[g].type		= game_isblitz(wt / 60, winc, bt / 60, binc,
@@ -198,8 +204,10 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 		garray[g].moveList[0].toRank = -1;
 		garray[g].moveList[0].color = WHITE;
 
-		strcpy(garray[g].moveList[0].moveString, "NONE");
-		strcpy(garray[g].moveList[0].algString, "NONE");
+		strlcpy(garray[g].moveList[0].moveString, "NONE",
+		    sizeof(garray[g].moveList[0].moveString));
+		strlcpy(garray[g].moveList[0].algString, "NONE",
+		    sizeof(garray[g].moveList[0].algString));
 	} else {
 		garray[g].numHalfMoves = 0;
 		garray[g].moveListSize = 0;
@@ -299,8 +307,8 @@ accept_match(int p, int p1)
 	binc	= pend->param4;
 	rated	= pend->param5;
 
-	strcpy(category, pend->char1);
-	strcpy(board, pend->char2);
+	strlcpy(category, pend->char1, sizeof category);
+	strlcpy(board, pend->char2, sizeof board);
 
 	white = (pend->param6 == -1 ? -1 : (1 - pend->param6));
 
@@ -694,7 +702,7 @@ com_match(int p, param_list param)
 				val = eatword(eatwhite(val));
 
 				if (category[0] != '\0' && board[0] == '\0') {
-					strcpy(board, parsebuf);
+					strlcpy(board, parsebuf, sizeof board);
 				} else if (isdigit(*parsebuf)) {
 					if ((numba = atoi(parsebuf)) < 0) {
 						pprintf(p, "You can't specify "
@@ -738,7 +746,8 @@ com_match(int p, param_list param)
 					else
 						confused = 1;
 				} else if (category[0] == '\0') {
-					strcpy(category, parsebuf);
+					strlcpy(category, parsebuf,
+					    sizeof category);
 				} else {
 					confused = 1;
 				}
@@ -764,8 +773,8 @@ com_match(int p, param_list param)
 			binc = winc;
 
 		if (!strcmp(category, "bughouse")) {	// save mentioning wild
-			strcpy(board, "bughouse");
-			strcpy(category, "wild");
+			strlcpy(board, "bughouse", sizeof board);
+			strlcpy(category, "wild", sizeof category);
 		}
 
 		if (category[0] && !board[0]) {
@@ -958,8 +967,12 @@ com_match(int p, param_list param)
 	parray[p].p_to_list[ppend].param4 = binc;
 	parray[p].p_to_list[ppend].param5 = rated;
 	parray[p].p_to_list[ppend].param6 = white;
-	strcpy(parray[p].p_to_list[ppend].char1, category);
-	strcpy(parray[p].p_to_list[ppend].char2, board);
+
+	strlcpy(parray[p].p_to_list[ppend].char1, category,
+	    sizeof(parray[p].p_to_list[ppend].char1));
+	strlcpy(parray[p].p_to_list[ppend].char2, board,
+	    sizeof(parray[p].p_to_list[ppend].char2));
+
 	parray[p].p_to_list[ppend].type = PEND_MATCH;
 	parray[p].p_to_list[ppend].whoto = p1;
 	parray[p].p_to_list[ppend].whofrom = p;
@@ -970,8 +983,12 @@ com_match(int p, param_list param)
 	parray[p1].p_from_list[p1pend].param4 = binc;
 	parray[p1].p_from_list[p1pend].param5 = rated;
 	parray[p1].p_from_list[p1pend].param6 = white;
-	strcpy(parray[p1].p_from_list[p1pend].char1, category);
-	strcpy(parray[p1].p_from_list[p1pend].char2, board);
+
+	strlcpy(parray[p1].p_from_list[p1pend].char1, category,
+	    sizeof(parray[p1].p_from_list[p1pend].char1));
+	strlcpy(parray[p1].p_from_list[p1pend].char2, board,
+	    sizeof(parray[p1].p_from_list[p1pend].char2));
+
 	parray[p1].p_from_list[p1pend].type = PEND_MATCH;
 	parray[p1].p_from_list[p1pend].whoto = p1;
 	parray[p1].p_from_list[p1pend].whofrom = p;
