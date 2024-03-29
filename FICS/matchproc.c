@@ -70,7 +70,7 @@ PUBLIC int
 create_new_match(int white_player, int black_player, int wt, int winc, int bt,
     int binc, int rated, char *category, char *board, int white)
 {
-	char	outStr[1024];
+	char	outStr[1024] = { '\0' };
 	int	g, p;
 	int	reverse = 0;
 
@@ -212,7 +212,8 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 	garray[g].lastDecTime	= garray[g].startTime;
 	garray[g].clockStopped	= 0;
 
-	sprintf(outStr, "\n{Game %d (%s vs. %s) Creating %s %s match.}\n",
+	snprintf(outStr, sizeof outStr, "\n{Game %d (%s vs. %s) "
+	    "Creating %s %s match.}\n",
 	    (g + 1),
 	    parray[white_player].name,
 	    parray[black_player].name,
