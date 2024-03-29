@@ -50,6 +50,24 @@
 #include "utils.h"
 #include "variable.h"
 
+struct print_bh_context {
+	int pp;
+	int pp1;
+
+	int rated;
+	int type;
+	int white;
+
+	char *board;
+	char *category;
+
+	int binc;
+	int bt;
+
+	int winc;
+	int wt;
+};
+
 PUBLIC int
 create_new_match(int white_player, int black_player, int wt, int winc, int bt,
     int binc, int rated, char *category, char *board, int white)
@@ -440,24 +458,6 @@ PRIVATE int accept_match(int p, int p1)
   }
   return COM_OK;
 }
-
-struct print_bh_context {
-	int pp;
-	int pp1;
-
-	int rated;
-	int type;
-	int white;
-
-	char *board;
-	char *category;
-
-	int binc;
-	int bt;
-
-	int winc;
-	int wt;
-};
 
 PRIVATE void
 print_bughouse(int p, int p1, struct print_bh_context *ctx, char *colorstr[])
