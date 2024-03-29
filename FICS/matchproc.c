@@ -24,6 +24,8 @@
    Markus Uhlin                         24/03/29	Refactored and
 							reformatted all
 							functions.
+   Markus Uhlin                         24/03/29	Size-bounded string
+							handling.
 */
 
 #include "stdinclude.h"
