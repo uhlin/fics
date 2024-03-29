@@ -638,7 +638,7 @@ com_match(int p, param_list param)
 		return COM_OK;
 	}
 	if (p1 == p) {	// Allowing to match yourself to enter analysis mode
-		ExamineScratch (p, param);
+		ExamineScratch(p, param);
 		return COM_OK;
 	}
 
