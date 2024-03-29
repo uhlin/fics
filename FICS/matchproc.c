@@ -33,14 +33,10 @@
 #include "board.h"
 #include "command.h"
 #include "comproc.h"
-#include "config.h"
 #include "eco.h"
-#include "ficsmain.h"
 #include "formula.h"
 #include "gamedb.h"
-#include "gameproc.h"
 #include "lists.h"
-#include "multicol.h"
 #include "network.h"
 #include "obsproc.h"
 #include "playerdb.h"
@@ -48,7 +44,6 @@
 #include "rmalloc.h"
 #include "talkproc.h"
 #include "utils.h"
-#include "variable.h"
 
 struct print_bh_context {
 	int pp;
