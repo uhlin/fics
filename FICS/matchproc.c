@@ -249,19 +249,23 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 		if (gnw || gnb) {
 			pprintf(p, "Game notification: ");
 
-			if (gnw)
-				pprintf_highlight(p, parray[white_player].name);
-			else
-				pprintf(p, parray[white_player].name);
+			if (gnw) {
+				pprintf_highlight(p, "%s",
+				    parray[white_player].name);
+			} else {
+				pprintf(p, "%s", parray[white_player].name);
+			}
 
 			pprintf(p, " (%s) vs. ",
 			    ratstr(GetRating(&parray[white_player],
 			    garray[g].type)));
 
-			if (gnb)
-				pprintf_highlight(p, parray[black_player].name);
-			else
-				pprintf(p, parray[black_player].name);
+			if (gnb) {
+				pprintf_highlight(p, "%s",
+				    parray[black_player].name);
+			} else {
+				pprintf(p, "%s", parray[black_player].name);
+			}
 
 			pprintf_prompt(p, " (%s) %s %s %d %d\n",
 			    ratstr(GetRating(&parray[black_player],
@@ -449,22 +453,22 @@ accept_match(int p, int p1)
 		    board, white) != COM_OK) {
 			snprintf(tmp, sizeof tmp, "There was a problem "
 			    "creating the new match.\n");
-			pprintf(p, tmp);
-			pprintf_prompt(p1, tmp);
+			pprintf(p, "%s", tmp);
+			pprintf_prompt(p1, "%s", tmp);
 		} else if (bh) {
 			white = (parray[p].side == WHITE ? 0 : 1);
 
 			if (create_new_match(pp, pp1, wt, winc, bt, binc, rated,
 			    category, board, white) != COM_OK) {
-//				snprintf(tmp, sizeof tmp, "There was a problem "
-//				    "creating the new match.\n");
-				pprintf_prompt(pp, tmp);
-				pprintf_prompt(pp1, tmp);
+				snprintf(tmp, sizeof tmp, "There was a problem "
+				    "creating the new match.\n"); // XXX
+				pprintf_prompt(pp, "%s", tmp);
+				pprintf_prompt(pp1, "%s", tmp);
 
 				snprintf(tmp, sizeof tmp, "There was a problem "
 				    "creating your partner's match.\n");
-				pprintf(p, tmp);
-				pprintf_prompt(p1, tmp);
+				pprintf(p, "%s", tmp);
+				pprintf_prompt(p1, "%s", tmp);
 				// IanO: abort_game()?
 			} else {
 				int	g1 = parray[p].game;
@@ -478,16 +482,16 @@ accept_match(int p, int p1)
 				    (g2 + 1),
 				    garray[g2].white_name,
 				    garray[g2].black_name);
-				pprintf(p, tmp);
-				pprintf_prompt(p1, tmp);
+				pprintf(p, "%s", tmp);
+				pprintf_prompt(p1, "%s", tmp);
 
 				snprintf(tmp, sizeof tmp, "\nYour partner is "
 				    "playing game %d (%s vs. %s).\n",
 				    (g1 + 1),
 				    garray[g1].white_name,
 				    garray[g1].black_name);
-				pprintf_prompt(pp, tmp);
-				pprintf_prompt(pp1, tmp);
+				pprintf_prompt(pp, "%s", tmp);
+				pprintf_prompt(pp1, "%s", tmp);
 			}
 		}
 	} else {	// resume adjourned game
@@ -501,8 +505,8 @@ accept_match(int p, int p1)
 		    rstr[garray[g].rated],
 		    bstr[garray[g].type]);
 
-		pprintf(p, tmp);
-		pprintf(p1, tmp);
+		pprintf(p, "%s", tmp);
+		pprintf(p1, "%s", tmp);
 
 		garray[g].white = p;
 		garray[g].black = p1;
