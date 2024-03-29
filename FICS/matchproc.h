@@ -25,11 +25,14 @@
 #ifndef _MATCHPROC_H
 #define _MATCHPROC_H
 
-extern int com_match();
-extern int com_decline();
-extern int com_withdraw();
-extern int com_pending();
-extern int com_accept();
-extern int create_new_match(int, int, int, int, int, int, int, char *, char *, int);
+#include "command.h"	/* param_list */
+
+extern int	com_accept(int, param_list);
+extern int	com_decline(int, param_list);
+extern int	com_match(int, param_list);
+extern int	com_pending(int, param_list);
+extern int	com_withdraw(int, param_list);
+extern int	create_new_match(int, int, int, int, int, int, int, char *,
+		    char *, int);
 
 #endif /* _MATCHPROC_H */
