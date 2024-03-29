@@ -26,6 +26,8 @@
 							functions.
    Markus Uhlin                         24/03/29	Size-bounded string
 							handling.
+   Markus Uhlin                         24/03/29	Fixed potentially
+							insecure format strings.
 */
 
 #include "stdinclude.h"
