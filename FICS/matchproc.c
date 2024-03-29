@@ -277,186 +277,250 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 	return COM_OK;
 }
 
-PRIVATE int accept_match(int p, int p1)
+PRIVATE int
+accept_match(int p, int p1)
 {
-  int g, adjourned, foo, which;
-  int wt, winc, bt, binc, rated, white;
-  char category[50], board[50];
-  pending *pend;
-  char tmp[100];
-  int bh=0, pp, pp1;
+	char	 board[50] = { '\0' };
+	char	 category[50] = { '\0' };
+	char	 tmp[100] = { '\0' };
+	int	 bh = 0, pp, pp1;
+	int	 g, adjourned, foo, which;
+	int	 wt, winc, bt, binc, rated, white;
+	pending	*pend;
 
-  unobserveAll(p);		/* stop observing when match starts */
-  unobserveAll(p1);
+	// stop observing when match starts
+	unobserveAll(p);
+	unobserveAll(p1);
 
-  which = player_find_pendfrom(p, p1, PEND_MATCH);
-  pend = &parray[p].p_from_list[which];
-  wt = pend->param1;
-  winc = pend->param2;
-  bt = pend->param3;
-  binc = pend->param4;
-  rated = pend->param5;
-  strcpy (category, pend->char1);
-  strcpy (board, pend->char2);
-  white = (pend->param6 == -1) ? -1 : 1 - pend->param6;
+	which	= player_find_pendfrom(p, p1, PEND_MATCH);
+	pend	= &parray[p].p_from_list[which];
+	wt	= pend->param1;
+	winc	= pend->param2;
+	bt	= pend->param3;
+	binc	= pend->param4;
+	rated	= pend->param5;
 
-  pprintf(p, "You accept the challenge of %s.\n", parray[p1].name);
-  pprintf(p1, "\n%s accepts your challenge.\n", parray[p].name);
-  player_remove_request(p, p1, -1);
-  player_remove_request(p1, p, -1);
+	strcpy(category, pend->char1);
+	strcpy(board, pend->char2);
 
-  while ((which = player_find_pendto(p, -1, -1)) != -1) {
-    foo = parray[p].p_to_list[which].whoto;
-    pprintf_prompt(foo, "\n%s, who was challenging you, has joined a match with %s.\n", parray[p].name, parray[p1].name);
-    pprintf(p, "Challenge to %s withdrawn.\n", parray[foo].name);
-    player_remove_request(p, foo, -1);
-  }
+	white = (pend->param6 == -1 ? -1 : (1 - pend->param6));
 
-  while ((which = player_find_pendto(p1, -1, -1)) != -1) {
-    foo = parray[p1].p_to_list[which].whoto;
-    pprintf_prompt(foo, "\n%s, who was challenging you, has joined a match with %s.\n", parray[p1].name, parray[p].name);
-    pprintf(p1, "Challenge to %s withdrawn.\n", parray[foo].name);
-    player_remove_request(p1, foo, -1);
-  }
+	pprintf(p, "You accept the challenge of %s.\n", parray[p1].name);
+	pprintf(p1, "\n%s accepts your challenge.\n", parray[p].name);
 
-  while ((which = player_find_pendfrom(p, -1, -1)) != -1) {
-    foo = parray[p].p_from_list[which].whofrom;
-    pprintf_prompt(foo, "\n%s, whom you were challenging, has joined a match with %s.\n", parray[p].name, parray[p1].name);
-    pprintf(p, "Challenge from %s removed.\n", parray[foo].name);
-    player_remove_request(foo, p, -1);
-  }
+	player_remove_request(p, p1, -1);
+	player_remove_request(p1, p, -1);
 
-  while ((which = player_find_pendfrom(p1, -1, -1)) != -1) {
-    foo = parray[p1].p_from_list[which].whofrom;
-    pprintf_prompt(foo, "\n%s, whom you were challenging, has joined a match with %s.\n", parray[p1].name, parray[p].name);
-    pprintf(p1, "Challenge from %s removed.\n", parray[foo].name);
-    player_remove_request(foo, p1, -1);
-  }
+	while ((which = player_find_pendto(p, -1, -1)) != -1) {
+		foo = parray[p].p_to_list[which].whoto;
+		pprintf_prompt(foo, "\n%s, who was challenging you, "
+		    "has joined a match with %s.\n",
+		    parray[p].name,
+		    parray[p1].name);
+		pprintf(p, "Challenge to %s withdrawn.\n", parray[foo].name);
+		player_remove_request(p, foo, -1);
+	}
 
-  if (game_isblitz(wt, winc, bt, binc, category, board) == TYPE_WILD &&
-      strcmp(board, "bughouse") == 0) {
-    bh = 1;
+	while ((which = player_find_pendto(p1, -1, -1)) != -1) {
+		foo = parray[p1].p_to_list[which].whoto;
+		pprintf_prompt(foo, "\n%s, who was challenging you, "
+		    "has joined a match with %s.\n",
+		    parray[p1].name,
+		    parray[p].name);
+		pprintf(p1, "Challenge to %s withdrawn.\n", parray[foo].name);
+		player_remove_request(p1, foo, -1);
+	}
 
-    if ((pp = parray[p].partner) >= 0 &&
-        (pp1 = parray[p1].partner) >= 0) {
-      unobserveAll(pp);		/* stop observing when match starts */
-      unobserveAll(pp1);
+	while ((which = player_find_pendfrom(p, -1, -1)) != -1) {
+		foo = parray[p].p_from_list[which].whofrom;
+		pprintf_prompt(foo, "\n%s, whom you were challenging, "
+		    "has joined a match with %s.\n",
+		    parray[p].name,
+		    parray[p1].name);
+		pprintf(p, "Challenge from %s removed.\n", parray[foo].name);
+		player_remove_request(foo, p, -1);
+	}
 
-      pprintf(pp, "\nYour partner accepts the challenge of %s.\n", parray[p1].name);
-      pprintf(pp1, "\nYour partner %s's challenge was accepted.\n", parray[p].name);
+	while ((which = player_find_pendfrom(p1, -1, -1)) != -1) {
+		foo = parray[p1].p_from_list[which].whofrom;
+		pprintf_prompt(foo, "\n%s, whom you were challenging, "
+		    "has joined a match with %s.\n",
+		    parray[p1].name,
+		    parray[p].name);
+		pprintf(p1, "Challenge from %s removed.\n", parray[foo].name);
+		player_remove_request(foo, p1, -1);
+	}
 
-      while ((which = player_find_pendto(pp, -1, -1)) != -1) {
-        foo = parray[pp].p_to_list[which].whoto;
-        pprintf_prompt(foo, "\n%s, who was challenging you, has joined a match with %s.\n", parray[pp].name, parray[pp1].name);
-        pprintf(pp, "Challenge to %s withdrawn.\n", parray[foo].name);
-        player_remove_request(pp, foo, -1);
-      }
+	if (game_isblitz(wt, winc, bt, binc, category, board) == TYPE_WILD &&
+	    strcmp(board, "bughouse") == 0) {
+		bh = 1;
 
-      while ((which = player_find_pendto(pp1, -1, -1)) != -1) {
-        foo = parray[pp1].p_to_list[which].whoto;
-        pprintf_prompt(foo, "\n%s, who was challenging you, has joined a match with %s.\n", parray[pp1].name, parray[pp].name);
-        pprintf(pp1, "Challenge to %s withdrawn.\n", parray[foo].name);
-        player_remove_request(pp1, foo, -1);
-      }
+		if ((pp = parray[p].partner) >= 0 &&
+		    (pp1 = parray[p1].partner) >= 0) {
+			// stop observing when match starts
+			unobserveAll(pp);
+			unobserveAll(pp1);
 
-      while ((which = player_find_pendfrom(pp, -1, -1)) != -1) {
-        foo = parray[pp].p_from_list[which].whofrom;
-        pprintf_prompt(foo, "\n%s, whom you were challenging, has joined a match with %s.\n", parray[pp].name, parray[pp1].name);
-        pprintf(pp, "Challenge from %s removed.\n", parray[foo].name);
-        player_remove_request(foo, pp, -1);
-      }
+			pprintf(pp, "\nYour partner accepts the challenge of "
+			    "%s.\n", parray[p1].name);
+			pprintf(pp1, "\nYour partner %s's challenge was "
+			    "accepted.\n", parray[p].name);
 
-      while ((which = player_find_pendfrom(pp1, -1, -1)) != -1) {
-        foo = parray[pp1].p_from_list[which].whofrom;
-        pprintf_prompt(foo, "\n%s, whom you were challenging, has joined a match with %s.\n", parray[pp1].name, parray[pp].name);
-        pprintf(pp1, "Challenge from %s removed.\n", parray[foo].name);
-        player_remove_request(foo, pp1, -1);
-      }
-    } else {
-      return COM_OK;
-    }
-  }
+			while ((which = player_find_pendto(pp, -1, -1)) != -1) {
+				foo = parray[pp].p_to_list[which].whoto;
+				pprintf_prompt(foo, "\n%s, who was challenging "
+				    "you, has joined a match with %s.\n",
+				    parray[pp].name,
+				    parray[pp1].name);
+				pprintf(pp, "Challenge to %s withdrawn.\n",
+				    parray[foo].name);
+				player_remove_request(pp, foo, -1);
+			}
 
-  g = game_new();
-  adjourned = 0;
-  if (game_read(g, p, p1) >= 0)
-    adjourned = 1;
-  else if (game_read(g, p1, p) >= 0) {
-    int swap;
-    adjourned = 1;
-    swap = p;
-    p = p1;
-    p1 = swap;
-  }
-  if (!adjourned) {		/* no adjourned game, so begin a new game */
-    game_remove(g);
+			while ((which = player_find_pendto(pp1, -1, -1)) !=
+			    -1) {
+				foo = parray[pp1].p_to_list[which].whoto;
+				pprintf_prompt(foo, "\n%s, who was challenging "
+				    "you, has joined a match with %s.\n",
+				    parray[pp1].name,
+				    parray[pp].name);
+				pprintf(pp1, "Challenge to %s withdrawn.\n",
+				    parray[foo].name);
+				player_remove_request(pp1, foo, -1);
+			}
 
-    if (create_new_match(p, p1, wt, winc, bt, binc, rated, category, board, white) != COM_OK) {
-      sprintf(tmp, "There was a problem creating the new match.\n");
-      pprintf(p, tmp);
-      pprintf_prompt(p1, tmp);
-    } else if (bh) {
-      white = (parray[p].side == WHITE ? 0 : 1);
-      if (create_new_match(pp, pp1, wt, winc, bt, binc, rated, category, board, white) != COM_OK) {
-/*        sprintf(tmp, "There was a problem creating the new match.\n"); */
-        pprintf_prompt(pp, tmp);
-        pprintf_prompt(pp1, tmp);
-        sprintf(tmp, "There was a problem creating your partner's match.\n");
-        pprintf(p, tmp);
-        pprintf_prompt(p1, tmp);
-        /* abort first game p-p1   IanO: abort_game()? */
-      } else {
-        int g1 = parray[p].game;
-        int g2 = parray[pp].game;
+			while ((which = player_find_pendfrom(pp, -1, -1)) !=
+			    -1) {
+				foo = parray[pp].p_from_list[which].whofrom;
+				pprintf_prompt(foo, "\n%s, whom you were "
+				    "challenging, has joined a match with %s."
+				    "\n",
+				    parray[pp].name,
+				    parray[pp1].name);
+				pprintf(pp, "Challenge from %s removed.\n",
+				    parray[foo].name);
+				player_remove_request(foo, pp, -1);
+			}
 
-        garray[g1].link = g2;
-        garray[g2].link = g1;
+			while ((which = player_find_pendfrom(pp1, -1, -1)) !=
+			    -1) {
+				foo = parray[pp1].p_from_list[which].whofrom;
+				pprintf_prompt(foo, "\n%s, whom you were "
+				    "challenging, has joined a match with %s."
+				    "\n",
+				    parray[pp1].name,
+				    parray[pp].name);
+				pprintf(pp1, "Challenge from %s removed.\n",
+				    parray[foo].name);
+				player_remove_request(foo, pp1, -1);
+			}
+		} else {
+			return COM_OK;
+		}
+	}
 
-        sprintf(tmp, "\nYour partner is playing game %d (%s vs. %s).\n",
-                g2 + 1, garray[g2].white_name, garray[g2].black_name);
-        pprintf(p, tmp);
-        pprintf_prompt(p1, tmp);
-        sprintf(tmp, "\nYour partner is playing game %d (%s vs. %s).\n",
-                g1 + 1, garray[g1].white_name, garray[g1].black_name);
-        pprintf_prompt(pp, tmp);
-        pprintf_prompt(pp1, tmp);
-      }
-    }
-  } else {			/* resume adjourned game */
-    game_delete(p, p1);
+	g = game_new();
+	adjourned = 0;
 
-    sprintf(tmp, "{Game %d (%s vs. %s) Continuing %s %s match.}\n",
-            g+1, parray[p].name, parray[p1].name,
-            rstr[garray[g].rated], bstr[garray[g].type]);
-    pprintf(p, tmp);
-    pprintf(p1, tmp);
+	if (game_read(g, p, p1) >= 0) {
+		adjourned = 1;
+	} else if (game_read(g, p1, p) >= 0) {
+		int	swap;
 
-    garray[g].white = p;
-    garray[g].black = p1;
-    garray[g].status = GAME_ACTIVE;
-    garray[g].result = END_NOTENDED;
-    garray[g].startTime = tenth_secs();
-    garray[g].lastMoveTime = garray[g].startTime;
-    garray[g].lastDecTime = garray[g].startTime;
-    parray[p].game = g;
-    parray[p].opponent = p1;
-    parray[p].side = WHITE;
-    parray[p1].game = g;
-    parray[p1].opponent = p;
-    parray[p1].side = BLACK;
+		adjourned = 1;
+		swap = p;
+		p = p1;
+		p1 = swap;
+	}
+
+	if (!adjourned) {	// No adjourned game, so begin a new game.
+		game_remove(g);
+
+		if (create_new_match(p, p1, wt, winc, bt, binc, rated, category,
+		    board, white) != COM_OK) {
+			snprintf(tmp, sizeof tmp, "There was a problem "
+			    "creating the new match.\n");
+			pprintf(p, tmp);
+			pprintf_prompt(p1, tmp);
+		} else if (bh) {
+			white = (parray[p].side == WHITE ? 0 : 1);
+
+			if (create_new_match(pp, pp1, wt, winc, bt, binc, rated,
+			    category, board, white) != COM_OK) {
+//				snprintf(tmp, sizeof tmp, "There was a problem "
+//				    "creating the new match.\n");
+				pprintf_prompt(pp, tmp);
+				pprintf_prompt(pp1, tmp);
+
+				snprintf(tmp, sizeof tmp, "There was a problem "
+				    "creating your partner's match.\n");
+				pprintf(p, tmp);
+				pprintf_prompt(p1, tmp);
+				// IanO: abort_game()?
+			} else {
+				int	g1 = parray[p].game;
+				int	g2 = parray[pp].game;
+
+				garray[g1].link = g2;
+				garray[g2].link = g1;
+
+				snprintf(tmp, sizeof tmp, "\nYour partner is "
+				    "playing game %d (%s vs. %s).\n",
+				    (g2 + 1),
+				    garray[g2].white_name,
+				    garray[g2].black_name);
+				pprintf(p, tmp);
+				pprintf_prompt(p1, tmp);
+
+				snprintf(tmp, sizeof tmp, "\nYour partner is "
+				    "playing game %d (%s vs. %s).\n",
+				    (g1 + 1),
+				    garray[g1].white_name,
+				    garray[g1].black_name);
+				pprintf_prompt(pp, tmp);
+				pprintf_prompt(pp1, tmp);
+			}
+		}
+	} else {	// resume adjourned game
+		game_delete(p, p1);
+
+		snprintf(tmp, sizeof tmp, "{Game %d (%s vs. %s) Continuing "
+		    "%s %s match.}\n",
+		    (g + 1),
+		    parray[p].name,
+		    parray[p1].name,
+		    rstr[garray[g].rated],
+		    bstr[garray[g].type]);
+
+		pprintf(p, tmp);
+		pprintf(p1, tmp);
+
+		garray[g].white = p;
+		garray[g].black = p1;
+		garray[g].status = GAME_ACTIVE;
+		garray[g].result = END_NOTENDED;
+		garray[g].startTime = tenth_secs();
+		garray[g].lastMoveTime = garray[g].startTime;
+		garray[g].lastDecTime = garray[g].startTime;
+		parray[p].game = g;
+		parray[p].opponent = p1;
+		parray[p].side = WHITE;
+
+		parray[p1].game = g;
+		parray[p1].opponent = p;
+		parray[p1].side = BLACK;
 
 #ifdef TIMESEAL
-
-    garray[g].wRealTime = garray[g].wTime * 100;
-    garray[g].bRealTime = garray[g].bTime * 100;
-    garray[g].wTimeWhenReceivedMove = 0;
-    garray[g].bTimeWhenReceivedMove = 0;
-
+		garray[g].wRealTime = garray[g].wTime * 100;
+		garray[g].bRealTime = garray[g].bTime * 100;
+		garray[g].wTimeWhenReceivedMove = 0;
+		garray[g].bTimeWhenReceivedMove = 0;
 #endif
 
-    send_boards(g);
-  }
-  return COM_OK;
+		send_boards(g);
+	}
+
+	return COM_OK;
 }
 
 PRIVATE void
