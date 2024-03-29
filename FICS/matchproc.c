@@ -21,6 +21,9 @@
    name		email			yy/mm/dd	Change
    hersco dhersco@stmarys-ca.edu        95/07/24	Created
    Markus Uhlin                         23/12/14	Fixed compiler warnings
+   Markus Uhlin                         24/03/29	Refactored and
+							reformatted all
+							functions.
 */
 
 #include "stdinclude.h"
