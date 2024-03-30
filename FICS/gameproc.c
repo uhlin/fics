@@ -269,24 +269,24 @@ PUBLIC void game_ended(int g, int winner, int why)
   game_finish(g);
 }
 
-PRIVATE int was_promoted(game *g, int f, int r)
+PRIVATE int
+was_promoted(game *g, int f, int r)
 {
 #define BUGHOUSE_PAWN_REVERT 1
-#ifdef BUGHOUSE_PAWN_REVERT
-  int i;
-
-  for (i = g->numHalfMoves-2; i > 0; i -= 2) {
-    if (g->moveList[i].toFile == f && g->moveList[i].toRank == r) {
-      if (g->moveList[i].piecePromotionTo)
-	return 1;
-      if (g->moveList[i].fromFile == ALG_DROP)
-	return 0;
-      f = g->moveList[i].fromFile;
-      r = g->moveList[i].fromRank;
-    }
-  }
+#if BUGHOUSE_PAWN_REVERT
+	for (int i = g->numHalfMoves-2; i > 0; i -= 2) {
+		if (g->moveList[i].toFile == f &&
+		    g->moveList[i].toRank == r) {
+			if (g->moveList[i].piecePromotionTo)
+				return 1;
+			if (g->moveList[i].fromFile == ALG_DROP)
+				return 0;
+			f = g->moveList[i].fromFile;
+			r = g->moveList[i].fromRank;
+		}
+	}
 #endif
-  return 0;
+	return 0;
 }
 
 PUBLIC int
