@@ -1119,50 +1119,68 @@ PUBLIC int com_flag(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_adjourn(int p, param_list param)
+PUBLIC int
+com_adjourn(int p, param_list param)
 {
-  int p1, g, myColor, yourColor;
+	int	p1, g, myColor, yourColor;
 
-  ASSERT(param[0].type == TYPE_NULL);
-  if (!pIsPlaying(p))
-    return COM_OK;
+	ASSERT(param[0].type == TYPE_NULL);
 
-  p1 = parray[p].opponent;
-  g = parray[p].game;
-  if (!(parray[p].registered && parray[p1].registered)) {
-    pprintf(p, "Both players must be registered to adjorn a game.  Use \"abort\".\n");
-    return COM_OK;
-  }
-  if (garray[g].link >= 0) {
-    pprintf(p, "Bughouse games cannot be adjourned.\n");
-    return COM_OK;
-  }
-  myColor = (p == garray[g].white ? WHITE : BLACK);
-  yourColor = (myColor == WHITE ? BLACK : WHITE);
+	if (!pIsPlaying(p))
+		return COM_OK;
 
-  if (player_find_pendfrom(p, p1, PEND_ADJOURN) >= 0) {
-    player_remove_request(p1, p, PEND_ADJOURN);
-    player_decline_offers(p, -1, -1);
-    game_ended(parray[p].game, yourColor, END_ADJOURN);
-  } else {
-    game_update_time(g);
-    if (((myColor == WHITE) && (garray[g].wTime > 0) && (garray[g].bTime <= 0))
-	|| ((myColor == BLACK) && (garray[g].bTime > 0) && (garray[g].wTime <= 0))) {
-/* player wants to adjourn + opponent is out of time = courtesyadjourn */
-      pprintf(p, "Since you have time, and your opponent has none, the game has been adjourned.");
-      pprintf(p1, "Your opponent has adjourned the game rather than calling your flag.");
-      player_decline_offers(p, -1, -1);
-      game_ended(g, myColor, END_COURTESYADJOURN);
-    } else {
-      pprintf(p1, "\n");
-      pprintf_highlight(p1, "%s", parray[p].name);
-      pprintf(p1, " would like to adjourn the game; ");
-      pprintf_prompt(p1, "type \"adjourn\" to accept.\n");
-      pprintf(p, "Adjourn request sent.\n");
-      player_add_request(p, p1, PEND_ADJOURN, 0);
-    }
-  }
-  return COM_OK;
+	p1 = parray[p].opponent;
+	g = parray[p].game;
+
+	if (!(parray[p].registered && parray[p1].registered)) {
+		pprintf(p, "Both players must be registered to adjorn a game. "
+		    "Use \"abort\".\n");
+		return COM_OK;
+	}
+
+	if (garray[g].link >= 0) {
+		pprintf(p, "Bughouse games cannot be adjourned.\n");
+		return COM_OK;
+	}
+
+	myColor		= (p == garray[g].white ? WHITE : BLACK);
+	yourColor	= (myColor == WHITE ? BLACK : WHITE);
+
+	if (player_find_pendfrom(p, p1, PEND_ADJOURN) >= 0) {
+		player_remove_request(p1, p, PEND_ADJOURN);
+		player_decline_offers(p, -1, -1);
+		game_ended(parray[p].game, yourColor, END_ADJOURN);
+	} else {
+		game_update_time(g);
+
+		if ((myColor == WHITE &&
+		    garray[g].wTime > 0 &&
+		    garray[g].bTime <= 0) ||
+		    (myColor == BLACK &&
+		    garray[g].bTime > 0 &&
+		    garray[g].wTime <= 0)) {
+			/*
+			 * Player wants to adjourn + opponent is out
+			 * of time = courtesyadjourn.
+			 */
+
+			pprintf(p, "Since you have time, and your opponent "
+			    "has none, the game has been adjourned.");
+			pprintf(p1, "Your opponent has adjourned the game "
+			    "rather than calling your flag.");
+			player_decline_offers(p, -1, -1);
+			game_ended(g, myColor, END_COURTESYADJOURN);
+		} else {
+			pprintf(p1, "\n");
+			pprintf_highlight(p1, "%s", parray[p].name);
+			pprintf(p1, " would like to adjourn the game; ");
+			pprintf_prompt(p1, "type \"adjourn\" to accept.\n");
+			pprintf(p, "Adjourn request sent.\n");
+			player_add_request(p, p1, PEND_ADJOURN, 0);
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
