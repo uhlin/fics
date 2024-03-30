@@ -138,8 +138,8 @@ ECO_init(void)
 
 		/* XXX */
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-		strcat(FENpos, " ");
-		strcat(FENpos, onMove);
+		(void) strlcat(FENpos, " ", sizeof FENpos);
+		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
@@ -202,8 +202,8 @@ NIC_init(void)
 			continue;
 
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-		strcat(FENpos, " ");
-		strcat(FENpos, onMove);
+		(void) strlcat(FENpos, " ", sizeof FENpos);
+		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
@@ -260,8 +260,8 @@ LONG_init(void)
 
 		/* XXX */
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
-		strcat(FENpos, " ");
-		strcat(FENpos, onMove);
+		(void) strlcat(FENpos, " ", sizeof FENpos);
+		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
