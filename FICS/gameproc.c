@@ -46,227 +46,276 @@
 #include "rmalloc.h"
 #include "utils.h"
 
-PUBLIC void game_ended(int g, int winner, int why)
+#if __linux__
+#include <bsd/string.h>
+#endif
+
+PUBLIC void
+game_ended(int g, int winner, int why)
 {
-  char outstr[200];
-  char tmp[200];
-  int p;
-  int gl = garray[g].link;
-  int rate_change = 0;
-  int isDraw = 0;
-  int whiteResult;
-  char winSymbol[10];
-  char EndSymbol[10];
-  char *NameOfWinner, *NameOfLoser;
-  int beingplayed = 0;		/* i.e. it wasn't loaded for adjudication */
+	char	*NameOfWinner, *NameOfLoser;
+	char	 EndSymbol[10] = { '\0' };
+	char	 outstr[200] = { '\0' };
+	char	 tmp[200] = { '\0' };
+	char	 winSymbol[10] = { '\0' };
+	int	 beingplayed = 0; // i.e. it wasn't loaded for adjudication
+	int	 gl = garray[g].link;
+	int	 isDraw = 0;
+	int	 p;
+	int	 rate_change = 0;
+	int	 whiteResult;
 
-  beingplayed = (parray[garray[g].black].game == g);
+	beingplayed = (parray[garray[g].black].game == g);
 
-  sprintf(outstr, "\n{Game %d (%s vs. %s) ", g + 1,
-	  parray[garray[g].white].name,
-	  parray[garray[g].black].name);
-  garray[g].result = why;
-  garray[g].winner = winner;
-  if (winner == WHITE) {
-    whiteResult = RESULT_WIN;
-    strcpy(winSymbol, "1-0");
-    NameOfWinner = parray[garray[g].white].name;
-    NameOfLoser = parray[garray[g].black].name;
-  } else {
-    whiteResult = RESULT_LOSS;
-    strcpy(winSymbol, "0-1");
-    NameOfWinner = parray[garray[g].black].name;
-    NameOfLoser = parray[garray[g].white].name;
-  }
-  switch (why) {
-  case END_CHECKMATE:
-    sprintf(tmp, "%s checkmated} %s\n", NameOfLoser, winSymbol);
-    strcpy(EndSymbol, "Mat");
-    rate_change = 1;
-    break;
-  case END_RESIGN:
-    sprintf(tmp, "%s resigns} %s\n", NameOfLoser, winSymbol);
-    strcpy(EndSymbol, "Res");
-    rate_change = 1;
-    break;
-  case END_FLAG:
-    sprintf(tmp, "%s forfeits on time} %s\n", NameOfLoser, winSymbol);
-    strcpy(EndSymbol, "Fla");
-    rate_change = 1;
-    break;
-  case END_STALEMATE:
-    sprintf(tmp, "Game drawn by stalemate} 1/2-1/2\n");
-    isDraw = 1;
-    strcpy(EndSymbol, "Sta");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_AGREEDDRAW:
-    sprintf(tmp, "Game drawn by mutual agreement} 1/2-1/2\n");
-    isDraw = 1;
-    strcpy(EndSymbol, "Agr");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_BOTHFLAG:
-    sprintf(tmp, "Game drawn because both players ran out of time} 1/2-1/2\n");
-    isDraw = 1;
-    strcpy(EndSymbol, "Fla");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_REPETITION:
-    sprintf(tmp, "Game drawn by repetition} 1/2-1/2\n");
-    isDraw = 1;
-    strcpy(EndSymbol, "Rep");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_50MOVERULE:
-    sprintf(tmp, "Game drawn by the 50 move rule} 1/2-1/2\n");
-    isDraw = 1;
-    strcpy(EndSymbol, "50");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_ADJOURN:
-    if (gl >= 0) {
-      sprintf(tmp, "Bughouse game aborted.} *\n");
-      whiteResult = RESULT_ABORT;
-    } else {
-    sprintf(tmp, "Game adjourned by mutual agreement} *\n");
-    game_save(g);
-    }
-    break;
-  case END_LOSTCONNECTION:
-    sprintf(tmp, "%s lost connection; game ", NameOfWinner);
-    if (parray[garray[g].white].registered && parray[garray[g].black].registered
-        && gl < 0) {
-      sprintf(tmp, "adjourned} *\n");
-      game_save(g);
-    } else
-      sprintf(tmp, "aborted} *\n");
-    whiteResult = RESULT_ABORT;
-    break;
-  case END_ABORT:
-    sprintf(tmp, "Game aborted by mutual agreement} *\n");
-    whiteResult = RESULT_ABORT;
-    break;
-  case END_COURTESY:
-    sprintf(tmp, "Game courtesyaborted by %s} *\n", NameOfWinner);
-    whiteResult = RESULT_ABORT;
-    break;
-  case END_COURTESYADJOURN:
-    if (gl >= 0) {
-      sprintf(tmp, "Bughouse game courtesyaborted by %s.} *\n", NameOfWinner);
-      whiteResult = RESULT_ABORT;
-    } else {
-    sprintf(tmp, "Game courtesyadjourned by %s} *\n", NameOfWinner);
-    game_save(g);
-    }
-    break;
-  case END_NOMATERIAL:
-    /* Draw by insufficient material (e.g., lone K vs. lone K) */
-    sprintf(tmp, "Neither player has mating material} 1/2-1/2\n");
-    isDraw = 1;
-    strcpy(EndSymbol, "NM ");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_FLAGNOMATERIAL:
-    sprintf(tmp, "%s ran out of time and %s has no material to mate} 1/2-1/2\n",
-	    NameOfLoser, NameOfWinner);
-    isDraw = 1;
-    strcpy(EndSymbol, "TM ");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_ADJWIN:
-    sprintf(tmp, "%s wins by adjudication} %s\n", NameOfWinner, winSymbol);
-    strcpy(EndSymbol, "Adj");
-    rate_change = 1;
-    break;
-  case END_ADJDRAW:
-    sprintf(tmp, "Game drawn by adjudication} 1/2-1/2\n");
-    isDraw = 1;
-    strcpy(EndSymbol, "Adj");
-    rate_change = 1;
-    whiteResult = RESULT_DRAW;
-    break;
-  case END_ADJABORT:
-    sprintf(tmp, "Game aborted by adjudication} *\n");
-    whiteResult = RESULT_ABORT;
-    break;
-  default:
-    sprintf(tmp, "Hmm, the game ended and I don't know why} *\n");
-    break;
-  }
-  strcat(outstr, tmp);
-  if (beingplayed) {
-    pprintf_noformat(garray[g].white, outstr);
-    pprintf_noformat(garray[g].black, outstr);
-    if (parray[garray[g].white].bell)
-      pprintf (garray[g].white, "\007");
-    if (parray[garray[g].black].bell)
-      pprintf (garray[g].black, "\007");
+	(void) snprintf(outstr, sizeof outstr, "\n{Game %d (%s vs. %s) ",
+	    (g + 1),
+	    parray[garray[g].white].name,
+	    parray[garray[g].black].name);
 
-    garray[g].link = -1;		/*IanO: avoids recursion */
-    if (gl >= 0 && garray[gl].link >= 0) {
-      pprintf_noformat(garray[gl].white, outstr);
-      pprintf_noformat(garray[gl].black, outstr);
-      game_ended(gl, CToggle(winner), why);
-    }
+	garray[g].result = why;
+	garray[g].winner = winner;
 
-    for (p = 0; p < p_num; p++) {
-      if ((p == garray[g].white) || (p == garray[g].black))
-	continue;
-      if (parray[p].status != PLAYER_PROMPT)
-	continue;
-      if (!parray[p].i_game && !player_is_observe(p, g))
-	continue;
-      pprintf_noformat(p, outstr);
-      pprintf_prompt(p, "%s", "");
-    }
-  }
-  if ((garray[g].rated) && (rate_change)) {
-    /* Adjust ratings */
-    rating_update(g);
+	if (winner == WHITE) {
+		whiteResult = RESULT_WIN;
+		strcpy(winSymbol, "1-0");
+		NameOfWinner = parray[garray[g].white].name;
+		NameOfLoser = parray[garray[g].black].name;
+	} else {
+		whiteResult = RESULT_LOSS;
+		strcpy(winSymbol, "0-1");
+		NameOfWinner = parray[garray[g].black].name;
+		NameOfLoser = parray[garray[g].white].name;
+	}
 
-  } else {
-    if (beingplayed) {
-      pprintf(garray[g].white, "No ratings adjustment done.\n");
-      pprintf(garray[g].black, "No ratings adjustment done.\n");
-    }
-  }
-  if (rate_change && gl < 0)
-    game_write_complete(g, isDraw, EndSymbol);
-  /* Mail off the moves */
-  if (parray[garray[g].white].automail) {
-    pcommand(garray[g].white, "mailmoves");
-  }
-  if (parray[garray[g].black].automail) {
-    pcommand(garray[g].black, "mailmoves");
-  }
-  parray[garray[g].white].num_white++;
-  parray[garray[g].white].lastColor = WHITE;
-  parray[garray[g].black].num_black++;
-  parray[garray[g].black].lastColor = BLACK;
-  parray[garray[g].white].last_opponent = garray[g].black;
-  parray[garray[g].black].last_opponent = garray[g].white;
-  if (beingplayed) {
-    parray[garray[g].white].game = -1;
-    parray[garray[g].black].game = -1;
-    parray[garray[g].white].opponent = -1;
-    parray[garray[g].black].opponent = -1;
-    if (garray[g].white != commanding_player)
-      pprintf_prompt(garray[g].white, "%s", "");
-    if (garray[g].black != commanding_player)
-      pprintf_prompt(garray[g].black, "%s", "");
-    if (parray[garray[g].white].simul_info.numBoards) {
-      player_simul_over(garray[g].white, g, whiteResult);
-    }
-  }
-  game_finish(g);
+	switch (why) {
+	case END_CHECKMATE:
+		snprintf(tmp, sizeof tmp, "%s checkmated} %s\n",
+		    NameOfLoser,
+		    winSymbol);
+		strcpy(EndSymbol, "Mat");
+		rate_change = 1;
+		break;
+	case END_RESIGN:
+		snprintf(tmp, sizeof tmp, "%s resigns} %s\n",
+		    NameOfLoser,
+		    winSymbol);
+		strcpy(EndSymbol, "Res");
+		rate_change = 1;
+		break;
+	case END_FLAG:
+		snprintf(tmp, sizeof tmp, "%s forfeits on time} %s\n",
+		    NameOfLoser,
+		    winSymbol);
+		strcpy(EndSymbol, "Fla");
+		rate_change = 1;
+		break;
+	case END_STALEMATE:
+		strlcpy(tmp, "Game drawn by stalemate} 1/2-1/2\n", sizeof tmp);
+		isDraw = 1;
+		strcpy(EndSymbol, "Sta");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_AGREEDDRAW:
+		strlcpy(tmp, "Game drawn by mutual agreement} 1/2-1/2\n",
+		    sizeof tmp);
+		isDraw = 1;
+		strcpy(EndSymbol, "Agr");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_BOTHFLAG:
+		strlcpy(tmp, "Game drawn because both players ran out of "
+		    "time} 1/2-1/2\n", sizeof tmp);
+		isDraw = 1;
+		strcpy(EndSymbol, "Fla");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_REPETITION:
+		strlcpy(tmp, "Game drawn by repetition} 1/2-1/2\n", sizeof tmp);
+		isDraw = 1;
+		strcpy(EndSymbol, "Rep");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_50MOVERULE:
+		strlcpy(tmp, "Game drawn by the 50 move rule} 1/2-1/2\n",
+		    sizeof tmp);
+		isDraw = 1;
+		strcpy(EndSymbol, "50");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_ADJOURN:
+		if (gl >= 0) {
+			strlcpy(tmp, "Bughouse game aborted.} *\n",
+			    sizeof tmp);
+			whiteResult = RESULT_ABORT;
+		} else {
+			strlcpy(tmp, "Game adjourned by mutual agreement} *\n",
+			    sizeof tmp);
+			game_save(g);
+		}
+		break;
+	case END_LOSTCONNECTION:
+		snprintf(tmp, sizeof tmp, "%s lost connection; game ",
+		    NameOfWinner);
+
+		if (parray[garray[g].white].registered &&
+		    parray[garray[g].black].registered &&
+		    gl < 0) {
+			strlcpy(tmp, "adjourned} *\n", sizeof tmp);
+			game_save(g);
+		} else
+			strlcpy(tmp, "aborted} *\n", sizeof tmp);
+		whiteResult = RESULT_ABORT;
+		break;
+	case END_ABORT:
+		strlcpy(tmp, "Game aborted by mutual agreement} *\n",
+		    sizeof tmp);
+		whiteResult = RESULT_ABORT;
+		break;
+	case END_COURTESY:
+		snprintf(tmp, sizeof tmp, "Game courtesyaborted by %s} *\n",
+		    NameOfWinner);
+		whiteResult = RESULT_ABORT;
+		break;
+	case END_COURTESYADJOURN:
+		if (gl >= 0) {
+			snprintf(tmp, sizeof tmp, "Bughouse game "
+			    "courtesyaborted by %s.} *\n",
+			    NameOfWinner);
+			whiteResult = RESULT_ABORT;
+		} else {
+			snprintf(tmp, sizeof tmp, "Game courtesyadjourned by "
+			    "%s} *\n",
+			    NameOfWinner);
+			game_save(g);
+		}
+		break;
+	case END_NOMATERIAL:
+		// Draw by insufficient material (e.g., lone K vs. lone K)
+		strlcpy(tmp, "Neither player has mating material} 1/2-1/2\n",
+		    sizeof tmp);
+		isDraw = 1;
+		strcpy(EndSymbol, "NM ");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_FLAGNOMATERIAL:
+		snprintf(tmp, sizeof tmp, "%s ran out of time and %s has no "
+		    "material to mate} 1/2-1/2\n",
+		    NameOfLoser,
+		    NameOfWinner);
+		isDraw = 1;
+		strcpy(EndSymbol, "TM ");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_ADJWIN:
+		snprintf(tmp, sizeof tmp, "%s wins by adjudication} %s\n",
+		    NameOfWinner, winSymbol);
+		strcpy(EndSymbol, "Adj");
+		rate_change = 1;
+		break;
+	case END_ADJDRAW:
+		strlcpy(tmp, "Game drawn by adjudication} 1/2-1/2\n",
+		    sizeof tmp);
+		isDraw = 1;
+		strcpy(EndSymbol, "Adj");
+		rate_change = 1;
+		whiteResult = RESULT_DRAW;
+		break;
+	case END_ADJABORT:
+		strlcpy(tmp, "Game aborted by adjudication} *\n", sizeof tmp);
+		whiteResult = RESULT_ABORT;
+		break;
+	default:
+		strlcpy(tmp, "Hmm, the game ended and I don't know why} *\n",
+		    sizeof tmp);
+		break;
+	}
+
+	strcat(outstr, tmp);
+
+	if (beingplayed) {
+		pprintf_noformat(garray[g].white, outstr);
+		pprintf_noformat(garray[g].black, outstr);
+
+		if (parray[garray[g].white].bell)
+			pprintf(garray[g].white, "\007");
+		if (parray[garray[g].black].bell)
+			pprintf(garray[g].black, "\007");
+
+		garray[g].link = -1;	// IanO: avoids recursion
+
+		if (gl >= 0 && garray[gl].link >= 0) {
+			pprintf_noformat(garray[gl].white, outstr);
+			pprintf_noformat(garray[gl].black, outstr);
+
+			game_ended(gl, CToggle(winner), why);
+		}
+
+		for (p = 0; p < p_num; p++) {
+			if (p == garray[g].white || p == garray[g].black)
+				continue;
+			if (parray[p].status != PLAYER_PROMPT)
+				continue;
+			if (!parray[p].i_game && !player_is_observe(p, g))
+				continue;
+
+			pprintf_noformat(p, outstr);
+			pprintf_prompt(p, "%s", "");
+		}
+	}
+
+	if (garray[g].rated && rate_change) {
+		/* Adjust ratings */
+		rating_update(g);
+	} else {
+		if (beingplayed) {
+			pprintf(garray[g].white, "No ratings adjustment done."
+			    "\n");
+			pprintf(garray[g].black, "No ratings adjustment done."
+			    "\n");
+		}
+	}
+
+	if (rate_change && gl < 0)
+		game_write_complete(g, isDraw, EndSymbol);
+
+	/*
+	 * Mail off the moves
+	 */
+	if (parray[garray[g].white].automail)
+		pcommand(garray[g].white, "mailmoves");
+	if (parray[garray[g].black].automail)
+		pcommand(garray[g].black, "mailmoves");
+
+	parray[garray[g].white].num_white++;
+	parray[garray[g].white].lastColor = WHITE;
+	parray[garray[g].black].num_black++;
+	parray[garray[g].black].lastColor = BLACK;
+	parray[garray[g].white].last_opponent = garray[g].black;
+	parray[garray[g].black].last_opponent = garray[g].white;
+
+	if (beingplayed) {
+		parray[garray[g].white].game = -1;
+		parray[garray[g].black].game = -1;
+		parray[garray[g].white].opponent = -1;
+		parray[garray[g].black].opponent = -1;
+
+		if (garray[g].white != commanding_player)
+			pprintf_prompt(garray[g].white, "%s", "");
+		if (garray[g].black != commanding_player)
+			pprintf_prompt(garray[g].black, "%s", "");
+
+		if (parray[garray[g].white].simul_info.numBoards)
+			player_simul_over(garray[g].white, g, whiteResult);
+	}
+
+	game_finish(g);
 }
 
 PRIVATE int
