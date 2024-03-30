@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.1] - 2024-03-30 ##
 - **Added** `PRINTFLIKE()` and fixed many format errors.
 - **Added** argument lists to many function declarations.
 - **Added** initialization of many variables.
