@@ -1369,158 +1369,203 @@ PUBLIC int com_boards(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_simmatch(int p, param_list param)
+PUBLIC int
+com_simmatch(int p, param_list param)
 {
-  int p1, g, adjourned;
-  int num;
-  char tmp[100];
+	char	tmp[100] = { '\0' };
+	int	num;
+	int	p1, g, adjourned;
 
-  if ((parray[p].game >=0) &&(garray[parray[p].game].status == GAME_EXAMINE)) {
-    pprintf(p, "You are still examining a game.\n");
-    return COM_OK;
-  }
-  p1 = player_find_part_login(param[0].val.word);
-  if (p1 < 0) {
-    pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-    return COM_OK;
-  }
-  if (p == p1) {
-    pprintf(p, "You can't simmatch yourself!\n");
-    return COM_OK;
-  }
-  if (player_find_pendfrom(p, p1, PEND_SIMUL) >= 0) {
-    player_remove_request(p, p1, PEND_MATCH);
-    player_remove_request(p1, p, PEND_MATCH);
-    player_remove_request(p, p1, PEND_SIMUL);
-    player_remove_request(p1, p, PEND_SIMUL);
-    player_withdraw_offers(p, -1, PEND_SIMUL);
-    player_decline_offers(p1, -1, PEND_SIMUL);
-    player_withdraw_offers(p1, -1, PEND_SIMUL);
-    player_decline_offers(p, -1, PEND_MATCH);
-    player_withdraw_offers(p, -1, PEND_MATCH);
-    player_decline_offers(p1, -1, PEND_MATCH);
-    player_withdraw_offers(p1, -1, PEND_MATCH);
-    player_decline_offers(p, -1, PEND_PARTNER);
-    player_withdraw_offers(p, -1, PEND_PARTNER);
-    player_decline_offers(p1, -1, PEND_PARTNER);
-    player_withdraw_offers(p1, -1, PEND_PARTNER);
+	if (parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE) {
+		pprintf(p, "You are still examining a game.\n");
+		return COM_OK;
+	}
 
-    /* Accepting Simul ! */
+	p1 = player_find_part_login(param[0].val.word);
 
-    if (parray[p].simul_info.numBoards >= MAX_SIMUL) {
-      pprintf(p, "You are already playing the maximum of %d boards.\n", MAX_SIMUL);
-      pprintf(p1, "Simul request removed, boards filled.\n");
-      return COM_OK;
-    }
-    unobserveAll(p);		/* stop observing when match starts */
-    unobserveAll(p1);
+	if (p1 < 0) {
+		pprintf(p, "No user named \"%s\" is logged in.\n",
+		    param[0].val.word);
+		return COM_OK;
+	}
 
-    g = game_new();
-    adjourned = 0;
-    if (game_read(g, p, p1) >= 0)
-      adjourned = 1;
-    if (!adjourned) {		/* no adjourned game, so begin a new game */
-      game_remove(g);
+	if (p == p1) {
+		pprintf(p, "You can't simmatch yourself!\n");
+		return COM_OK;
+	}
 
-      if (create_new_match(p, p1, 0, 0, 0, 0, 0, "standard", "standard", 1)) {
-	pprintf(p, "There was a problem creating the new match.\n");
-	pprintf_prompt(p1, "There was a problem creating the new match.\n");
+	if (player_find_pendfrom(p, p1, PEND_SIMUL) >= 0) {
+		player_remove_request(p, p1, PEND_MATCH);
+		player_remove_request(p1, p, PEND_MATCH);
+		player_remove_request(p, p1, PEND_SIMUL);
+		player_remove_request(p1, p, PEND_SIMUL);
+		player_withdraw_offers(p, -1, PEND_SIMUL);
+		player_decline_offers(p1, -1, PEND_SIMUL);
+		player_withdraw_offers(p1, -1, PEND_SIMUL);
+		player_decline_offers(p, -1, PEND_MATCH);
+		player_withdraw_offers(p, -1, PEND_MATCH);
+		player_decline_offers(p1, -1, PEND_MATCH);
+		player_withdraw_offers(p1, -1, PEND_MATCH);
+		player_decline_offers(p, -1, PEND_PARTNER);
+		player_withdraw_offers(p, -1, PEND_PARTNER);
+		player_decline_offers(p1, -1, PEND_PARTNER);
+		player_withdraw_offers(p1, -1, PEND_PARTNER);
+
+		if (parray[p].simul_info.numBoards >= MAX_SIMUL) {
+			pprintf(p, "You are already playing the maximum of %d "
+			    "boards.\n", MAX_SIMUL);
+			pprintf(p1, "Simul request removed, boards filled.\n");
+			return COM_OK;
+		}
+
+		// stop observing when match starts
+		unobserveAll(p);
+		unobserveAll(p1);
+
+		g = game_new();
+		adjourned = 0;
+
+		if (game_read(g, p, p1) >= 0)
+			adjourned = 1;
+
+		if (!adjourned) { // no adjourned game - so begin a new game.
+			game_remove(g);
+
+			if (create_new_match(p, p1, 0, 0, 0, 0, 0, "standard",
+			    "standard", 1)) {
+				pprintf(p, "There was a problem creating the "
+				    "new match.\n");
+				pprintf_prompt(p1, "There was a problem "
+				    "creating the new match.\n");
+				return COM_OK;
+			}
+		} else { // resume adjourned game
+			game_delete(p, p1);
+
+			snprintf(tmp, sizeof tmp, "{Game %d (%s vs. %s) "
+			    "Continuing %s %s simul.}\n",
+			    (g + 1),
+			    parray[p].name,
+			    parray[p1].name,
+			    rstr[garray[g].rated],
+			    bstr[garray[g].type]);
+
+			pprintf(p, tmp);
+			pprintf(p1, tmp);
+
+			garray[g].white = p;
+			garray[g].black = p1;
+			garray[g].status = GAME_ACTIVE;
+			garray[g].startTime = tenth_secs();
+			garray[g].lastMoveTime = garray[g].startTime;
+			garray[g].lastDecTime = garray[g].startTime;
+			parray[p].game = g;
+			parray[p].opponent = p1;
+			parray[p].side = WHITE;
+			parray[p1].game = g;
+			parray[p1].opponent = p;
+			parray[p1].side = BLACK;
+
+			send_boards(g);
+		}
+
+		num = parray[p].simul_info.numBoards;
+
+		parray[p].simul_info.results[num] = -1;
+		parray[p].simul_info.boards[num] = parray[p].game;
+		parray[p].simul_info.numBoards++;
+
+		if (parray[p].simul_info.numBoards > 1 &&
+		    parray[p].simul_info.onBoard >= 0)
+			player_goto_board(p, parray[p].simul_info.onBoard);
+		else
+			parray[p].simul_info.onBoard = 0;
+		return COM_OK;
+	}
+
+	if (player_find_pendfrom(p, -1, PEND_SIMUL) >= 0) {
+		pprintf(p, "You cannot be the simul giver and request to join "
+		    "another simul.\nThat would just be too confusing for me "
+		    "and you.\n");
+		return COM_OK;
+	}
+
+	if (parray[p].simul_info.numBoards) {
+		pprintf(p, "You cannot be the simul giver and request to join "
+		    "another simul.\nThat would just be too confusing for me "
+		    "and you.\n");
+		return COM_OK;
+	}
+
+	if (parray[p].game >= 0) {
+		pprintf(p, "You are already playing a game.\n");
+		return COM_OK;
+	}
+
+	if (!parray[p1].sopen) {
+		pprintf_highlight(p, "%s", parray[p1].name);
+		pprintf(p, " is not open to receiving simul requests.\n");
+		return COM_OK;
+	}
+
+	if (parray[p1].simul_info.numBoards >= MAX_SIMUL) {
+		pprintf_highlight(p, "%s", parray[p1].name);
+		pprintf(p, " is already playing the maximum of %d boards.\n",
+		    MAX_SIMUL);
+		return COM_OK;
+	}
+
+	// loon: checking for some crazy situations we can't allow :)
+	if (parray[p1].game >= 0 && parray[p1].simul_info.numBoards == 0) {
+		pprintf_highlight(p, "%s", parray[p1].name);
+
+		if (parray[garray[parray[p1].game].white].simul_info.numBoards) {
+			pprintf(p, " is playing in ");
+			pprintf_highlight(p, "%s",
+			    parray[parray[p1].opponent].name);
+			pprintf(p, "'s simul, and can't accept.\n");
+		} else {
+			pprintf(p, " can't begin a simul while playing a "
+			    "non-simul game.\n");
+		}
+
+		return COM_OK;
+	}
+
+	g = game_new();
+	adjourned = ((game_read(g, p, p1) < 0 && game_read(g, p1, p) < 0)
+	    ? 0 : 1);
+
+	if (adjourned) {
+		if (!(garray[g].type == TYPE_UNTIMED))
+			adjourned = 0;
+	}
+
+	game_remove(g);
+
+	if (player_add_request(p, p1, PEND_SIMUL, 0)) {
+		pprintf(p, "Maximum number of pending actions reached. "
+		    "Your request was not sent.\nTry again later.\n");
+		return COM_OK;
+	} else {
+
+		pprintf(p1, "\n");
+		pprintf_highlight(p1, "%s", parray[p].name);
+
+		if (adjourned) {
+			pprintf_prompt(p1, " requests to continue an "
+			    "adjourned simul game.\n");
+			pprintf(p, "Request to resume simul sent. "
+			    "Adjourned game found.\n");
+		} else {
+			pprintf_prompt(p1, " requests to join a simul match "
+			    "with you.\n");
+			pprintf(p, "Simul match request sent.\n");
+		}
+	}
+
 	return COM_OK;
-      }
-    } else {			/* resume adjourned game */
-      game_delete(p, p1);
-
-      sprintf(tmp, "{Game %d (%s vs. %s) Continuing %s %s simul.}\n", g + 1, parray[p].name, parray[p1].name, rstr[garray[g].rated], bstr[garray[g].type]);
-      pprintf(p, tmp);
-      pprintf(p1, tmp);
-
-      garray[g].white = p;
-      garray[g].black = p1;
-      garray[g].status = GAME_ACTIVE;
-      garray[g].startTime = tenth_secs();
-      garray[g].lastMoveTime = garray[g].startTime;
-      garray[g].lastDecTime = garray[g].startTime;
-      parray[p].game = g;
-      parray[p].opponent = p1;
-      parray[p].side = WHITE;
-      parray[p1].game = g;
-      parray[p1].opponent = p;
-      parray[p1].side = BLACK;
-      send_boards(g);
-    }
-
-    num = parray[p].simul_info.numBoards;
-    parray[p].simul_info.results[num] = -1;
-    parray[p].simul_info.boards[num] = parray[p].game;
-    parray[p].simul_info.numBoards++;
-    if (parray[p].simul_info.numBoards > 1 &&
-	parray[p].simul_info.onBoard >= 0)
-      player_goto_board(p, parray[p].simul_info.onBoard);
-    else
-      parray[p].simul_info.onBoard = 0;
-    return COM_OK;
-  }
-  if (player_find_pendfrom(p, -1, PEND_SIMUL) >= 0) {
-    pprintf(p, "You cannot be the simul giver and request to join another simul.\nThat would just be too confusing for me and you.\n");
-    return COM_OK;
-  }
-  if (parray[p].simul_info.numBoards) {
-    pprintf(p, "You cannot be the simul giver and request to join another simul.\nThat would just be too confusing for me and you.\n");
-    return COM_OK;
-  }
-  if (parray[p].game >=0) {
-    pprintf(p, "You are already playing a game.\n");
-    return COM_OK;
-  }
-  if (!parray[p1].sopen) {
-    pprintf_highlight(p, "%s", parray[p1].name);
-    pprintf(p, " is not open to receiving simul requests.\n");
-    return COM_OK;
-  }
-  if (parray[p1].simul_info.numBoards >= MAX_SIMUL) {
-    pprintf_highlight(p, "%s", parray[p1].name);
-    pprintf(p, " is already playing the maximum of %d boards.\n", MAX_SIMUL);
-    return COM_OK;
-  }
-/* loon: checking for some crazy situations we can't allow :) */
-
-  if ((parray[p1].game >=0) &&(parray[p1].simul_info.numBoards == 0)) {
-    pprintf_highlight(p, "%s", parray[p1].name);
-    if (parray[garray[parray[p1].game].white].simul_info.numBoards) {
-      pprintf(p, " is playing in ");
-      pprintf_highlight(p, "%s", parray[parray[p1].opponent].name);
-      pprintf(p, "'s simul, and can't accept.\n");
-    } else {
-      pprintf(p, " can't begin a simul while playing a non-simul game.\n");
-    }
-    return COM_OK;
-  }
-/* loon: this was (p, p1, PEND_SIMUL) but player_add_request needs 4 args...
-if 0 is the incorrect 4th arg, please fix :) */
-
-  g = game_new();		/* Check if an adjourned untimed game */
-  adjourned = ((game_read(g, p, p1) < 0) && (game_read(g, p1, p) < 0)) ? 0 : 1;
-  if (adjourned) {
-    if (!(garray[g].type == TYPE_UNTIMED))
-      adjourned = 0;
-  }
-  game_remove(g);
-
-  if (player_add_request(p, p1, PEND_SIMUL, 0)) {
-    pprintf(p, "Maximum number of pending actions reached. Your request was not sent.\nTry again later.\n");
-    return COM_OK;
-  } else {
-    pprintf(p1, "\n");
-    pprintf_highlight(p1, "%s", parray[p].name);
-    if (adjourned) {
-      pprintf_prompt(p1, " requests to continue an adjourned simul game.\n");
-      pprintf(p, "Request to resume simul sent. Adjourned game found.\n");
-    } else {
-      pprintf_prompt(p1, " requests to join a simul match with you.\n");
-      pprintf(p, "Simul match request sent.\n");
-    }
-  }
-  return COM_OK;
 }
 
 PUBLIC int
