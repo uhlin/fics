@@ -1615,46 +1615,57 @@ PUBLIC int com_simnext(int p, param_list param)
 }
 
 
-PUBLIC int com_simprev(int p, param_list param)
+PUBLIC int
+com_simprev(int p, param_list param)
 {
-  int on, g;
+	int on, g;
 
-  if (!parray[p].simul_info.numBoards) {
-    pprintf(p, "You are not giving a simul.\n");
-    return COM_OK;
-  }
-  if (parray[p].simul_info.numBoards > 1) {
-    player_decline_offers(p, -1, -PEND_SIMUL);
-    on = parray[p].simul_info.onBoard;
-    g = parray[p].simul_info.boards[on];
-    if (g >= 0) {
-      pprintf(garray[g].black, "\n");
-      pprintf_highlight(garray[g].black, "%s", parray[p].name);
-      pprintf_prompt(garray[g].black, " is moving back to the previous board.\n");
-    }
-    player_goto_prev_board(p);
-  } else
-    pprintf(p, "You are only playing one board!\n");
-  return COM_OK;
+	if (!parray[p].simul_info.numBoards) {
+		pprintf(p, "You are not giving a simul.\n");
+		return COM_OK;
+	}
+
+	if (parray[p].simul_info.numBoards > 1) {
+		player_decline_offers(p, -1, -PEND_SIMUL);
+		on = parray[p].simul_info.onBoard;
+		g = parray[p].simul_info.boards[on];
+
+		if (g >= 0) {
+			pprintf(garray[g].black, "\n");
+			pprintf_highlight(garray[g].black, "%s",
+			    parray[p].name);
+			pprintf_prompt(garray[g].black, " is moving back to "
+			    "the previous board.\n");
+		}
+
+		player_goto_prev_board(p);
+	} else
+		pprintf(p, "You are only playing one board!\n");
+	return COM_OK;
 }
 
-PUBLIC int com_simgames(int p, param_list param)
+PUBLIC int
+com_simgames(int p, param_list param)
 {
-  int p1 = p;
+	int p1 = p;
 
-  if (param[0].type == TYPE_WORD) {
-    if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
-      pprintf(p, "No player named %s is logged in.\n", param[0].val.word);
-      return COM_OK;
-    }
-  }
-  if (p1 == p)
-    pprintf(p, "You are playing %d simultaneous games.\n",
-	    player_num_active_boards(p1));
-  else
-    pprintf(p, "%s is playing %d simultaneous games.\n", parray[p1].name,
-	    player_num_active_boards(p1));
-  return COM_OK;
+	if (param[0].type == TYPE_WORD) {
+		if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
+			pprintf(p, "No player named %s is logged in.\n",
+			    param[0].val.word);
+			return COM_OK;
+		}
+	}
+
+	if (p1 == p) {
+		pprintf(p, "You are playing %d simultaneous games.\n",
+		    player_num_active_boards(p1));
+	} else {
+		pprintf(p, "%s is playing %d simultaneous games.\n",
+		    parray[p1].name, player_num_active_boards(p1));
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
