@@ -1591,29 +1591,33 @@ PUBLIC int com_gonum(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_simnext(int p, param_list param)
+PUBLIC int
+com_simnext(int p, param_list param)
 {
-  int on, g;
+	int on, g;
 
-  if (!parray[p].simul_info.numBoards) {
-    pprintf(p, "You are not giving a simul.\n");
-    return COM_OK;
-  }
-  if (parray[p].simul_info.numBoards > 1) {
-    player_decline_offers(p, -1, -PEND_SIMUL);
-    on = parray[p].simul_info.onBoard;
-    g = parray[p].simul_info.boards[on];
-    if (g >= 0) {
-      pprintf(garray[g].black, "\n");
-      pprintf_highlight(garray[g].black, "%s", parray[p].name);
-      pprintf_prompt(garray[g].black, " is moving away from your board.\n");
-      player_goto_next_board(p);
-    }
-  } else
-    pprintf(p, "You are only playing one board!\n");
-  return COM_OK;
+	if (!parray[p].simul_info.numBoards) {
+		pprintf(p, "You are not giving a simul.\n");
+		return COM_OK;
+	}
+
+	if (parray[p].simul_info.numBoards > 1) {
+		player_decline_offers(p, -1, -PEND_SIMUL);
+		on = parray[p].simul_info.onBoard;
+		g = parray[p].simul_info.boards[on];
+
+		if (g >= 0) {
+			pprintf(garray[g].black, "\n");
+			pprintf_highlight(garray[g].black, "%s",
+			    parray[p].name);
+			pprintf_prompt(garray[g].black, " is moving away from "
+			    "your board.\n");
+			player_goto_next_board(p);
+		}
+	} else
+		pprintf(p, "You are only playing one board!\n");
+	return COM_OK;
 }
-
 
 PUBLIC int
 com_simprev(int p, param_list param)
