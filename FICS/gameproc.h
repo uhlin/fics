@@ -28,39 +28,36 @@
 #define MAX_SIMPASS 3
 #define MAX_JOURNAL 10
 
-extern void game_ended();
-extern int pIsPlaying();
-extern void process_move();
-extern int com_resign();
-extern int com_draw();
-extern int com_pause();
-extern int com_unpause();
-extern int com_abort();
-extern int com_games();
+#include "command.h" /* param_list */
 
-extern int com_courtesyabort();
-extern int com_courtesyadjourn();
-extern int com_load();
-extern int com_stored();
-extern int com_adjourn();
-extern int com_flag();
-extern int com_takeback();
-extern int com_switch();
-extern int com_time();
-extern int com_boards();
+extern int	com_abort(int, param_list);
+extern int	com_adjourn(int, param_list);
+extern int	com_boards(int, param_list);
+extern int	com_courtesyabort(int, param_list);
+extern int	com_courtesyadjourn(int, param_list);
+extern int	com_draw(int, param_list);
+extern int	com_flag(int, param_list);
+extern int	com_goboard(int, param_list);
+extern int	com_gonum(int, param_list);
+extern int	com_moretime(int, param_list);
+extern int	com_pause(int, param_list);
+extern int	com_resign(int, param_list);
+extern int	com_simabort(int, param_list);
+extern int	com_simadjourn(int, param_list);
+extern int	com_simallabort(int, param_list);
+extern int	com_simalladjourn(int, param_list);
+extern int	com_simgames(int, param_list);
+extern int	com_simmatch(int, param_list);
+extern int	com_simnext(int, param_list);
+extern int	com_simpass(int, param_list);
+extern int	com_simprev(int, param_list);
+extern int	com_switch(int, param_list);
+extern int	com_takeback(int, param_list);
+extern int	com_time(int, param_list);
+extern int	com_unpause(int, param_list);
 
-extern int com_simmatch();
-extern int com_simnext();
-extern int com_simprev();
-extern int com_goboard();
-extern int com_gonum();
-extern int com_simgames();
-extern int com_simpass();
-extern int com_simabort();
-extern int com_simallabort();
-extern int com_simadjourn();
-extern int com_simalladjourn();
-
-extern int com_moretime();
+extern int	pIsPlaying(int);
+extern void	game_ended(int, int, int);
+extern void	process_move(int, char *);
 
 #endif /* _GAMEPROC_H */
