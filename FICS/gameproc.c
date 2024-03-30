@@ -1330,43 +1330,45 @@ PUBLIC int com_time(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_boards(int p, param_list param)
+PUBLIC int
+com_boards(int p, param_list param)
 {
-  char *category = NULL;
-  char dname[MAX_FILENAME_SIZE];
-  DIR *dirp;
+	DIR		*dirp;
+	char		*category = NULL;
+	char		 dname[MAX_FILENAME_SIZE] = { '\0' };
 #ifdef USE_DIRENT
-  struct dirent *dp;
+	struct dirent	*dp;
 #else
-  struct direct *dp;
+	struct direct	*dp;
 #endif
 
-  if (param[0].type == TYPE_WORD)
-    category = param[0].val.word;
-  if (category) {
-    pprintf(p, "Boards Available For Category %s:\n", category);
-    sprintf(dname, "%s/%s", board_dir, category);
-  } else {
-    pprintf(p, "Categories Available:\n");
-    sprintf(dname, "%s", board_dir);
-  }
-  dirp = opendir(dname);
-  if (!dirp) {
-    pprintf(p, "No such category %s, try \"boards\".\n", category);
-    return COM_OK;
-  }
+	if (param[0].type == TYPE_WORD)
+		category = param[0].val.word;
 
-/* YUK! what a mess, how about printing an ordered directory? - DAV*/
+	if (category) {
+		pprintf(p, "Boards Available For Category %s:\n", category);
+		snprintf(dname, sizeof dname, "%s/%s", board_dir, category);
+	} else {
+		pprintf(p, "Categories Available:\n");
+		snprintf(dname, sizeof dname, "%s", board_dir);
+	}
 
-  for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
-    if (!strcmp(dp->d_name, "."))
-      continue;
-    if (!strcmp(dp->d_name, ".."))
-      continue;
-    pprintf(p, "%s\n", dp->d_name);
-  }
-  closedir(dirp);
-  return COM_OK;
+	if ((dirp = opendir(dname)) == NULL) {
+		pprintf(p, "No such category %s, try \"boards\".\n", category);
+		return COM_OK;
+	}
+
+	// YUK! What a mess, how about printing an ordered directory? - DAV
+	for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
+		if (!strcmp(dp->d_name, "."))
+			continue;
+		if (!strcmp(dp->d_name, ".."))
+			continue;
+		pprintf(p, "%s\n", dp->d_name);
+	}
+
+	closedir(dirp);
+	return COM_OK;
 }
 
 PUBLIC int
