@@ -111,10 +111,10 @@ ECO_init(void)
 {
 	FILE	*fp;
 	char	 ECO[4];
-	char	 FENpos[73];
-	char	 filename[1024];
+	char	 FENpos[73] = { '\0' };
+	char	 filename[1024] = { '\0' };
 	char	 onMove[2];
-	char	 tmp[1024];
+	char	 tmp[1024] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
 
@@ -173,11 +173,11 @@ PUBLIC void
 NIC_init(void)
 {
 	FILE	*fp;
-	char	 FENpos[73];
+	char	 FENpos[73] = { '\0' };
 	char	 NIC[6];
-	char	 filename[1024];
+	char	 filename[1024] = { '\0' };
 	char	 onMove[2];
-	char	 tmp[1024];
+	char	 tmp[1024] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
 
@@ -228,11 +228,11 @@ PUBLIC void
 LONG_init(void)
 {
 	FILE	*fp;
-	char	 FENpos[73];
-	char	 LONG[256];
-	char	 filename[1024];
+	char	 FENpos[73] = { '\0' };
+	char	 LONG[256] = { '\0' };
+	char	 filename[1024] = { '\0' };
 	char	 onMove[2];
-	char	 tmp[1024];
+	char	 tmp[1024] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
 
