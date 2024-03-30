@@ -1657,51 +1657,61 @@ PUBLIC int com_simgames(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_simpass(int p, param_list param)
+PUBLIC int
+com_simpass(int p, param_list param)
 {
-  int g, p1, on;
+	int	g, p1, on;
 
-  if (!pIsPlaying(p)) {
-    return COM_OK;
-  }
-  g = parray[p].game;
-  p1 = garray[g].white;
-  if (!parray[p1].simul_info.numBoards) {
-    pprintf(p, "You are not participating in a simul.\n");
-    return COM_OK;
-  }
-  if (p == p1) {
-    pprintf(p, "You are the simul holder and cannot pass!\n");
-    return COM_OK;
-  }
-  if (player_num_active_boards(p1) == 1) {
-    pprintf(p, "This is the only game, so passing is futile.\n");
-    return COM_OK;
-  }
-  on = parray[p1].simul_info.onBoard;
-  if (parray[p1].simul_info.boards[on] != g) {
-    pprintf(p, "You cannot pass until the simul holder arrives!\n");
-    return COM_OK;
-  }
-  if (garray[g].passes >= MAX_SIMPASS) {
-    if (parray[p].bell)
-      pprintf(p, "\a");
-    pprintf(p, "You have reached your maximum of %d pass(es).\n", MAX_SIMPASS);
-    pprintf(p, "Please move IMMEDIATELY!\n");
-    pprintf_highlight(p1, "%s", parray[p].name);
-    pprintf_prompt(p1, " tried to pass, but is out of passes.\n");
-    return COM_OK;
-  }
-  player_decline_offers(p, -1, -PEND_SIMUL);
+	if (!pIsPlaying(p))
+		return COM_OK;
 
-  garray[g].passes++;
-  pprintf(p, "You have passed and have %d pass(es) left.\n",
-	  (MAX_SIMPASS - garray[g].passes));
-  pprintf_highlight(p1, "%s", parray[p].name);
-  pprintf_prompt(p1, " has decided to pass and has %d pass(es) left.\n",
-		 (MAX_SIMPASS - garray[g].passes));
-  player_goto_next_board(p1);
-  return COM_OK;
+	g	= parray[p].game;
+	p1	= garray[g].white;
+
+	if (!parray[p1].simul_info.numBoards) {
+		pprintf(p, "You are not participating in a simul.\n");
+		return COM_OK;
+	}
+
+	if (p == p1) {
+		pprintf(p, "You are the simul holder and cannot pass!\n");
+		return COM_OK;
+	}
+
+	if (player_num_active_boards(p1) == 1) {
+		pprintf(p, "This is the only game, so passing is futile.\n");
+		return COM_OK;
+	}
+
+	on = parray[p1].simul_info.onBoard;
+
+	if (parray[p1].simul_info.boards[on] != g) {
+		pprintf(p, "You cannot pass until the simul holder arrives!\n");
+		return COM_OK;
+	}
+
+	if (garray[g].passes >= MAX_SIMPASS) {
+		if (parray[p].bell)
+			pprintf(p, "\a");
+		pprintf(p, "You have reached your maximum of %d pass(es).\n",
+		    MAX_SIMPASS);
+		pprintf(p, "Please move IMMEDIATELY!\n");
+		pprintf_highlight(p1, "%s", parray[p].name);
+		pprintf_prompt(p1, " tried to pass, but is out of passes.\n");
+		return COM_OK;
+	}
+
+	player_decline_offers(p, -1, -PEND_SIMUL);
+	garray[g].passes++;
+
+	pprintf(p, "You have passed and have %d pass(es) left.\n",
+	    (MAX_SIMPASS - garray[g].passes));
+	pprintf_highlight(p1, "%s", parray[p].name);
+	pprintf_prompt(p1, " has decided to pass and has %d pass(es) left.\n",
+	    (MAX_SIMPASS - garray[g].passes));
+	player_goto_next_board(p1);
+
+	return COM_OK;
 }
 
 PUBLIC int
