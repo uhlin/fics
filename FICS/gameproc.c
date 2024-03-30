@@ -887,90 +887,114 @@ PUBLIC int com_unpause(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_abort(int p, param_list param)
+PUBLIC int
+com_abort(int p, param_list param)
 {
-  int p1, g, myColor, yourColor, myGTime, yourGTime;
-  int courtesyOK = 1;
+	int courtesyOK = 1;
+	int p1, g, myColor, yourColor, myGTime, yourGTime;
 
-  ASSERT(param[0].type == TYPE_NULL);
+	ASSERT(param[0].type == TYPE_NULL);
 
-  g = parray[p].game;
-  if (!pIsPlaying(p))
-    return COM_OK;
+	g = parray[p].game;
 
-  p1 = parray[p].opponent;
-  if (p == garray[g].white) {
-    myColor = WHITE;
-    yourColor = BLACK;
-    myGTime = garray[g].wTime;
-    yourGTime = garray[g].bTime;
-  } else {
-    myColor = BLACK;
-    yourColor = WHITE;
-    myGTime = garray[g].bTime;
-    yourGTime = garray[g].wTime;
-  }
-  if (parray[p1].simul_info.numBoards &&
-      parray[p1].simul_info.boards[parray[p1].simul_info.onBoard] != g) {
-    pprintf(p, "You can only make requests when the simul player is at your board.\n");
-    return COM_OK;
-  }
-  if (player_find_pendfrom(p, p1, PEND_ABORT) >= 0) {
-    player_remove_request(p1, p, PEND_ABORT);
-    player_decline_offers(p, -1, -1);
-    game_ended(g, yourColor, END_ABORT);
-  } else {
-    game_update_time(g);
+	if (!pIsPlaying(p))
+		return COM_OK;
+
+	p1 = parray[p].opponent;
+
+	if (p == garray[g].white) {
+		myColor		= WHITE;
+		yourColor	= BLACK;
+		myGTime		= garray[g].wTime;
+		yourGTime	= garray[g].bTime;
+	} else {
+		myColor		= BLACK;
+		yourColor	= WHITE;
+		myGTime		= garray[g].bTime;
+		yourGTime	= garray[g].wTime;
+	}
+
+	if (parray[p1].simul_info.numBoards &&
+	    parray[p1].simul_info.boards[parray[p1].simul_info.onBoard] != g) {
+		pprintf(p, "You can only make requests when the simul player "
+		    "is at your board.\n");
+		return COM_OK;
+	}
+
+	if (player_find_pendfrom(p, p1, PEND_ABORT) >= 0) {
+		player_remove_request(p1, p, PEND_ABORT);
+		player_decline_offers(p, -1, -1);
+		game_ended(g, yourColor, END_ABORT);
+	} else {
+		game_update_time(g);
 
 #ifdef TIMESEAL
-    if (con[parray[p].socket].timeseal
-        && garray[g].game_state.onMove == myColor
-        && garray[g].flag_pending == FLAG_ABORT) {
-      /* It's my move, opponent has asked for abort; I lagged out,
-         my timeseal prevented courtesyabort, and I sent an abort
-         request before acknowledging (and processing) my opponent's
-         courtesyabort.  OK, let's abort already :-). */
-      player_decline_offers(p, -1, -1);
-      game_ended(g, yourColor, END_ABORT);
-    }
+		if (con[parray[p].socket].timeseal &&
+		    garray[g].game_state.onMove == myColor &&
+		    garray[g].flag_pending == FLAG_ABORT) {
+			/*
+			 * It's my move, opponent has asked for abort;
+			 * I lagged out, my timeseal prevented
+			 * courtesyabort, and I sent an abort request
+			 * before acknowledging (and processing) my
+			 * opponent's courtesyabort. OK, let's abort
+			 * already :-).
+			 */
 
-    if (con[parray[p1].socket].timeseal) {	/* opp uses timeseal? */
+			player_decline_offers(p, -1, -1);
+			game_ended(g, yourColor, END_ABORT);
+		}
 
-      int yourRealTime = (myColor == WHITE  ?  garray[g].bRealTime
-       	                                    :  garray[g].wRealTime);
-      if (myGTime > 0 && yourGTime <= 0 && yourRealTime > 0) {
-        /* Override courtesyabort; opponent still has time.  Check for lag. */
-        courtesyOK = 0;
+		if (con[parray[p1].socket].timeseal) { // Opp uses timeseal?
+			int yourRealTime = (myColor == WHITE ?
+			    garray[g].bRealTime : garray[g].wRealTime);
 
-        if (garray[g].game_state.onMove != myColor
-            && garray[g].flag_pending != FLAG_CHECKING) {
-          /* Opponent may be lagging; let's ask. */
-          garray[g].flag_pending = FLAG_ABORT;
-          garray[g].flag_check_time = time(0);
-          pprintf(p, "Opponent has timeseal; trying to courtesyabort.\n");
-          pprintf(p1, "\n[G]\n");
-          return COM_OK;
-        }
-      }
-    }
+			if (myGTime > 0 && yourGTime <= 0 && yourRealTime > 0) {
+				/*
+				 * Override courtesyabort; opponent
+				 * still has time. Check for lag.
+				 */
+				courtesyOK = 0;
+
+				if (garray[g].game_state.onMove != myColor &&
+				    garray[g].flag_pending != FLAG_CHECKING) {
+					// Opponent may be lagging; let's ask.
+					garray[g].flag_pending = FLAG_ABORT;
+					garray[g].flag_check_time = time(0);
+
+					pprintf(p, "Opponent has timeseal; "
+					    "trying to courtesyabort.\n");
+					pprintf(p1, "\n[G]\n");
+
+					return COM_OK;
+				}
+			}
+		}
 #endif
 
-    if (myGTime > 0 && yourGTime <= 0 && courtesyOK) {
-      /* player wants to abort + opponent is out of time = courtesyabort */
-      pprintf(p, "Since you have time, and your opponent has none, the game has been aborted.");
-      pprintf(p1, "Your opponent has aborted the game rather than calling your flag.");
-      player_decline_offers(p, -1, -1);
-      game_ended(g, myColor, END_COURTESY);
-    } else {
-      pprintf(p1, "\n");
-      pprintf_highlight(p1, "%s", parray[p].name);
-      pprintf(p1, " would like to abort the game; ");
-      pprintf_prompt(p1, "type \"abort\" to accept.\n");
-      pprintf(p, "Abort request sent.\n");
-      player_add_request(p, p1, PEND_ABORT, 0);
-    }
-  }
-  return COM_OK;
+		if (myGTime > 0 && yourGTime <= 0 && courtesyOK) {
+			/*
+			 * Player wants to abort + opponent is out of
+			 * time = courtesyabort.
+			 */
+
+			pprintf(p, "Since you have time, and your opponent "
+			    "has none, the game has been aborted.");
+			pprintf(p1, "Your opponent has aborted the game "
+			    "rather than calling your flag.");
+			player_decline_offers(p, -1, -1);
+			game_ended(g, myColor, END_COURTESY);
+		} else {
+			pprintf(p1, "\n");
+			pprintf_highlight(p1, "%s", parray[p].name);
+			pprintf(p1, " would like to abort the game; ");
+			pprintf_prompt(p1, "type \"abort\" to accept.\n");
+			pprintf(p, "Abort request sent.\n");
+			player_add_request(p, p1, PEND_ABORT, 0);
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
