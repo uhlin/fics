@@ -11,6 +11,10 @@
 #include "playerdb.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 PRIVATE char *book_dir = DEFAULT_BOOK;
 
 PRIVATE ECO_entry	*ECO_book[1096];
@@ -126,7 +130,7 @@ ECO_init(void)
 	}
 
 	while (!feof(fp)) {
-		strcpy(ptmp, "");
+		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
 
 		if (feof(fp))
@@ -137,7 +141,7 @@ ECO_init(void)
 		strcat(FENpos, " ");
 		strcat(FENpos, onMove);
 
-		strcpy(ptmp, "");
+		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
 		if (feof(fp))
 			continue;
@@ -149,8 +153,10 @@ ECO_init(void)
 			exit(1);
 		}
 
-		strcpy(ECO_book[i]->ECO, ECO);
-		strcpy(ECO_book[i]->FENpos, FENpos);
+		(void) strlcpy(ECO_book[i]->ECO, ECO,
+		    sizeof(ECO_book[i]->ECO));
+		(void) strlcpy(ECO_book[i]->FENpos, FENpos,
+		    sizeof(ECO_book[i]->FENpos));
 
 		++i;
 	}
@@ -189,7 +195,7 @@ NIC_init(void)
 	}
 
 	while (!feof(fp)) {
-		strcpy(ptmp, "");
+		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
 
 		if (feof(fp))
@@ -199,7 +205,7 @@ NIC_init(void)
 		strcat(FENpos, " ");
 		strcat(FENpos, onMove);
 
-		strcpy(ptmp, "");
+		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
 		if (feof(fp))
 			continue;
@@ -211,8 +217,10 @@ NIC_init(void)
 			exit(1);
 		}
 
-		strcpy(NIC_book[i]->NIC, NIC);
-		strcpy(NIC_book[i]->FENpos, FENpos);
+		(void) strlcpy(NIC_book[i]->NIC, NIC,
+		    sizeof(NIC_book[i]->NIC));
+		(void) strlcpy(NIC_book[i]->FENpos, FENpos,
+		    sizeof(NIC_book[i]->FENpos));
 
 		++i;
 	}
@@ -244,7 +252,7 @@ LONG_init(void)
 	}
 
 	while (!feof(fp)) {
-		strcpy(ptmp, "");
+		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
 
 		if (feof(fp))
@@ -255,7 +263,7 @@ LONG_init(void)
 		strcat(FENpos, " ");
 		strcat(FENpos, onMove);
 
-		strcpy(ptmp, "");
+		(void) strlcpy(ptmp, "", sizeof tmp);
 		fgets(ptmp, 1024, fp);
 		if (feof(fp))
 			continue;
@@ -268,8 +276,10 @@ LONG_init(void)
 			exit(1);
 		}
 
-		strcpy(LONG_book[i]->LONG, LONG);
-		strcpy(LONG_book[i]->FENpos, FENpos);
+		(void) strlcpy(LONG_book[i]->LONG, LONG,
+		    sizeof(LONG_book[i]->LONG));
+		(void) strlcpy(LONG_book[i]->FENpos, FENpos,
+		    sizeof(LONG_book[i]->FENpos));
 
 		++i;
 	}
@@ -299,17 +309,17 @@ getECO(int g)
 
 	if (parray[garray[g].white].private ||
 	    parray[garray[g].black].private) {
-		strcpy(ECO, "---");
+		(void) strlcpy(ECO, "---", sizeof ECO);
 		return ECO;
 	} else {
 		if (garray[g].type == TYPE_WILD) {
-			strcpy(ECO, "---");
+			(void) strlcpy(ECO, "---", sizeof ECO);
 			return ECO;
 		} else if (garray[g].moveList == NULL) {
-			strcpy(ECO, "***");
+			(void) strlcpy(ECO, "***", sizeof ECO);
 			return ECO;
 		} else {
-			strcpy(ECO, "A00");
+			(void) strlcpy(ECO, "A00", sizeof ECO);
 		}
 	}
 
@@ -331,7 +341,8 @@ getECO(int g)
 
 			if (!fencmp(garray[g].moveList[i].FENpos,
 			    ECO_book[x]->FENpos)) {
-				strcpy(ECO, ECO_book[x]->ECO);
+				(void)strlcpy(ECO, ECO_book[x]->ECO,
+				    sizeof ECO);
 				flag = 1;
 			}
 		}
@@ -339,7 +350,7 @@ getECO(int g)
 		i--;
 	} /* while */
 #else
-	strcpy(ECO, "---");
+	(void) strlcpy(ECO, "---", sizeof ECO);
 #endif
 	return ECO;
 }
