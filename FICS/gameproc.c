@@ -690,45 +690,58 @@ process_move(int p, char *command)
 	}
 }
 
-PUBLIC int com_resign(int p, param_list param)
+PUBLIC int
+com_resign(int p, param_list param)
 {
-  int g, o, oconnected;
+	int	g, o, oconnected;
 
-  if (param[0].type == TYPE_NULL) {
-    g = parray[p].game;
-    if (!pIsPlaying(p)) {
-      return COM_OK;
-    } else {
-      player_decline_offers(p, -1, -1);
-      game_ended(g, (garray[g].white == p) ? BLACK : WHITE, END_RESIGN);
-    }
-  } else if (FindPlayer(p, param[0].val.word, &o, &oconnected)) {
-    g = game_new();
-    if (game_read(g, p, o) < 0) {
-      if (game_read(g, o, p) < 0) {
-	pprintf(p, "You have no stored game with %s\n", parray[o].name);
-        if (!oconnected)
-          player_remove(o);
-        return COM_OK;
-      } else {
-	garray[g].white = o;
-	garray[g].black = p;
-      }
-    } else {
-      garray[g].white = p;
-      garray[g].black = o;
-    }
-    pprintf(p, "You resign your stored game with %s\n", parray[o].name);
-    game_delete(garray[g].white, garray[g].black);
-    game_ended(g, (garray[g].white == p) ? BLACK : WHITE, END_RESIGN);
-    pcommand(p, "message %s I have resigned our stored game \"%s vs. %s.\"",
-	     parray[o].name,
-	     parray[garray[g].white].name,
-	     parray[garray[g].black].name);
-    if (!oconnected)
-      player_remove(o);
-  }
-  return COM_OK;
+	if (param[0].type == TYPE_NULL) {
+		g = parray[p].game;
+
+		if (!pIsPlaying(p))
+			return COM_OK;
+		else {
+			player_decline_offers(p, -1, -1);
+			game_ended(g, (garray[g].white == p ? BLACK : WHITE),
+			    END_RESIGN);
+		}
+	} else if (FindPlayer(p, param[0].val.word, &o, &oconnected)) {
+		g = game_new();
+
+		if (game_read(g, p, o) < 0) {
+			if (game_read(g, o, p) < 0) {
+				pprintf(p, "You have no stored game with %s\n",
+				    parray[o].name);
+				if (!oconnected)
+					player_remove(o);
+				return COM_OK;
+			} else {
+				garray[g].white = o;
+				garray[g].black = p;
+			}
+		} else {
+			garray[g].white = p;
+			garray[g].black = o;
+		}
+
+		pprintf(p, "You resign your stored game with %s\n",
+		    parray[o].name);
+
+		game_delete(garray[g].white, garray[g].black);
+		game_ended(g, (garray[g].white == p ? BLACK : WHITE),
+		    END_RESIGN);
+
+		pcommand(p, "message %s I have resigned our stored game "
+		    "\"%s vs. %s.\"",
+		    parray[o].name,
+		    parray[garray[g].white].name,
+		    parray[garray[g].black].name);
+
+		if (!oconnected)
+			player_remove(o);
+	}
+
+	return COM_OK;
 }
 
 PRIVATE int
