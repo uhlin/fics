@@ -745,7 +745,7 @@ int Check50MoveRule (int p, int g)
   return 0;
 }
 
-char *
+PRIVATE char *
 GetFENpos(int g, int half_move)
 {
 	if (half_move < 0)
