@@ -1300,34 +1300,38 @@ PUBLIC int com_switch(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_time(int p, param_list param)
+PUBLIC int
+com_time(int p, param_list param)
 {
-  int p1, g;
+	int	p1, g;
 
-  if (param[0].type == TYPE_NULL) {
-    g = parray[p].game;
-    if (!pIsPlaying(p)) {
-      return COM_OK;
-    }
-  } else {
-    g = GameNumFromParam(p, &p1, &param[0]);
-    if (g < 0)
-      return COM_OK;
-  }
-  if ((g < 0) || (g >= g_num) || (garray[g].status != GAME_ACTIVE)) {
-    pprintf(p, "There is no such game.\n");
-    return COM_OK;
-  }
-  game_update_time(g);
-  pprintf(p, "White (%s) : %d mins, %d secs\n",
-	  parray[garray[g].white].name,
-	  garray[g].wTime / 600,
-	  (garray[g].wTime - ((garray[g].wTime / 600) * 600)) / 10);
-  pprintf(p, "Black (%s) : %d mins, %d secs\n",
-	  parray[garray[g].black].name,
-	  garray[g].bTime / 600,
-	  (garray[g].bTime - ((garray[g].bTime / 600) * 600)) / 10);
-  return COM_OK;
+	if (param[0].type == TYPE_NULL) {
+		g = parray[p].game;
+
+		if (!pIsPlaying(p))
+			return COM_OK;
+	} else {
+		if ((g = GameNumFromParam(p, &p1, &param[0])) < 0)
+			return COM_OK;
+	}
+
+	if (g < 0 || g >= g_num || garray[g].status != GAME_ACTIVE) {
+		pprintf(p, "There is no such game.\n");
+		return COM_OK;
+	}
+
+	game_update_time(g);
+
+	pprintf(p, "White (%s) : %d mins, %d secs\n",
+		parray[garray[g].white].name,
+		garray[g].wTime / 600,
+		(garray[g].wTime - ((garray[g].wTime / 600) * 600)) / 10);
+	pprintf(p, "Black (%s) : %d mins, %d secs\n",
+		parray[garray[g].black].name,
+		garray[g].bTime / 600,
+		(garray[g].bTime - ((garray[g].bTime / 600) * 600)) / 10);
+
+	return COM_OK;
 }
 
 PUBLIC int
