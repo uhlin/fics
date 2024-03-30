@@ -973,16 +973,18 @@ PUBLIC int com_abort(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_courtesyabort(int p, param_list param)
+PUBLIC int
+com_courtesyabort(int p, param_list param)
 {
-  pprintf(p, "Courtesyabort is obsolete; use \"abort\" instead.\n");
-  return COM_OK;
+	pprintf(p, "Courtesyabort is obsolete; use \"abort\" instead.\n");
+	return COM_OK;
 }
 
-PUBLIC int com_courtesyadjourn(int p, param_list param)
+PUBLIC int
+com_courtesyadjourn(int p, param_list param)
 {
-  pprintf(p, "Use \"adjourn\" to courtesyadjourn a game.\n");
-  return COM_OK;
+	pprintf(p, "Use \"adjourn\" to courtesyadjourn a game.\n");
+	return COM_OK;
 }
 
 PRIVATE int
