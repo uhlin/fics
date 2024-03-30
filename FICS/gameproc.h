@@ -26,8 +26,8 @@
 #ifndef _GAMEPROC_H
 #define _GAMEPROC_H
 
-#define MAX_SIMPASS 3
-#define MAX_JOURNAL 10
+#define MAX_SIMPASS	3
+#define MAX_JOURNAL	10
 
 #include "command.h" /* param_list */
 
