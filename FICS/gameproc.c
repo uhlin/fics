@@ -753,34 +753,41 @@ GetFENpos(int g, int half_move)
 	return ((char *)garray[g].moveList[half_move].FENpos);
 }
 
-int CheckRepetition (int p, int g)
+PRIVATE int
+CheckRepetition(int p, int g)
 {
-  int move_num;
-  int flag1 = 1, flag2 = 1;
-  char *pos1 = GetFENpos (g, garray[g].numHalfMoves - 1);
-  char *pos2 = GetFENpos (g, garray[g].numHalfMoves);
-  char *pos;
+	char	*pos1 = GetFENpos(g, garray[g].numHalfMoves - 1);
+	char	*pos2 = GetFENpos(g, garray[g].numHalfMoves);
+	char	*pos;
+	int	 flag1 = 1, flag2 = 1;
+	int	 move_num;
 
-  if (garray[g].numHalfMoves < 8)  /* can't have three repeats any quicker. */
-    return 0;
+	if (garray[g].numHalfMoves < 8) // Can't have three repeats any quicker.
+		return 0;
 
-  for (move_num = garray[g].game_state.lastIrreversable;
-       move_num < garray[g].numHalfMoves - 1; move_num++) {
-    pos = GetFENpos (g, move_num);
-    if (strlen(pos1) == strlen(pos) && !strcmp(pos1, pos))
-      flag1++;
-    if (strlen(pos2) == strlen(pos) && !strcmp(pos2, pos))
-      flag2++;
-  }
-  if (flag1 >= 3 || flag2 >= 3) {
-    if (player_find_pendfrom(p, parray[p].opponent, PEND_DRAW) >= 0) {
-      player_remove_request(parray[p].opponent, p, PEND_DRAW);
-      player_decline_offers(p, -1, -1);
-    }
-    game_ended(g, (garray[g].white == p) ? BLACK : WHITE, END_REPETITION);
-    return 1;
-  }
-  else return 0;
+	for (move_num = garray[g].game_state.lastIrreversable;
+	    move_num < garray[g].numHalfMoves - 1;
+	    move_num++) {
+		pos = GetFENpos(g, move_num);
+
+		if (strlen(pos1) == strlen(pos) && !strcmp(pos1, pos))
+			flag1++;
+		if (strlen(pos2) == strlen(pos) && !strcmp(pos2, pos))
+			flag2++;
+	}
+
+	if (flag1 >= 3 || flag2 >= 3) {
+		if (player_find_pendfrom(p, parray[p].opponent, PEND_DRAW)
+		    >= 0) {
+			player_remove_request(parray[p].opponent, p, PEND_DRAW);
+			player_decline_offers(p, -1, -1);
+		}
+
+		game_ended(g, (garray[g].white == p ? BLACK : WHITE),
+		    END_REPETITION);
+		return 1;
+	} else
+		return 0;
 }
 
 PUBLIC int
