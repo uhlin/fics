@@ -24,6 +24,8 @@
    						Second is 'obsproc.c'.
    Markus Uhlin			23/12/16	Fixed compiler warnings
    Markus Uhlin			24/01/04	Fixed pprintf_prompt() calls
+   Markus Uhlin			24/03/30	Refactored and reformatted all
+						functions.
 */
 
 #include "stdinclude.h"
