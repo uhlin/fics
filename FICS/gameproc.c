@@ -1764,49 +1764,56 @@ PUBLIC int com_simalladjourn(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_moretime(int p, param_list param)
+PUBLIC int
+com_moretime(int p, param_list param)
 {
-  int g, increment;
+	int	g, increment;
 
-  ASSERT(param[0].type == TYPE_INT);
-  if ((parray[p].game >=0) &&(garray[parray[p].game].status == GAME_EXAMINE)) {
-    pprintf(p, "You cannot use moretime in an examined game.\n");
-    return COM_OK;
-  }
-  increment = param[0].val.integer;
-  if (increment <= 0) {
-    pprintf(p, "Moretime requires an integer value greater than zero.\n");
-    return COM_OK;
-  }
-  if (!pIsPlaying(p)) {
-    return COM_OK;
-  }
-  if (increment > 600) {
-    pprintf(p, "Moretime has a maximum limit of 600 seconds.\n");
-    increment = 600;
-  }
-  g = parray[p].game;
-  if (garray[g].white == p) {
-    garray[g].bTime += increment * 10;
+	ASSERT(param[0].type == TYPE_INT);
+
+	if (parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE) {
+		pprintf(p, "You cannot use moretime in an examined game.\n");
+		return COM_OK;
+	}
+
+	if ((increment = param[0].val.integer) <= 0) {
+		pprintf(p, "Moretime requires an integer value greater than "
+		    "zero.\n");
+		return COM_OK;
+	}
+
+	if (!pIsPlaying(p))
+		return COM_OK;
+
+	if (increment > 600) {
+		pprintf(p, "Moretime has a maximum limit of 600 seconds.\n");
+		increment = 600;
+	}
+
+	g = parray[p].game;
+
+	if (garray[g].white == p) {
+		garray[g].bTime += increment * 10;
 #ifdef TIMESEAL
-    garray[g].bRealTime += increment * 10 * 100;
+		garray[g].bRealTime += increment * 10 * 100;
 #endif
-    pprintf(p, "%d seconds were added to your opponents clock\n",
-	    increment);
-    pprintf_prompt(parray[p].opponent,
-		   "\nYour opponent has added %d seconds to your clock.\n",
-		   increment);
-  }
-  if (garray[g].black == p) {
-    garray[g].wTime += increment * 10;;
+		pprintf(p, "%d seconds were added to your opponents clock\n",
+		    increment);
+		pprintf_prompt(parray[p].opponent, "\nYour opponent has "
+		    "added %d seconds to your clock.\n", increment);
+	}
+
+	if (garray[g].black == p) {
+		garray[g].wTime += increment * 10;;
 #ifdef TIMESEAL
-    garray[g].wRealTime += increment * 10 * 100;
+		garray[g].wRealTime += increment * 10 * 100;
 #endif
-    pprintf(p, "%d seconds were added to your opponents clock\n",
-	    increment);
-    pprintf_prompt(parray[p].opponent,
-		   "\nYour opponent has added %d seconds to your clock.\n",
-		   increment);
-  }
-  return COM_OK;
+		pprintf(p, "%d seconds were added to your opponents clock\n",
+		    increment);
+		pprintf_prompt(parray[p].opponent, "\nYour opponent has "
+		    "added %d seconds to your clock.\n", increment);
+	}
+
+	return COM_OK;
 }
