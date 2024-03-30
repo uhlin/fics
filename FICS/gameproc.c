@@ -783,36 +783,41 @@ int CheckRepetition (int p, int g)
   else return 0;
 }
 
-PUBLIC int com_draw(int p, param_list param)
+PUBLIC int
+com_draw(int p, param_list param)
 {
-  int p1, g = parray[p].game;
+	int p1, g = parray[p].game;
 
-  ASSERT(param[0].type == TYPE_NULL);
-  if (!pIsPlaying(p)) {
-    return COM_OK;
-  }
-  if (Check50MoveRule (p, g) || CheckRepetition(p, g)) {
-    return COM_OK;
-  }
-  p1 = parray[p].opponent;
-  if (parray[p1].simul_info.numBoards &&
-      parray[p1].simul_info.boards[parray[p1].simul_info.onBoard] !=
-      g) {
-    pprintf(p, "You can only make requests when the simul player is at your board.\n");
-    return COM_OK;
-  }
-  if (player_find_pendfrom(p, parray[p].opponent, PEND_DRAW) >= 0) {
-    player_remove_request(parray[p].opponent, p, PEND_DRAW);
-    player_decline_offers(p, -1, -1);
-    game_ended(g, (garray[g].white == p) ? BLACK : WHITE, END_AGREEDDRAW);
-  } else {
-    pprintf(parray[p].opponent, "\n");
-    pprintf_highlight(parray[p].opponent, "%s", parray[p].name);
-    pprintf_prompt(parray[p].opponent, " offers you a draw.\n");
-    pprintf(p, "Draw request sent.\n");
-    player_add_request(p, parray[p].opponent, PEND_DRAW, 0);
-  }
-  return COM_OK;
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if (!pIsPlaying(p))
+		return COM_OK;
+	if (Check50MoveRule(p, g) || CheckRepetition(p, g))
+		return COM_OK;
+
+	p1 = parray[p].opponent;
+
+	if (parray[p1].simul_info.numBoards &&
+	    parray[p1].simul_info.boards[parray[p1].simul_info.onBoard] != g) {
+		pprintf(p, "You can only make requests when the simul player "
+		    "is at your board.\n");
+		return COM_OK;
+	}
+
+	if (player_find_pendfrom(p, parray[p].opponent, PEND_DRAW) >= 0) {
+		player_remove_request(parray[p].opponent, p, PEND_DRAW);
+		player_decline_offers(p, -1, -1);
+		game_ended(g, (garray[g].white == p ? BLACK : WHITE),
+		    END_AGREEDDRAW);
+	} else {
+		pprintf(parray[p].opponent, "\n");
+		pprintf_highlight(parray[p].opponent, "%s", parray[p].name);
+		pprintf_prompt(parray[p].opponent, " offers you a draw.\n");
+		pprintf(p, "Draw request sent.\n");
+		player_add_request(p, parray[p].opponent, PEND_DRAW, 0);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
