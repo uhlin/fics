@@ -5,6 +5,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "board.h"
 #include "command.h"
 #include "config.h"
@@ -128,10 +130,8 @@ ECO_init(void)
 
 	snprintf(filename, sizeof filename, "%s/eco999.idx", book_dir);
 
-	if ((fp = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "Could not open ECO file (%s)\n", filename);
-		exit(1);
-	}
+	if ((fp = fopen(filename, "r")) == NULL)
+		err(1, "Could not open ECO file (%s)", filename);
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
@@ -151,11 +151,8 @@ ECO_init(void)
 			continue;
 		sscanf(ptmp, "%[0-z]", ECO);
 
-		if ((ECO_book[i] = malloc(sizeof(ECO_entry))) == NULL) {
-			fprintf(stderr, "Cound not alloc mem for ECO "
-			    "entry %d.\n", i);
-			exit(1);
-		}
+		if ((ECO_book[i] = malloc(sizeof(ECO_entry))) == NULL)
+			err(1, "Cound not alloc mem for ECO entry %d", i);
 
 		(void) strlcpy(ECO_book[i]->ECO, ECO,
 		    sizeof(ECO_book[i]->ECO));
@@ -193,10 +190,8 @@ NIC_init(void)
 
 	snprintf(filename, sizeof filename, "%s/nic999.idx", book_dir);
 
-	if ((fp = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "Could not open NIC file\n");
-		exit(1);
-	}
+	if ((fp = fopen(filename, "r")) == NULL)
+		err(1, "Could not open NIC file (%s)", filename);
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
@@ -215,11 +210,8 @@ NIC_init(void)
 			continue;
 		sscanf(ptmp, "%[.-z]", NIC);
 
-		if ((NIC_book[i] = malloc(sizeof(NIC_entry))) == NULL) {
-			fprintf(stderr, "Cound not alloc mem for NIC "
-			    "entry %d.\n", i);
-			exit(1);
-		}
+		if ((NIC_book[i] = malloc(sizeof(NIC_entry))) == NULL)
+			err(1, "Cound not alloc mem for NIC entry %d", i);
 
 		(void) strlcpy(NIC_book[i]->NIC, NIC,
 		    sizeof(NIC_book[i]->NIC));
@@ -250,10 +242,8 @@ LONG_init(void)
 
 	snprintf(filename, sizeof filename, "%s/long999.idx", book_dir);
 
-	if ((fp = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "Could not open LONG file\n");
-		exit(1);
-	}
+	if ((fp = fopen(filename, "r")) == NULL)
+		err(1, "Could not open LONG file (%s)", filename);
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
@@ -273,11 +263,8 @@ LONG_init(void)
 			continue;
 		sscanf(ptmp, "%[^*\n]", LONG);
 
-		if ((LONG_book[i] = malloc(sizeof(LONG_entry))) == NULL) {
-			fprintf(stderr, "Cound not alloc mem for "
-			    "LONG entry %d.\n", i);
-			exit(1);
-		}
+		if ((LONG_book[i] = malloc(sizeof(LONG_entry))) == NULL)
+			err(1, "Cound not alloc mem for LONG entry %d", i);
 
 		(void) strlcpy(LONG_book[i]->LONG, LONG,
 		    sizeof(LONG_book[i]->LONG));
