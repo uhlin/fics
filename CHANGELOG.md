@@ -28,6 +28,8 @@ documented in this file.
   checks.
 - Replaced _multiple_ occurrences of `strcpy()` and `strcat()` with
   size-bounded versions.
+- Switched to the usage of the functions from `err.h` in multiple
+  places for error handling.
 
 ## [1.0] - 2023-12-28 ##
 - Added a new build system (and deleted the old).
