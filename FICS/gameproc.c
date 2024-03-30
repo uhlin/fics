@@ -79,12 +79,12 @@ game_ended(int g, int winner, int why)
 
 	if (winner == WHITE) {
 		whiteResult = RESULT_WIN;
-		strcpy(winSymbol, "1-0");
+		strlcpy(winSymbol, "1-0", sizeof winSymbol);
 		NameOfWinner = parray[garray[g].white].name;
 		NameOfLoser = parray[garray[g].black].name;
 	} else {
 		whiteResult = RESULT_LOSS;
-		strcpy(winSymbol, "0-1");
+		strlcpy(winSymbol, "0-1", sizeof winSymbol);
 		NameOfWinner = parray[garray[g].black].name;
 		NameOfLoser = parray[garray[g].white].name;
 	}
@@ -94,27 +94,27 @@ game_ended(int g, int winner, int why)
 		snprintf(tmp, sizeof tmp, "%s checkmated} %s\n",
 		    NameOfLoser,
 		    winSymbol);
-		strcpy(EndSymbol, "Mat");
+		strlcpy(EndSymbol, "Mat", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_RESIGN:
 		snprintf(tmp, sizeof tmp, "%s resigns} %s\n",
 		    NameOfLoser,
 		    winSymbol);
-		strcpy(EndSymbol, "Res");
+		strlcpy(EndSymbol, "Res", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_FLAG:
 		snprintf(tmp, sizeof tmp, "%s forfeits on time} %s\n",
 		    NameOfLoser,
 		    winSymbol);
-		strcpy(EndSymbol, "Fla");
+		strlcpy(EndSymbol, "Fla", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_STALEMATE:
 		strlcpy(tmp, "Game drawn by stalemate} 1/2-1/2\n", sizeof tmp);
 		isDraw = 1;
-		strcpy(EndSymbol, "Sta");
+		strlcpy(EndSymbol, "Sta", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
@@ -122,7 +122,7 @@ game_ended(int g, int winner, int why)
 		strlcpy(tmp, "Game drawn by mutual agreement} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strcpy(EndSymbol, "Agr");
+		strlcpy(EndSymbol, "Agr", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
@@ -130,14 +130,14 @@ game_ended(int g, int winner, int why)
 		strlcpy(tmp, "Game drawn because both players ran out of "
 		    "time} 1/2-1/2\n", sizeof tmp);
 		isDraw = 1;
-		strcpy(EndSymbol, "Fla");
+		strlcpy(EndSymbol, "Fla", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_REPETITION:
 		strlcpy(tmp, "Game drawn by repetition} 1/2-1/2\n", sizeof tmp);
 		isDraw = 1;
-		strcpy(EndSymbol, "Rep");
+		strlcpy(EndSymbol, "Rep", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
@@ -145,7 +145,7 @@ game_ended(int g, int winner, int why)
 		strlcpy(tmp, "Game drawn by the 50 move rule} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strcpy(EndSymbol, "50");
+		strlcpy(EndSymbol, "50", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
@@ -201,7 +201,7 @@ game_ended(int g, int winner, int why)
 		strlcpy(tmp, "Neither player has mating material} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strcpy(EndSymbol, "NM ");
+		strlcpy(EndSymbol, "NM ", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
@@ -211,21 +211,21 @@ game_ended(int g, int winner, int why)
 		    NameOfLoser,
 		    NameOfWinner);
 		isDraw = 1;
-		strcpy(EndSymbol, "TM ");
+		strlcpy(EndSymbol, "TM ", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_ADJWIN:
 		snprintf(tmp, sizeof tmp, "%s wins by adjudication} %s\n",
 		    NameOfWinner, winSymbol);
-		strcpy(EndSymbol, "Adj");
+		strlcpy(EndSymbol, "Adj", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_ADJDRAW:
 		strlcpy(tmp, "Game drawn by adjudication} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strcpy(EndSymbol, "Adj");
+		strlcpy(EndSymbol, "Adj", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
@@ -1464,8 +1464,10 @@ com_switch(int p, param_list param)
 		parray[p].side = (parray[p].side == WHITE ? BLACK : WHITE);
 
 		strTmp = xstrdup(garray[g].white_name);
-		strcpy(garray[g].white_name, garray[g].black_name);
-		strcpy(garray[g].black_name, strTmp);
+		strlcpy(garray[g].white_name, garray[g].black_name,
+		    sizeof(garray[g].white_name));
+		strlcpy(garray[g].black_name, strTmp,
+		    sizeof(garray[g].black_name));
 		strfree(strTmp);
 
 		parray[parray[p].opponent].side =
