@@ -243,8 +243,8 @@ game_ended(int g, int winner, int why)
 	strlcat(outstr, tmp, sizeof outstr);
 
 	if (beingplayed) {
-		pprintf_noformat(garray[g].white, outstr);
-		pprintf_noformat(garray[g].black, outstr);
+		pprintf_noformat(garray[g].white, "%s", outstr);
+		pprintf_noformat(garray[g].black, "%s", outstr);
 
 		if (parray[garray[g].white].bell)
 			pprintf(garray[g].white, "\007");
@@ -254,8 +254,8 @@ game_ended(int g, int winner, int why)
 		garray[g].link = -1;	// IanO: avoids recursion
 
 		if (gl >= 0 && garray[gl].link >= 0) {
-			pprintf_noformat(garray[gl].white, outstr);
-			pprintf_noformat(garray[gl].black, outstr);
+			pprintf_noformat(garray[gl].white, "%s", outstr);
+			pprintf_noformat(garray[gl].black, "%s", outstr);
 
 			game_ended(gl, CToggle(winner), why);
 		}
@@ -268,7 +268,7 @@ game_ended(int g, int winner, int why)
 			if (!parray[p].i_game && !player_is_observe(p, g))
 				continue;
 
-			pprintf_noformat(p, outstr);
+			pprintf_noformat(p, "%s", outstr);
 			pprintf_prompt(p, "%s", "");
 		}
 	}
@@ -1668,8 +1668,8 @@ com_simmatch(int p, param_list param)
 			    rstr[garray[g].rated],
 			    bstr[garray[g].type]);
 
-			pprintf(p, tmp);
-			pprintf(p1, tmp);
+			pprintf(p, "%s", tmp);
+			pprintf(p1, "%s", tmp);
 
 			garray[g].white = p;
 			garray[g].black = p1;
