@@ -815,50 +815,66 @@ PUBLIC int com_draw(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_pause(int p, param_list param)
+PUBLIC int
+com_pause(int p, param_list param)
 {
-  int g;
-  int now;
+	int	g;
+	int	now;
 
-  ASSERT(param[0].type == TYPE_NULL);
-  if (!pIsPlaying(p)) {
-    return COM_OK;
-  }
-  g = parray[p].game;
-  if (garray[g].wTime == 0) {
-    pprintf(p, "You can't pause untimed games.\n");
-    return COM_OK;
-  }
-  if (garray[g].clockStopped) {
-    pprintf(p, "Game is already paused, use \"unpause\" to resume.\n");
-    return COM_OK;
-  }
-  if (player_find_pendfrom(p, parray[p].opponent, PEND_PAUSE) >= 0) {
-    player_remove_request(parray[p].opponent, p, PEND_PAUSE);
-    garray[g].clockStopped = 1;
-    /* Roll back the time */
-    if (garray[g].game_state.onMove == WHITE) {
-      garray[g].wTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-    } else {
-      garray[g].bTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-    }
-    now = tenth_secs();
-    if (garray[g].numHalfMoves == 0)
-      garray[g].timeOfStart = now;
-    garray[g].lastMoveTime = now;
-    garray[g].lastDecTime = now;
-    send_boards(g);
-    pprintf_prompt(parray[p].opponent, "\n%s accepted pause. Game clock paused.\n",
-		   parray[p].name);
-    pprintf(p, "Game clock paused.\n");
-  } else {
-    pprintf(parray[p].opponent, "\n");
-    pprintf_highlight(parray[p].opponent, "%s", parray[p].name);
-    pprintf_prompt(parray[p].opponent, " requests to pause the game.\n");
-    pprintf(p, "Pause request sent.\n");
-    player_add_request(p, parray[p].opponent, PEND_PAUSE, 0);
-  }
-  return COM_OK;
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if (!pIsPlaying(p))
+		return COM_OK;
+
+	g = parray[p].game;
+
+	if (garray[g].wTime == 0) {
+		pprintf(p, "You can't pause untimed games.\n");
+		return COM_OK;
+	}
+
+	if (garray[g].clockStopped) {
+		pprintf(p, "Game is already paused, "
+		    "use \"unpause\" to resume.\n");
+		return COM_OK;
+	}
+
+	if (player_find_pendfrom(p, parray[p].opponent, PEND_PAUSE) >= 0) {
+		player_remove_request(parray[p].opponent, p, PEND_PAUSE);
+		garray[g].clockStopped = 1;
+
+		// Roll back the time
+		if (garray[g].game_state.onMove == WHITE) {
+			garray[g].wTime += (garray[g].lastDecTime -
+					    garray[g].lastMoveTime);
+		} else {
+			garray[g].bTime += (garray[g].lastDecTime -
+					    garray[g].lastMoveTime);
+		}
+
+		now = tenth_secs();
+
+		if (garray[g].numHalfMoves == 0)
+			garray[g].timeOfStart = now;
+
+		garray[g].lastMoveTime = now;
+		garray[g].lastDecTime = now;
+
+		send_boards(g);
+
+		pprintf_prompt(parray[p].opponent, "\n%s accepted pause. "
+		    "Game clock paused.\n", parray[p].name);
+		pprintf(p, "Game clock paused.\n");
+	} else {
+		pprintf(parray[p].opponent, "\n");
+		pprintf_highlight(parray[p].opponent, "%s", parray[p].name);
+		pprintf_prompt(parray[p].opponent, " requests to pause the "
+		    "game.\n");
+		pprintf(p, "Pause request sent.\n");
+		player_add_request(p, parray[p].opponent, PEND_PAUSE, 0);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
