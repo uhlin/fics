@@ -731,18 +731,21 @@ PUBLIC int com_resign(int p, param_list param)
   return COM_OK;
 }
 
-int Check50MoveRule (int p, int g)
+PRIVATE int
+Check50MoveRule(int p, int g)
 {
-  int num_reversible = garray[g].numHalfMoves;
+	int	num_reversible = garray[g].numHalfMoves;
 
-  if (garray[g].game_state.lastIrreversable >= 0) {
-    num_reversible -= garray[g].game_state.lastIrreversable;
-  }
-  if (num_reversible > 99) {
-    game_ended(g, (garray[g].white == p) ? BLACK : WHITE, END_50MOVERULE);
-    return 1;
-  }
-  return 0;
+	if (garray[g].game_state.lastIrreversable >= 0)
+		num_reversible -= garray[g].game_state.lastIrreversable;
+
+	if (num_reversible > 99) {
+		game_ended(g, (garray[g].white == p ? BLACK : WHITE),
+		    END_50MOVERULE);
+		return 1;
+	}
+
+	return 0;
 }
 
 PRIVATE char *
