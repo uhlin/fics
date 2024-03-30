@@ -118,7 +118,7 @@ ECO_init(void)
 	char	*ptmp = tmp;
 	int	 i = 0;
 
-	sprintf(filename, "%s/eco999.idx", book_dir);
+	snprintf(filename, sizeof filename, "%s/eco999.idx", book_dir);
 
 	if ((fp = fopen(filename, "r")) == NULL) {
 		fprintf(stderr, "Could not open ECO file (%s)\n", filename);
@@ -181,7 +181,7 @@ NIC_init(void)
 	char	*ptmp = tmp;
 	int	 i = 0;
 
-	sprintf(filename, "%s/nic999.idx", book_dir);
+	snprintf(filename, sizeof filename, "%s/nic999.idx", book_dir);
 
 	if ((fp = fopen(filename, "r")) == NULL) {
 		fprintf(stderr, "Could not open NIC file\n");
@@ -236,7 +236,7 @@ LONG_init(void)
 	char	*ptmp = tmp;
 	int	 i = 0;
 
-	sprintf(filename, "%s/long999.idx", book_dir);
+	snprintf(filename, sizeof filename, "%s/long999.idx", book_dir);
 
 	if ((fp = fopen(filename, "r")) == NULL) {
 		fprintf(stderr, "Could not open LONG file\n");
