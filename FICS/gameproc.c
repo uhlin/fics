@@ -985,30 +985,34 @@ PUBLIC int com_courtesyadjourn(int p, param_list param)
   return COM_OK;
 }
 
-PRIVATE int player_has_mating_material(game_state_t *gs, int color)
+PRIVATE int
+player_has_mating_material(game_state_t *gs, int color)
 {
-  int i, j;
-  int piece;
-  int minor_pieces = 0;
+	int	i, j;
+	int	minor_pieces = 0;
+	int	piece;
 
-  for (i = 0; i < 8; i++)
-    for (j = 0; j < 8; j++) {
-      piece = gs->board[i][j];
-      switch (piecetype(piece)) {
-      case BISHOP:
-      case KNIGHT:
-	if (iscolor(piece, color))
-	  minor_pieces++;
-	break;
-      case KING:
-      case NOPIECE:
-	break;
-      default:
-	if (iscolor(piece, color))
-	  return 1;
-      }
-    }
-  return ((minor_pieces > 1) ? 1 : 0);
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++) {
+			piece = gs->board[i][j];
+
+			switch (piecetype(piece)) {
+			case BISHOP:
+			case KNIGHT:
+				if (iscolor(piece, color))
+					minor_pieces++;
+				break;
+			case KING:
+			case NOPIECE:
+				break;
+			default:
+				if (iscolor(piece, color))
+					return 1;
+			}
+		}
+	}
+
+	return (minor_pieces > 1 ? 1 : 0);
 }
 
 PUBLIC int
