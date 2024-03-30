@@ -26,6 +26,7 @@
    Markus Uhlin			24/01/04	Fixed pprintf_prompt() calls
    Markus Uhlin			24/03/30	Refactored and reformatted all
 						functions.
+   Markus Uhlin			24/03/30	Size-bounded string handling.
 */
 
 #include "stdinclude.h"
