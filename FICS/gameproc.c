@@ -1704,34 +1704,39 @@ PUBLIC int com_simpass(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_simabort(int p, param_list param)
+PUBLIC int
+com_simabort(int p, param_list param)
 {
-  if (!parray[p].simul_info.numBoards) {
-    pprintf(p, "You are not giving a simul.\n");
-    return COM_OK;
-  }
-  player_decline_offers(p, -1, -PEND_SIMUL);
-  game_ended(parray[p].simul_info.boards[parray[p].simul_info.onBoard],
-	     WHITE, END_ABORT);
-  return COM_OK;
+	if (!parray[p].simul_info.numBoards) {
+		pprintf(p, "You are not giving a simul.\n");
+		return COM_OK;
+	}
+
+	player_decline_offers(p, -1, -PEND_SIMUL);
+	game_ended(parray[p].simul_info.boards[parray[p].simul_info.onBoard],
+	    WHITE, END_ABORT);
+
+	return COM_OK;
 }
 
-PUBLIC int com_simallabort(int p, param_list param)
+PUBLIC int
+com_simallabort(int p, param_list param)
 {
-  int i;
+	if (!parray[p].simul_info.numBoards) {
+		pprintf(p, "You are not giving a simul.\n");
+		return COM_OK;
+	}
 
-  if (!parray[p].simul_info.numBoards) {
-    pprintf(p, "You are not giving a simul.\n");
-    return COM_OK;
-  }
-  player_decline_offers(p, -1, -PEND_SIMUL);
-  for (i = 0; i < parray[p].simul_info.numBoards; i++) {
-    if (parray[p].simul_info.boards[i] >= 0) {
-      game_ended(parray[p].simul_info.boards[i],
-		 WHITE, END_ABORT);
-    }
-  }
-  return COM_OK;
+	player_decline_offers(p, -1, -PEND_SIMUL);
+
+	for (int i = 0; i < parray[p].simul_info.numBoards; i++) {
+		if (parray[p].simul_info.boards[i] >= 0) {
+			game_ended(parray[p].simul_info.boards[i], WHITE,
+			    END_ABORT);
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
