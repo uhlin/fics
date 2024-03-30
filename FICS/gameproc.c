@@ -1523,41 +1523,52 @@ if 0 is the incorrect 4th arg, please fix :) */
   return COM_OK;
 }
 
-PUBLIC int com_goboard(int p, param_list param)
+PUBLIC int
+com_goboard(int p, param_list param)
 {
-  int on, g, p1;
+	int on, g, p1;
 
-  if (!parray[p].simul_info.numBoards) {
-    pprintf(p, "You are not giving a simul.\n");
-    return COM_OK;
-  }
-  p1 = player_find_part_login(param[0].val.word);
-  if (p1 < 0) {
-    pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-    return COM_OK;
-  }
-  if (p == p1) {
-    pprintf(p, "You can't goboard yourself!\n");
-    return COM_OK;
-  }
-  on = parray[p].simul_info.onBoard;
-  g = parray[p].simul_info.boards[on];
-  if (p1 == garray[g].black) {
-    pprintf(p, "You are already at that board!\n");
-    return COM_OK;
-  }
-  if (parray[p].simul_info.numBoards > 1) {
-    player_decline_offers(p, -1, -PEND_SIMUL);
-    if (player_goto_simulgame_bynum(p, parray[p1].game) !=-1) {
-      if (g >= 0) {
-	pprintf(garray[g].black, "\n");
-	pprintf_highlight(garray[g].black, "%s", parray[p].name);
-	pprintf_prompt(garray[g].black, " has moved away from your board.\n");
-      }
-    }
-  } else
-    pprintf(p, "You are only playing one board!\n");
-  return COM_OK;
+	if (!parray[p].simul_info.numBoards) {
+		pprintf(p, "You are not giving a simul.\n");
+		return COM_OK;
+	}
+
+	p1 = player_find_part_login(param[0].val.word);
+
+	if (p1 < 0) {
+		pprintf(p, "No user named \"%s\" is logged in.\n",
+		    param[0].val.word);
+		return COM_OK;
+	}
+
+	if (p == p1) {
+		pprintf(p, "You can't goboard yourself!\n");
+		return COM_OK;
+	}
+
+	on = parray[p].simul_info.onBoard;
+	g = parray[p].simul_info.boards[on];
+
+	if (p1 == garray[g].black) {
+		pprintf(p, "You are already at that board!\n");
+		return COM_OK;
+	}
+
+	if (parray[p].simul_info.numBoards > 1) {
+		player_decline_offers(p, -1, -PEND_SIMUL);
+
+		if (player_goto_simulgame_bynum(p, parray[p1].game) != -1) {
+			if (g >= 0) {
+				pprintf(garray[g].black, "\n");
+				pprintf_highlight(garray[g].black, "%s",
+				    parray[p].name);
+				pprintf_prompt(garray[g].black, " has moved "
+				    "away from your board.\n");
+			}
+		}
+	} else
+		pprintf(p, "You are only playing one board!\n");
+	return COM_OK;
 }
 
 PUBLIC int
