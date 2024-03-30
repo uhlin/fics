@@ -1011,112 +1011,129 @@ PRIVATE int player_has_mating_material(game_state_t *gs, int color)
   return ((minor_pieces > 1) ? 1 : 0);
 }
 
-PUBLIC int com_flag(int p, param_list param)
+PUBLIC int
+com_flag(int p, param_list param)
 {
-  int g;
-  int myColor;
+	int	g;
+	int	myColor;
 
-  ASSERT(param[0].type == TYPE_NULL);
-  if (!pIsPlaying(p)) {
-    return COM_OK;
-  }
-  g = parray[p].game;
-  myColor = (p == garray[g].white ? WHITE : BLACK);
-  if (garray[g].type == TYPE_UNTIMED) {
-    pprintf(p, "You can't flag an untimed game.\n");
-    return COM_OK;
-  }
-  if (garray[g].numHalfMoves < 2) {
-    pprintf(p, "You cannot flag before both players have moved.\nUse abort instead.\n");
-    return COM_OK;
-  }
-  game_update_time(g);
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if (!pIsPlaying(p))
+		return COM_OK;
+
+	g = parray[p].game;
+	myColor = (p == garray[g].white ? WHITE : BLACK);
+
+	if (garray[g].type == TYPE_UNTIMED) {
+		pprintf(p, "You can't flag an untimed game.\n");
+		return COM_OK;
+	}
+
+	if (garray[g].numHalfMoves < 2) {
+		pprintf(p, "You cannot flag before both players have moved.\n"
+		    "Use abort instead.\n");
+		return COM_OK;
+	}
+
+	game_update_time(g);
 
 #ifdef TIMESEAL
+	{
+		int	myTime, yourTime, serverTime;
+		int	opp = parray[p].opponent;
 
-  {
-    int myTime, yourTime, opp = parray[p].opponent, serverTime;
+		if (con[parray[p].socket].timeseal) {	// Does the caller use
+							// timeseal?
+			myTime = (myColor == WHITE ? garray[g].wRealTime :
+			    garray[g].bRealTime);
+		} else {
+			myTime = (myColor == WHITE ? garray[g].wTime :
+			    garray[g].bTime);
+		}
 
-    if (con[parray[p].socket].timeseal) {    /* does caller use timeseal? */
-      myTime = (myColor == WHITE  ?  garray[g].wRealTime
-                                  :  garray[g].bRealTime);
-    } else {
-      myTime = (myColor == WHITE  ?  garray[g].wTime  :  garray[g].bTime);
-    }
-    serverTime = (myColor == WHITE  ?  garray[g].bTime  :  garray[g].wTime);
+		serverTime = (myColor == WHITE ? garray[g].bTime :
+		    garray[g].wTime);
 
-    if (con[parray[opp].socket].timeseal) {	/* opp uses timeseal? */
-      yourTime = (myColor == WHITE  ?  garray[g].bRealTime
-                                    :  garray[g].wRealTime);
-    } else {
-      yourTime = serverTime;
-    }
+		if (con[parray[opp].socket].timeseal) { // Opp uses timeseal?
+			yourTime = (myColor == WHITE ? garray[g].bRealTime :
+			    garray[g].wRealTime);
+		} else {
+			yourTime = serverTime;
+		}
 
-    /* the clocks to compare are now in myTime and yourTime */
+		// The clocks to compare are now in 'myTime' and 'yourTime'.
+		if (myTime <= 0 && yourTime <= 0) {
+			player_decline_offers(p, -1, -1);
+			game_ended(g, myColor, END_BOTHFLAG);
+			return COM_OK;
+		}
 
-    if ((myTime <= 0) && (yourTime <= 0)) {
-      player_decline_offers(p, -1, -1);
-      game_ended(g, myColor, END_BOTHFLAG);
-      return COM_OK;
-    }
-    if (yourTime > 0) {
-      /* Opponent still has time, but if that's only because s/he
-       * may be lagging, we should ask for an acknowledgement and then
-       * try to call the flag. */
+		if (yourTime > 0) {
+			/*
+			 * Opponent still has time, but if that's only
+			 * because s/he may be lagging, we should ask
+			 * for an acknowledgement and then try to call
+			 * the flag.
+			 */
 
-      if (serverTime <= 0 && garray[g].game_state.onMove != myColor
-          && garray[g].flag_pending != FLAG_CHECKING) {
+			if (serverTime <= 0 &&
+			    garray[g].game_state.onMove != myColor &&
+			    garray[g].flag_pending != FLAG_CHECKING) {
+				garray[g].flag_pending = FLAG_CALLED;
+				garray[g].flag_check_time = time(0);
 
-        /* server time thinks opponent is down, but RealTIme disagrees.
-         * ask client to acknowledge it's alive. */
+				pprintf(p, "Opponent has timeseal; "
+				    "checking if (s)he's lagging.\n");
+				pprintf(opp, "\n[G]\n");
 
-        garray[g].flag_pending = FLAG_CALLED;
-        garray[g].flag_check_time = time(0);
-        pprintf(p, "Opponent has timeseal; checking if (s)he's lagging.\n");
-        pprintf (opp, "\n[G]\n");
-        return COM_OK;
-      }
+				return COM_OK;
+			}
 
-      /* if we're here, it means one of:
-       * 1. the server agrees opponent has time, whether lagging or not.
-       * 2. opp. has timeseal (if yourTime != serverTime), had time left
-       *    after the last move (yourTime > 0), and it's still your move.
-       * 3. we're currently checking a flag call after having receiving
-       *    acknowledgement from the other timeseal (and would have reset
-       *    yourTime if the flag were down). */
+			/*
+			 * If we're here, it means:
+			 * 1) The server agrees opponent has time, whether
+			 *    lagging or not.
+			 * 2) Opponent has timeseal (if yourTime != serverTime),
+			 *    had time left after the last move (yourTime > 0),
+			 *    and it's still your move.
+			 * 3) We're currently checking a flag call after having
+			 *    receiving acknowledgement from the other timeseal
+			 *    (and would have reset 'yourTime' if the flag were
+			 *    down).
+			 */
+			pprintf(p, "Your opponent is not out of time!\n");
+			return COM_OK;
+		}
+	}
+#else	// !defined(TIMESEAL)
+	if (garray[g].wTime <= 0 && garray[g].bTime <= 0) {
+		player_decline_offers(p, -1, -1);
+		game_ended(g, myColor, END_BOTHFLAG);
+		return COM_OK;
+	}
 
-      pprintf(p, "Your opponent is not out of time!\n");
-      return COM_OK;
-    }
-  }
-
-#else
-
-  if ((garray[g].wTime <= 0) && (garray[g].bTime <= 0)) {
-    player_decline_offers(p, -1, -1);
-    game_ended(g, myColor, END_BOTHFLAG);
-    return COM_OK;
-  }
-  if (myColor == WHITE) {
-    if (garray[g].bTime > 0) {
-      pprintf(p, "Your opponent is not out of time!\n");
-      return COM_OK;
-    }
-  } else {
-    if (garray[g].wTime > 0) {
-      pprintf(p, "Your opponent is not out of time!\n");
-      return COM_OK;
-    }
-  }
-
+	if (myColor == WHITE) {
+		if (garray[g].bTime > 0) {
+			pprintf(p, "Your opponent is not out of time!\n");
+			return COM_OK;
+		}
+	} else {
+		if (garray[g].wTime > 0) {
+			pprintf(p, "Your opponent is not out of time!\n");
+			return COM_OK;
+		}
+	}
 #endif
 
-  player_decline_offers(p, -1, -1);
-  if (player_has_mating_material(&garray[g].game_state, myColor))
-    game_ended(g, myColor, END_FLAG);
-  else
-    game_ended(g, myColor, END_FLAGNOMATERIAL);
-  return COM_OK;
+	player_decline_offers(p, -1, -1);
+
+	if (player_has_mating_material(&garray[g].game_state, myColor))
+		game_ended(g, myColor, END_FLAG);
+	else
+		game_ended(g, myColor, END_FLAGNOMATERIAL);
+
+	return COM_OK;
 }
 
 PUBLIC int
