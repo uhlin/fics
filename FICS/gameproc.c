@@ -861,30 +861,39 @@ PUBLIC int com_pause(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_unpause(int p, param_list param)
+PUBLIC int
+com_unpause(int p, param_list param)
 {
-  int now;
-  int g;
+	int	g;
+	int	now;
 
-  ASSERT(param[0].type == TYPE_NULL);
-  if (!pIsPlaying(p)) {
-    return COM_OK;
-  }
-  g = parray[p].game;
-  if (!garray[g].clockStopped) {
-    pprintf(p, "Game is not paused.\n");
-    return COM_OK;
-  }
-  garray[g].clockStopped = 0;
-  now = tenth_secs();
-  if (garray[g].numHalfMoves == 0)
-    garray[g].timeOfStart = now;
-  garray[g].lastMoveTime = now;
-  garray[g].lastDecTime = now;
-  send_boards(g);
-  pprintf(p, "Game clock resumed.\n");
-  pprintf_prompt(parray[p].opponent, "\nGame clock resumed.\n");
-  return COM_OK;
+	ASSERT(param[0].type == TYPE_NULL);
+
+	if (!pIsPlaying(p))
+		return COM_OK;
+
+	g = parray[p].game;
+
+	if (!garray[g].clockStopped) {
+		pprintf(p, "Game is not paused.\n");
+		return COM_OK;
+	}
+
+	garray[g].clockStopped = 0;
+	now = tenth_secs();
+
+	if (garray[g].numHalfMoves == 0)
+		garray[g].timeOfStart = now;
+
+	garray[g].lastMoveTime = now;
+	garray[g].lastDecTime = now;
+
+	send_boards(g);
+
+	pprintf(p, "Game clock resumed.\n");
+	pprintf_prompt(parray[p].opponent, "\nGame clock resumed.\n");
+
+	return COM_OK;
 }
 
 PUBLIC int
