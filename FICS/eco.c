@@ -269,8 +269,7 @@ LONG_init(void)
 			continue;
 		sscanf(ptmp, "%[^*\n]", LONG);
 
-		LONG_book[i] = malloc(sizeof(LONG_entry));
-		if (LONG_book[i] == NULL) {
+		if ((LONG_book[i] = malloc(sizeof(LONG_entry))) == NULL) {
 			fprintf(stderr, "Cound not alloc mem for "
 			    "LONG entry %d.\n", i);
 			exit(1);
