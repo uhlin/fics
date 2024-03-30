@@ -1165,76 +1165,99 @@ PUBLIC int com_adjourn(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_takeback(int p, param_list param)
+PUBLIC int
+com_takeback(int p, param_list param)
 {
-  int nHalfMoves = 1;
-  int from;
-  int g, i;
-  int p1;
+	int	from;
+	int	g, i;
+	int	nHalfMoves = 1;
+	int	p1;
 
-  if (!pIsPlaying(p)) {
-    return COM_OK;
-  }
-  p1 = parray[p].opponent;
-  if (parray[p1].simul_info.numBoards &&
-      parray[p1].simul_info.boards[parray[p1].simul_info.onBoard] !=
-      parray[p].game) {
-    pprintf(p, "You can only make requests when the simul player is at your board.\n");
-    return COM_OK;
-  }
-  g = parray[p].game;
-  if (garray[g].link >= 0) {
-    pprintf(p, "Takeback not implemented for bughouse games yet.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_INT) {
-    nHalfMoves = param[0].val.integer;
-  }
-  if ((from = player_find_pendfrom(p, parray[p].opponent, PEND_TAKEBACK)) >= 0) {
-    player_remove_request(parray[p].opponent, p, PEND_TAKEBACK);
-    if (parray[p].p_from_list[from].param1 == nHalfMoves) {
-      /* Doing the takeback */
-      player_decline_offers(p, -1, -PEND_SIMUL);
-      for (i = 0; i < nHalfMoves; i++) {
-	if (backup_move(g, REL_GAME) != MOVE_OK) {
-	  pprintf(garray[g].white, "Can only backup %d moves\n", i);
-	  pprintf(garray[g].black, "Can only backup %d moves\n", i);
-	  break;
+	if (!pIsPlaying(p))
+		return COM_OK;
+
+	p1 = parray[p].opponent;
+
+	if (parray[p1].simul_info.numBoards &&
+	    parray[p1].simul_info.boards[parray[p1].simul_info.onBoard] !=
+	    parray[p].game) {
+		pprintf(p, "You can only make requests when the simul player "
+		    "is at your board.\n");
+		return COM_OK;
 	}
-      }
+
+	g = parray[p].game;
+
+	if (garray[g].link >= 0) {
+		pprintf(p, "Takeback not implemented for bughouse games yet."
+		    "\n");
+		return COM_OK;
+	}
+
+	if (param[0].type == TYPE_INT)
+		nHalfMoves = param[0].val.integer;
+
+	if ((from = player_find_pendfrom(p, parray[p].opponent, PEND_TAKEBACK))
+	    >= 0) {
+		player_remove_request(parray[p].opponent, p, PEND_TAKEBACK);
+
+		if (parray[p].p_from_list[from].param1 == nHalfMoves) {
+			// Doing the takeback
+			player_decline_offers(p, -1, -PEND_SIMUL);
+
+			for (i = 0; i < nHalfMoves; i++) {
+				if (backup_move(g, REL_GAME) != MOVE_OK) {
+					pprintf(garray[g].white, "Can only "
+					    "backup %d moves\n", i);
+					pprintf(garray[g].black, "Can only "
+					    "backup %d moves\n", i);
+					break;
+				}
+			}
 
 #ifdef TIMESEAL
-
-      garray[g].wTimeWhenReceivedMove = 0;
-      garray[g].bTimeWhenReceivedMove = 0;
-
+			garray[g].wTimeWhenReceivedMove = 0;
+			garray[g].bTimeWhenReceivedMove = 0;
 #endif
 
-      send_boards(g);
-    } else {
-      if (garray[g].numHalfMoves < nHalfMoves) {
-	pprintf(p, "There are only %d half moves in your game.\n", garray[g].numHalfMoves);
-	pprintf_prompt(parray[p].opponent, "\n%s has declined the takeback request.\n", parray[p].name);
+			send_boards(g);
+		} else {
+			if (garray[g].numHalfMoves < nHalfMoves) {
+				pprintf(p, "There are only %d half moves in "
+				    "your game.\n", garray[g].numHalfMoves);
+				pprintf_prompt(parray[p].opponent, "\n%s has "
+				    "declined the takeback request.\n",
+				    parray[p].name);
+				return COM_OK;
+			}
+
+			pprintf(p, "You disagree on the number of half-moves "
+			    "to takeback.\n");
+			pprintf(p, "Alternate takeback request sent.\n");
+			pprintf_prompt(parray[p].opponent, "\n%s proposes a "
+			    "different number (%d) of half-move(s).\n",
+			    parray[p].name,
+			    nHalfMoves);
+			player_add_request(p, parray[p].opponent, PEND_TAKEBACK,
+			    nHalfMoves);
+		}
+	} else {
+		if (garray[g].numHalfMoves < nHalfMoves) {
+			pprintf(p, "There are only %d half moves in your game."
+			    "\n", garray[g].numHalfMoves);
+			return COM_OK;
+		}
+
+		pprintf(parray[p].opponent, "\n");
+		pprintf_highlight(parray[p].opponent, "%s", parray[p].name);
+		pprintf_prompt(parray[p].opponent, " would like to take back "
+		    "%d half move(s).\n", nHalfMoves);
+		pprintf(p, "Takeback request sent.\n");
+		player_add_request(p, parray[p].opponent, PEND_TAKEBACK,
+		    nHalfMoves);
+	}
+
 	return COM_OK;
-      }
-      pprintf(p, "You disagree on the number of half-moves to takeback.\n");
-      pprintf(p, "Alternate takeback request sent.\n");
-      pprintf_prompt(parray[p].opponent, "\n%s proposes a different number (%d) of half-move(s).\n", parray[p].name, nHalfMoves);
-      player_add_request(p, parray[p].opponent, PEND_TAKEBACK, nHalfMoves);
-    }
-  } else {
-    if (garray[g].numHalfMoves < nHalfMoves) {
-      pprintf(p, "There are only %d half moves in your game.\n", garray[g].numHalfMoves);
-      return COM_OK;
-    }
-    pprintf(parray[p].opponent, "\n");
-    pprintf_highlight(parray[p].opponent, "%s", parray[p].name);
-    pprintf_prompt(parray[p].opponent, " would like to take back %d half move(s).\n",
-		   nHalfMoves);
-    pprintf(p, "Takeback request sent.\n");
-    player_add_request(p, parray[p].opponent, PEND_TAKEBACK, nHalfMoves);
-  }
-  return COM_OK;
 }
 
 PUBLIC int
