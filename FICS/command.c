@@ -1042,35 +1042,39 @@ process_heartbeat(int *fd)
 	return COM_OK;
 }
 
-PUBLIC void commands_init()
+PUBLIC void
+commands_init(void)
 {
-  FILE *fp, *afp;
-  char fname[MAX_FILENAME_SIZE];
-  int i = 0;
+	FILE	*fp, *afp;
+	char	 fname[MAX_FILENAME_SIZE];
+	int	 i = 0;
 
-  sprintf(fname, "%s/commands", comhelp_dir);
-  fp = fopen(fname, "w");
-  if (!fp) {
-    fprintf(stderr, "FICS: Could not write commands help file.\n");
-    return;
-  }
-  sprintf(fname, "%s/admin_commands", adhelp_dir);
-  afp = fopen(fname, "w");
-  if (!afp) {
-    fprintf(stderr, "FICS: Could not write admin_commands help file.\n");
-    fclose(fp);
-    return;
-  }
-  while (command_list[i].comm_name) {
-    if (command_list[i].adminLevel >= ADMIN_ADMIN) {
-      fprintf(afp, "%s\n", command_list[i].comm_name);
-    } else {
-      fprintf(fp, "%s\n", command_list[i].comm_name);
-    }
-    i++;
-  }
-  fclose(fp);
-  fclose(afp);
+	snprintf(fname, sizeof fname, "%s/commands", comhelp_dir);
+
+	if ((fp = fopen(fname, "w")) == NULL) {
+		fprintf(stderr, "FICS: Could not write commands help file.\n");
+		return;
+	}
+
+	snprintf(fname, sizeof fname, "%s/admin_commands", adhelp_dir);
+
+	if ((afp = fopen(fname, "w")) == NULL) {
+		fprintf(stderr, "FICS: Could not write admin_commands help "
+		    "file.\n");
+		fclose(fp);
+		return;
+	}
+
+	while (command_list[i].comm_name) {
+		if (command_list[i].adminLevel >= ADMIN_ADMIN)
+			fprintf(afp, "%s\n", command_list[i].comm_name);
+		else
+			fprintf(fp, "%s\n", command_list[i].comm_name);
+		i++;
+	}
+
+	fclose(fp);
+	fclose(afp);
 }
 
 /* Need to save rated games */
