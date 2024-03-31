@@ -926,45 +926,56 @@ PUBLIC int process_new_connection(int fd, unsigned int fromHost)
   return 0;
 }
 
-PUBLIC int process_disconnection(int fd)
+PUBLIC int
+process_disconnection(int fd)
 {
-  int p = player_find(fd);
-  int p1;
+	int p = player_find(fd);
 
-  if (p < 0) {
-    fprintf(stderr, "FICS: Disconnect from a player not in array!\n");
-    return -1;
-  }
-  if ((parray[p].game >=0) &&(garray[parray[p].game].status == GAME_EXAMINE)) {
-    pcommand(p, "unexamine");
-  }
-  if ((parray[p].game >=0) &&in_list(p, L_ABUSER, parray[p].name)) {
-    pcommand(p, "resign");
-  }
-  if (parray[p].status == PLAYER_PROMPT) {
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (p1 == p)
-	continue;
-      if (parray[p1].status != PLAYER_PROMPT)
-	continue;
-      if (!parray[p1].i_login)
-	continue;
-      pprintf_prompt(p1, "\n[%s has disconnected.]\n", parray[p].name);
-    }
-    player_notify(p, "departed", "departure");
-    player_notify_departure(p);
-    player_write_logout(p);
-    if (parray[p].registered) {
-      parray[p].totalTime += time(0) - parray[p].logon_time;
-      player_save(p);
-    } else {			/* delete unreg history file */
-      char fname[MAX_FILENAME_SIZE];
-      sprintf(fname, "%s/player_data/%c/%s.games", stats_dir, parray[p].login[0], parray[p].login);
-      unlink(fname);
-    }
-  }
-  player_remove(p);
-  return 0;
+	if (p < 0) {
+		fprintf(stderr, "FICS: Disconnect from a player not in array!"
+		    "\n");
+		return -1;
+	}
+
+	if (parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE)
+		pcommand(p, "unexamine");
+	if (parray[p].game >= 0 && in_list(p, L_ABUSER, parray[p].name))
+		pcommand(p, "resign");
+
+	if (parray[p].status == PLAYER_PROMPT) {
+		for (int p1 = 0; p1 < p_num; p1++) {
+			if (p1 == p)
+				continue;
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+			if (!parray[p1].i_login)
+				continue;
+			pprintf_prompt(p1, "\n[%s has disconnected.]\n",
+			    parray[p].name);
+		}
+
+		player_notify(p, "departed", "departure");
+		player_notify_departure(p);
+		player_write_logout(p);
+
+		if (parray[p].registered) {
+			parray[p].totalTime += time(0) - parray[p].logon_time;
+			player_save(p);
+		} else {	// delete unreg history file
+			char fname[MAX_FILENAME_SIZE] = { '\0' };
+
+			(void) snprintf(fname, sizeof fname,
+			    "%s/player_data/%c/%s.games",
+			    stats_dir,
+			    parray[p].login[0],
+			    parray[p].login);
+			unlink(fname);
+		}
+	}
+
+	player_remove(p);
+	return 0;
 }
 
 /* Called every few seconds */
