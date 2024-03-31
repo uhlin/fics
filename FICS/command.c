@@ -1078,31 +1078,34 @@ commands_init(void)
 }
 
 /* Need to save rated games */
-PUBLIC void TerminateCleanup()
+PUBLIC void
+TerminateCleanup(void)
 {
-  int p1;
-  int g;
+	for (int g = 0; g < g_num; g++) {
+		if (garray[g].status != GAME_ACTIVE)
+			continue;
+		if (garray[g].rated)
+			game_ended(g, WHITE, END_ADJOURN);
+	}
 
-  for (g = 0; g < g_num; g++) {
-    if (garray[g].status != GAME_ACTIVE)
-      continue;
-    if (garray[g].rated) {
-      game_ended(g, WHITE, END_ADJOURN);
-    }
-  }
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].status == PLAYER_EMPTY)
-      continue;
-    pprintf(p1, "\n    **** Server shutting down immediately. ****\n\n");
-    if (parray[p1].status != PLAYER_PROMPT) {
-      close(parray[p1].socket);
-    } else {
-      pprintf(p1, "Logging you out.\n");
-      psend_raw_file(p1, mess_dir, MESS_LOGOUT);
-      player_write_logout(p1);
-      if (parray[p1].registered)
-	parray[p1].totalTime += time(0) - parray[p1].logon_time;
-      player_save(p1);
-    }
-  }
+	for (int p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].status == PLAYER_EMPTY)
+			continue;
+
+		pprintf(p1, "\n    **** Server shutting down immediately. "
+		    "****\n\n");
+
+		if (parray[p1].status != PLAYER_PROMPT) {
+			close(parray[p1].socket);
+		} else {
+			pprintf(p1, "Logging you out.\n");
+			psend_raw_file(p1, mess_dir, MESS_LOGOUT);
+			player_write_logout(p1);
+			if (parray[p1].registered) {
+				parray[p1].totalTime +=
+				    (time(0) - parray[p1].logon_time);
+			}
+			player_save(p1);
+		}
+	}
 }
