@@ -8,6 +8,8 @@
 #ifndef _LISTS_H
 #define _LISTS_H
 
+#include "command.h" /* param_list */
+
 enum ListWhich {
 	L_ADMIN = 0,
 	L_REMOVEDCOM,
@@ -57,9 +59,9 @@ struct _List {
 	struct _List	*next;
 };
 
-extern int	com_addlist();
-extern int	com_showlist();
-extern int	com_sublist();
+extern int	com_addlist(int, param_list);
+extern int	com_showlist(int, param_list);
+extern int	com_sublist(int, param_list);
 
 extern int	in_list(int, enum ListWhich, char *);
 extern int	list_add(int, enum ListWhich, char *);
