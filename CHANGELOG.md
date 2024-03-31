@@ -4,6 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added parameter lists to many function declarations.
 - Fixed non-ANSI function declarations of functions. (Multiple
   occurrences.)
 - Made functions and variables private where possible.
