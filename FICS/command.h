@@ -85,7 +85,7 @@ typedef parameter param_list[MAXNUMPARAMS];
 typedef struct s_command_type {
 	char *comm_name;
 	char *param_string;
-	int (*comm_func)();
+	int (*comm_func)(int, param_list);
 	int adminLevel;
 } command_type;
 
