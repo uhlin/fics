@@ -3,6 +3,12 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Fixed non-ANSI function declarations of functions. (Multiple
+  occurrences.)
+- Made functions and variables private where possible.
+- Reformatted code according to OpenBSD's KNF.
+
 ## [1.1] - 2024-03-30 ##
 - **Added** `PRINTFLIKE()` and fixed many format errors.
 - **Added** argument lists to many function declarations.
