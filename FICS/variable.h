@@ -43,13 +43,13 @@ typedef struct _var_list {
 
 extern var_list variables[];
 
-extern char *Language();
-extern int com_height();
-extern int com_inc();
-extern int com_partner();
-extern int com_time();
-extern int com_variables();
-extern int com_width();
-extern int var_set(int, char *, char *, int *);
+extern char	*Language();
+extern int	 com_height();
+extern int	 com_inc();
+extern int	 com_partner();
+extern int	 com_time();
+extern int	 com_variables();
+extern int	 com_width();
+extern int	 var_set(int, char *, char *, int *);
 
 #endif /* _VARIABLE_H */
