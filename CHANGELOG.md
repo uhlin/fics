@@ -5,6 +5,8 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added parameter lists to many function declarations.
+- Added usage of `reallocarray()` which handles multiplication
+  overflow.
 - Fixed non-ANSI function declarations of functions. (Multiple
   occurrences.)
 - Made functions and variables private where possible.
