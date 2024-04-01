@@ -241,52 +241,56 @@ PRIVATE int set_jprivate(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_automail(int p, char *var, char *val)
+PRIVATE int
+set_automail(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].automail, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].automail)
-    pprintf(p, "Your games will be mailed to you.\n");
-  else
-    pprintf(p, "Your games will not be mailed to you.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].automail, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].automail)
+		pprintf(p, "Your games will be mailed to you.\n");
+	else
+		pprintf(p, "Your games will not be mailed to you.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_mailmess(int p, char *var, char *val)
+PRIVATE int
+set_mailmess(int p, char *var, char *val)
 {
-  if (!parray[p].registered) {
-    pprintf(p, "Unregistered players may not receive messages.\n");
-    return VAR_OK;
-  }
-  if (set_boolean_var(&parray[p].i_mailmess, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].i_mailmess)
-    pprintf(p, "Your messages will be mailed to you.\n");
-  else
-    pprintf(p, "Your messages will not be mailed to you.\n");
-  return VAR_OK;
+	if (!parray[p].registered) {
+		pprintf(p, "Unregistered players may not receive messages.\n");
+		return VAR_OK;
+	}
+	if (set_boolean_var(&parray[p].i_mailmess, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].i_mailmess)
+		pprintf(p, "Your messages will be mailed to you.\n");
+	else
+		pprintf(p, "Your messages will not be mailed to you.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_pgn(int p, char *var, char *val)
+PRIVATE int
+set_pgn(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].pgn, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].pgn)
-    pprintf(p, "Games will now be mailed to you in PGN.\n");
-  else
-    pprintf(p, "Games will now be mailed to you in FICS format.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].pgn, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].pgn)
+		pprintf(p, "Games will now be mailed to you in PGN.\n");
+	else
+		pprintf(p, "Games will now be mailed to you in FICS format.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_bell(int p, char *var, char *val)
+PRIVATE int
+set_bell(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].bell, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].bell)
-    pprintf(p, "Bell on.\n");
-  else
-    pprintf(p, "Bell off.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].bell, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].bell)
+		pprintf(p, "Bell on.\n");
+	else
+		pprintf(p, "Bell off.\n");
+	return VAR_OK;
 }
 
 PRIVATE int
