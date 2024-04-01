@@ -71,36 +71,41 @@ PRIVATE int set_boolean_var(int *var, char *val)
     return (-1);
 }
 
-PRIVATE int set_open(int p, char *var, char *val)
+PRIVATE int
+set_open(int p, char *var, char *val)
 {
-  int v = set_boolean_var(&parray[p].open, val);
+	int v = set_boolean_var(&parray[p].open, val);
 
-  if (v < 0)
-    return VAR_BADVAL;
-  if (v > 0)
-    pprintf(p, "You are now open to receive match requests.\n");
-  else {
-    player_decline_offers(p, -1, PEND_MATCH);
-    player_withdraw_offers(p, -1, PEND_MATCH);
-    pprintf(p, "You are no longer receiving match requests.\n");
-  }
-  return VAR_OK;
+	if (v < 0) {
+		return VAR_BADVAL;
+	} else if (v > 0) {
+		pprintf(p, "You are now open to receive match requests.\n");
+	} else {
+		player_decline_offers(p, -1, PEND_MATCH);
+		player_withdraw_offers(p, -1, PEND_MATCH);
+		pprintf(p, "You are no longer receiving match requests.\n");
+	}
+
+	return VAR_OK;
 }
 
-PRIVATE int set_sopen(int p, char *var, char *val)
+PRIVATE int
+set_sopen(int p, char *var, char *val)
 {
-  int v = set_boolean_var(&parray[p].sopen, val);
+	int v = set_boolean_var(&parray[p].sopen, val);
 
-  if (v < 0)
-    return VAR_BADVAL;
-  pprintf(p, "sopen set to %d.\n", parray[p].sopen);
+	if (v < 0)
+		return VAR_BADVAL;
 
-  if (v > 0)
-    pprintf(p, "You are now open to receive simul requests.\n");
-  else
-    pprintf(p, "You are no longer receiving simul requests.\n");
-  player_decline_offers(p, -1, PEND_SIMUL);
-  return VAR_OK;
+	pprintf(p, "sopen set to %d.\n", parray[p].sopen);
+
+	if (v > 0)
+		pprintf(p, "You are now open to receive simul requests.\n");
+	else
+		pprintf(p, "You are no longer receiving simul requests.\n");
+
+	player_decline_offers(p, -1, PEND_SIMUL);
+	return VAR_OK;
 }
 
 PRIVATE int
