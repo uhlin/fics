@@ -820,79 +820,81 @@ PUBLIC int var_set(int p, char *var, char *val, int *wh)
   return variables[which].var_func(p, (isdigit(*variables[which].name) ? var : variables[which].name), val);
 }
 
-PUBLIC int com_variables(int p, param_list param)
+PUBLIC int
+com_variables(int p, param_list param)
 {
-  int p1, connected;
-  int i;
+	int	i;
+	int	p1, connected;
 
-  if (param[0].type == TYPE_WORD) {
-    if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-      return COM_OK;
-  } else {
-      p1 = p;
-      connected = 1;
-  }
+	if (param[0].type == TYPE_WORD) {
+		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+			return COM_OK;
+	} else {
+		p1 = p;
+		connected = 1;
+	}
 
-  pprintf(p, "Variable settings of %s:\n", parray[p1].name);
-/*  if (parray[p1].fullName)
-    pprintf(p, "   Realname: %s\n", parray[p1].fullName);
-  if (parray[p1].uscfRating)
-    pprintf(p, "   USCF: %d\n", parray[p1].uscfRating);
-*/
-  pprintf(p, "   time=%-3d    inc=%-3d    private=%d  jprivate=%d  Lang=%s\n",
-          parray[p1].d_time, parray[p1].d_inc, parray[p1].private,
-          parray[p1].jprivate, Language(parray[p1].language));
-  pprintf(p, "   rated=%d     ropen=%d    open=%d     simopen=%d\n",
-     parray[p1].rated, parray[p1].ropen, parray[p1].open, parray[p1].sopen);
-  pprintf(p, "   shout=%d     cshout=%d   kib=%d      tell=%d      notifiedby=%d\n",
-          parray[p1].i_shout, parray[p1].i_cshout, parray[p1].i_kibitz, parray[p1].i_tell, parray[p1].notifiedby);
-  pprintf(p, "   pin=%d       gin=%d      style=%-3d  flip=%d      kiblevel=%d\n",
-          parray[p1].i_login, parray[p1].i_game, parray[p1].style + 1, parray[p1].flip, parray[p1].kiblevel);
-  pprintf(p, "   highlight=%d bell=%d     auto=%d     mailmess=%d  pgn=%d\n",
-          parray[p1].highlight, parray[p1].bell, parray[p1].automail, parray[p1].i_mailmess, parray[p1].pgn);
-  pprintf(p, "   width=%-3d   height=%-3d\n",
-          parray[p1].d_width, parray[p1].d_height);
-  if (parray[p1].prompt && parray[p1].prompt != def_prompt)
-    pprintf(p, "   Prompt: %s\n", parray[p1].prompt);
-  if (parray[p1].partner >= 0)
-    pprintf(p, "   Bughouse partner: %s\n", parray[parray[p1].partner].name);
+	pprintf(p, "Variable settings of %s:\n", parray[p1].name);
 
-#if 0
-  {                             /* added code to print channels */
-    int count = 0;
-    for (i = 0; i < MAX_CHANNELS; i++) {
-      if (on_channel(i, p1)) {
-        if (!count)
-          pprintf(p, "\n  Channels:");
-        pprintf(p, " %d", i);
-        count++;
-      }
-    }
-    if (count)
-      pprintf(p, "\n");
-  }
-#endif /* Now use in [name] */
-/*  if (parray[p1].numAlias && (p == p1)) {
-    pprintf(p, "\n   Aliases:\n");
-    for (i = 0; i < parray[p1].numAlias; i++) {
-      pprintf(p, "      %s %s\n", parray[p1].alias_list[i].comm_name,
-              parray[p1].alias_list[i].alias);
-    }
-  }
-*/
-  if (parray[p1].num_formula) {
-    pprintf(p, "\n");
-    for (i = 0; i < parray[p1].num_formula; i++) {
-      if (parray[p1].formulaLines[i] != NULL)
-        pprintf(p, " f%d: %s\n", i + 1, parray[p1].formulaLines[i]);
-      else
-        pprintf(p, " f%d:\n", i + 1);
-    }
-  }
-  if (parray[p1].formula != NULL)
-    pprintf(p, "\nFormula: %s\n", parray[p1].formula);
+	pprintf(p, "   time=%-3d    inc=%-3d    private=%d  jprivate=%d  "
+	    "Lang=%s\n",
+	    parray[p1].d_time,
+	    parray[p1].d_inc,
+	    parray[p1].private,
+	    parray[p1].jprivate,
+	    Language(parray[p1].language));
+	pprintf(p, "   rated=%d     ropen=%d    open=%d     simopen=%d\n",
+	    parray[p1].rated,
+	    parray[p1].ropen,
+	    parray[p1].open,
+	    parray[p1].sopen);
+	pprintf(p, "   shout=%d     cshout=%d   kib=%d      tell=%d      "
+	    "notifiedby=%d\n",
+	    parray[p1].i_shout,
+	    parray[p1].i_cshout,
+	    parray[p1].i_kibitz,
+	    parray[p1].i_tell,
+	    parray[p1].notifiedby);
+	pprintf(p, "   pin=%d       gin=%d      style=%-3d  flip=%d      "
+	    "kiblevel=%d\n",
+	    parray[p1].i_login,
+	    parray[p1].i_game,
+	    (parray[p1].style + 1),
+	    parray[p1].flip,
+	    parray[p1].kiblevel);
+	pprintf(p, "   highlight=%d bell=%d     auto=%d     mailmess=%d  "
+	    "pgn=%d\n",
+	    parray[p1].highlight,
+	    parray[p1].bell,
+	    parray[p1].automail,
+	    parray[p1].i_mailmess,
+	    parray[p1].pgn);
+	pprintf(p, "   width=%-3d   height=%-3d\n",
+	    parray[p1].d_width,
+	    parray[p1].d_height);
 
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (parray[p1].prompt && parray[p1].prompt != def_prompt)
+		pprintf(p, "   Prompt: %s\n", parray[p1].prompt);
+	if (parray[p1].partner >= 0) {
+		pprintf(p, "   Bughouse partner: %s\n",
+		    parray[parray[p1].partner].name);
+	}
+
+	if (parray[p1].num_formula) {
+		pprintf(p, "\n");
+
+		for (i = 0; i < parray[p1].num_formula; i++) {
+			if (parray[p1].formulaLines[i] != NULL)
+				pprintf(p, " f%d: %s\n", (i + 1),
+				    parray[p1].formulaLines[i]);
+			else
+				pprintf(p, " f%d:\n", (i + 1));
+		}
+	}
+
+	if (parray[p1].formula != NULL)
+		pprintf(p, "\nFormula: %s\n", parray[p1].formula);
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
