@@ -807,17 +807,20 @@ PRIVATE int set_find(char *var)
   return -VAR_NOSUCH;
 }
 
-PUBLIC int var_set(int p, char *var, char *val, int *wh)
+PUBLIC int
+var_set(int p, char *var, char *val, int *wh)
 {
-  int which;
+	int which;
 
-  if (!var)
-    return VAR_NOSUCH;
-  if ((which = set_find(var)) < 0) {
-    return -which;
-  }
-  *wh = which;
-  return variables[which].var_func(p, (isdigit(*variables[which].name) ? var : variables[which].name), val);
+	if (!var)
+		return VAR_NOSUCH;
+	if ((which = set_find(var)) < 0)
+		return -which;
+
+	*wh = which;
+
+	return variables[which].var_func(p, (isdigit(*variables[which].name) ?
+	    var : variables[which].name), val);
 }
 
 PUBLIC int
