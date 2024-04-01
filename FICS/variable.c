@@ -382,19 +382,22 @@ PRIVATE int set_inc(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_height(int p, char *var, char *val)
+PRIVATE int
+set_height(int p, char *var, char *val)
 {
-  int v = -1;
+	int v = -1;
 
-  if (!val)
-    return VAR_BADVAL;
-  if (sscanf(val, "%d", &v) != 1)
-    return VAR_BADVAL;
-  if ((v < 5) || (v > 240))
-    return VAR_BADVAL;
-  parray[p].d_height = v;
-  pprintf(p, "Height set to %d.\n", v);
-  return VAR_OK;
+	if (!val)
+		return VAR_BADVAL;
+	if (sscanf(val, "%d", &v) != 1)
+		return VAR_BADVAL;
+	if (v < 5 || v > 240)
+		return VAR_BADVAL;
+
+	parray[p].d_height = v;
+
+	pprintf(p, "Height set to %d.\n", v);
+	return VAR_OK;
 }
 
 PRIVATE int
