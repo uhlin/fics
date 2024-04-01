@@ -289,26 +289,25 @@ PRIVATE int set_bell(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_highlight(int p, char *var, char *val)
+PRIVATE int
+set_highlight(int p, char *var, char *val)
 {
-/*  if (set_boolean_var (&parray[p].highlight, val) < 0) return VAR_BADVAL;
- */
-  int v = -1;
+	int v = -1;
 
-  if (!val)
-    return VAR_BADVAL;
-  if (sscanf(val, "%d", &v) != 1)
-    return VAR_BADVAL;
-  if ((v < 0) || (v > 15))
-    return VAR_BADVAL;
+	if (!val)
+		return VAR_BADVAL;
+	if (sscanf(val, "%d", &v) != 1)
+		return VAR_BADVAL;
+	if (v < 0 || v > 15)
+		return VAR_BADVAL;
 
-  if ((parray[p].highlight = v)) {
-    pprintf(p, "Highlight is now style ");
-    pprintf_highlight(p, "%d", v);
-    pprintf(p, ".\n");
-  } else
-    pprintf(p, "Highlight is off.\n");
-  return VAR_OK;
+	if ((parray[p].highlight = v)) {
+		pprintf(p, "Highlight is now style ");
+		pprintf_highlight(p, "%d", v);
+		pprintf(p, ".\n");
+	} else
+		pprintf(p, "Highlight is off.\n");
+	return VAR_OK;
 }
 
 PRIVATE int
