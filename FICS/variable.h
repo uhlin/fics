@@ -38,7 +38,7 @@
 
 typedef struct _var_list {
 	char *name;
-	int (*var_func)();
+	int (*var_func)(int, char *, char *);
 } var_list;
 
 extern var_list variables[];
