@@ -170,75 +170,83 @@ PRIVATE int set_kiblevel(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_tell(int p, char *var, char *val)
+PRIVATE int
+set_tell(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].i_tell, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].i_tell)
-    pprintf(p, "You will now hear tells.\n");
-  else
-    pprintf(p, "You will not hear tells.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].i_tell, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].i_tell)
+		pprintf(p, "You will now hear tells.\n");
+	else
+		pprintf(p, "You will not hear tells.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_notifiedby(int p, char *var, char *val)
+PRIVATE int
+set_notifiedby(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].notifiedby, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].notifiedby)
-    pprintf(p, "You will now hear if people notify you, but you don't notify them.\n");
-  else
-    pprintf(p, "You will not hear if people notify you, but you don't notify them.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].notifiedby, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].notifiedby) {
+		pprintf(p, "You will now hear if people notify you, "
+		    "but you don't notify them.\n");
+	} else {
+		pprintf(p, "You will not hear if people notify you, "
+		    "but you don't notify them.\n");
+	}
+	return VAR_OK;
 }
 
-PRIVATE int set_pinform(int p, char *var, char *val)
+PRIVATE int
+set_pinform(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].i_login, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].i_login)
-    pprintf(p, "You will now hear logins/logouts.\n");
-  else
-    pprintf(p, "You will not hear logins/logouts.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].i_login, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].i_login)
+		pprintf(p, "You will now hear logins/logouts.\n");
+	else
+		pprintf(p, "You will not hear logins/logouts.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_ginform(int p, char *var, char *val)
+PRIVATE int
+set_ginform(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].i_game, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].i_game)
-    pprintf(p, "You will now hear game results.\n");
-  else
-    pprintf(p, "You will not hear game results.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].i_game, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].i_game)
+		pprintf(p, "You will now hear game results.\n");
+	else
+		pprintf(p, "You will not hear game results.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_private(int p, char *var, char *val)
+PRIVATE int
+set_private(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].private, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].private)
-    pprintf(p, "Your games will be private.\n");
-  else
-    pprintf(p, "Your games may not be private.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].private, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].private)
+		pprintf(p, "Your games will be private.\n");
+	else
+		pprintf(p, "Your games may not be private.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_jprivate(int p, char *var, char *val)
+PRIVATE int
+set_jprivate(int p, char *var, char *val)
 {
-  if (!parray[p].registered) {
-    pprintf(p, "Unregistered players may not keep a journal.\n");
-    return VAR_OK;
-  }
-
-  if (set_boolean_var(&parray[p].jprivate, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].jprivate)
-    pprintf(p, "Your journal will be private.\n");
-  else
-    pprintf(p, "Your journal will not be private.\n");
-  return VAR_OK;
+	if (!parray[p].registered) {
+		pprintf(p, "Unregistered players may not keep a journal.\n");
+		return VAR_OK;
+	}
+	if (set_boolean_var(&parray[p].jprivate, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].jprivate)
+		pprintf(p, "Your journal will be private.\n");
+	else
+		pprintf(p, "Your journal will not be private.\n");
+	return VAR_OK;
 }
 
 PRIVATE int
