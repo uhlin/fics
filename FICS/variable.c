@@ -1,5 +1,5 @@
 /* variable.c
- * This is cludgy
+ *
  */
 
 /*
@@ -603,77 +603,101 @@ PRIVATE int set_busy(int p, char *var, char *val)
   return VAR_OK;
 }
 
-/* this is really ugly */
-PRIVATE int set_plan(int p, char *var, char *val)
+PRIVATE int
+set_plan(int p, char *var, char *val)
 {
-  int which;
-  int i;
+	int	i;
+	int	which;
 
-  if (val && !printablestring(val))
-    return VAR_BADVAL;
-  which = atoi(var);		/* Must be an integer, no test needed */
+	if (val && !printablestring(val))
+		return VAR_BADVAL;
+	if ((which = atoi(var)) > MAX_PLAN)
+		return VAR_BADVAL;
+	if (which > parray[p].num_plan)
+		which = parray[p].num_plan + 1;
 
-  if (which > MAX_PLAN)
-    return VAR_BADVAL;
+	if (which == 0) { // shove from top
+		if (parray[p].num_plan >= MAX_PLAN) // free the bottom string
+			strfree(parray[p].planLines[parray[p].num_plan - 1]);
 
-  if (which > parray[p].num_plan)
-    which = parray[p].num_plan + 1;
+		if (parray[p].num_plan) {
+			i = (parray[p].num_plan >= MAX_PLAN ? MAX_PLAN - 1 :
+			    parray[p].num_plan);
+			for (; i > 0; i--) {
+				parray[p].planLines[i] =
+				    parray[p].planLines[i - 1];
+			}
+		}
 
-  if (which == 0) {  /* shove from top */
-    if (parray[p].num_plan >= MAX_PLAN) { /* free the bottom string */
-      if (parray[p].planLines[parray[p].num_plan - 1] != NULL)
-	rfree(parray[p].planLines[parray[p].num_plan - 1]);
-    }
-    if (parray[p].num_plan) {
-      for (i = (parray[p].num_plan >= MAX_PLAN) ? MAX_PLAN - 1 : parray[p].num_plan; i > 0; i--)
-	parray[p].planLines[i] = parray[p].planLines[i - 1];
-    }
-    if (parray[p].num_plan < MAX_PLAN)
-      parray[p].num_plan++;
-    parray[p].planLines[0] = ((val == NULL) ? NULL : xstrdup(val));
-    pprintf(p, "\nPlan variable %d changed to '%s'.\n", which+1, parray[p].planLines[which]);
-    pprintf(p, "All other variables moved down.\n");
-    return VAR_OK;
-  }
-  if (which > parray[p].num_plan) {	/* new line at bottom */
-    if (parray[p].num_plan >= MAX_PLAN) {	/* shove the old lines up */
-      if (parray[p].planLines[0] != NULL)
-	rfree(parray[p].planLines[0]);
-      for (i = 0; i < parray[p].num_plan; i++)
-	parray[p].planLines[i] = parray[p].planLines[i + 1];
-    } else {
-      parray[p].num_plan++;
-    }
-    parray[p].planLines[which - 1] = ((val == NULL) ? NULL : xstrdup(val));
-    pprintf(p, "\nPlan variable %d changed to '%s'.\n", which, parray[p].planLines[which-1]);
-    return VAR_OK;
-  }
-  which--;
-  if (parray[p].planLines[which] != NULL) {
-    rfree(parray[p].planLines[which]);
-  }
-  if (val != NULL) {
-    parray[p].planLines[which] = xstrdup(val);
-    pprintf(p, "\nPlan variable %d changed to '%s'.\n", which+1, parray[p].planLines[which]);
-  } else {
-    parray[p].planLines[which] = NULL;
-    if (which == parray[p].num_plan - 1) {	/* clear nulls from bottom */
-      while ((parray[p].num_plan > 0) && (parray[p].planLines[parray[p].num_plan - 1] == NULL)) {
-	parray[p].num_plan--;
-    pprintf(p, "\nPlan variable %d cleared.\n", which+1);
-      }
-    } else if (which == 0) {	/* clear nulls from top */
-      while ((which < parray[p].num_plan) && (parray[p].planLines[which] == NULL)) {
-	which++;
-      }
-      if (which != parray[p].num_plan) {
-	for (i = which; i < parray[p].num_plan; i++)
-	  parray[p].planLines[i - which] = parray[p].planLines[i];
-      }
-      parray[p].num_plan -= which;
-    }
-  }
-  return VAR_OK;
+		if (parray[p].num_plan < MAX_PLAN)
+			parray[p].num_plan++;
+
+		parray[p].planLines[0] = (val == NULL ? NULL : xstrdup(val));
+
+		pprintf(p, "\nPlan variable %d changed to '%s'.\n", (which + 1),
+		    parray[p].planLines[which]);
+		pprintf(p, "All other variables moved down.\n");
+		return VAR_OK;
+	}
+
+	if (which > parray[p].num_plan) {              // new line at bottom
+		if (parray[p].num_plan >= MAX_PLAN) {  // shove the old lines up
+			if (parray[p].planLines[0] != NULL)
+				rfree(parray[p].planLines[0]);
+			for (i = 0; i < parray[p].num_plan; i++) {
+				parray[p].planLines[i] =
+				    parray[p].planLines[i + 1];
+			}
+		} else {
+			parray[p].num_plan++;
+		}
+
+		parray[p].planLines[which - 1] = (val == NULL ? NULL :
+		    xstrdup(val));
+		pprintf(p, "\nPlan variable %d changed to '%s'.\n", which,
+		    parray[p].planLines[which - 1]);
+		return VAR_OK;
+	}
+
+	which--;
+
+	if (parray[p].planLines[which] != NULL)
+		rfree(parray[p].planLines[which]);
+
+	if (val != NULL) {
+		parray[p].planLines[which] = xstrdup(val);
+		pprintf(p, "\nPlan variable %d changed to '%s'.\n",
+		    (which + 1),
+		    parray[p].planLines[which]);
+	} else {
+		parray[p].planLines[which] = NULL;
+
+		if (which == (parray[p].num_plan - 1)) {	// clear nulls
+								// from bottom
+			while (parray[p].num_plan > 0 &&
+			    parray[p].planLines[parray[p].num_plan - 1] ==
+			    NULL) {
+				parray[p].num_plan--;
+				pprintf(p, "\nPlan variable %d cleared.\n",
+				    (which + 1));
+			}
+		} else if (which == 0) { // clear nulls from top
+			while (which < parray[p].num_plan &&
+			       parray[p].planLines[which] == NULL)
+				which++;
+
+			if (which != parray[p].num_plan) {
+				for (i = which; i < parray[p].num_plan; i++) {
+					parray[p].planLines[i - which] =
+					    parray[p].planLines[i];
+				}
+			}
+
+			parray[p].num_plan -= which;
+		}
+	}
+
+	return VAR_OK;
 }
 
 PRIVATE int
