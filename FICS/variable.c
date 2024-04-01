@@ -397,19 +397,22 @@ PRIVATE int set_height(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_width(int p, char *var, char *val)
+PRIVATE int
+set_width(int p, char *var, char *val)
 {
-  int v = -1;
+	int v = -1;
 
-  if (!val)
-    return VAR_BADVAL;
-  if (sscanf(val, "%d", &v) != 1)
-    return VAR_BADVAL;
-  if ((v < 32) || (v > 240))
-    return VAR_BADVAL;
-  parray[p].d_width = v;
-  pprintf(p, "Width set to %d.\n", v);
-  return VAR_OK;
+	if (!val)
+		return VAR_BADVAL;
+	if (sscanf(val, "%d", &v) != 1)
+		return VAR_BADVAL;
+	if (v < 32 || v > 240)
+		return VAR_BADVAL;
+
+	parray[p].d_width = v;
+
+	pprintf(p, "Width set to %d.\n", v);
+	return VAR_OK;
 }
 
 PUBLIC char *
