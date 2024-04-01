@@ -352,19 +352,22 @@ PRIVATE int set_uscf(int p, char *var, char *val)
   return VAR_OK;
 }
 */
-PRIVATE int set_time(int p, char *var, char *val)
-{
-  int v = -1;
 
-  if (!val)
-    return VAR_BADVAL;
-  if (sscanf(val, "%d", &v) != 1)
-    return VAR_BADVAL;
-  if ((v < 0) || (v > 240))
-    return VAR_BADVAL;
-  parray[p].d_time = v;
-  pprintf(p, "Default time set to %d.\n", v);
-  return VAR_OK;
+PRIVATE int
+set_time(int p, char *var, char *val)
+{
+	int v = -1;
+
+	if (!val)
+		return VAR_BADVAL;
+	if (sscanf(val, "%d", &v) != 1)
+		return VAR_BADVAL;
+	if (v < 0 || v > 240)
+		return VAR_BADVAL;
+
+	parray[p].d_time = v;
+	pprintf(p, "Default time set to %d.\n", v);
+	return VAR_OK;
 }
 
 PRIVATE int
