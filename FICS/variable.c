@@ -676,53 +676,62 @@ PRIVATE int set_plan(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_formula(int p, char *var, char *val)
+PRIVATE int
+set_formula(int p, char *var, char *val)
 {
-  int which;
-  player *me = &parray[p];
+	int	 which;
+	player	*me = &parray[p];
 
 #ifdef NO_FORMULAS
-  pprintf(p, "Sorry -- not available because of a bug\n");
-  return COM_OK;
+	pprintf(p, "Sorry -- not available because of a bug\n");
+	return COM_OK;
 #else
-  if (isdigit(var[1]))
-    which = var[1] - '1';
-  else
-    which = MAX_FORMULA;
+	if (isdigit(var[1]))
+		which = var[1] - '1';
+	else
+		which = MAX_FORMULA;
 
-  if (val != NULL) {
-    val = eatwhite(val);
-    if (val[0] == '\0')
-      val = NULL;
-  }
-  if (!SetValidFormula(p, which, val))
-    return VAR_BADVAL;
+	if (val != NULL) {
+		val = eatwhite(val);
 
-  if (which < MAX_FORMULA) {
-    if (val != NULL) {
-      while (me->num_formula < which) {
-	me->formulaLines[me->num_formula] = NULL;
-	(me->num_formula)++;
-      }
-      if (me->num_formula <= which)
-	me->num_formula = which + 1;
-      pprintf(p, "Formula variable f%d set to %s.\n",
-	      which + 1, me->formulaLines[which]);
-      return VAR_OK;
-    }
-    pprintf(p, "Formula variable f%d unset.\n", which + 1);
-    if (which + 1 >= me->num_formula) {
-      while (which >= 0 && me->formulaLines[which] == NULL)
-	which--;
-      me->num_formula = which + 1;
-    }
-  } else {
-    if (me->formula != NULL)
-      pprintf(p, "Formula set to %s.\n", me->formula);
-    else
-      pprintf(p, "Formula unset.\n");
-  }
-  return VAR_OK;
+		if (val[0] == '\0')
+			val = NULL;
+	}
+
+	if (!SetValidFormula(p, which, val))
+		return VAR_BADVAL;
+
+	if (which < MAX_FORMULA) {
+		if (val != NULL) {
+			while (me->num_formula < which) {
+				me->formulaLines[me->num_formula] = NULL;
+				(me->num_formula)++;
+			}
+
+			if (me->num_formula <= which)
+				me->num_formula = (which + 1);
+
+			pprintf(p, "Formula variable f%d set to %s.\n",
+			    (which + 1),
+			    me->formulaLines[which]);
+			return VAR_OK;
+		}
+
+		pprintf(p, "Formula variable f%d unset.\n", (which + 1));
+
+		if (which + 1 >= me->num_formula) {
+			while (which >= 0 && me->formulaLines[which] == NULL)
+				which--;
+			me->num_formula = (which + 1);
+		}
+	} else {
+		if (me->formula != NULL)
+			pprintf(p, "Formula set to %s.\n", me->formula);
+		else
+			pprintf(p, "Formula unset.\n");
+	}
+
+	return VAR_OK;
 #endif
 }
 
