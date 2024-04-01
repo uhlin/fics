@@ -784,27 +784,29 @@ PUBLIC var_list variables[] = {
   {NULL, NULL}
 };
 
-PRIVATE int set_find(char *var)
+PRIVATE int
+set_find(char *var)
 {
-  int i = 0;
-  int gotIt = -1;
-  int len = strlen(var);
+	int	gotIt = -1;
+	int	i = 0;
+	int	len = strlen(var);
 
-  while (variables[i].name) {
-    if (!strncmp(variables[i].name, var, len)) {
-      if (len == strlen(variables[i].name)) {
-	return i;
-      } else if (gotIt >= 0) {
-	return -VAR_AMBIGUOUS;
-      }
-      gotIt = i;
-    }
-    i++;
-  }
-  if (gotIt >= 0) {
-    return gotIt;
-  }
-  return -VAR_NOSUCH;
+	while (variables[i].name) {
+		if (!strncmp(variables[i].name, var, len)) {
+			if (len == strlen(variables[i].name))
+				return i;
+			else if (gotIt >= 0)
+				return -VAR_AMBIGUOUS;
+
+			gotIt = i;
+		}
+
+		i++;
+	}
+
+	if (gotIt >= 0)
+		return gotIt;
+	return -VAR_NOSUCH;
 }
 
 PUBLIC int
