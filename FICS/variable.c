@@ -35,8 +35,6 @@
 #include "board.h"
 #include "command.h"
 #include "comproc.h"
-#include "config.h"
-#include "ficsmain.h"
 #include "formula.h" /* SetValidFormula() */
 #include "playerdb.h"
 #include "rmalloc.h"
