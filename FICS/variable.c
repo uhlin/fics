@@ -412,10 +412,16 @@ PRIVATE int set_width(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PUBLIC char *Language(int i)
-{
-  static char *Lang[NUM_LANGS] = {"English", "Spanish", "French", "Danish"};
-  return Lang[i];
+PUBLIC char *
+Language(int i)
+{ // XXX
+	static char *Lang[NUM_LANGS] = {
+		"English",
+		"Spanish",
+		"French",
+		"Danish"
+	};
+	return Lang[i];
 }
 
 PRIVATE int
