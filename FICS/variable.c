@@ -395,7 +395,6 @@ set_height(int p, char *var, char *val)
 		return VAR_BADVAL;
 
 	parray[p].d_height = v;
-
 	pprintf(p, "Height set to %d.\n", v);
 	return VAR_OK;
 }
@@ -413,7 +412,6 @@ set_width(int p, char *var, char *val)
 		return VAR_BADVAL;
 
 	parray[p].d_width = v;
-
 	pprintf(p, "Width set to %d.\n", v);
 	return VAR_OK;
 }
