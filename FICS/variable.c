@@ -47,28 +47,31 @@
 #include <bsd/string.h>
 #endif
 
-PRIVATE int set_boolean_var(int *var, char *val)
+PRIVATE int
+set_boolean_var(int *var, char *val)
 {
-  int v = -1;
+	int v = -1;
 
-  if (val == NULL)
-    return (*var = !*var);
+	if (val == NULL)
+		return (*var = !*var);
 
-  if (sscanf(val, "%d", &v) != 1) {
-    stolower(val);
-    if (!strcmp(val, "off"))
-      v = 0;
-    if (!strcmp(val, "false"))
-      v = 0;
-    if (!strcmp(val, "on"))
-      v = 1;
-    if (!strcmp(val, "true"))
-      v = 1;
-  }
-  if ((v == 0) || (v == 1))
-    return (*var = v);
-  else
-    return (-1);
+	if (sscanf(val, "%d", &v) != 1) {
+		stolower(val);
+
+		if (!strcmp(val, "off"))
+			v = 0;
+		if (!strcmp(val, "false"))
+			v = 0;
+		if (!strcmp(val, "on"))
+			v = 1;
+		if (!strcmp(val, "true"))
+			v = 1;
+	}
+
+	if (v == 0 || v == 1)
+		return (*var = v);
+	else
+		return (-1);
 }
 
 PRIVATE int
