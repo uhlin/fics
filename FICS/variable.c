@@ -510,50 +510,65 @@ int RePartner (int p, int new)
   return new;
 }
 
-PUBLIC int com_partner(int p, param_list param)
+PUBLIC int
+com_partner(int p, param_list param)
 {
-  int pNew;
+	int pNew;
 
-  if (param[0].type == TYPE_NULL) {
-    RePartner(p, -1);
-    return COM_OK;
-  }
-  /* OK, we're trying to set a new partner. */
-  pNew = player_find_part_login(param[0].val.word);
-  if (pNew < 0 || parray[pNew].status == PLAYER_PASSWORD
-      || parray[pNew].status == PLAYER_LOGIN) {
-    pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-    return COM_OK;
-  }
-  if (pNew == p) {
-    pprintf(p, "You can't be your own bughouse partner.\n");
-    return COM_OK;
-  }
-  /* Now we know a legit partner has been chosen.  Is an offer pending? */
-  if (player_find_pendfrom(p, pNew, PEND_PARTNER) >= 0) {
-    pprintf (p, "You agree to be %s's partner.\n", parray[pNew].name);
-    pprintf_prompt (pNew, "%s agrees to be your partner.\n", parray[p].name);
-    player_remove_request(pNew, p, PEND_PARTNER);
+	if (param[0].type == TYPE_NULL) {
+		RePartner(p, -1);
+		return COM_OK;
+	}
 
-    /* Make the switch. */
-    RePartner (p, pNew);
-    RePartner (pNew, p);
-    return COM_OK;
-  }
-  /* This is just an offer. Make sure a new partner is needed. */
-  if (parray[pNew].partner >= 0) {
-    pprintf(p, "%s already has a partner.\n", parray[pNew].name);
-    return COM_OK;
-  }
-  pprintf(pNew, "\n");
-  pprintf_highlight(pNew, "%s", parray[p].name);
-  pprintf(pNew, " offers to be your bughouse partner; ");
-  pprintf_prompt(pNew, "type \"partner %s\" to accept.\n", parray[p].name);
-  pprintf(p, "Making a partnership offer to %s.\n", parray[pNew].name);
-  player_add_request(p, pNew, PEND_PARTNER, 0);
+	// OK, we're trying to set a new partner.
+	pNew = player_find_part_login(param[0].val.word);
 
-/*  pprintf (p, "Command not implemented yet.\n"); */
-  return COM_OK;
+	if (pNew < 0 ||
+	    parray[pNew].status == PLAYER_PASSWORD ||
+	    parray[pNew].status == PLAYER_LOGIN) {
+		pprintf(p, "No user named \"%s\" is logged in.\n",
+		    param[0].val.word);
+		return COM_OK;
+	}
+
+	if (pNew == p) {
+		pprintf(p, "You can't be your own bughouse partner.\n");
+		return COM_OK;
+	}
+
+	/*
+	 * Now we know a legit partner has been chosen. Is an offer
+	 * pending?
+	 */
+	if (player_find_pendfrom(p, pNew, PEND_PARTNER) >= 0) {
+		pprintf(p, "You agree to be %s's partner.\n",
+		    parray[pNew].name);
+		pprintf_prompt(pNew, "%s agrees to be your partner.\n",
+		    parray[p].name);
+		player_remove_request(pNew, p, PEND_PARTNER);
+
+		// Make the switch.
+		RePartner(p, pNew);
+		RePartner(pNew, p);
+
+		return COM_OK;
+	}
+
+	// This is just an offer. Make sure a new partner is needed.
+	if (parray[pNew].partner >= 0) {
+		pprintf(p, "%s already has a partner.\n", parray[pNew].name);
+		return COM_OK;
+	}
+
+	pprintf(pNew, "\n");
+	pprintf_highlight(pNew, "%s", parray[p].name);
+	pprintf(pNew, " offers to be your bughouse partner; ");
+	pprintf_prompt(pNew, "type \"partner %s\" to accept.\n",
+	    parray[p].name);
+	pprintf(p, "Making a partnership offer to %s.\n", parray[pNew].name);
+
+	player_add_request(p, pNew, PEND_PARTNER, 0);
+	return COM_OK;
 }
 
 PRIVATE int
