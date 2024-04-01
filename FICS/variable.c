@@ -311,47 +311,34 @@ PRIVATE int set_highlight(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_style(int p, char *var, char *val)
+PRIVATE int
+set_style(int p, char *var, char *val)
 {
-  int v = -1;
+	int v = -1;
 
-  if (!val)
-    return VAR_BADVAL;
-  if (sscanf(val, "%d", &v) != 1)
-    return VAR_BADVAL;
-  if ((v < 1) || (v > MAX_STYLES))
-    return VAR_BADVAL;
-  parray[p].style = v - 1;
-  pprintf(p, "Style %d set.\n", v);
-  return VAR_OK;
+	if (!val)
+		return VAR_BADVAL;
+	if (sscanf(val, "%d", &v) != 1)
+		return VAR_BADVAL;
+	if (v < 1 || v > MAX_STYLES)
+		return VAR_BADVAL;
+
+	parray[p].style = (v - 1);
+	pprintf(p, "Style %d set.\n", v);
+	return VAR_OK;
 }
 
-PRIVATE int set_flip(int p, char *var, char *val)
+PRIVATE int
+set_flip(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].flip, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].flip)
-    pprintf(p, "Flip on.\n");
-  else
-    pprintf(p, "Flip off.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].flip, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].flip)
+		pprintf(p, "Flip on.\n");
+	else
+		pprintf(p, "Flip off.\n");
+	return VAR_OK;
 }
-/*
-PRIVATE int set_uscf(int p, char *var, char *val)
-{
-  int v = -1;
-
-  if (!val)
-    return VAR_BADVAL;
-  if (sscanf(val, "%d", &v) != 1)
-    return VAR_BADVAL;
-  if ((v < 0) || (v > 3000))
-    return VAR_BADVAL;
-  parray[p].uscfRating = v;
-  pprintf(p, "USCF Rating set to %d.\n", v);
-  return VAR_OK;
-}
-*/
 
 PRIVATE int
 set_time(int p, char *var, char *val)
