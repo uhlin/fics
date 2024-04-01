@@ -25,11 +25,6 @@
 #ifndef _VARIABLE_H
 #define _VARIABLE_H
 
-typedef struct _var_list {
-	char *name;
-	int (*var_func)();
-} var_list;
-
 #define VAR_OK           0
 #define VAR_NOSUCH       1
 #define VAR_BADVAL       2
@@ -40,6 +35,11 @@ typedef struct _var_list {
 #define LANG_FRENCH      2
 #define LANG_DANISH      3
 #define NUM_LANGS        4
+
+typedef struct _var_list {
+	char *name;
+	int (*var_func)();
+} var_list;
 
 extern var_list variables[];
 
