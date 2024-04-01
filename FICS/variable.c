@@ -556,37 +556,16 @@ PUBLIC int com_partner(int p, param_list param)
   return COM_OK;
 }
 
-PRIVATE int set_partner(int p, char *var, char *val)
+PRIVATE int
+set_partner(int p, char *var, char *val)
 {
-#if 0
-  int p1 = parray[p].partner;
-
-  if (!val) {
-    RePartner (p, -1);
-    return VAR_OK;
-  }
-  if (!printablestring(val))
-    return VAR_BADVAL;
-  stolower(val);
-  p1 = player_find_part_login(val);
-  if (p1 < 0 || parray[p1].status == PLAYER_PASSWORD
-      || parray[p1].status == PLAYER_LOGIN) {
-    pprintf(p, "No user named \"%s\" is logged in.\n", val);
-    return VAR_OK;
-  }
-  if (p1 == p) {
-    pprintf(p, "You can't be your own bughouse partner!\n");
-    return VAR_OK;
-  }
-  parray[p].partner = p1;
-  pprintf(p, "Your bughouse partner is now %s.\n", parray[p1].name);
-  pprintf_prompt(p1, "%s just chose you for a bughouse partner.\n", parray[p].name);
-#endif
-  if (!val)
-    pprintf(p, "Command is obsolete; type \"partner\" to clear your partner\n");
-  else
-    pprintf(p, "Command is obsolete; type \"partner %s\" to change your partner\n", val);
-  return VAR_OK;
+	if (!val)
+		pprintf(p, "Command is obsolete; type \"partner\" to clear "
+		    "your partner\n");
+	else
+		pprintf(p, "Command is obsolete; type \"partner %s\" to "
+		    "change your partner\n", val);
+	return VAR_OK;
 }
 
 PRIVATE int
