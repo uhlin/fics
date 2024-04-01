@@ -468,22 +468,29 @@ PRIVATE int set_promote(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_prompt(int p, char *var, char *val)
+PRIVATE int
+set_prompt(int p, char *var, char *val)
 {
-  if (!val) {
-    if (parray[p].prompt && (parray[p].prompt != def_prompt))
-      rfree(parray[p].prompt);
-    parray[p].prompt = def_prompt;
-    return VAR_OK;
-  }
-  if (!printablestring(val))
-    return VAR_BADVAL;
-  if (parray[p].prompt != def_prompt)
-    rfree(parray[p].prompt);
-  parray[p].prompt = (char *) rmalloc(strlen(val) + 2);
-  strcpy(parray[p].prompt, val);
-  strcat(parray[p].prompt, " ");
-  return VAR_OK;
+	if (!val) {
+		if (parray[p].prompt && parray[p].prompt != def_prompt)
+			rfree(parray[p].prompt);
+		parray[p].prompt = def_prompt;
+		return VAR_OK;
+	}
+
+	if (!printablestring(val))
+		return VAR_BADVAL;
+
+	if (parray[p].prompt != def_prompt)
+		rfree(parray[p].prompt);
+
+	const size_t size = strlen(val) + 2;
+	parray[p].prompt = rmalloc(size);
+
+	strlcpy(parray[p].prompt, val, size);
+	strlcat(parray[p].prompt, " ", size);
+
+	return VAR_OK;
 }
 
 PRIVATE int
