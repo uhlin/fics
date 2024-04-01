@@ -57,21 +57,20 @@
 #endif
 
 struct print_bh_context {
-	int pp;
-	int pp1;
+	int	 pp;
+	int	 pp1;
 
-	int rated;
-	int type;
-	int white;
+	int	 rated;
+	int	 type;
+	int	 white;
 
-	char *board;
-	char *category;
+	char	*board;
+	char	*category;
 
-	int binc;
-	int bt;
-
-	int winc;
-	int wt;
+	int	 binc;
+	int	 bt;
+	int	 winc;
+	int	 wt;
 };
 
 PUBLIC int
