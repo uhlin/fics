@@ -103,71 +103,79 @@ PRIVATE int set_sopen(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_ropen(int p, char *var, char *val)
+PRIVATE int
+set_ropen(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].ropen, val) < 0)
-    return VAR_BADVAL;
-  pprintf(p, "ropen set to %d.\n", parray[p].ropen);
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].ropen, val) < 0)
+		return VAR_BADVAL;
+	pprintf(p, "ropen set to %d.\n", parray[p].ropen);
+	return VAR_OK;
 }
 
-PRIVATE int set_rated(int p, char *var, char *val)
+PRIVATE int
+set_rated(int p, char *var, char *val)
 {
-  if (!parray[p].registered) {
-    pprintf(p, "You cannot change your rated status.\n");
-    return VAR_OK;
-  }
-  if (set_boolean_var(&parray[p].rated, val) < 0)
-    return VAR_BADVAL;
-  pprintf(p, "rated set to %d.\n", parray[p].rated);
-  return VAR_OK;
+	if (!parray[p].registered) {
+		pprintf(p, "You cannot change your rated status.\n");
+		return VAR_OK;
+	}
+	if (set_boolean_var(&parray[p].rated, val) < 0)
+		return VAR_BADVAL;
+	pprintf(p, "rated set to %d.\n", parray[p].rated);
+	return VAR_OK;
 }
 
-PRIVATE int set_shout(int p, char *var, char *val)
+PRIVATE int
+set_shout(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].i_shout, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].i_shout)
-    pprintf(p, "You will now hear shouts.\n");
-  else
-    pprintf(p, "You will not hear shouts.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].i_shout, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].i_shout)
+		pprintf(p, "You will now hear shouts.\n");
+	else
+		pprintf(p, "You will not hear shouts.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_cshout(int p, char *var, char *val)
+PRIVATE int
+set_cshout(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].i_cshout, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].i_cshout)
-    pprintf(p, "You will now hear cshouts.\n");
-  else
-    pprintf(p, "You will not hear cshouts.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].i_cshout, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].i_cshout)
+		pprintf(p, "You will now hear cshouts.\n");
+	else
+		pprintf(p, "You will not hear cshouts.\n");
+	return VAR_OK;
 }
 
-PRIVATE int set_kibitz(int p, char *var, char *val)
+PRIVATE int
+set_kibitz(int p, char *var, char *val)
 {
-  if (set_boolean_var(&parray[p].i_kibitz, val) < 0)
-    return VAR_BADVAL;
-  if (parray[p].i_kibitz)
-    pprintf(p, "You will now hear kibitzes.\n");
-  else
-    pprintf(p, "You will not hear kibitzes.\n");
-  return VAR_OK;
+	if (set_boolean_var(&parray[p].i_kibitz, val) < 0)
+		return VAR_BADVAL;
+	if (parray[p].i_kibitz)
+		pprintf(p, "You will now hear kibitzes.\n");
+	else
+		pprintf(p, "You will not hear kibitzes.\n");
+	return VAR_OK;
 }
-PRIVATE int set_kiblevel(int p, char *var, char *val)
-{
-  int v = -1;
 
-  if (!val)
-    return VAR_BADVAL;
-  if (sscanf(val, "%d", &v) != 1)
-    return VAR_BADVAL;
-  if ((v < 0) || (v > 9999))
-    return VAR_BADVAL;
-  parray[p].kiblevel = v;
-  pprintf(p, "Kibitz level now set to: %d.\n", v);
-  return VAR_OK;
+PRIVATE int
+set_kiblevel(int p, char *var, char *val)
+{
+	int v = -1;
+
+	if (!val)
+		return VAR_BADVAL;
+	if (sscanf(val, "%d", &v) != 1)
+		return VAR_BADVAL;
+	if (v < 0 || v > 9999)
+		return VAR_BADVAL;
+
+	parray[p].kiblevel = v;
+	pprintf(p, "Kibitz level now set to: %d.\n", v);
+	return VAR_OK;
 }
 
 PRIVATE int
