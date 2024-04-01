@@ -486,28 +486,39 @@ PRIVATE int set_prompt(int p, char *var, char *val)
   return VAR_OK;
 }
 
-int RePartner (int p, int new)
+PRIVATE int
+RePartner(int p, int new)
 {
-  int pOld;
+	int	pOld;
 
-  if (p < 0)
-    return -1;
-  pOld = parray[p].partner;
-  if (parray[pOld].partner == p) {
-    if (new >= 0)
-      pprintf_prompt (pOld, "Your partner has just chosen a new partner.\n");
-    else
-      pprintf_prompt (pOld, "Your partner has just unset his/her partner.\n");
-    player_withdraw_offers (pOld, -1, PEND_BUGHOUSE);
-    player_decline_offers (pOld, -1, PEND_BUGHOUSE);
-    player_withdraw_offers (p, -1, PEND_BUGHOUSE);
-    player_decline_offers (p, -1, PEND_BUGHOUSE);
-  }
-  player_withdraw_offers(p, -1, PEND_PARTNER);
-  player_decline_offers(p, -1, PEND_PARTNER);
-  parray[pOld].partner = -1;
-  parray[p].partner = new;
-  return new;
+	if (p < 0)
+		return -1;
+
+	pOld = parray[p].partner;
+
+	if (parray[pOld].partner == p) {
+		if (new >= 0) {
+			pprintf_prompt(pOld, "Your partner has just chosen "
+			    "a new partner.\n");
+		} else {
+			pprintf_prompt(pOld, "Your partner has just unset "
+			    "his/her partner.\n");
+		}
+
+		player_withdraw_offers(pOld, -1, PEND_BUGHOUSE);
+		player_decline_offers(pOld, -1, PEND_BUGHOUSE);
+
+		player_withdraw_offers(p, -1, PEND_BUGHOUSE);
+		player_decline_offers(p, -1, PEND_BUGHOUSE);
+	}
+
+	player_withdraw_offers(p, -1, PEND_PARTNER);
+	player_decline_offers(p, -1, PEND_PARTNER);
+
+	parray[pOld].partner	= -1;
+	parray[p].partner	= new;
+
+	return new;
 }
 
 PUBLIC int
