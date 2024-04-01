@@ -48,6 +48,9 @@
 #define PRINTFLIKE(arg_no)
 #endif
 
+#define UNUSED_PARAM(p) ((void) (p))
+#define UNUSED_VAR(v) ((void) (v))
+
 #ifdef DEBUG
 #define ASSERT(expression) \
 	((void) ((expression)||_assert_error(__FILE__, __LINE__)))
