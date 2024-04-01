@@ -418,25 +418,32 @@ PUBLIC char *Language(int i)
   return Lang[i];
 }
 
-PRIVATE int set_language (int p, char *var, char *val)
+PRIVATE int
+set_language(int p, char *var, char *val)
 {
-  int i, len, gotIt = -1;
+	int	len, gotIt = -1;
 
-  if (!val)
-    return VAR_BADVAL;
-  len = strlen(val);
-  for (i=0; i < NUM_LANGS; i++) {
-    if (strncasecmp(val, Language(i), len))
-      continue;
-    if (gotIt >= 0)
-      return VAR_BADVAL;
-    else gotIt = i;
-  }
-  if (gotIt < 0)
-    return VAR_BADVAL;
-  parray[p].language = gotIt;
-  pprintf(p, "Language set to %s.\n", Language(gotIt));
-  return VAR_OK;
+	if (!val)
+		return VAR_BADVAL;
+
+	len = strlen(val);
+
+	for (int i = 0; i < NUM_LANGS; i++) {
+		if (strncasecmp(val, Language(i), len))
+			continue;
+		if (gotIt >= 0)
+			return VAR_BADVAL;
+		else
+			gotIt = i;
+	}
+
+	if (gotIt < 0)
+		return VAR_BADVAL;
+
+	parray[p].language = gotIt;
+
+	pprintf(p, "Language set to %s.\n", Language(gotIt));
+	return VAR_OK;
 }
 
 PRIVATE int
