@@ -26,6 +26,7 @@
    DAV                          95/19/11	Moved variable command to here
 						Added jprivate
    Markus Uhlin                 23/12/27	Fixed the includes
+   Markus Uhlin                 24/04/01	Reformatted all functions
 */
 
 #include "stdinclude.h"
