@@ -9,6 +9,8 @@ documented in this file.
   occurrences.)
 - Made functions and variables private where possible.
 - Reformatted code according to OpenBSD's KNF.
+- Replaced unbounded string handling functions. _Multiple_
+  occurrences.
 
 ## [1.1] - 2024-03-30 ##
 - **Added** `PRINTFLIKE()` and fixed many format errors.
