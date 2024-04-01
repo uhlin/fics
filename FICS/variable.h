@@ -41,6 +41,8 @@ typedef struct _var_list {
 #define LANG_DANISH      3
 #define NUM_LANGS        4
 
+extern var_list variables[];
+
 extern int var_set(int, char *, char *, int *);
 extern int com_time();
 extern int com_inc();
@@ -48,8 +50,6 @@ extern int com_height();
 extern int com_width();
 extern int com_partner();
 extern char *Language();
-
-extern var_list variables[];
 
 extern int com_variables();
 
