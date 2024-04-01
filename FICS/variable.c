@@ -43,6 +43,10 @@
 #include "utils.h"
 #include "variable.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 PRIVATE int set_boolean_var(int *var, char *val)
 {
   int v = -1;
@@ -585,22 +589,27 @@ PRIVATE int set_partner(int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_busy(int p, char *var, char *val)
+PRIVATE int
+set_busy(int p, char *var, char *val)
 {
-  if (!val) {
-    parray[p].busy[0] = '\0';
-    pprintf(p, "Your \"busy\" string was cleared.\n");
-    return VAR_OK;
-  }
-  if ((val) && (!printablestring(val)))
-    return VAR_BADVAL;
-  if (strlen(val) > 50) {
-    pprintf(p, "That string is too long.\n");
-    return VAR_BADVAL;
-  }
-  sprintf(parray[p].busy, "%s", val);
-  pprintf(p, "Your \"busy\" string was set to \" %s\"\n", parray[p].busy);
-  return VAR_OK;
+	if (!val) {
+		parray[p].busy[0] = '\0';
+		pprintf(p, "Your \"busy\" string was cleared.\n");
+		return VAR_OK;
+	}
+
+	if (val && !printablestring(val))
+		return VAR_BADVAL;
+
+	if (strlen(val) > 50) {
+		pprintf(p, "That string is too long.\n");
+		return VAR_BADVAL;
+	}
+
+	strlcpy(parray[p].busy, val, sizeof(parray[p].busy));
+
+	pprintf(p, "Your \"busy\" string was set to \" %s\"\n", parray[p].busy);
+	return VAR_OK;
 }
 
 PRIVATE int
