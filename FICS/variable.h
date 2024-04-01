@@ -26,8 +26,8 @@
 #define _VARIABLE_H
 
 typedef struct _var_list {
-  char *name;
-  int (*var_func)();
+	char *name;
+	int (*var_func)();
 } var_list;
 
 #define VAR_OK 0
