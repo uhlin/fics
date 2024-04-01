@@ -30,16 +30,16 @@ typedef struct _var_list {
 	int (*var_func)();
 } var_list;
 
-#define VAR_OK 0
-#define VAR_NOSUCH 1
-#define VAR_BADVAL 2
-#define VAR_AMBIGUOUS 3
+#define VAR_OK           0
+#define VAR_NOSUCH       1
+#define VAR_BADVAL       2
+#define VAR_AMBIGUOUS    3
 
-#define LANG_ENGLISH 0
-#define LANG_SPANISH 1
-#define LANG_FRENCH 2
-#define LANG_DANISH 3
-#define NUM_LANGS 4
+#define LANG_ENGLISH     0
+#define LANG_SPANISH     1
+#define LANG_FRENCH      2
+#define LANG_DANISH      3
+#define NUM_LANGS        4
 
 extern int var_set(int, char *, char *, int *);
 extern int com_time();
