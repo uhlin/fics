@@ -121,10 +121,10 @@ LoadEntries(void)
 	int	 listsize;
 
 	listsize	= 100;
-	list		= malloc(sizeof(ENTRY *) * listsize);
+	list		= reallocarray(NULL, sizeof(ENTRY *), listsize);
 
 	if (list == NULL)
-		err(1, "%s: malloc", __func__);
+		err(1, "%s: reallocarray", __func__);
 
 	for (letter1 = 'a'; letter1 <= 'z'; letter1++) {
 		printf("Loading %c's.\n", letter1);
@@ -237,10 +237,11 @@ makerank(void)
 	for (rtype = 0; rtype < 4; rtype++) {
 		sortnum		= 0;
 		sortmesize	= 100;
-		sortme		= malloc(sizeof(ENTRY *) * sortmesize);
+		sortme		= reallocarray(NULL, sizeof(ENTRY *),
+		    sortmesize);
 
 		if (sortme == NULL)
-			err(1, "%s: malloc", __func__);
+			err(1, "%s: reallocarray", __func__);
 
 		for (i = 0; i < n; i++) {
 			if (list[i]->r[rtype].rating) {
