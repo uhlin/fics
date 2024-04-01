@@ -24,6 +24,8 @@
    Markus Uhlin                 24/01/03	Added/deleted macros and
 						redefined ASSERT().
    Markus Uhlin                 24/01/04	Added PRINTFLIKE().
+   Markus Uhlin                 24/04/02	Defined UNUSED_PARAM() and
+						UNUSED_VAR()
 */
 
 #ifndef _COMMON_H
