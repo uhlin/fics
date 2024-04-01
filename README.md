@@ -8,7 +8,9 @@ The fork is maintained by the
 [RPBLC computing network](https://www.rpblc.net)
 and in particular
 [Markus Uhlin](mailto:maxxe@rpblc.net).
-One goal of the fork is to modernize the code and fix bugs.
+The main goal of the fork is to modernize the codebase, improve the
+security and fix bugs. New features, for example, other chess variants
+will be added in a later stage.
 
 ## Installation ##
 
