@@ -162,12 +162,11 @@ LoadEntries(void)
 
 					if (++n == listsize) {
 						listsize += 100;
-						list = realloc(list, listsize *
+						list = reallocarray(list,
+						    listsize,
 						    sizeof(ENTRY *));
-						if (list == NULL) {
-							err(1, "%s: realloc",
-							    __func__);
-						}
+						if (list == NULL)
+							err(1, NULL);
 					}
 				}
 			}
@@ -249,10 +248,11 @@ makerank(void)
 
 				if (sortnum == sortmesize) {
 					sortmesize += 100;
-					sortme = realloc(sortme, sortmesize *
+					sortme = reallocarray(sortme,
+					    sortmesize,
 					    sizeof(ENTRY *));
 					if (sortme == NULL)
-						err(1, "%s: realloc", __func__);
+						err(1, NULL);
 				}
 			}
 		}
