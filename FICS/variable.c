@@ -439,33 +439,37 @@ PRIVATE int set_language (int p, char *var, char *val)
   return VAR_OK;
 }
 
-PRIVATE int set_promote(int p, char *var, char *val)
+PRIVATE int
+set_promote(int p, char *var, char *val)
 {
-  if (!val)
-    return VAR_BADVAL;
-  stolower(val);
-  switch (val[0]) {
-  case 'q':
-    parray[p].promote = QUEEN;
-    pprintf(p, "Promotion piece set to QUEEN.\n");
-    break;
-  case 'r':
-    parray[p].promote = ROOK;
-    pprintf(p, "Promotion piece set to ROOK.\n");
-    break;
-  case 'b':
-    parray[p].promote = BISHOP;
-    pprintf(p, "Promotion piece set to BISHOP.\n");
-    break;
-  case 'n':
-  case 'k':
-    parray[p].promote = KNIGHT;
-    pprintf(p, "Promotion piece set to KNIGHT.\n");
-    break;
-  default:
-    return VAR_BADVAL;
-  }
-  return VAR_OK;
+	if (!val)
+		return VAR_BADVAL;
+
+	stolower(val);
+
+	switch (val[0]) {
+	case 'q':
+		parray[p].promote = QUEEN;
+		pprintf(p, "Promotion piece set to QUEEN.\n");
+		break;
+	case 'r':
+		parray[p].promote = ROOK;
+		pprintf(p, "Promotion piece set to ROOK.\n");
+		break;
+	case 'b':
+		parray[p].promote = BISHOP;
+		pprintf(p, "Promotion piece set to BISHOP.\n");
+		break;
+	case 'n':
+	case 'k':
+		parray[p].promote = KNIGHT;
+		pprintf(p, "Promotion piece set to KNIGHT.\n");
+		break;
+	default:
+		return VAR_BADVAL;
+	}
+
+	return VAR_OK;
 }
 
 PRIVATE int
