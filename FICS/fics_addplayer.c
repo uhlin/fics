@@ -33,6 +33,7 @@
 #include <string.h>
 
 #include "command.h"
+#include "config.h"
 #include "fics_getsalt.h"
 #include "playerdb.h"
 #include "utils.h"
@@ -154,7 +155,7 @@ main(int argc, char *argv[])
 	    "and enter your handle name and password.\n\n"
 
 	    "Regards,\n\nThe FICS admins\n", funame, fname, email, password,
-	    fics_hostname);
+	    SERVER_HOSTNAME);
 
 	mail_string_to_address(email, "FICS Account Created", text);
 	return 0;
