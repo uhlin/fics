@@ -1449,46 +1449,51 @@ PUBLIC int DisplayTargetRank(int p, char *target, int show, int showComp)
   return (1);
 }
 
-PUBLIC int DisplayRankedPlayers(int p, int start, int end,
-				 int show, int showComp)
+PUBLIC int
+DisplayRankedPlayers(int p, int start, int end, int show, int showComp)
 {
-  int num = end - start + 1;
-  FILE *fb = NULL, *fs = NULL, *fw = NULL;
-  char Path[MAX_FILENAME_SIZE];
+	FILE	*fb = NULL;
+	FILE	*fs = NULL;
+	FILE	*fw = NULL;
+	char	 Path[MAX_FILENAME_SIZE] = { '\0' };
+	int	 num = (end - start + 1);
 
-  if (start <= 0)
-    start = 1;
-  if (num <= 0)
-    return 0;
-  if (num > 100)
-    num = 100;
-  if (CheckFlag(show, SHOW_BLITZ)) {
-    GetRankFileName(Path, TYPE_BLITZ);
-    fb = (FILE *) fopen(Path, "r");
-    if (fb == NULL)
-      ClearFlag(show, SHOW_BLITZ);
-  }
-  if (CheckFlag(show, SHOW_STANDARD)) {
-    GetRankFileName(Path, TYPE_STAND);
-    fs = (FILE *) fopen(Path, "r");
-    if (fs == NULL)
-      ClearFlag(show, SHOW_STANDARD);
-  }
-  if (CheckFlag(show, SHOW_WILD)) {
-    GetRankFileName(Path, TYPE_WILD);
-    fw = (FILE *) fopen(Path, "r");
-    if (fw == NULL)
-      ClearFlag(show, SHOW_WILD);
-  }
-  ShowRankLines(p, fb, fs, fw, start, start, start,
-		num, showComp, show, "");
-  if (fb)
-    fclose(fb);
-  if (fs)
-    fclose(fs);
-  if (fw)
-    fclose(fw);
-  return 1;
+	if (start <= 0)
+		start = 1;
+	if (num <= 0)
+		return 0;
+	if (num > 100)
+		num = 100;
+
+	if (CheckFlag(show, SHOW_BLITZ)) {
+		GetRankFileName(Path, TYPE_BLITZ);
+
+		if ((fb = fopen(Path, "r")) == NULL)
+			ClearFlag(show, SHOW_BLITZ);
+	}
+	if (CheckFlag(show, SHOW_STANDARD)) {
+		GetRankFileName(Path, TYPE_STAND);
+
+		if ((fs = fopen(Path, "r")) == NULL)
+			ClearFlag(show, SHOW_STANDARD);
+	}
+	if (CheckFlag(show, SHOW_WILD)) {
+		GetRankFileName(Path, TYPE_WILD);
+
+		if ((fw = fopen(Path, "r")) == NULL)
+			ClearFlag(show, SHOW_WILD);
+	}
+
+	ShowRankLines(p, fb, fs, fw, start, start, start, num, showComp, show,
+	    "");
+
+	if (fb)
+		fclose(fb);
+	if (fs)
+		fclose(fs);
+	if (fw)
+		fclose(fw);
+	return 1;
 }
 
 PUBLIC int
