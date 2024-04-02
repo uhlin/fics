@@ -1394,59 +1394,76 @@ PRIVATE int ShowRankLines(int p, FILE * fb, FILE * fs, FILE * fw, int bCount,
   return 1;
 }
 
-PUBLIC int DisplayTargetRank(int p, char *target, int show, int showComp)
+PUBLIC int
+DisplayTargetRank(int p, char *target, int show, int showComp)
 {
-  int numToShow = 20;
-  int blitzRank = -1, blitzCount;
-  int stdRank = -1, stdCount;
-  int wildRank = -1, wildCount;
-  int numAbove;
-  char Path[MAX_FILENAME_SIZE];
-  FILE *fb = NULL, *fs = NULL, *fw = NULL;
+	FILE	*fb = NULL;
+	FILE	*fs = NULL;
+	FILE	*fw = NULL;
+	char	 Path[MAX_FILENAME_SIZE] = { '\0' };
+	int	 numAbove;
+	int	 numToShow = 20;
+	int	 blitzRank = -1, blitzCount;
+	int	 stdRank = -1, stdCount;
+	int	 wildRank = -1, wildCount;
 
-  if (CheckFlag(show, SHOW_BLITZ)) {
-    GetRankFileName(Path, TYPE_BLITZ);
-    fb = (FILE *) fopen(Path, "r");
-    if (fb != NULL)
-      blitzRank = GetRank(fb, target, showComp);
-    if (blitzRank < 0)
-      ClearFlag(show, SHOW_BLITZ);
-  }
-  if (CheckFlag(show, SHOW_STANDARD)) {
-    GetRankFileName(Path, TYPE_STAND);
-    fs = (FILE *) fopen(Path, "r");
-    if (fs != NULL)
-      stdRank = GetRank(fs, target, showComp);
-    if (stdRank < 0)
-      ClearFlag(show, SHOW_STANDARD);
-  }
-  if (CheckFlag(show, SHOW_WILD)) {
-    GetRankFileName(Path, TYPE_WILD);
-    if (CheckFlag(show, SHOW_WILD))
-      fw = (FILE *) fopen(Path, "r");
-    if (fw != NULL)
-      wildRank = GetRank(fw, target, showComp);
-    if (wildRank < 0)
-      ClearFlag(show, SHOW_WILD);
-  }
-  if (!CheckFlag(show, SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD)) {
-    pprintf(p, "No ratings to show.\n");
-    if (fb != NULL) fclose(fb);
-    if (fs != NULL) fclose(fs);
-    if (fw != NULL) fclose(fw);
-    return (0);
-  }
-  numAbove = CountAbove(numToShow, blitzRank, stdRank, wildRank, show);
-  blitzCount = blitzRank - numAbove;
-  stdCount = stdRank - numAbove;
-  wildCount = wildRank - numAbove;
+	if (CheckFlag(show, SHOW_BLITZ)) {
+		GetRankFileName(Path, TYPE_BLITZ);
 
-  ShowRankLines(p, fb, fs, fw, blitzCount, stdCount, wildCount,
-		numToShow, showComp, show, target);
-  if (fb != NULL) fclose(fb);
-  if (fs != NULL) fclose(fs);
-  if (fw != NULL) fclose(fw);
-  return (1);
+		if ((fb = fopen(Path, "r")) != NULL)
+			blitzRank = GetRank(fb, target, showComp);
+		if (blitzRank < 0)
+			ClearFlag(show, SHOW_BLITZ);
+	}
+
+	if (CheckFlag(show, SHOW_STANDARD)) {
+		GetRankFileName(Path, TYPE_STAND);
+
+		if ((fs = fopen(Path, "r")) != NULL)
+			stdRank = GetRank(fs, target, showComp);
+		if (stdRank < 0)
+			ClearFlag(show, SHOW_STANDARD);
+	}
+
+	if (CheckFlag(show, SHOW_WILD)) {
+		GetRankFileName(Path, TYPE_WILD);
+
+		if (CheckFlag(show, SHOW_WILD))
+			fw = fopen(Path, "r");
+		if (fw != NULL)
+			wildRank = GetRank(fw, target, showComp);
+		if (wildRank < 0)
+			ClearFlag(show, SHOW_WILD);
+	}
+
+	if (!CheckFlag(show, (SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD))) {
+		pprintf(p, "No ratings to show.\n");
+
+		if (fb != NULL)
+			fclose(fb);
+		if (fs != NULL)
+			fclose(fs);
+		if (fw != NULL)
+			fclose(fw);
+		return 0;
+	}
+
+	numAbove = CountAbove(numToShow, blitzRank, stdRank, wildRank, show);
+
+	blitzCount	= (blitzRank - numAbove);
+	stdCount	= (stdRank - numAbove);
+	wildCount	= (wildRank - numAbove);
+
+	ShowRankLines(p, fb, fs, fw, blitzCount, stdCount, wildCount, numToShow,
+	    showComp, show, target);
+
+	if (fb != NULL)
+		fclose(fb);
+	if (fs != NULL)
+		fclose(fs);
+	if (fw != NULL)
+		fclose(fw);
+	return 1;
 }
 
 PUBLIC int
