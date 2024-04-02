@@ -1482,7 +1482,7 @@ clean_up_doit(int g, int mode, game_state_t *gs, move_t *m)
 	}
 
 	/*
-	 * Take back of last move is done already. It's time to update
+	 * takeback of last move is done already. It's time to update
 	 * enpassant array...
 	 */
 	update_enpassant_array(g, mode, gs);
@@ -1516,7 +1516,7 @@ backup_move(int g, int mode)
 	}
 
 	/*
-	 * When take back a _first_ move of rook, the ??rmoved
+	 * When takeback a _first_ move of rook, the ??rmoved
 	 * variable must be cleared. To check if the move is first we
 	 * should the scan move list.
 	 */
@@ -1532,7 +1532,7 @@ backup_move(int g, int mode)
 			gs->board[5][m->fromRank] = NOPIECE;
 
 			/*
-			 * If take back a castling, the appropriates
+			 * If takeback a castling, the appropriates
 			 * ??moved variables must be cleared.
 			 */
 			if (m->color == WHITE) {
@@ -1552,7 +1552,7 @@ backup_move(int g, int mode)
 			gs->board[3][m->fromRank] = NOPIECE;
 
 			/*
-			 * If take back a castling, the appropriate
+			 * If takeback a castling, the appropriate
 			 * ??moved variables must be cleared.
 			 */
 			if (m->color == WHITE) {
@@ -1567,7 +1567,7 @@ backup_move(int g, int mode)
 		}
 
 		/*
-		 * When take back a _first_ move of king (not the
+		 * When takeback a _first_ move of king (not the
 		 * castling), the ?kmoved variable must be cleared. To
 		 * check if the move is first we should scan the move
 		 * list.
