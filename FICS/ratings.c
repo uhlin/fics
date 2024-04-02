@@ -330,114 +330,6 @@ PUBLIC void save_ratings(void)
   fclose(fp);
 }
 
-/*
-PRIVATE void BestRemove(int p)
-{
-  int i;
-
-  for (i = 0; i < numB; i++) {
-    if (!strcmp(bestB[i].name, parray[p].name))
-      break;
-  }
-  if (i < numB) {
-    for (; i < numB - 1; i++) {
-      strcpy(bestB[i].name, bestB[i + 1].name);
-      bestB[i].rating = bestB[i + 1].rating;
-    }
-    numB--;
-  }
-  for (i = 0; i < numS; i++) {
-    if (!strcmp(bestS[i].name, parray[p].name))
-      break;
-  }
-  if (i < numS) {
-    for (; i < numS - 1; i++) {
-      strcpy(bestS[i].name, bestS[i + 1].name);
-      bestS[i].rating = bestS[i + 1].rating;
-    }
-    numS--;
-  }
-  for (i = 0; i < numW; i++) {
-    if (!strcmp(bestW[i].name, parray[p].name))
-      break;
-  }
-  if (i < numW) {
-    for (; i < numW - 1; i++) {
-      strcpy(bestW[i].name, bestW[i + 1].name);
-      bestW[i].rating = bestW[i + 1].rating;
-    }
-    numW--;
-  }
-}
-
-PRIVATE void BestAdd(int p)
-{
-  int where, j;
-
-  if ((parray[p].b_stats.rating > 0) && (parray[p].b_stats.num > 19)) {
-    for (where = 0; where < numB; where++) {
-      if (parray[p].b_stats.rating > bestB[where].rating)
-	break;
-    }
-    if (where < MAX_BEST) {
-      for (j = numB; j > where; j--) {
-	if (j == MAX_BEST)
-	  continue;
-	strcpy(bestB[j].name, bestB[j - 1].name);
-	bestB[j].rating = bestB[j - 1].rating;
-      }
-      strcpy(bestB[where].name, parray[p].name);
-      bestB[where].rating = parray[p].b_stats.rating;
-      if (numB < MAX_BEST)
-	numB++;
-    }
-  }
-  if ((parray[p].s_stats.rating > 0) && (parray[p].s_stats.num > 19)) {
-    for (where = 0; where < numS; where++) {
-      if (parray[p].s_stats.rating > bestS[where].rating)
-	break;
-    }
-    if (where < MAX_BEST) {
-      for (j = numS; j > where; j--) {
-	if (j == MAX_BEST)
-	  continue;
-	strcpy(bestS[j].name, bestS[j - 1].name);
-	bestS[j].rating = bestS[j - 1].rating;
-      }
-      strcpy(bestS[where].name, parray[p].name);
-      bestS[where].rating = parray[p].s_stats.rating;
-      if (numS < MAX_BEST)
-	numS++;
-    }
-  }
-  if ((parray[p].w_stats.rating > 0) && (parray[p].w_stats.num > 19)) {
-    for (where = 0; where < numW; where++) {
-      if (parray[p].w_stats.rating > bestW[where].rating)
-	break;
-    }
-    if (where < MAX_BEST) {
-      for (j = numW; j > where; j--) {
-	if (j == MAX_BEST)
-	  continue;
-	strcpy(bestW[j].name, bestW[j - 1].name);
-	bestW[j].rating = bestW[j - 1].rating;
-      }
-      strcpy(bestW[where].name, parray[p].name);
-      bestW[where].rating = parray[p].w_stats.rating;
-      if (numW < MAX_BEST)
-	numW++;
-    }
-  }
-}
-
-PUBLIC void BestUpdate(int p)
-{
-  BestRemove(p);
-  BestAdd(p);
-}
-
-*/
-
 PUBLIC void zero_stats(void)
 {
   int i;
@@ -1004,35 +896,6 @@ PUBLIC int com_hbest(int p, param_list param)
   return Best(p, param, 0);
 }
 
-#if 0
-PUBLIC int com_best(int p, param_list param)
-{
-  int i;
-
-  pprintf(p, "Standard                Blitz                   Wild\n");
-  for (i = 0; i < MAX_BEST; i++) {
-    if ((i >= numS) && (i >= numB))
-      break;
-    if (i < numS) {
-      pprintf(p, "%4d %-17s  ", bestS[i].rating, bestS[i].name);
-    } else {
-      pprintf(p, "                        ");
-    }
-    if (i < numB) {
-      pprintf(p, "%4d %-17s  ", bestB[i].rating, bestB[i].name);
-    } else {
-      pprintf(p, "                        ");
-    }
-    if (i < numW) {
-      pprintf(p, "%4d %-17s\n", bestW[i].rating, bestW[i].name);
-    } else {
-      pprintf(p, "\n");
-    }
-  }
-  return COM_OK;
-}
-#endif
-
 PUBLIC int com_statistics(int p, param_list param)
 {
   pprintf(p, "                Standard       Blitz   Lightning        Wild\n");
@@ -1105,46 +968,6 @@ PUBLIC int DisplayRank(int p, param_list param, int showComputers)
   }
 }
 
-/* CompareStats returns 1 if s1 comes first, -1 if s2 comes first, and 0
-   if neither takes precedence. */
-#if 0
-PRIVATE int CompareStats(char *name1, statistics *s1,
-			  char *name2, statistics *s2)
-{
-  int i, l1;
-
-  if (s1 == NULL)
-    if (s2 == NULL)
-      return 0;
-    else
-      return -1;
-  else if (s2 == NULL)
-    return 1;
-
-  if (s1->rating > s2->rating)
-    return 1;
-  if (s1->rating < s2->rating)
-    return -1;
-  l1 = strlen(name1);
-  for (i = 0; i < l1; i++) {
-    if (name2[i] == '\0')
-      return -1;
-    if (tolower(name1[i]) < tolower(name2[i]))
-      return 1;
-    if (tolower(name1[i]) > tolower(name2[i]))
-      return -1;
-  }
-  if (name2[i] != '\0')
-    return 1;
-/*  if (s1->sterr < s2->sterr) return 1;
-  if (s1->sterr > s2->sterr) return -1;
-  if (s1->num > s2->num) return 1;
-  if (s1->num < s2->num) return -1;
-*/
-  fprintf(stderr, "Duplicate entries found: %s.\n", name1);
-  return 0;
-}
-#endif
 PRIVATE int GetRankFileName(char *out, int type)
 {
   switch (type) {
