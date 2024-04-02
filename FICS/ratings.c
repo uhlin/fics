@@ -1080,29 +1080,34 @@ PRIVATE int GetRank(FILE * fp, char *target, int countComp)
   return (playerFound ? count : -1);
 }
 
-PRIVATE void PositionFilePtr(FILE * fp, int count, int *last,
-			      int *nTied, int showComp)
+PRIVATE void
+PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 {
-  int i, rating, nGames, is_computer;
-  char login[MAX_LOGIN_NAME];
-  char line[MAX_RANK_LINE];
+	char	line[MAX_RANK_LINE] = { '\0' };
+	char	login[MAX_LOGIN_NAME] = { '\0' };
+	int	rating, nGames, is_computer;
 
-  if (fp == NULL)
-    return;
-  rewind(fp);
-  for (i = 1; i < count; i++) {
-    do {
-      fgets(line, MAX_RANK_LINE - 1, fp);
-      if (feof(fp))
-	break;
-      sscanf(line, "%s %d %d %d", login, &rating, &nGames, &is_computer);
-    } while (!CountRankLine(showComp, login, nGames, is_computer));
-    if (rating != *last) {
-      *nTied = 1;
-      *last = rating;
-    } else
-      (*nTied)++;
-  }
+	if (fp == NULL)
+		return;
+
+	rewind(fp);
+
+	for (int i = 1; i < count; i++) {
+		do {
+			fgets(line, MAX_RANK_LINE - 1, fp);
+
+			if (feof(fp))
+				break;
+			sscanf(line, "%s %d %d %d", login, &rating, &nGames,
+			    &is_computer);
+		} while (!CountRankLine(showComp, login, nGames, is_computer));
+
+		if (rating != *last) {
+			*nTied = 1;
+			*last = rating;
+		} else
+			(*nTied)++;
+	}
 }
 
 PRIVATE int
