@@ -1055,12 +1055,12 @@ PRIVATE void DisplayRankHead(int p, int show)
   pprintf(p, "%s\n\n", Line);
 }
 
-PRIVATE int CountRankLine(int countComp, char *loginName,
-			   int num, int is_computer)
+PRIVATE int
+CountRankLine(int countComp, char *loginName, int num, int is_computer)
 {
-  if (loginName == NULL || loginName[0] == '\0')
-    return 0;
-  return (countComp || !is_computer) && (is_active(num));
+	if (loginName == NULL || loginName[0] == '\0')
+		return 0;
+	return (countComp || !is_computer) && (is_active(num));
 }
 
 PRIVATE int
