@@ -905,21 +905,24 @@ PUBLIC int com_statistics(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_fixrank(int p, param_list param)
+PUBLIC int
+com_fixrank(int p, param_list param)
 {
-  int p1, connected;
+	int	p1, connected;
 
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
-  UpdateRank(TYPE_BLITZ, parray[p1].name, &parray[p1].b_stats,
-	     parray[p1].name);
-  UpdateRank(TYPE_STAND, parray[p1].name, &parray[p1].s_stats,
-	     parray[p1].name);
-  UpdateRank(TYPE_WILD, parray[p1].name, &parray[p1].w_stats,
-	     parray[p1].name);
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
+
+	UpdateRank(TYPE_BLITZ, parray[p1].name, &parray[p1].b_stats,
+	    parray[p1].name);
+	UpdateRank(TYPE_STAND, parray[p1].name, &parray[p1].s_stats,
+	    parray[p1].name);
+	UpdateRank(TYPE_WILD, parray[p1].name, &parray[p1].w_stats,
+	    parray[p1].name);
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PUBLIC int
