@@ -1499,7 +1499,7 @@ DisplayRankedPlayers(int p, int start, int end, int show, int showComp)
 PUBLIC int
 ShowFromString(char *s)
 {
-	int	len = strlen(s);
+	int	len = strlen(s ? s : "");
 	int	show = 0;
 
 	if (s == NULL || s[0] == '\0')
