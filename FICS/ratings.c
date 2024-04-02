@@ -968,21 +968,22 @@ PUBLIC int DisplayRank(int p, param_list param, int showComputers)
   }
 }
 
-PRIVATE int GetRankFileName(char *out, int type)
+PRIVATE int
+GetRankFileName(char *out, int type)
 {
-  switch (type) {
-    case TYPE_BLITZ:
-	sprintf(out, "%s/rank.blitz", sdir);
-	return type;
-    case TYPE_STAND:
-	sprintf(out, "%s/rank.std", sdir);
-	return type;
-    case TYPE_WILD:
-	sprintf(out, "%s/rank.wild", sdir);
-	return type;
-    default:
-	return -1;
-  }
+	switch (type) {
+	case TYPE_BLITZ:
+		sprintf(out, "%s/rank.blitz", sdir);
+		return type;
+	case TYPE_STAND:
+		sprintf(out, "%s/rank.std", sdir);
+		return type;
+	case TYPE_WILD:
+		sprintf(out, "%s/rank.wild", sdir);
+		return type;
+	default:
+		return -1;
+	}
 }
 
 PUBLIC void
