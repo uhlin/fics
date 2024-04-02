@@ -48,32 +48,27 @@ typedef struct _rateStruct {
   int rating;
 } rateStruct;
 
-extern int is_active(int);
-extern void rating_init(void);
-extern void rating_recalc(void);
-extern void rating_sterr_delta(int, int, int, int, int, int *, double *);
-extern int rating_delta(int, int, int, int, int);
-extern int rating_update(int);
-
-extern int com_assess(int, param_list);
-extern int com_best(int, param_list);
-extern int com_hbest(int, param_list);
-extern int com_statistics(int, param_list);
-extern int com_fixrank(int, param_list);
-extern int com_rank(int, param_list);
-extern int com_hrank(int, param_list);
-
-extern void save_ratings(void);
-/*extern void BestUpdate(int); */
-extern void rating_remove(int, int);
-extern void rating_add(int, int);
-
-extern int DisplayRank(int, param_list, int);
-extern void UpdateRank(int, char *, statistics *, char *);
-extern int DisplayTargetRank(int, char *, int, int);
-extern int DisplayRankedPlayers(int, int, int, int, int);
-extern int ShowFromString(char *);
-/* extern time_t time(); */
-extern int Best(int, param_list, int);
+extern int	Best(int, param_list, int);
+extern int	DisplayRank(int, param_list, int);
+extern int	DisplayRankedPlayers(int, int, int, int, int);
+extern int	DisplayTargetRank(int, char *, int, int);
+extern int	ShowFromString(char *);
+extern int	com_assess(int, param_list);
+extern int	com_best(int, param_list);
+extern int	com_fixrank(int, param_list);
+extern int	com_hbest(int, param_list);
+extern int	com_hrank(int, param_list);
+extern int	com_rank(int, param_list);
+extern int	com_statistics(int, param_list);
+extern int	is_active(int);
+extern int	rating_delta(int, int, int, int, int);
+extern int	rating_update(int);
+extern void	UpdateRank(int, char *, statistics *, char *);
+extern void	rating_add(int, int);
+extern void	rating_init(void);
+extern void	rating_recalc(void);
+extern void	rating_remove(int, int);
+extern void	rating_sterr_delta(int, int, int, int, int, int *, double *);
+extern void	save_ratings(void);
 
 #endif /* _RATINGS_H */
