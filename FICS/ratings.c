@@ -1491,36 +1491,40 @@ PUBLIC int DisplayRankedPlayers(int p, int start, int end,
   return 1;
 }
 
-PUBLIC int ShowFromString(char *s)
+PUBLIC int
+ShowFromString(char *s)
 {
-  int i, len = strlen(s);
-  int show = 0;
+	int	len = strlen(s);
+	int	show = 0;
 
-  if (s == NULL || s[0] == '\0')
-    return SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD;
-  for (i = 0; i < len; i++) {
-    switch (s[i]) {
-    case 'b':
-      SetFlag(show, SHOW_BLITZ);
-      break;
-    case 's':
-      SetFlag(show, SHOW_STANDARD);
-      break;
-    case 'w':
-      SetFlag(show, SHOW_WILD);
-      break;
-    }
-  }
-  return (show);
+	if (s == NULL || s[0] == '\0')
+		return (SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD);
+
+	for (int i = 0; i < len; i++) {
+		switch (s[i]) {
+		case 'b':
+			SetFlag(show, SHOW_BLITZ);
+			break;
+		case 's':
+			SetFlag(show, SHOW_STANDARD);
+			break;
+		case 'w':
+			SetFlag(show, SHOW_WILD);
+			break;
+		}
+	}
+
+	return show;
 }
 
-PUBLIC int Best(int p, param_list param, int ShowComp)
+PUBLIC int
+Best(int p, param_list param, int ShowComp)
 {
-  int show = SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD;
+	int show = (SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD);
 
-  if (param[0].type != TYPE_NULL)
-    show = ShowFromString(param[0].val.word);
+	if (param[0].type != TYPE_NULL)
+		show = ShowFromString(param[0].val.word);
 
-  DisplayRankedPlayers(p, 1, 20, show, ShowComp);
-  return COM_OK;
+	DisplayRankedPlayers(p, 1, 20, show, ShowComp);
+	return COM_OK;
 }
