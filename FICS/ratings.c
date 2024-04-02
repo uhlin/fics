@@ -1063,21 +1063,25 @@ PRIVATE int CountRankLine(int countComp, char *loginName,
   return (countComp || !is_computer) && (is_active(num));
 }
 
-PRIVATE int GetRank(FILE * fp, char *target, int countComp)
+PRIVATE int
+GetRank(FILE *fp, char *target, int countComp)
 {
-  int count = 0;
-  int nGames, is_computer;
-  int playerFound = 0;
-  char line[MAX_RANK_LINE];
-  char login[MAX_LOGIN_NAME];
+	char	line[MAX_RANK_LINE] = { '\0' };
+	char	login[MAX_LOGIN_NAME] = { '\0' };
+	int	count = 0;
+	int	nGames, is_computer;
+	int	playerFound = 0;
 
-  while (fgets(line, MAX_RANK_LINE - 1, fp) && !playerFound) {
-    sscanf(line, "%s %*d %d %d", login, &nGames, &is_computer);
-    if ((playerFound = !strcasecmp(login, target))
-	|| CountRankLine(countComp, login, nGames, is_computer))
-      count++;
-  }
-  return (playerFound ? count : -1);
+	while (fgets(line, MAX_RANK_LINE - 1, fp) &&
+	    !playerFound) {
+		sscanf(line, "%s %*d %d %d", login, &nGames, &is_computer);
+
+		if ((playerFound = !strcasecmp(login, target)) ||
+		    CountRankLine(countComp, login, nGames, is_computer))
+			count++;
+	}
+
+	return (playerFound ? count : -1);
 }
 
 PRIVATE void
