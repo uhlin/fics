@@ -19,7 +19,8 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash	              	93/10/22	Created
+   Richard Nash                 93/10/22	Created
+   Markus Uhlin                 24/04/02	Revised
 */
 
 #ifndef _RATINGS_H
