@@ -11,7 +11,9 @@ documented in this file.
 - Fixed non-ANSI function declarations of functions. (Multiple
   occurrences.)
 - Made functions and variables private where possible.
-- Reformatted code according to OpenBSD's KNF.
+- Reformatted code according to OpenBSD's KNF:
+  - `variable.c`
+  - ...
 - Replaced unbounded string handling functions. _Multiple_
   occurrences.
 
