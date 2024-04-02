@@ -51,7 +51,7 @@ typedef struct _rateStruct {
 extern int is_active(int);
 extern void rating_init(void);
 extern void rating_recalc(void);
-extern void rating_sterr_delta(int, int, int, int, int, int *, double *);   
+extern void rating_sterr_delta(int, int, int, int, int, int *, double *);
 extern int rating_delta(int, int, int, int, int);
 extern int rating_update(int);
 
@@ -77,4 +77,3 @@ extern int ShowFromString(char *);
 extern int Best(int, param_list, int);
 
 #endif /* _RATINGS_H */
-
