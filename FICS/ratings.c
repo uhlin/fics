@@ -985,59 +985,70 @@ PRIVATE int GetRankFileName(char *out, int type)
   }
 }
 
-/* loon: Turning this off 28 Oct 1995 (temporary:)) since we're lagged
-   into outer space */
-PUBLIC void UpdateRank(int type, char *addName,
-		        statistics *sNew, char *delName)
-{}
+PUBLIC void
+UpdateRank(int type, char *addName, statistics *sNew, char *delName)
+{
+	/* TODO: Reenable */;
+}
 
 #if 0
-PUBLIC void UpdateRank(int type, char *addName,
-		        statistics *sNew, char *delName)
+PUBLIC void
+UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 {
-  char RankFile[MAX_FILENAME_SIZE];
-  char TmpRankFile[MAX_FILENAME_SIZE];
-  char line[MAX_RANK_LINE];
-  char login[MAX_LOGIN_NAME];
-  char command[MAX_STRING_LENGTH];
-  int comp;
-  statistics sCur;
-  FILE *fp;
-  FILE *fptemp;
+	FILE		*fp;
+	FILE		*fptemp;
+	char		 RankFile[MAX_FILENAME_SIZE];
+	char		 TmpRankFile[MAX_FILENAME_SIZE];
+	char		 command[MAX_STRING_LENGTH];
+	char		 line[MAX_RANK_LINE] = { '\0' };
+	char		 login[MAX_LOGIN_NAME] = { '\0' };
+	int		 comp;
+	statistics	 sCur;
 
-  if (GetRankFileName(RankFile, type) < 0)
-    return;
-  fp = fopen(RankFile, "r");
-  if (fp == NULL) {
-    fprintf(stderr, "Can't open rank file to update.\n");
-    return;
-  }
-  sprintf(TmpRankFile, "%s/tmpRank", sdir);
-  fptemp = fopen(TmpRankFile, "w");
-  if (fptemp == NULL) {
-    fprintf (stderr, "Unable to open rank file for updating.\n");
-    return;
-  }
-  while (fgets(line, MAX_RANK_LINE - 1, fp)) {
-    sscanf(line, "%s %d %d %d", login, &sCur.rating,
-	   &sCur.num, &comp);
-    if (delName != NULL && !strcasecmp(delName, login)) {	/* Kill name. */
-      delName = NULL;
-      continue;
-    }
-    if (addName != NULL && CompareStats(addName, sNew, login, &sCur) > 0) {
-      int computer = in_list(-1, L_COMPUTER, addName);
-      fprintf(fptemp, "%s %d %d %d\n", addName, sNew->rating,
-	      sNew->num, computer);
-      addName = NULL;
-    }
-    fprintf(fptemp, "%s %d %d %d\n", login, sCur.rating, sCur.num, comp);
-  }
-  fclose(fptemp);
-  fclose(fp);
+	if (GetRankFileName(RankFile, type) < 0)
+		return;
 
-  sprintf(command, "mv %s %s", TmpRankFile, RankFile);
-  system(command);
+	if ((fp = fopen(RankFile, "r")) == NULL) {
+		fprintf(stderr, "Can't open rank file to update.\n");
+		return;
+	}
+
+	sprintf(TmpRankFile, "%s/tmpRank", sdir);
+
+	if ((fptemp = fopen(TmpRankFile, "w")) == NULL) {
+		fprintf (stderr, "Unable to open rank file for updating.\n");
+		return;
+	}
+
+	while (fgets(line, MAX_RANK_LINE - 1, fp)) {
+		sscanf(line, "%s %d %d %d", login, &sCur.rating, &sCur.num,
+		    &comp);
+
+		if (delName != NULL &&
+		    !strcasecmp(delName, login)) {	// Kill name.
+			delName = NULL;
+			continue;
+		}
+
+		if (addName != NULL &&
+		    CompareStats(addName, sNew, login, &sCur) > 0) {
+			int computer = in_list(-1, L_COMPUTER, addName);
+
+			fprintf(fptemp, "%s %d %d %d\n", addName, sNew->rating,
+			    sNew->num, computer);
+			addName = NULL;
+		}
+
+		fprintf(fptemp, "%s %d %d %d\n", login, sCur.rating, sCur.num,
+		    comp);
+	}
+
+	fclose(fptemp);
+	fclose(fp);
+
+	// XXX
+	sprintf(command, "mv %s %s", TmpRankFile, RankFile);
+	system(command);
 }
 #endif
 
