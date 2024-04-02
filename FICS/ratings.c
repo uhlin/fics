@@ -885,24 +885,36 @@ PUBLIC int com_assess(int p, param_list param)
   return COM_OK;
 }
 
-
-PUBLIC int com_best(int p, param_list param)
+PUBLIC int
+com_best(int p, param_list param)
 {
-  return Best(p, param, 1);
+	return Best(p, param, 1);
 }
 
-PUBLIC int com_hbest(int p, param_list param)
+PUBLIC int
+com_hbest(int p, param_list param)
 {
-  return Best(p, param, 0);
+	return Best(p, param, 0);
 }
 
-PUBLIC int com_statistics(int p, param_list param)
+PUBLIC int
+com_statistics(int p, param_list param)
 {
-  pprintf(p, "                Standard       Blitz   Lightning        Wild\n");
-  pprintf(p, "average:         %7.2f     %7.2f     %7.2f     %7.2f\n", Ratings_S_Average, Ratings_B_Average, Ratings_L_Average, Ratings_W_Average);
-  pprintf(p, "std dev:         %7.2f     %7.2f     %7.2f     %7.2f\n", Ratings_S_StdDev, Ratings_B_StdDev, Ratings_L_StdDev, Ratings_W_StdDev);
-  pprintf(p, "number :      %7d     %7d     %7d     %7d\n", Rs_count, Rb_count,  Rl_count, Rw_count);
-  return COM_OK;
+	pprintf(p, "                Standard       Blitz   Lightning        "
+	    "Wild\n");
+	pprintf(p, "average:         %7.2f     %7.2f     %7.2f     %7.2f\n",
+	    Ratings_S_Average,
+	    Ratings_B_Average,
+	    Ratings_L_Average,
+	    Ratings_W_Average);
+	pprintf(p, "std dev:         %7.2f     %7.2f     %7.2f     %7.2f\n",
+	    Ratings_S_StdDev,
+	    Ratings_B_StdDev,
+	    Ratings_L_StdDev,
+	    Ratings_W_StdDev);
+	pprintf(p, "number :      %7d     %7d     %7d     %7d\n",
+	    Rs_count, Rb_count,  Rl_count, Rw_count);
+	return COM_OK;
 }
 
 PUBLIC int
