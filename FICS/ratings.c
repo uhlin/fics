@@ -1041,18 +1041,19 @@ PUBLIC void UpdateRank(int type, char *addName,
 }
 #endif
 
-PRIVATE void DisplayRankHead(int p, int show)
+PRIVATE void
+DisplayRankHead(int p, int show)
 {
-  char Line[MAX_STRING_LENGTH];
+	char Line[MAX_STRING_LENGTH] = { '\0' };
 
-  Line[0] = '\0';
-  if (CheckFlag(show, SHOW_BLITZ))
-    strcat(Line, "         Blitz          ");
-  if (CheckFlag(show, SHOW_STANDARD))
-    strcat(Line, "       Standard          ");
-  if (CheckFlag(show, SHOW_WILD))
-    strcat(Line, "          Wild");
-  pprintf(p, "%s\n\n", Line);
+	if (CheckFlag(show, SHOW_BLITZ))
+		strcat(Line, "         Blitz          ");
+	if (CheckFlag(show, SHOW_STANDARD))
+		strcat(Line, "       Standard          ");
+	if (CheckFlag(show, SHOW_WILD))
+		strcat(Line, "          Wild");
+
+	pprintf(p, "%s\n\n", Line);
 }
 
 PRIVATE int
