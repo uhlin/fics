@@ -27,19 +27,19 @@
 
 #define STATS_VERSION 2
 
-#define RESULT_WIN 0
-#define RESULT_DRAW 1
-#define RESULT_LOSS 2
-#define RESULT_ABORT 3
+#define RESULT_WIN       0
+#define RESULT_DRAW      1
+#define RESULT_LOSS      2
+#define RESULT_ABORT     3
 
-#define PROVISIONAL 20
+#define PROVISIONAL      20
 
-#define MAX_RANK_LINE 50
-#define MAX_BEST 20
+#define MAX_RANK_LINE    50
+#define MAX_BEST         20
 
-#define SHOW_BLITZ 0x1
-#define SHOW_STANDARD 0x2
-#define SHOW_WILD 0x4
+#define SHOW_BLITZ       0x1
+#define SHOW_STANDARD    0x2
+#define SHOW_WILD        0x4
 
 #include "command.h"
 
