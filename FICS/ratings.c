@@ -1105,61 +1105,76 @@ PRIVATE void PositionFilePtr(FILE * fp, int count, int *last,
   }
 }
 
-PRIVATE int ShowRankEntry(int p, FILE * fp, int count, int comp,
-			   char *target, int *lastRating, int *nTied)
+PRIVATE int
+ShowRankEntry(int p, FILE *fp, int count, int comp, char *target,
+    int *lastRating, int *nTied)
 {
-  char newLine[MAX_RANK_LINE];
-  char login[MAX_LOGIN_NAME];
-  int rating, findable, nGames, is_comp;
+	char	login[MAX_LOGIN_NAME] = { '\0' };
+	char	newLine[MAX_RANK_LINE] = { '\0' };
+	int	rating, findable, nGames, is_comp;
 
-  findable = (count > 0) && !feof(fp);
-  if (findable) {
-    do {
-      fgets(newLine, MAX_RANK_LINE - 1, fp);
-      if (feof(fp))
-	findable = 0;
-      else if (newLine[0] != '\0')
-	sscanf(newLine, "%s %d %d %d",
-	       login, &rating, &nGames, &is_comp);
-      else
-	login[0] = '\0';
-    } while (!CountRankLine(comp, login, nGames, is_comp) && findable
-	     && strcasecmp(login, target));
-  }
-  if (findable) {
-    if (!strcasecmp(login, target)
-	&& !CountRankLine(comp, login, nGames, is_comp)) {
-      pprintf_highlight(p, "----  %-12.12s %4s", login, ratstr(rating));
-      pprintf(p, "  ");
-      return 0;
-    } else if (*lastRating == rating && *nTied < 1) {
-      pprintf(p, "      ");
-      if (!strcasecmp(login, target))
-	pprintf_highlight(p, "%-12.12s %4s", login, ratstr(rating));
-      else
-	pprintf(p, "%-12.12s %4s", login, ratstr(rating));
-      pprintf(p, "  ");
-      return 1;
-    } else {
-      if (*nTied >= 1) {
-	if (*lastRating == rating)
-	  count -= *nTied;
-	*nTied = -1;
-      }
-      if (!strcasecmp(login, target))
-	pprintf_highlight(p, "%4d. %-12.12s %4s",
-			  count, login, ratstr(rating));
-      else
-	pprintf(p, "%4d. %-12.12s %4s",
-		count, login, ratstr(rating));
-      pprintf(p, "  ");
-      *lastRating = rating;
-      return 1;
-    }
-  } else {
-    pprintf(p, "%25s", "");
-    return 1;
-  }
+	findable = (count > 0 && !feof(fp));
+
+	if (findable) {
+		do {
+			fgets(newLine, MAX_RANK_LINE - 1, fp);
+
+			if (feof(fp)) {
+				findable = 0;
+			} else if (newLine[0] != '\0') {
+				sscanf(newLine, "%s %d %d %d", login, &rating,
+				    &nGames, &is_comp);
+			} else {
+				login[0] = '\0';
+			}
+		} while (!CountRankLine(comp, login, nGames, is_comp) &&
+		    findable &&
+		    strcasecmp(login, target));
+	}
+
+	if (findable) {
+		if (!strcasecmp(login, target) && !CountRankLine(comp, login,
+		    nGames, is_comp)) {
+			pprintf_highlight(p, "----  %-12.12s %4s", login,
+			    ratstr(rating));
+			pprintf(p, "  ");
+			return 0;
+		} else if (*lastRating == rating && *nTied < 1) {
+			pprintf(p, "      ");
+
+			if (!strcasecmp(login, target)) {
+				pprintf_highlight(p, "%-12.12s %4s", login,
+				    ratstr(rating));
+			} else {
+				pprintf(p, "%-12.12s %4s", login,
+				    ratstr(rating));
+			}
+
+			pprintf(p, "  ");
+			return 1;
+		} else {
+			if (*nTied >= 1) {
+				if (*lastRating == rating)
+					count -= *nTied;
+				*nTied = -1;
+			}
+
+			if (!strcasecmp(login, target)) {
+				pprintf_highlight(p, "%4d. %-12.12s %4s", count,
+				    login, ratstr(rating));
+			} else {
+				pprintf(p, "%4d. %-12.12s %4s", count, login,
+				    ratstr(rating));
+			}
+
+			pprintf(p, "  ");
+			*lastRating = rating;
+			return 1;
+		}
+	} else {
+		pprintf(p, "%25s", "");
+		return 1;
+	}
 }
 
 PRIVATE int
