@@ -1339,15 +1339,16 @@ PRIVATE int ShowRankEntry(int p, FILE * fp, int count, int comp,
   }
 }
 
-PRIVATE int CountAbove(int num, int blitz, int std, int wild, int which)
+PRIVATE int
+CountAbove(int num, int blitz, int std, int wild, int which)
 {
-  int max = blitz;
+	int	max = blitz;
 
-  if (max < std)
-    max = std;
-  if (max < wild)
-    max = wild;
-  return (max <= (num + 1) / 2 ? max - 1 : (num + 1) / 2);
+	if (max < std)
+		max = std;
+	if (max < wild)
+		max = wild;
+	return (max <= (num + 1) / 2 ? max - 1 : (num + 1) / 2);
 }
 
 PRIVATE int
