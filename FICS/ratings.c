@@ -765,124 +765,215 @@ PUBLIC int rating_update(int g)
   return 0;
 }
 
-PUBLIC int com_assess(int p, param_list param)
+PUBLIC int
+com_assess(int p, param_list param)
 {
-  int p1 = p, p2, nowtime;
-  int p1_connected = 1, p2_connected = 1;
-  int win1, draw1, loss1;
-  double newsterr1;
-  int win2, draw2, loss2;
-  double newsterr2;
+	double	newsterr1;
+	double	newsterr2;
+	int	p1 = p, p2, nowtime;
+	int	p1_connected = 1, p2_connected = 1;
+	int	win1, draw1, loss1;
+	int	win2, draw2, loss2;
 
-  nowtime = time(0);
+	// XXX
+	nowtime = time(0);
 
-/* Hawk: Now assess can be used with players not  */
-/*       logged on -- I wonder if anyone doesn't  */
-/*       get just a bit confused here :)          */
+	if (param[0].type == TYPE_NULL) {
+		if (parray[p].game < 0) {
+			pprintf(p, "You are not playing a game.\n");
+			return COM_OK;
+		} else if (garray[parray[p].game].status == GAME_EXAMINE) {
+			if (!strcmp(garray[parray[p].game].black_name,
+			    parray[p].name)) {
+				pcommand(p, "assess %s\n",
+				    garray[parray[p].game].white_name);
+			} else {
+				pcommand(p, "assess %s %s\n",
+				    garray[parray[p].game].white_name,
+				    garray[parray[p].game].black_name);
+			}
 
-  if (param[0].type == TYPE_NULL) {
-    if (parray[p].game < 0) {
-      pprintf(p, "You are not playing a game.\n");
-      return COM_OK;
-    } else if (garray[parray[p].game].status == GAME_EXAMINE) {
-      if (!strcmp(garray[parray[p].game].black_name, parray[p].name)) {
-	pcommand(p, "assess %s\n", garray[parray[p].game].white_name);
-      } else {
-	pcommand(p, "assess %s %s\n",
-		 garray[parray[p].game].white_name,
-		 garray[parray[p].game].black_name);
-      }
-      return COM_OK;
-    } else {
-      p2 = parray[p].opponent;
-    }
-  } else {
-    if (!FindPlayer(p, param[0].val.word, &p2, &p2_connected)) {
-      pprintf(p, "No user named \"%s\" was found.\n", param[0].val.word);
-      return COM_OK;
-    }
-    if (param[1].type != TYPE_NULL) {
-      p1 = p2;
-      p1_connected = p2_connected;
-      if (!FindPlayer(p, param[1].val.word, &p2, &p2_connected)) {
-	pprintf(p, "No user named \"%s\" was found.\n", param[1].val.word);
+			return COM_OK;
+		} else {
+			p2 = parray[p].opponent;
+		}
+	} else {
+		if (!FindPlayer(p, param[0].val.word, &p2, &p2_connected)) {
+			pprintf(p, "No user named \"%s\" was found.\n",
+			    param[0].val.word);
+			return COM_OK;
+		}
+
+		if (param[1].type != TYPE_NULL) {
+			p1 = p2;
+			p1_connected = p2_connected;
+
+			if (!FindPlayer(p, param[1].val.word, &p2,
+			    &p2_connected)) {
+				pprintf(p, "No user named \"%s\" was found.\n",
+				    param[1].val.word);
+
+				if (!p1_connected)
+					player_remove(p1);
+				return COM_OK;
+			}
+		}
+	}
+
+	if (p1 == p2) {
+		pprintf(p, "You can't assess the same players.\n");
+
+		if (!p1_connected)
+			player_remove(p1);
+		if (!p2_connected)
+			player_remove(p2);
+		return COM_OK;
+	}
+
+	rating_sterr_delta(p1, p2, TYPE_BLITZ, nowtime, RESULT_WIN, &win1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_BLITZ, nowtime, RESULT_DRAW, &draw1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_BLITZ, nowtime, RESULT_LOSS, &loss1,
+	    &newsterr1);
+	rating_sterr_delta(p2, p1, TYPE_BLITZ, nowtime, RESULT_WIN, &win2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_BLITZ, nowtime, RESULT_DRAW, &draw2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_BLITZ, nowtime, RESULT_LOSS, &loss2,
+	    &newsterr2);
+
+	pprintf(p, "\nBlitz\n   %10s (%4s, RD: %5.1f)  %10s (%4s, RD: %5.1f)\n",
+	    parray[p1].name,
+	    ratstrii(parray[p1].b_stats.rating, parray[p1].registered),
+	    parray[p1].b_stats.sterr,
+	    parray[p2].name,
+	    ratstrii(parray[p2].b_stats.rating, parray[p2].registered),
+	    parray[p2].b_stats.sterr);
+
+	pprintf(p, "Win :         %4d                         %4d\n",
+	    win1,
+	    loss2);
+	pprintf(p, "Draw:         %4d                         %4d\n",
+	    draw1,
+	    draw2);
+	pprintf(p, "Loss:         %4d                         %4d\n",
+	    loss1,
+	    win2);
+	pprintf(p, "New RD:        %5.1f                        %5.1f\n",
+	    newsterr1,
+	    newsterr2);
+
+	rating_sterr_delta(p1, p2, TYPE_STAND, nowtime, RESULT_WIN, &win1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_STAND, nowtime, RESULT_DRAW, &draw1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_STAND, nowtime, RESULT_LOSS, &loss1,
+	    &newsterr1);
+	rating_sterr_delta(p2, p1, TYPE_STAND, nowtime, RESULT_WIN, &win2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_STAND, nowtime, RESULT_DRAW, &draw2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_STAND, nowtime, RESULT_LOSS, &loss2,
+	    &newsterr2);
+
+	pprintf(p, "\nStandard\n   %10s (%4s, RD: %5.1f)  %10s "
+	    "(%4s, RD: %5.1f)\n",
+	    parray[p1].name,
+	    ratstrii(parray[p1].s_stats.rating, parray[p1].registered),
+	    parray[p1].s_stats.sterr,
+	    parray[p2].name,
+	    ratstrii(parray[p2].s_stats.rating, parray[p2].registered),
+	    parray[p2].s_stats.sterr);
+
+	pprintf(p, "Win :         %4d                         %4d\n",
+	    win1,
+	    loss2);
+	pprintf(p, "Draw:         %4d                         %4d\n",
+	    draw1,
+	    draw2);
+	pprintf(p, "Loss:         %4d                         %4d\n",
+	    loss1,
+	    win2);
+	pprintf(p, "New RD:        %5.1f                        %5.1f\n",
+	    newsterr1,
+	    newsterr2);
+
+	rating_sterr_delta(p1, p2, TYPE_LIGHT, nowtime, RESULT_WIN, &win1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_LIGHT, nowtime, RESULT_DRAW, &draw1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_LIGHT, nowtime, RESULT_LOSS, &loss1,
+	    &newsterr1);
+	rating_sterr_delta(p2, p1, TYPE_LIGHT, nowtime, RESULT_WIN, &win2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_LIGHT, nowtime, RESULT_DRAW, &draw2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_LIGHT, nowtime, RESULT_LOSS, &loss2,
+	    &newsterr2);
+
+	pprintf(p, "\nLightning\n   %10s (%4s, RD: %5.1f)  %10s "
+	    "(%4s, RD: %5.1f)\n",
+	    parray[p1].name,
+	    ratstrii(parray[p1].l_stats.rating, parray[p1].registered),
+	    parray[p1].l_stats.sterr,
+	    parray[p2].name,
+	    ratstrii(parray[p2].l_stats.rating, parray[p2].registered),
+	    parray[p2].l_stats.sterr);
+
+	pprintf(p, "Win :         %4d                         %4d\n",
+	    win1,
+	    loss2);
+	pprintf(p, "Draw:         %4d                         %4d\n",
+	    draw1,
+	    draw2);
+	pprintf(p, "Loss:         %4d                         %4d\n",
+	    loss1,
+	    win2);
+	pprintf(p, "New RD:        %5.1f                        %5.1f\n",
+	    newsterr1,
+	    newsterr2);
+
+	rating_sterr_delta(p1, p2, TYPE_WILD, nowtime, RESULT_WIN, &win1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_WILD, nowtime, RESULT_DRAW, &draw1,
+	    &newsterr1);
+	rating_sterr_delta(p1, p2, TYPE_WILD, nowtime, RESULT_LOSS, &loss1,
+	    &newsterr1);
+
+	rating_sterr_delta(p2, p1, TYPE_WILD, nowtime, RESULT_WIN, &win2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_WILD, nowtime, RESULT_DRAW, &draw2,
+	    &newsterr2);
+	rating_sterr_delta(p2, p1, TYPE_WILD, nowtime, RESULT_LOSS, &loss2,
+	    &newsterr2);
+
+	pprintf(p, "\nWild\n   %10s (%4s, RD: %5.1f)  %10s (%4s, RD: %5.1f)\n",
+	    parray[p1].name,
+	    ratstrii(parray[p1].w_stats.rating, parray[p1].registered),
+	    parray[p1].w_stats.sterr,
+	    parray[p2].name,
+	    ratstrii(parray[p2].w_stats.rating, parray[p2].registered),
+	    parray[p2].w_stats.sterr);
+
+	pprintf(p, "Win :         %4d                         %4d\n",
+	    win1,
+	    loss2);
+	pprintf(p, "Draw:         %4d                         %4d\n",
+	    draw1,
+	    draw2);
+	pprintf(p, "Loss:         %4d                         %4d\n",
+	    loss1,
+	    win2);
+	pprintf(p, "New RD:        %5.1f                        %5.1f\n",
+	    newsterr1,
+	    newsterr2);
+
 	if (!p1_connected)
-	  player_remove(p1);
+		player_remove(p1);
+	if (!p2_connected)
+		player_remove(p2);
 	return COM_OK;
-      }
-    }
-  }
-  if (p1 == p2) {
-    pprintf(p, "You can't assess the same players.\n");
-    if (!p1_connected)
-      player_remove(p1);
-    if (!p2_connected)
-      player_remove(p2);
-    return COM_OK;
-  }
-  rating_sterr_delta(p1, p2, TYPE_BLITZ, nowtime, RESULT_WIN, &win1, &newsterr1);
-  rating_sterr_delta(p1, p2, TYPE_BLITZ, nowtime, RESULT_DRAW, &draw1, &newsterr1);
-  rating_sterr_delta(p1, p2, TYPE_BLITZ, nowtime, RESULT_LOSS, &loss1, &newsterr1);
-  rating_sterr_delta(p2, p1, TYPE_BLITZ, nowtime, RESULT_WIN, &win2, &newsterr2);
-  rating_sterr_delta(p2, p1, TYPE_BLITZ, nowtime, RESULT_DRAW, &draw2, &newsterr2);
-  rating_sterr_delta(p2, p1, TYPE_BLITZ, nowtime, RESULT_LOSS, &loss2, &newsterr2);
-
-  pprintf(p, "\nBlitz\n   %10s (%4s, RD: %5.1f)  %10s (%4s, RD: %5.1f)\n",
-	  parray[p1].name, ratstrii(parray[p1].b_stats.rating, parray[p1].registered), parray[p1].b_stats.sterr,
-	  parray[p2].name, ratstrii(parray[p2].b_stats.rating, parray[p2].registered), parray[p2].b_stats.sterr);
-  pprintf(p, "Win :         %4d                         %4d\n", win1, loss2);
-  pprintf(p, "Draw:         %4d                         %4d\n", draw1, draw2);
-  pprintf(p, "Loss:         %4d                         %4d\n", loss1, win2);
-  pprintf(p, "New RD:        %5.1f                        %5.1f\n", newsterr1, newsterr2);
-
-  rating_sterr_delta(p1, p2, TYPE_STAND, nowtime, RESULT_WIN, &win1, &newsterr1);
-  rating_sterr_delta(p1, p2, TYPE_STAND, nowtime, RESULT_DRAW, &draw1, &newsterr1);
-  rating_sterr_delta(p1, p2, TYPE_STAND, nowtime, RESULT_LOSS, &loss1, &newsterr1);
-  rating_sterr_delta(p2, p1, TYPE_STAND, nowtime, RESULT_WIN, &win2, &newsterr2);
-  rating_sterr_delta(p2, p1, TYPE_STAND, nowtime, RESULT_DRAW, &draw2, &newsterr2);
-  rating_sterr_delta(p2, p1, TYPE_STAND, nowtime, RESULT_LOSS, &loss2, &newsterr2);
-
-  pprintf(p, "\nStandard\n   %10s (%4s, RD: %5.1f)  %10s (%4s, RD: %5.1f)\n",
-	  parray[p1].name, ratstrii(parray[p1].s_stats.rating, parray[p1].registered), parray[p1].s_stats.sterr,
-	  parray[p2].name, ratstrii(parray[p2].s_stats.rating, parray[p2].registered), parray[p2].s_stats.sterr);
-  pprintf(p, "Win :         %4d                         %4d\n", win1, loss2);
-  pprintf(p, "Draw:         %4d                         %4d\n", draw1, draw2);
-  pprintf(p, "Loss:         %4d                         %4d\n", loss1, win2);
-  pprintf(p, "New RD:        %5.1f                        %5.1f\n", newsterr1, newsterr2);
-
-  rating_sterr_delta(p1, p2, TYPE_LIGHT, nowtime, RESULT_WIN, &win1, &newsterr1);  rating_sterr_delta(p1, p2, TYPE_LIGHT, nowtime, RESULT_DRAW, &draw1, &newsterr1);
-  rating_sterr_delta(p1, p2, TYPE_LIGHT, nowtime, RESULT_LOSS, &loss1, &newsterr1);
-  rating_sterr_delta(p2, p1, TYPE_LIGHT, nowtime, RESULT_WIN, &win2, &newsterr2);  rating_sterr_delta(p2, p1, TYPE_LIGHT, nowtime, RESULT_DRAW, &draw2, &newsterr2);
-  rating_sterr_delta(p2, p1, TYPE_LIGHT, nowtime, RESULT_LOSS, &loss2, &newsterr2);
-
-  pprintf(p, "\nLightning\n   %10s (%4s, RD: %5.1f)  %10s (%4s, RD: %5.1f)\n",
-          parray[p1].name, ratstrii(parray[p1].l_stats.rating, parray[p1].registered), parray[p1].l_stats.sterr,
-          parray[p2].name, ratstrii(parray[p2].l_stats.rating, parray[p2].registered), parray[p2].l_stats.sterr);
-  pprintf(p, "Win :         %4d                         %4d\n", win1, loss2);
-  pprintf(p, "Draw:         %4d                         %4d\n", draw1, draw2);
-  pprintf(p, "Loss:         %4d                         %4d\n", loss1, win2);
-  pprintf(p, "New RD:        %5.1f                        %5.1f\n", newsterr1, newsterr2);
-
-  rating_sterr_delta(p1, p2, TYPE_WILD, nowtime, RESULT_WIN, &win1, &newsterr1);
-  rating_sterr_delta(p1, p2, TYPE_WILD, nowtime, RESULT_DRAW, &draw1, &newsterr1);
-  rating_sterr_delta(p1, p2, TYPE_WILD, nowtime, RESULT_LOSS, &loss1, &newsterr1);
-  rating_sterr_delta(p2, p1, TYPE_WILD, nowtime, RESULT_WIN, &win2, &newsterr2);
-  rating_sterr_delta(p2, p1, TYPE_WILD, nowtime, RESULT_DRAW, &draw2, &newsterr2);
-  rating_sterr_delta(p2, p1, TYPE_WILD, nowtime, RESULT_LOSS, &loss2, &newsterr2);
-
-  pprintf(p, "\nWild\n   %10s (%4s, RD: %5.1f)  %10s (%4s, RD: %5.1f)\n",
-	  parray[p1].name, ratstrii(parray[p1].w_stats.rating, parray[p1].registered), parray[p1].w_stats.sterr,
-	  parray[p2].name, ratstrii(parray[p2].w_stats.rating, parray[p2].registered), parray[p2].w_stats.sterr);
-  pprintf(p, "Win :         %4d                         %4d\n", win1, loss2);
-  pprintf(p, "Draw:         %4d                         %4d\n", draw1, draw2);
-  pprintf(p, "Loss:         %4d                         %4d\n", loss1, win2);
-  pprintf(p, "New RD:        %5.1f                        %5.1f\n", newsterr1, newsterr2);
-
-  if (!p1_connected)
-    player_remove(p1);
-  if (!p2_connected)
-    player_remove(p2);
-  return COM_OK;
 }
 
 PUBLIC int
