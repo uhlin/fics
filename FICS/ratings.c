@@ -1350,48 +1350,60 @@ PRIVATE int CountAbove(int num, int blitz, int std, int wild, int which)
   return (max <= (num + 1) / 2 ? max - 1 : (num + 1) / 2);
 }
 
-PRIVATE int ShowRankLines(int p, FILE * fb, FILE * fs, FILE * fw, int bCount,
-        int sCount, int wCount, int n, int showComp, int show, char *target)
+PRIVATE int
+ShowRankLines(int p, FILE *fb, FILE *fs, FILE *fw, int bCount, int sCount,
+    int wCount, int n, int showComp, int show, char *target)
 {
-  int lastBlitz = 9999, nTiedBlitz = 0;
-  int lastStd = 9999, nTiedStd = 0;
-  int lastWild = 9999, nTiedWild = 0;
-  int i;
+	int	lastBlitz = 9999, nTiedBlitz = 0;
+	int	lastStd = 9999, nTiedStd = 0;
+	int	lastWild = 9999, nTiedWild = 0;
 
-  if (n <= 0)
-    return 0;
-  if (CheckFlag(show, SHOW_BLITZ)) {
-    PositionFilePtr(fb, bCount, &lastBlitz, &nTiedBlitz, showComp);
-    if (feof(fb))
-      ClearFlag(show, SHOW_BLITZ);
-  }
-  if (CheckFlag(show, SHOW_STANDARD)) {
-    PositionFilePtr(fs, sCount, &lastStd, &nTiedStd, showComp);
-    if (feof(fs))
-      ClearFlag(show, SHOW_STANDARD);
-  }
-  if (CheckFlag(show, SHOW_WILD)) {
-    PositionFilePtr(fw, wCount, &lastWild, &nTiedWild, showComp);
-    if (feof(fw))
-      ClearFlag(show, SHOW_WILD);
-  }
-  if (!CheckFlag(show, SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD))
-    return 0;
-  DisplayRankHead(p, show);
+	if (n <= 0)
+		return 0;
 
-  for (i = 0; i < n && show; i++) {
-    if (CheckFlag(show, SHOW_BLITZ))
-      bCount += ShowRankEntry(p, fb, bCount, showComp, target,
-			      &lastBlitz, &nTiedBlitz);
-    if (CheckFlag(show, SHOW_STANDARD))
-      sCount += ShowRankEntry(p, fs, sCount, showComp, target,
-			      &lastStd, &nTiedStd);
-    if (CheckFlag(show, SHOW_WILD))
-      wCount += ShowRankEntry(p, fw, wCount, showComp, target,
-			      &lastWild, &nTiedWild);
-    pprintf(p, "\n");
-  }
-  return 1;
+	if (CheckFlag(show, SHOW_BLITZ)) {
+		PositionFilePtr(fb, bCount, &lastBlitz, &nTiedBlitz, showComp);
+
+		if (feof(fb))
+			ClearFlag(show, SHOW_BLITZ);
+	}
+
+	if (CheckFlag(show, SHOW_STANDARD)) {
+		PositionFilePtr(fs, sCount, &lastStd, &nTiedStd, showComp);
+
+		if (feof(fs))
+			ClearFlag(show, SHOW_STANDARD);
+	}
+
+	if (CheckFlag(show, SHOW_WILD)) {
+		PositionFilePtr(fw, wCount, &lastWild, &nTiedWild, showComp);
+
+		if (feof(fw))
+			ClearFlag(show, SHOW_WILD);
+	}
+
+	if (!CheckFlag(show, (SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD)))
+		return 0;
+
+	DisplayRankHead(p, show);
+
+	for (int i = 0; i < n && show; i++) {
+		if (CheckFlag(show, SHOW_BLITZ)) {
+			bCount += ShowRankEntry(p, fb, bCount, showComp, target,
+			    &lastBlitz, &nTiedBlitz);
+		}
+		if (CheckFlag(show, SHOW_STANDARD)) {
+			sCount += ShowRankEntry(p, fs, sCount, showComp, target,
+			    &lastStd, &nTiedStd);
+		}
+		if (CheckFlag(show, SHOW_WILD)) {
+			wCount += ShowRankEntry(p, fw, wCount, showComp, target,
+			    &lastWild, &nTiedWild);
+		}
+		pprintf(p, "\n");
+	}
+
+	return 1;
 }
 
 PUBLIC int
