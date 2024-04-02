@@ -922,50 +922,60 @@ PUBLIC int com_fixrank(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_rank(int p, param_list param)
+PUBLIC int
+com_rank(int p, param_list param)
 {
-  return DisplayRank(p, param, 1);
+	return DisplayRank(p, param, 1);
 }
 
-PUBLIC int com_hrank(int p, param_list param)
+PUBLIC int
+com_hrank(int p, param_list param)
 {
-  return DisplayRank(p, param, 0);
+	return DisplayRank(p, param, 0);
 }
 
-PUBLIC int DisplayRank(int p, param_list param, int showComputers)
+PUBLIC int
+DisplayRank(int p, param_list param, int showComputers)
 {
-  int start, end, target, connected;
-  int show = SHOW_BLITZ | SHOW_STANDARD | SHOW_WILD;
+	int	show = (SHOW_BLITZ|SHOW_STANDARD|SHOW_WILD);
+	int	start, end, target, connected;
 
-  if (param[0].type == TYPE_NULL) {
-    DisplayTargetRank(p, parray[p].name, show, showComputers);
-    return COM_OK;
-  } else if (isdigit(param[0].val.word[0])) {
-    end = -1;
-    sscanf(param[0].val.word, "%d-%d", &start, &end);
-    if (end > 0 && (param[1].type != TYPE_NULL))
-      show = ShowFromString(param[1].val.word);
-    DisplayRankedPlayers(p, start, end, show, showComputers);
-    return COM_OK;
-  } else {
-    target = player_search(p, param[0].val.word);
-    if (target == 0) {
-      pprintf(p, "Target %s not found.\n", param[0].val.word);
-      return COM_OK;
-    }
-    connected = (target > 0);
-    if (!connected)
-      target = -target - 1;
-    else
-      target--;
+	if (param[0].type == TYPE_NULL) {
+		DisplayTargetRank(p, parray[p].name, show, showComputers);
+		return COM_OK;
+	} else if (isdigit(param[0].val.word[0])) {
+		end = -1;
+		sscanf(param[0].val.word, "%d-%d", &start, &end);
 
-    if (param[1].type != TYPE_NULL)
-      show = ShowFromString(param[1].val.word);
-    DisplayTargetRank(p, parray[target].name, show, showComputers);
-    if (!connected)
-      player_remove(target);
-    return COM_OK;
-  }
+		if (end > 0 && (param[1].type != TYPE_NULL))
+			show = ShowFromString(param[1].val.word);
+
+		DisplayRankedPlayers(p, start, end, show, showComputers);
+		return COM_OK;
+	} else {
+		target = player_search(p, param[0].val.word);
+
+		if (target == 0) {
+			pprintf(p, "Target %s not found.\n", param[0].val.word);
+			return COM_OK;
+		}
+
+		connected = (target > 0);
+
+		if (!connected)
+			target = -target - 1;
+		else
+			target--;
+
+		if (param[1].type != TYPE_NULL)
+			show = ShowFromString(param[1].val.word);
+
+		DisplayTargetRank(p, parray[target].name, show, showComputers);
+
+		if (!connected)
+			player_remove(target);
+		return COM_OK;
+	}
 }
 
 PRIVATE int
