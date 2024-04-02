@@ -44,8 +44,8 @@
 #include "command.h"
 
 typedef struct _rateStruct {
-  char name[MAX_LOGIN_NAME];
-  int rating;
+	char	name[MAX_LOGIN_NAME];
+	int	rating;
 } rateStruct;
 
 extern int	Best(int, param_list, int);
