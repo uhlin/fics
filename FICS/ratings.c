@@ -473,11 +473,11 @@ Round(double x)
 }
 
 // Constants for Glicko system
-#define Gd 3.25
-#define Gr0 1720
-#define Gs0 350
-#define Gq 0.00575646273249
-#define Gp 0.000010072398601964
+#define Gd	3.25
+#define Gr0	1720
+#define Gs0	350
+#define Gq	0.00575646273249
+#define Gp	0.000010072398601964
 // End of Glicko system variables
 
 PRIVATE double
