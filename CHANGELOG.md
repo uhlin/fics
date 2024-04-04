@@ -7,6 +7,7 @@ documented in this file.
 - Added parameter lists to many function declarations.
 - Added usage of `reallocarray()` which handles multiplication
   overflow.
+- Cleared sensitive with `explicit_bzero()`.
 - Fixed an empty hostname in the addplayer program.
 - Fixed non-ANSI function declarations of functions. (Multiple
   occurrences.)
