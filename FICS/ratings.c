@@ -340,7 +340,7 @@ save_ratings(void)
 	fclose(fp);
 }
 
-PUBLIC void
+PRIVATE void
 zero_stats(void)
 {
 	for (int i = 0; i < MAXHIST; i++) {
@@ -500,7 +500,7 @@ GE(int r, int rr, double ss, double *fss)
 	return (1.0 / (1.0 + pow(10.0, (rr - r) * (*fss) / 400.0)));
 }
 
-PUBLIC double
+PRIVATE double
 current_sterr(double s, int t)
 {
 	if (t < 0)
