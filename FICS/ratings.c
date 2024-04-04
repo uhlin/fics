@@ -90,11 +90,11 @@ PRIVATE int	lHist[MAXHIST];
 
 PRIVATE char sdir[] = DEFAULT_STATS;
 
-PUBLIC int is_active(int Games)
+PUBLIC int
+is_active(int Games)
 {
-  return (Games >= PROVISIONAL);
+	return (Games >= PROVISIONAL);
 }
-
 
 PUBLIC void rating_add(int rating, int type)
 {
