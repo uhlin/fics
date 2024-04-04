@@ -85,12 +85,12 @@ PUBLIC rateStruct bestW[MAX_BEST];
 PUBLIC int numW = 0;
 */
 
-PUBLIC int sHist[MAXHIST];
-PUBLIC int bHist[MAXHIST];
-PUBLIC int wHist[MAXHIST];
-PUBLIC int lHist[MAXHIST];
+PRIVATE int	sHist[MAXHIST];
+PRIVATE int	bHist[MAXHIST];
+PRIVATE int	wHist[MAXHIST];
+PRIVATE int	lHist[MAXHIST];
 
-char sdir[] = DEFAULT_STATS;
+PRIVATE char sdir[] = DEFAULT_STATS;
 
 PUBLIC int is_active(int Games)
 {
