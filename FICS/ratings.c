@@ -750,11 +750,13 @@ rating_update(int g)
 	rating_add(w_stats->rating, garray[g].type);
 	rating_add(b_stats->rating, garray[g].type);
 
-	if ((w_stats->rating > w_stats->best) && (is_active(w_stats->num))) {
+	if (w_stats->rating > w_stats->best &&
+	    is_active(w_stats->num)) {
 		w_stats->best = w_stats->rating;
 		w_stats->whenbest = time(NULL);
 	}
-	if ((b_stats->rating > b_stats->best) && (is_active(b_stats->num))) {
+	if (b_stats->rating > b_stats->best &&
+	    is_active(b_stats->num)) {
 		b_stats->best = b_stats->rating;
 		b_stats->whenbest = time(NULL);
 	}
