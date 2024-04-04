@@ -307,50 +307,53 @@ PRIVATE void load_ratings(void)
   }
 }
 
-PUBLIC void save_ratings(void)
+PUBLIC void
+save_ratings(void)
 {
-  FILE *fp;
-  char fname[MAX_FILENAME_SIZE];
-  int i;
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 
-  sprintf(fname, "%s/newratingsV%d_data", stats_dir,STATS_VERSION);
-  fp = fopen(fname, "w");
-  if (!fp) {
-    fprintf(stderr, "FICS: Can't write ratings data!\n");
-    return;
-  }
-  fprintf(fp, "%10f %10f %10f %d\n", Rb_M, Rb_S, Rb_total, Rb_count);
-  fprintf(fp, "%10f %10f %10f %d\n", Rs_M, Rs_S, Rs_total, Rs_count);
-  fprintf(fp, "%10f %10f %10f %d\n", Rw_M, Rw_S, Rw_total, Rw_count);
-  fprintf(fp, "%10f %10f %10f %d\n", Rl_M, Rl_S, Rl_total, Rl_count);
+	sprintf(fname, "%s/newratingsV%d_data", stats_dir, STATS_VERSION);
 
-  for (i = 0; i < MAXHIST; i++) {
-    fprintf(fp, "%d %d %d %d\n", sHist[i], bHist[i], wHist[i], lHist[i]);
-  }
-  fclose(fp);
+	if ((fp = fopen(fname, "w")) == NULL) {
+		fprintf(stderr, "FICS: Can't write ratings data!\n");
+		return;
+	}
+
+	fprintf(fp, "%10f %10f %10f %d\n", Rb_M, Rb_S, Rb_total, Rb_count);
+	fprintf(fp, "%10f %10f %10f %d\n", Rs_M, Rs_S, Rs_total, Rs_count);
+	fprintf(fp, "%10f %10f %10f %d\n", Rw_M, Rw_S, Rw_total, Rw_count);
+	fprintf(fp, "%10f %10f %10f %d\n", Rl_M, Rl_S, Rl_total, Rl_count);
+
+	for (int i = 0; i < MAXHIST; i++) {
+		fprintf(fp, "%d %d %d %d\n", sHist[i], bHist[i], wHist[i],
+		    lHist[i]);
+	}
+
+	fclose(fp);
 }
 
-PUBLIC void zero_stats(void)
+PUBLIC void
+zero_stats(void)
 {
-  int i;
-  for (i = 0; i < MAXHIST; i++) {
-    sHist[i] = 0;
-    bHist[i] = 0;
-    wHist[i] = 0;
-    lHist[i] = 0;
-  }
-  Rb_M = 0.0, Rb_S = 0.0, Rb_total = 0.0;
-  Rb_count = 0;
+	for (int i = 0; i < MAXHIST; i++) {
+		sHist[i] = 0;
+		bHist[i] = 0;
+		wHist[i] = 0;
+		lHist[i] = 0;
+	}
 
-  Rs_M = 0.0, Rs_S = 0.0, Rs_total = 0.0;
-  Rs_count = 0;
+	Rb_M = 0.0, Rb_S = 0.0, Rb_total = 0.0;
+	Rb_count = 0;
 
-  Rw_M = 0.0, Rw_S = 0.0, Rw_total = 0.0;
-  Rw_count = 0;
+	Rs_M = 0.0, Rs_S = 0.0, Rs_total = 0.0;
+	Rs_count = 0;
 
-  Rl_M = 0.0, Rl_S = 0.0, Rl_total = 0.0;
-  Rl_count = 0;
+	Rw_M = 0.0, Rw_S = 0.0, Rw_total = 0.0;
+	Rw_count = 0;
 
+	Rl_M = 0.0, Rl_S = 0.0, Rl_total = 0.0;
+	Rl_count = 0;
 /*
   numS = 0;
   numB = 0;
@@ -358,10 +361,11 @@ PUBLIC void zero_stats(void)
 */
 }
 
-PUBLIC void rating_init(void)
+PUBLIC void
+rating_init(void)
 {
-  zero_stats();
-  load_ratings();
+	zero_stats();
+	load_ratings();
 }
 
 /*
