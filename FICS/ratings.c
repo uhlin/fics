@@ -365,11 +365,10 @@ zero_stats(void)
 
 	Rl_M = 0.0, Rl_S = 0.0, Rl_total = 0.0;
 	Rl_count = 0;
-/*
-  numS = 0;
-  numB = 0;
-  numW = 0;
-*/
+
+	numS = 0;
+	numB = 0;
+	numW = 0;
 }
 
 PUBLIC void
