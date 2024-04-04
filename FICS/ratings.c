@@ -747,14 +747,14 @@ rating_update(int g)
 
 	if (bDelta < -1000) {
 		pprintf(garray[g].black, "not changed due to bug "
-		    "(way too small)! sorry! ");
+		    "(way too small)! sorry!\n");
 		fprintf(stderr, "FICS: Got too small ratings bug for %s "
 		    "(b) vs. %s\n",
 		    parray[garray[g].black].login,
 		    parray[garray[g].white].login);
 	} else if (bDelta > 3000) {
 		pprintf(garray[g].black, "not changed due to bug "
-		    "(way too big)! sorry! ");
+		    "(way too big)! sorry!\n");
 		fprintf(stderr, "FICS: Got too big ratings bug for %s "
 		    "(b) vs. %s\n",
 		    parray[garray[g].black].login,
