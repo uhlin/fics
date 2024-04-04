@@ -329,7 +329,8 @@ save_ratings(void)
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 
-	sprintf(fname, "%s/newratingsV%d_data", stats_dir, STATS_VERSION);
+	snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
+	    STATS_VERSION);
 
 	if ((fp = fopen(fname, "w")) == NULL) {
 		fprintf(stderr, "FICS: Can't write ratings data!\n");
@@ -405,7 +406,7 @@ rating_recalc(void)
 	zero_stats();
 
 	for (c = 'a'; c <= 'z'; c++) {
-		sprintf(dname, "%s/%c", player_dir, c);
+		snprintf(dname, sizeof dname, "%s/%c", player_dir, c);
 
 		if ((dirp = opendir(dname)) == NULL)
 			continue;
@@ -1177,7 +1178,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 		return;
 	}
 
-	sprintf(TmpRankFile, "%s/tmpRank", sdir);
+	snprintf(TmpRankFile, sizeof TmpRankFile, "%s/tmpRank", sdir);
 
 	if ((fptemp = fopen(TmpRankFile, "w")) == NULL) {
 		fprintf(stderr, "Unable to open rank file for updating.\n");
@@ -1211,7 +1212,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	fclose(fp);
 
 	// XXX
-	sprintf(command, "mv %s %s", TmpRankFile, RankFile);
+	snprintf(command, sizeof command, "mv %s %s", TmpRankFile, RankFile);
 	system(command);
 }
 #endif
