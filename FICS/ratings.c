@@ -499,92 +499,95 @@ PUBLIC double current_sterr(double s, int t)
   return (sqrt(s * s + Gd * Gd * log(1.0 + t / 60.0)));
 }
 
-/* Calculates new rating and standard error.  By vek.  The person       */
-/*   who invented the ratings system is Mark E. Glickman, Ph.D.         */
-/*   His e-mail address is glickman@hustat.harvard.edu as of April '95. */
-/*   Postscript copy of the note I coded this from should be available  */
-/*   for ftp from ics.onenet.net, if not elsewhere.                     */
-
-PUBLIC void rating_sterr_delta(int p1, int p2, int type, int gtime, int result,
-			        int *deltarating, double *newsterr)
+/*
+ * Calculates new rating and standard error. By vek. The person who
+ * invented the ratings system is Mark E. Glickman, Ph.D. His e-mail
+ * address is glickman@hustat.harvard.edu as of April '95. Postscript
+ * copy of the note I coded this from should be available for ftp from
+ * ics.onenet.net, if not elsewhere.
+ */
+PUBLIC void
+rating_sterr_delta(int p1, int p2, int type, int gtime, int result,
+    int *deltarating, double *newsterr)
 {
-  statistics *p1_stats;
-  statistics *p2_stats;
+	double		 E, fs2, denominator, GK, w; // Parts of fancy formulas
+	double		 delta, sigma; // Results to return
+	double		 s1, s2;
+	int		 t1, r1, t2, r2; // Initial sterrs and ratings
+	statistics	*p1_stats;
+	statistics	*p2_stats;
 
-  double s1, s2;
-  int t1, r1, t2, r2;		/* Initial sterrs and ratings */
-  double E, fs2, denominator, GK, w;	/* Parts of fancy formulas */
-  double delta, sigma;		/* Results to return */
+	if (type == TYPE_BLITZ) {
+		p1_stats = &parray[p1].b_stats;
+		p2_stats = &parray[p2].b_stats;
+	} else if (type == TYPE_WILD) {
+		p1_stats = &parray[p1].w_stats;
+		p2_stats = &parray[p2].w_stats;
+	} else if (type == TYPE_LIGHT) {
+		p1_stats = &parray[p1].l_stats;
+		p2_stats = &parray[p2].l_stats;
 
-  if (type == TYPE_BLITZ) {
-    p1_stats = &parray[p1].b_stats;
-    p2_stats = &parray[p2].b_stats;
-  } else if (type == TYPE_WILD) {
-    p1_stats = &parray[p1].w_stats;
-    p2_stats = &parray[p2].w_stats;
-  } else if (type == TYPE_LIGHT) {
-    p1_stats = &parray[p1].l_stats;
-    p2_stats = &parray[p2].l_stats;
-/* insert bughouse stuff here */
-  } else {
-    p1_stats = &parray[p1].s_stats;
-    p2_stats = &parray[p2].s_stats;
-  }
+		// insert bughouse stuff here
+	} else {
+		p1_stats = &parray[p1].s_stats;
+		p2_stats = &parray[p2].s_stats;
+	}
 
-  /* Calculate effective pre-game sterrs.  ltime==0 implies never had sterr. */
+	/*
+	 * Calculate effective pre-game sterr's. ltime == 0 implies
+	 * never had sterr.
+	 */
+	if (p1_stats->ltime == 0)
+		s1 = Gs0;
+	else {
+		t1 = gtime - p1_stats->ltime;
+		s1 = current_sterr(p1_stats->sterr, t1);
 
-  if (p1_stats->ltime == 0)
-    s1 = Gs0;
-  else {
-    t1 = gtime - p1_stats->ltime;
-    s1 = current_sterr(p1_stats->sterr, t1);
-    if (s1 > Gs0)
-      s1 = Gs0;
-  }
+		if (s1 > Gs0)
+			s1 = Gs0;
+	}
 
-  if (p2_stats->ltime == 0)
-    s2 = Gs0;
-  else {
-    t2 = gtime - p2_stats->ltime;
-    s2 = current_sterr(p2_stats->sterr, t2);
-    if (s2 > Gs0)
-      s2 = Gs0;
-  }
+	if (p2_stats->ltime == 0)
+		s2 = Gs0;
+	else {
+		t2 = gtime - p2_stats->ltime;
+		s2 = current_sterr(p2_stats->sterr, t2);
 
-  /* pre-game ratings */
-  if (p1_stats->rating == 0 && p1_stats->num == 0)
-    r1 = Gr0;
-  else
-    r1 = p1_stats->rating;
+		if (s2 > Gs0)
+			s2 = Gs0;
+	}
 
-  if (p2_stats->rating == 0 && p2_stats->num == 0)
-    r2 = Gr0;
-  else
-    r2 = p2_stats->rating;
+	if (p1_stats->rating == 0 && p1_stats->num == 0)
+		r1 = Gr0;
+	else
+		r1 = p1_stats->rating;
 
-  /* now crunch */
+	if (p2_stats->rating == 0 && p2_stats->num == 0)
+		r2 = Gr0;
+	else
+		r2 = p2_stats->rating;
 
-  if (result == RESULT_WIN) {
-    w = 1.0;
-  } else if (result == RESULT_DRAW) {
-    w = 0.5;
-  } else {
-    w = 0.0;
-  }
+	if (result == RESULT_WIN) {
+		w = 1.0;
+	} else if (result == RESULT_DRAW) {
+		w = 0.5;
+	} else {
+		w = 0.0;
+	}
 
-  E = GE(r1, r2, s2, &fs2);	/* side effect: calculate fs2 */
+	E = GE(r1, r2, s2, &fs2);
+	denominator = 1.0 / (s1 * s1) + Gq * Gq * fs2 * fs2 * E * (1.0 - E);
+	GK = Gq * fs2 / denominator;
+	delta = GK * (w - E);
 
-  denominator = 1.0 / (s1 * s1) + Gq * Gq * fs2 * fs2 * E * (1.0 - E);
-  GK = Gq * fs2 / denominator;
+	if (p1_stats->rating == 0 && p1_stats->num == 0)
+		*deltarating = Round(Gr0 + delta);
+	else
+		*deltarating = Round(delta);	// Returned values: deltarating,
+						// newsterr.
 
-  delta = GK * (w - E);
-  if (p1_stats->rating == 0 && p1_stats->num == 0)
-    *deltarating = Round(Gr0 + delta);
-  else
-    *deltarating = Round(delta);	/* Returned values: deltarating,
-					   newsterr */
-  sigma = 1.0 / sqrt(denominator);
-  *newsterr = (double) sigma;
+	sigma = 1.0 / sqrt(denominator);
+	*newsterr = (double) sigma;
 }
 
 PUBLIC int
