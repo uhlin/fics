@@ -76,14 +76,12 @@ PRIVATE double	Rw_M = 0.0,
 		Rw_total = 0.0;
 PRIVATE int	Rw_count = 0;
 
-/*
-PUBLIC rateStruct bestS[MAX_BEST];
-PUBLIC int numS = 0;
-PUBLIC rateStruct bestB[MAX_BEST];
-PUBLIC int numB = 0;
-PUBLIC rateStruct bestW[MAX_BEST];
-PUBLIC int numW = 0;
-*/
+PRIVATE rateStruct	bestS[MAX_BEST];
+PRIVATE int		numS = 0;
+PRIVATE rateStruct	bestB[MAX_BEST];
+PRIVATE int		numB = 0;
+PRIVATE rateStruct	bestW[MAX_BEST];
+PRIVATE int		numW = 0;
 
 PRIVATE int	sHist[MAXHIST];
 PRIVATE int	bHist[MAXHIST];
