@@ -466,37 +466,43 @@ rating_recalc(void)
 	fprintf(stderr, "FICS: Finished at %s\n", strltime(&t));
 }
 
-PRIVATE int Round (double x)
+PRIVATE int
+Round(double x)
 {
-  return (x < 0   ?   (int) (x - 0.5)   :   (int) (x + 0.5));
+	return (x < 0 ? (int)(x - 0.5) : (int)(x + 0.5));
 }
 
-/*  Constants for Glicko system */
+// Constants for Glicko system
 #define Gd 3.25
 #define Gr0 1720
 #define Gs0 350
 #define Gq 0.00575646273249
 #define Gp 0.000010072398601964
+// End of Glicko system variables
 
-/* End of Glicko system variables */
-
-PRIVATE double Gf(double ss)
+PRIVATE double
+Gf(double ss)
 {
-  return (1.0 / sqrt(1.0 + Gp * ss * ss));
+	return (1.0 / sqrt(1.0 + Gp * ss * ss));
 }
 
-/* Confusing but economical: calculate error and attenuation function together */
-PRIVATE double GE(int r, int rr, double ss, double *fss)
+/*
+ * Confusing but economical: calculate error and attenuation function
+ * together.
+ */
+PRIVATE double
+GE(int r, int rr, double ss, double *fss)
 {
-  *fss = Gf(ss);
-  return (1.0 / (1.0 + pow(10.0, (rr - r) * (*fss) / 400.0)));
+	*fss = Gf(ss);
+	return (1.0 / (1.0 + pow(10.0, (rr - r) * (*fss) / 400.0)));
 }
 
-PUBLIC double current_sterr(double s, int t)
+PUBLIC double
+current_sterr(double s, int t)
 {
-  if (t < 0)
-    t = 0;			/* this shouldn't happen */
-  return (sqrt(s * s + Gd * Gd * log(1.0 + t / 60.0)));
+	if (t < 0)
+		t = 0; // this shouldn't happen
+	return sqrt(s * s + Gd * Gd * log(1.0 + t / 60.0));
 }
 
 /*
