@@ -599,170 +599,197 @@ PUBLIC int rating_delta(int p1, int p2, int type, int result, int gtime)
 
 }
 
-PUBLIC int rating_update(int g)
+PUBLIC int
+rating_update(int g)
 {
-  int wDelta, bDelta;
-  double wSigma, bSigma;	/* vek */
+	double		 wSigma, bSigma;
+	int		 gtime;
+	int		 inprogress = (g == parray[garray[g].black].game);
+	int		 wDelta, bDelta;
+	int		 wRes, bRes;
+	statistics	*b_stats;
+	statistics	*w_stats;
 
-  int wRes, bRes;
-  statistics *w_stats;
-  statistics *b_stats;
+	/*
+	 * If this is adjudication of stored game - be quiet about
+	 * ratings change.
+	 */
+	if (garray[g].type == TYPE_BLITZ) {
+		w_stats = &parray[garray[g].white].b_stats;
+		b_stats = &parray[garray[g].black].b_stats;
+	} else if (garray[g].type == TYPE_STAND) {
+		w_stats = &parray[garray[g].white].s_stats;
+		b_stats = &parray[garray[g].black].s_stats;
+	} else if (garray[g].type == TYPE_WILD) {
+		w_stats = &parray[garray[g].white].w_stats;
+		b_stats = &parray[garray[g].black].w_stats;
+	} else if (garray[g].type == TYPE_LIGHT) {
+		w_stats = &parray[garray[g].white].l_stats;
+		b_stats = &parray[garray[g].black].l_stats;
+	} else {
+		fprintf(stderr, "FICS: Can't update untimed ratings!\n");
+		return -1;
+	}
 
-  int gtime;
+	switch (garray[g].result) {
+	case END_CHECKMATE:
+	case END_RESIGN:
+	case END_FLAG:
+	case END_ADJWIN:
+		if (garray[g].winner == WHITE) {
+			wRes = RESULT_WIN;
+			bRes = RESULT_LOSS;
+		} else {
+			bRes = RESULT_WIN;
+			wRes = RESULT_LOSS;
+		}
+		break;
+	case END_AGREEDDRAW:
+	case END_REPETITION:
+	case END_50MOVERULE:
+	case END_STALEMATE:
+	case END_NOMATERIAL:
+	case END_BOTHFLAG:
+	case END_ADJDRAW:
+	case END_FLAGNOMATERIAL:
+		wRes = bRes = RESULT_DRAW;
+		break;
+	default:
+		fprintf(stderr, "FICS: Update undecided game %d?\n",
+		    garray[g].result);
+		return -1;
+	}
 
-  int inprogress = (g == parray[garray[g].black].game);
-  /* if this is adjudication of stored game, be quiet about ratings change */
+	gtime = untenths(garray[g].timeOfStart);
 
-  if (garray[g].type == TYPE_BLITZ) {
-    w_stats = &parray[garray[g].white].b_stats;
-    b_stats = &parray[garray[g].black].b_stats;
-  } else if (garray[g].type == TYPE_STAND) {
-    w_stats = &parray[garray[g].white].s_stats;
-    b_stats = &parray[garray[g].black].s_stats;
-  } else if (garray[g].type == TYPE_WILD) {
-    w_stats = &parray[garray[g].white].w_stats;
-    b_stats = &parray[garray[g].black].w_stats;
-  } else if (garray[g].type == TYPE_LIGHT) {
-    w_stats = &parray[garray[g].white].l_stats;
-    b_stats = &parray[garray[g].black].l_stats;
-  } else {
-    fprintf(stderr, "FICS: Can't update untimed ratings!\n");
-    return -1;
-  }
+	rating_sterr_delta(garray[g].white, garray[g].black, garray[g].type,
+	    gtime, wRes, &wDelta, &wSigma);
+	rating_sterr_delta(garray[g].black, garray[g].white, garray[g].type,
+	    gtime, bRes, &bDelta, &bSigma);
 
-  switch (garray[g].result) {
-  case END_CHECKMATE:
-  case END_RESIGN:
-  case END_FLAG:
-  case END_ADJWIN:
-    if (garray[g].winner == WHITE) {
-      wRes = RESULT_WIN;
-      bRes = RESULT_LOSS;
-    } else {
-      bRes = RESULT_WIN;
-      wRes = RESULT_LOSS;
-    }
-    break;
-  case END_AGREEDDRAW:
-  case END_REPETITION:
-  case END_50MOVERULE:
-  case END_STALEMATE:
-  case END_NOMATERIAL:
-  case END_BOTHFLAG:
-  case END_ADJDRAW:
-  case END_FLAGNOMATERIAL:
-    wRes = bRes = RESULT_DRAW;
-    break;
-  default:
-    fprintf(stderr, "FICS: Update undecided game %d?\n", garray[g].result);
-    return -1;
-  }
-  gtime = untenths(garray[g].timeOfStart);
-  rating_sterr_delta(garray[g].white, garray[g].black,
-		     garray[g].type, gtime, wRes,
-		     &wDelta, &wSigma);
+	w_stats->ltime = gtime;
+	b_stats->ltime = gtime;
 
-  rating_sterr_delta(garray[g].black, garray[g].white,
-		     garray[g].type, gtime, bRes,
-		     &bDelta, &bSigma);
+	if (wRes == RESULT_WIN) {
+		w_stats->win++;
+	} else if (wRes == RESULT_LOSS) {
+		w_stats->los++;
+	} else {
+		w_stats->dra++;
+	}
 
-  /* vek: Update time of last rated game played, for future ratings calcs. */
-  /* Kept independently for blitz and standard.                       */
-  w_stats->ltime = gtime;
-  b_stats->ltime = gtime;
-  /* end vek add 4/5/95 */
+	w_stats->num++;
 
-  if (wRes == RESULT_WIN) {
-    w_stats->win++;
-  } else if (wRes == RESULT_LOSS) {
-    w_stats->los++;
-  } else {
-    w_stats->dra++;
-  }
-  w_stats->num++;
-  if (bRes == RESULT_WIN) {
-    b_stats->win++;
-  } else if (bRes == RESULT_LOSS) {
-    b_stats->los++;
-  } else {
-    b_stats->dra++;
-  }
-  b_stats->num++;
-  rating_remove(w_stats->rating, garray[g].type);
-  rating_remove(b_stats->rating, garray[g].type);
+	if (bRes == RESULT_WIN) {
+		b_stats->win++;
+	} else if (bRes == RESULT_LOSS) {
+		b_stats->los++;
+	} else {
+		b_stats->dra++;
+	}
 
-  if (inprogress) {
-    pprintf(garray[g].white, "%s rating adjustment: %d ",
-	    ((garray[g].type == TYPE_BLITZ) ? "Blitz" : ((garray[g].type == TYPE_WILD) ? "Wild" : ((garray[g].type == TYPE_LIGHT) ? "Lightning" : "Standard"))), w_stats->rating);
-    pprintf(garray[g].black, "%s rating adjustment: %d ",
-	    ((garray[g].type == TYPE_BLITZ) ? "Blitz" : ((garray[g].type == TYPE_WILD) ? "Wild" : ((garray[g].type == TYPE_LIGHT) ? "Lightning" : "Standard"))), b_stats->rating);
-  }
-  if (wDelta < -1000) {
-    pprintf(garray[g].white, "not changed due to bug (way too small)! sorry!\n");
-    fprintf(stderr, "FICS: Got too small ratings bug for %s (w) vs. %s\n",
-	    parray[garray[g].white].login, parray[garray[g].black].login);
-  } else if (wDelta > 3000) {
-    pprintf(garray[g].white, "not changed due to bug (way too big)! sorry!\n");
-    fprintf(stderr, "FICS: Got too big ratings bug for %s (w) vs. %s\n",
-	    parray[garray[g].white].login, parray[garray[g].black].login);
-  } else {
-    w_stats->rating += wDelta;
-    w_stats->sterr = wSigma;
-  }
+	b_stats->num++;
 
-  if (bDelta < -1000) {
-    pprintf(garray[g].black, "not changed due to bug (way too small)! sorry! ");
-    fprintf(stderr, "FICS: Got too small ratings bug for %s (b) vs. %s\n",
-	    parray[garray[g].black].login, parray[garray[g].white].login);
-  } else if (bDelta > 3000) {
-    pprintf(garray[g].black, "not changed due to bug (way too big)! sorry! ");
-    fprintf(stderr, "FICS: Got too big ratings bug for %s (b) vs. %s\n",
-	    parray[garray[g].black].login, parray[garray[g].white].login);
-  } else {
-    b_stats->rating += bDelta;
-    b_stats->sterr = bSigma;
-  }				/* error messages down to vek */
+	rating_remove(w_stats->rating, garray[g].type);
+	rating_remove(b_stats->rating, garray[g].type);
 
-  rating_add(w_stats->rating, garray[g].type);
-  rating_add(b_stats->rating, garray[g].type);
+	if (inprogress) {
+		pprintf(garray[g].white, "%s rating adjustment: %d ",
+		    ((garray[g].type == TYPE_BLITZ) ? "Blitz" :
+		    ((garray[g].type == TYPE_WILD) ? "Wild" :
+		    ((garray[g].type == TYPE_LIGHT) ? "Lightning" :
+		    "Standard"))),
+		    w_stats->rating);
+		pprintf(garray[g].black, "%s rating adjustment: %d ",
+		    ((garray[g].type == TYPE_BLITZ) ? "Blitz" :
+		    ((garray[g].type == TYPE_WILD) ? "Wild" :
+		    ((garray[g].type == TYPE_LIGHT) ? "Lightning" :
+		    "Standard"))),
+		    b_stats->rating);
+	}
 
-  if ((w_stats->rating > w_stats->best) && (is_active(w_stats->num))) {
-    w_stats->best = w_stats->rating;
-    w_stats->whenbest = time(NULL);
-  }
-  if ((b_stats->rating > b_stats->best) && (is_active(b_stats->num))) {
-    b_stats->best = b_stats->rating;
-    b_stats->whenbest = time(NULL);
-  }
-/* Ratings are now saved to disk after each game */
-  player_save(garray[g].white);
-  player_save(garray[g].black);
+	if (wDelta < -1000) {
+		pprintf(garray[g].white, "not changed due to bug "
+		    "(way too small)! sorry!\n");
+		fprintf(stderr, "FICS: Got too small ratings bug for %s "
+		    "(w) vs. %s\n",
+		    parray[garray[g].white].login,
+		    parray[garray[g].black].login);
+	} else if (wDelta > 3000) {
+		pprintf(garray[g].white, "not changed due to bug "
+		    "(way too big)! sorry!\n");
+		fprintf(stderr, "FICS: Got too big ratings bug for %s "
+		    "(w) vs. %s\n",
+		    parray[garray[g].white].login,
+		    parray[garray[g].black].login);
+	} else {
+		w_stats->rating += wDelta;
+		w_stats->sterr = wSigma;
+	}
 
-/* foxbat 3.11.95 */
-  if (garray[g].type == TYPE_BLITZ) {
-    Rb_count++;
-    Rb_total += (w_stats->rating + b_stats->rating) / 2.0;
-  } else if (garray[g].type == TYPE_STAND) {
-    Rs_count++;
-    Rs_total += (w_stats->rating + b_stats->rating) / 2.0;
-  } else if (garray[g].type == TYPE_LIGHT) {
-    Rl_count++;
-    Rl_total += (w_stats->rating + b_stats->rating) / 2.0;
-  } else if (garray[g].type == TYPE_WILD) {
-    Rw_count++;
-    Rw_total += (w_stats->rating + b_stats->rating) / 2.0;
-  }
-/* end add */
-  if (inprogress) {
-    pprintf(garray[g].white, "--> %d\n", w_stats->rating);
-    pprintf(garray[g].black, "--> %d\n", b_stats->rating);
-  }
-  save_ratings();
-  UpdateRank(garray[g].type, parray[garray[g].white].name,
-	     w_stats, parray[garray[g].white].name);
-  UpdateRank(garray[g].type, parray[garray[g].black].name,
-	     b_stats, parray[garray[g].black].name);
-  return 0;
+	if (bDelta < -1000) {
+		pprintf(garray[g].black, "not changed due to bug "
+		    "(way too small)! sorry! ");
+		fprintf(stderr, "FICS: Got too small ratings bug for %s "
+		    "(b) vs. %s\n",
+		    parray[garray[g].black].login,
+		    parray[garray[g].white].login);
+	} else if (bDelta > 3000) {
+		pprintf(garray[g].black, "not changed due to bug "
+		    "(way too big)! sorry! ");
+		fprintf(stderr, "FICS: Got too big ratings bug for %s "
+		    "(b) vs. %s\n",
+		    parray[garray[g].black].login,
+		    parray[garray[g].white].login);
+	} else {
+		b_stats->rating += bDelta;
+		b_stats->sterr = bSigma;
+	}
+
+	rating_add(w_stats->rating, garray[g].type);
+	rating_add(b_stats->rating, garray[g].type);
+
+	if ((w_stats->rating > w_stats->best) && (is_active(w_stats->num))) {
+		w_stats->best = w_stats->rating;
+		w_stats->whenbest = time(NULL);
+	}
+	if ((b_stats->rating > b_stats->best) && (is_active(b_stats->num))) {
+		b_stats->best = b_stats->rating;
+		b_stats->whenbest = time(NULL);
+	}
+
+	// Ratings are now saved to disk after each game
+	player_save(garray[g].white);
+	player_save(garray[g].black);
+
+	// foxbat 3.11.95
+	if (garray[g].type == TYPE_BLITZ) {
+		Rb_count++;
+		Rb_total += (w_stats->rating + b_stats->rating) / 2.0;
+	} else if (garray[g].type == TYPE_STAND) {
+		Rs_count++;
+		Rs_total += (w_stats->rating + b_stats->rating) / 2.0;
+	} else if (garray[g].type == TYPE_LIGHT) {
+		Rl_count++;
+		Rl_total += (w_stats->rating + b_stats->rating) / 2.0;
+	} else if (garray[g].type == TYPE_WILD) {
+		Rw_count++;
+		Rw_total += (w_stats->rating + b_stats->rating) / 2.0;
+	}
+
+	// end add
+	if (inprogress) {
+		pprintf(garray[g].white, "--> %d\n", w_stats->rating);
+		pprintf(garray[g].black, "--> %d\n", b_stats->rating);
+	}
+
+	save_ratings();
+
+	UpdateRank(garray[g].type, parray[garray[g].white].name, w_stats,
+	    parray[garray[g].white].name);
+	UpdateRank(garray[g].type, parray[garray[g].black].name, b_stats,
+	    parray[garray[g].black].name);
+	return 0;
 }
 
 PUBLIC int
