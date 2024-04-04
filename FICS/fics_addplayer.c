@@ -159,5 +159,7 @@ main(int argc, char *argv[])
 	    SERVER_HOSTNAME);
 
 	mail_string_to_address(email, "FICS Account Created", text);
+	explicit_bzero(password, sizeof(password));
+	explicit_bzero(text, sizeof(text));
 	return 0;
 }
