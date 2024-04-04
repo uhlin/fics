@@ -1161,7 +1161,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	sprintf(TmpRankFile, "%s/tmpRank", sdir);
 
 	if ((fptemp = fopen(TmpRankFile, "w")) == NULL) {
-		fprintf (stderr, "Unable to open rank file for updating.\n");
+		fprintf(stderr, "Unable to open rank file for updating.\n");
 		return;
 	}
 
