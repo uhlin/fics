@@ -267,55 +267,60 @@ PUBLIC void rating_remove(int rating, int type)
   }
 }
 
-PRIVATE void load_ratings(void)
+PRIVATE void
+load_ratings(void)
 {
-  FILE *fp;
-  char fname[MAX_FILENAME_SIZE];
-  int i;
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 
-  sprintf(fname, "%s/newratingsV%d_data", stats_dir,STATS_VERSION);
-  fp = fopen(fname, "r");
-  if (!fp) {
-    fprintf(stderr, "FICS: Can't read ratings data!\n");
-    return;
-  }
-  fscanf(fp, "%lf %lf %lf %d", &Rb_M, &Rb_S, &Rb_total, &Rb_count);
-  fscanf(fp, "%lf %lf %lf %d", &Rs_M, &Rs_S, &Rs_total, &Rs_count);
-  fscanf(fp, "%lf %lf %lf %d", &Rw_M, &Rw_S, &Rw_total, &Rw_count);
-  fscanf(fp, "%lf %lf %lf %d", &Rl_M, &Rl_S, &Rl_total, &Rl_count);
+	snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
+	    STATS_VERSION);
 
-  for (i = 0; i < MAXHIST; i++) {
-    fscanf(fp, "%d %d %d %d", &sHist[i], &bHist[i], &wHist[i], &lHist[i]);
-  }
-  fclose(fp);
-  if (Rs_count) {
-    Ratings_S_StdDev = sqrt(Rs_S / Rs_count);
-    Ratings_S_Average = Rs_total / (double) Rs_count;
-  } else {
-    Ratings_S_StdDev = 0;
-    Ratings_S_Average = 0;
-  }
-  if (Rb_count) {
-    Ratings_B_StdDev = sqrt(Rb_S / Rb_count);
-    Ratings_B_Average = Rb_total / (double) Rb_count;
-  } else {
-    Ratings_B_StdDev = 0;
-    Ratings_B_Average = 0;
-  }
-  if (Rw_count) {
-    Ratings_W_StdDev = sqrt(Rw_S / Rw_count);
-    Ratings_W_Average = Rw_total / (double) Rw_count;
-  } else {
-    Ratings_W_StdDev = 0;
-    Ratings_W_Average = 0;
-  }
-  if (Rl_count) {
-    Ratings_L_StdDev = sqrt(Rl_S / Rl_count);
-    Ratings_L_Average = Rl_total / (double) Rl_count;
-  } else {
-    Ratings_L_StdDev = 0;
-    Ratings_L_Average = 0;
-  }
+	if ((fp = fopen(fname, "r")) == NULL) {
+		fprintf(stderr, "FICS: Can't read ratings data!\n");
+		return;
+	}
+
+	fscanf(fp, "%lf %lf %lf %d", &Rb_M, &Rb_S, &Rb_total, &Rb_count);
+	fscanf(fp, "%lf %lf %lf %d", &Rs_M, &Rs_S, &Rs_total, &Rs_count);
+	fscanf(fp, "%lf %lf %lf %d", &Rw_M, &Rw_S, &Rw_total, &Rw_count);
+	fscanf(fp, "%lf %lf %lf %d", &Rl_M, &Rl_S, &Rl_total, &Rl_count);
+
+	for (int i = 0; i < MAXHIST; i++) {
+		fscanf(fp, "%d %d %d %d", &sHist[i], &bHist[i], &wHist[i],
+		    &lHist[i]);
+	}
+
+	fclose(fp);
+
+	if (Rs_count) {
+		Ratings_S_StdDev	= sqrt(Rs_S / Rs_count);
+		Ratings_S_Average	= (Rs_total / (double)Rs_count);
+	} else {
+		Ratings_S_StdDev	= 0;
+		Ratings_S_Average	= 0;
+	}
+	if (Rb_count) {
+		Ratings_B_StdDev	= sqrt(Rb_S / Rb_count);
+		Ratings_B_Average	= (Rb_total / (double)Rb_count);
+	} else {
+		Ratings_B_StdDev	= 0;
+		Ratings_B_Average	= 0;
+	}
+	if (Rw_count) {
+		Ratings_W_StdDev	= sqrt(Rw_S / Rw_count);
+		Ratings_W_Average	= (Rw_total / (double)Rw_count);
+	} else {
+		Ratings_W_StdDev	= 0;
+		Ratings_W_Average	= 0;
+	}
+	if (Rl_count) {
+		Ratings_L_StdDev	= sqrt(Rl_S / Rl_count);
+		Ratings_L_Average	= (Rl_total / (double)Rl_count);
+	} else {
+		Ratings_L_StdDev	= 0;
+		Ratings_L_Average	= 0;
+	}
 }
 
 PUBLIC void
