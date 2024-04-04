@@ -25,6 +25,7 @@
    Markus Uhlin			23/12/28	Switched to arc4random_uniform()
    Markus Uhlin			24/01/01	Size-bounded copying
    Markus Uhlin			24/04/01	Fixed empty hostname
+   Markus Uhlin			24/04/04	Added usage of explicit_bzero()
 */
 
 #include "stdinclude.h"
