@@ -587,16 +587,14 @@ PUBLIC void rating_sterr_delta(int p1, int p2, int type, int gtime, int result,
   *newsterr = (double) sigma;
 }
 
-/* vek: Next is for when we want just the delta, and not the sigma. */
-
-PUBLIC int rating_delta(int p1, int p2, int type, int result, int gtime)
+PUBLIC int
+rating_delta(int p1, int p2, int type, int result, int gtime)
 {
-  int delta;
-  double sigma;
+	int	delta;
+	double	sigma;
 
-  rating_sterr_delta(p1, p2, type, gtime, result, &delta, &sigma);
-  return (delta);
-
+	rating_sterr_delta(p1, p2, type, gtime, result, &delta, &sigma);
+	return delta;
 }
 
 PUBLIC int
