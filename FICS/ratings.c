@@ -56,7 +56,6 @@ PUBLIC double Ratings_L_StdDev;
 PUBLIC double Ratings_W_Average;
 PUBLIC double Ratings_W_StdDev;
 
-
 PRIVATE double Rb_M = 0.0, Rb_S = 0.0, Rb_total = 0.0;
 PRIVATE int Rb_count = 0;
 
