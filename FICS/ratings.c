@@ -44,6 +44,9 @@
 #define Gp	0.000010072398601964
 // End of Glicko system variables
 
+#define LOWESTHIST	800
+#define MAXHIST		30
+
 PRIVATE double	Ratings_B_Average;
 PRIVATE double	Ratings_B_StdDev;
 PRIVATE double	Ratings_S_Average;
@@ -82,8 +85,6 @@ PUBLIC rateStruct bestW[MAX_BEST];
 PUBLIC int numW = 0;
 */
 
-#define MAXHIST 30
-#define LOWESTHIST 800
 PUBLIC int sHist[MAXHIST];
 PUBLIC int bHist[MAXHIST];
 PUBLIC int wHist[MAXHIST];
