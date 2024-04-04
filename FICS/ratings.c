@@ -53,14 +53,25 @@ PRIVATE double	Ratings_L_StdDev;
 PRIVATE double	Ratings_W_Average;
 PRIVATE double	Ratings_W_StdDev;
 
-PRIVATE double Rb_M = 0.0, Rb_S = 0.0, Rb_total = 0.0;
-PRIVATE int Rb_count = 0;
-PRIVATE double Rs_M = 0.0, Rs_S = 0.0, Rs_total = 0.0;
-PRIVATE int Rs_count = 0;
-PRIVATE double Rl_M = 0.0, Rl_S = 0.0, Rl_total = 0.0;
-PRIVATE int Rl_count = 0;
-PRIVATE double Rw_M = 0.0, Rw_S = 0.0, Rw_total = 0.0;
-PRIVATE int Rw_count = 0;
+PRIVATE double	Rb_M = 0.0,
+		Rb_S = 0.0,
+		Rb_total = 0.0;
+PRIVATE int	Rb_count = 0;
+
+PRIVATE double	Rs_M = 0.0,
+		Rs_S = 0.0,
+		Rs_total = 0.0;
+PRIVATE int	Rs_count = 0;
+
+PRIVATE double	Rl_M = 0.0,
+		Rl_S = 0.0,
+		Rl_total = 0.0;
+PRIVATE int	Rl_count = 0;
+
+PRIVATE double	Rw_M = 0.0,
+		Rw_S = 0.0,
+		Rw_total = 0.0;
+PRIVATE int	Rw_count = 0;
 
 /*
 PUBLIC rateStruct bestS[MAX_BEST];
