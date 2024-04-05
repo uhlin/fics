@@ -21,7 +21,10 @@
    vek leeds@math.gatech.edu    95/04/05	Glicko system, with sterr
    Markus Uhlin                 23/12/17	Fixed the includes
    Markus Uhlin                 23/12/17	Usage of 'time_t'
-   Markus Uhlin                 24/04/05	Reformatted ALL functions
+   Markus Uhlin                 24/04/05	Reformatted ALL functions and
+						reenabled disabled code.
+   Markus Uhlin                 24/04/05	Replaced unbounded string
+						handling functions.
 */
 
 #include "stdinclude.h"
