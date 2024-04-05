@@ -539,6 +539,45 @@ zero_stats(void)
 	numW = 0;
 }
 
+#if 0
+PUBLIC int
+com_best(int p, param_list param)
+{
+	pprintf(p, "Standard                Blitz                   Wild\n");
+
+	for (int i = 0; i < MAX_BEST; i++) {
+		if (i >= numS && i >= numB)
+			break;
+
+		if (i < numS) {
+			pprintf(p, "%4d %-17s  ",
+			    bestS[i].rating,
+			    bestS[i].name);
+		} else {
+			pprintf(p, "                        ");
+		}
+
+		if (i < numB) {
+			pprintf(p, "%4d %-17s  ",
+			    bestB[i].rating,
+			    bestB[i].name);
+		} else {
+			pprintf(p, "                        ");
+		}
+
+		if (i < numW) {
+			pprintf(p, "%4d %-17s\n",
+			    bestW[i].rating,
+			    bestW[i].name);
+		} else {
+			pprintf(p, "\n");
+		}
+	}
+
+	return COM_OK;
+}
+#endif
+
 PUBLIC void
 rating_init(void)
 {
