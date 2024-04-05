@@ -33,7 +33,6 @@
 #include "command.h"
 #include "comproc.h"
 #include "config.h"
-#include "ficsmain.h"
 #include "gamedb.h"
 #include "lists.h"
 #include "playerdb.h"
