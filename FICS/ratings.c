@@ -1465,8 +1465,17 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	fclose(fp);
 
 	// XXX
+#define NASH_CODE 0
+#if NASH_CODE
 	snprintf(command, sizeof command, "mv %s %s", TmpRankFile, RankFile);
 	system(command);
+#else
+	if (rename(TmpRankFile, RankFile) == -1) {
+		(void) fprintf(stderr, "FICS: %s: warning: rename(): %s",
+		    __func__, strerror(errno));
+	}
+	UNUSED_VAR(command);
+#endif
 }
 
 PRIVATE void
