@@ -96,66 +96,80 @@ is_active(int Games)
 	return (Games >= PROVISIONAL);
 }
 
-PUBLIC void rating_add(int rating, int type)
+PUBLIC void
+rating_add(int rating, int type)
 {
-  int which;
+	int	which;
 
-  which = (rating - LOWESTHIST) / 100;
-  if (which < 0)
-    which = 0;
-  if (which >= MAXHIST)
-    which = MAXHIST - 1;
-  if (type == TYPE_BLITZ) {
-    bHist[which] += 1;
-    Rb_count++;
-    Rb_total += rating;
-    if (Rb_count == 1) {
-      Rb_M = rating;
-    } else {
-      Rb_S = Rb_S + (rating - Rb_M) * (rating - Rb_M);
-      Rb_M = Rb_M + (rating - Rb_M) / (Rb_count);
-    }
-    Ratings_B_StdDev = sqrt(Rb_S / Rb_count);
-    Ratings_B_Average = Rb_total / (double) Rb_count;
-  } else if (type == TYPE_WILD) {	/* TYPE_WILD */
-    wHist[which] += 1;
-    Rw_count++;
-    Rw_total += rating;
-    if (Rw_count == 1) {
-      Rw_M = rating;
-    } else {
-      Rw_S = Rw_S + (rating - Rw_M) * (rating - Rw_M);
-      Rw_M = Rw_M + (rating - Rw_M) / (Rw_count);
-    }
-    Ratings_W_StdDev = sqrt(Rw_S / Rw_count);
-    Ratings_W_Average = Rw_total / (double) Rw_count;
-  } else if (type == TYPE_LIGHT) {       /* TYPE_LIGHT */
-    lHist[which] += 1;
-    Rl_count++;
-    Rl_total += rating;
-    if (Rl_count == 1) {
-      Rl_M = rating;
-    } else {
-      Rl_S = Rl_S + (rating - Rl_M) * (rating - Rl_M);
-      Rl_M = Rl_M + (rating - Rl_M) / (Rl_count);
-    }
-    Ratings_L_StdDev = sqrt(Rl_S / Rl_count);
-    Ratings_L_Average = Rl_total / (double) Rl_count;
+	if ((which = (rating - LOWESTHIST) / 100) < 0)
+		which = 0;
 
-/* Insert bughouse stuff */
-  } else {			/* TYPE_STAND */
-    sHist[which] += 1;
-    Rs_count++;
-    Rs_total += rating;
-    if (Rs_count == 1) {
-      Rs_M = rating;
-    } else {
-      Rs_S = Rs_S + (rating - Rs_M) * (rating - Rs_M);
-      Rs_M = Rs_M + (rating - Rs_M) / (Rs_count);
-    }
-    Ratings_S_StdDev = sqrt(Rs_S / Rs_count);
-    Ratings_S_Average = Rs_total / (double) Rs_count;
-  }
+	if (which >= MAXHIST)
+		which = MAXHIST - 1;
+
+	if (type == TYPE_BLITZ) {
+		bHist[which] += 1;
+
+		Rb_count++;
+		Rb_total += rating;
+
+		if (Rb_count == 1) {
+			Rb_M = rating;
+		} else {
+			Rb_S = Rb_S + (rating - Rb_M) * (rating - Rb_M);
+			Rb_M = Rb_M + (rating - Rb_M) / (Rb_count);
+		}
+
+		Ratings_B_StdDev	= sqrt(Rb_S / Rb_count);
+		Ratings_B_Average	= (Rb_total / (double)Rb_count);
+	} else if (type == TYPE_WILD) { // TYPE_WILD
+		wHist[which] += 1;
+
+		Rw_count++;
+		Rw_total += rating;
+
+		if (Rw_count == 1) {
+			Rw_M = rating;
+		} else {
+			Rw_S = Rw_S + (rating - Rw_M) * (rating - Rw_M);
+			Rw_M = Rw_M + (rating - Rw_M) / (Rw_count);
+		}
+
+		Ratings_W_StdDev	= sqrt(Rw_S / Rw_count);
+		Ratings_W_Average	= (Rw_total / (double)Rw_count);
+	} else if (type == TYPE_LIGHT) { // TYPE_LIGHT
+		lHist[which] += 1;
+
+		Rl_count++;
+		Rl_total += rating;
+
+		if (Rl_count == 1) {
+			Rl_M = rating;
+		} else {
+			Rl_S = Rl_S + (rating - Rl_M) * (rating - Rl_M);
+			Rl_M = Rl_M + (rating - Rl_M) / (Rl_count);
+		}
+
+		Ratings_L_StdDev	= sqrt(Rl_S / Rl_count);
+		Ratings_L_Average	= (Rl_total / (double)Rl_count);
+
+		// Insert bughouse stuff
+	} else { // TYPE_STAND
+		sHist[which] += 1;
+
+		Rs_count++;
+		Rs_total += rating;
+
+		if (Rs_count == 1) {
+			Rs_M = rating;
+		} else {
+			Rs_S = Rs_S + (rating - Rs_M) * (rating - Rs_M);
+			Rs_M = Rs_M + (rating - Rs_M) / (Rs_count);
+		}
+
+		Ratings_S_StdDev	= sqrt(Rs_S / Rs_count);
+		Ratings_S_Average	= (Rs_total / (double)Rs_count);
+	}
 }
 
 PUBLIC void
