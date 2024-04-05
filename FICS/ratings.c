@@ -1377,17 +1377,17 @@ CompareStats(char *name1, statistics *s1,
 }
 
 PRIVATE int
-GetRankFileName(char *out, int type)
+GetRankFileName(char *out, const size_t size, int type)
 {
 	switch (type) {
 	case TYPE_BLITZ:
-		sprintf(out, "%s/rank.blitz", sdir);
+		snprintf(out, size, "%s/rank.blitz", sdir);
 		return type;
 	case TYPE_STAND:
-		sprintf(out, "%s/rank.std", sdir);
+		snprintf(out, size, "%s/rank.std", sdir);
 		return type;
 	case TYPE_WILD:
-		sprintf(out, "%s/rank.wild", sdir);
+		snprintf(out, size, "%s/rank.wild", sdir);
 		return type;
 	default:
 		return -1;
@@ -1407,7 +1407,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	int		 comp;
 	statistics	 sCur;
 
-	if (GetRankFileName(RankFile, type) < 0)
+	if (GetRankFileName(RankFile, sizeof RankFile, type) < 0)
 		return;
 
 	if ((fp = fopen(RankFile, "r")) == NULL) {
@@ -1681,7 +1681,7 @@ DisplayTargetRank(int p, char *target, int show, int showComp)
 	int	 wildRank = -1, wildCount;
 
 	if (CheckFlag(show, SHOW_BLITZ)) {
-		GetRankFileName(Path, TYPE_BLITZ);
+		GetRankFileName(Path, sizeof Path, TYPE_BLITZ);
 
 		if ((fb = fopen(Path, "r")) != NULL)
 			blitzRank = GetRank(fb, target, showComp);
@@ -1690,7 +1690,7 @@ DisplayTargetRank(int p, char *target, int show, int showComp)
 	}
 
 	if (CheckFlag(show, SHOW_STANDARD)) {
-		GetRankFileName(Path, TYPE_STAND);
+		GetRankFileName(Path, sizeof Path, TYPE_STAND);
 
 		if ((fs = fopen(Path, "r")) != NULL)
 			stdRank = GetRank(fs, target, showComp);
@@ -1699,7 +1699,7 @@ DisplayTargetRank(int p, char *target, int show, int showComp)
 	}
 
 	if (CheckFlag(show, SHOW_WILD)) {
-		GetRankFileName(Path, TYPE_WILD);
+		GetRankFileName(Path, sizeof Path, TYPE_WILD);
 
 		if (CheckFlag(show, SHOW_WILD))
 			fw = fopen(Path, "r");
@@ -1756,19 +1756,19 @@ DisplayRankedPlayers(int p, int start, int end, int show, int showComp)
 		num = 100;
 
 	if (CheckFlag(show, SHOW_BLITZ)) {
-		GetRankFileName(Path, TYPE_BLITZ);
+		GetRankFileName(Path, sizeof Path, TYPE_BLITZ);
 
 		if ((fb = fopen(Path, "r")) == NULL)
 			ClearFlag(show, SHOW_BLITZ);
 	}
 	if (CheckFlag(show, SHOW_STANDARD)) {
-		GetRankFileName(Path, TYPE_STAND);
+		GetRankFileName(Path, sizeof Path, TYPE_STAND);
 
 		if ((fs = fopen(Path, "r")) == NULL)
 			ClearFlag(show, SHOW_STANDARD);
 	}
 	if (CheckFlag(show, SHOW_WILD)) {
-		GetRankFileName(Path, TYPE_WILD);
+		GetRankFileName(Path, sizeof Path, TYPE_WILD);
 
 		if ((fw = fopen(Path, "r")) == NULL)
 			ClearFlag(show, SHOW_WILD);
