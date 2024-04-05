@@ -1333,6 +1333,49 @@ DisplayRank(int p, param_list param, int showComputers)
 	}
 }
 
+/*
+ * CompareStats() returns:
+ *   - 1 if s1 comes first,
+ *   - -1 if s2 comes first,
+ *   - and 0 if neither takes precedence.
+ */
+PRIVATE int
+CompareStats(char *name1, statistics *s1,
+	     char *name2, statistics *s2)
+{
+	int	i, l1;
+
+	if (s1 == NULL) {
+		if (s2 == NULL)
+			return 0;
+		else
+			return -1;
+	} else if (s2 == NULL)
+		return 1;
+
+	if (s1->rating > s2->rating)
+		return 1;
+	if (s1->rating < s2->rating)
+		return -1;
+
+	l1 = strlen(name1);
+
+	for (i = 0; i < l1; i++) {
+		if (name2[i] == '\0')
+			return -1;
+		if (tolower(name1[i]) < tolower(name2[i]))
+			return 1;
+		if (tolower(name1[i]) > tolower(name2[i]))
+			return -1;
+	}
+
+	if (name2[i] != '\0')
+		return 1;
+
+	fprintf(stderr, "Duplicate entries found: %s.\n", name1);
+	return 0;
+}
+
 PRIVATE int
 GetRankFileName(char *out, int type)
 {
@@ -1351,13 +1394,6 @@ GetRankFileName(char *out, int type)
 	}
 }
 
-PUBLIC void
-UpdateRank(int type, char *addName, statistics *sNew, char *delName)
-{
-	/* TODO: Reenable */;
-}
-
-#if 0
 PUBLIC void
 UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 {
@@ -1416,7 +1452,6 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	snprintf(command, sizeof command, "mv %s %s", TmpRankFile, RankFile);
 	system(command);
 }
-#endif
 
 PRIVATE void
 DisplayRankHead(int p, int show)
