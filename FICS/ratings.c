@@ -37,6 +37,10 @@
 #include "ratings.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 // Constants for Glicko system
 #define Gd	3.25
 #define Gr0	1720
@@ -399,7 +403,8 @@ BestRemove(int p)
 	}
 	if (i < numB) {
 		for (; i < numB - 1; i++) {
-			strcpy(bestB[i].name, bestB[i + 1].name);
+			strlcpy(bestB[i].name, bestB[i + 1].name,
+			    sizeof bestB[i].name);
 			bestB[i].rating = bestB[i + 1].rating;
 		}
 		numB--;
@@ -411,7 +416,8 @@ BestRemove(int p)
 	}
 	if (i < numS) {
 		for (; i < numS - 1; i++) {
-			strcpy(bestS[i].name, bestS[i + 1].name);
+			strlcpy(bestS[i].name, bestS[i + 1].name,
+			    sizeof bestS[i].name);
 			bestS[i].rating = bestS[i + 1].rating;
 		}
 		numS--;
@@ -423,7 +429,8 @@ BestRemove(int p)
 	}
 	if (i < numW) {
 		for (; i < numW - 1; i++) {
-			strcpy(bestW[i].name, bestW[i + 1].name);
+			strlcpy(bestW[i].name, bestW[i + 1].name,
+			    sizeof bestW[i].name);
 			bestW[i].rating = bestW[i + 1].rating;
 		}
 		numW--;
@@ -446,11 +453,13 @@ BestAdd(int p)
 			for (j = numB; j > where; j--) {
 				if (j == MAX_BEST)
 					continue;
-				strcpy(bestB[j].name, bestB[j - 1].name);
+				strlcpy(bestB[j].name, bestB[j - 1].name,
+				    sizeof(bestB[j].name));
 				bestB[j].rating = bestB[j - 1].rating;
 			}
 
-			strcpy(bestB[where].name, parray[p].name);
+			strlcpy(bestB[where].name, parray[p].name,
+			    sizeof(bestB[where].name));
 			bestB[where].rating = parray[p].b_stats.rating;
 
 			if (numB < MAX_BEST)
@@ -469,11 +478,13 @@ BestAdd(int p)
 			for (j = numS; j > where; j--) {
 				if (j == MAX_BEST)
 					continue;
-				strcpy(bestS[j].name, bestS[j - 1].name);
+				strlcpy(bestS[j].name, bestS[j - 1].name,
+				    sizeof(bestS[j].name));
 				bestS[j].rating = bestS[j - 1].rating;
 			}
 
-			strcpy(bestS[where].name, parray[p].name);
+			strlcpy(bestS[where].name, parray[p].name,
+			    sizeof(bestS[where].name));
 			bestS[where].rating = parray[p].s_stats.rating;
 
 			if (numS < MAX_BEST)
@@ -492,11 +503,13 @@ BestAdd(int p)
 			for (j = numW; j > where; j--) {
 				if (j == MAX_BEST)
 					continue;
-				strcpy(bestW[j].name, bestW[j - 1].name);
+				strlcpy(bestW[j].name, bestW[j - 1].name,
+				    sizeof(bestW[j].name));
 				bestW[j].rating = bestW[j - 1].rating;
 			}
 
-			strcpy(bestW[where].name, parray[p].name);
+			strlcpy(bestW[where].name, parray[p].name,
+			    sizeof(bestW[where].name));
 			bestW[where].rating = parray[p].w_stats.rating;
 
 			if (numW < MAX_BEST)
