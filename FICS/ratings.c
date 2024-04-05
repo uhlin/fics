@@ -1475,11 +1475,11 @@ DisplayRankHead(int p, int show)
 	char Line[MAX_STRING_LENGTH] = { '\0' };
 
 	if (CheckFlag(show, SHOW_BLITZ))
-		strcat(Line, "         Blitz          ");
+		strlcat(Line, "         Blitz          ", sizeof(Line));
 	if (CheckFlag(show, SHOW_STANDARD))
-		strcat(Line, "       Standard          ");
+		strlcat(Line, "       Standard          ", sizeof(Line));
 	if (CheckFlag(show, SHOW_WILD))
-		strcat(Line, "          Wild");
+		strlcat(Line, "          Wild", sizeof(Line));
 
 	pprintf(p, "%s\n\n", Line);
 }
