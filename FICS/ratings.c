@@ -389,6 +389,130 @@ save_ratings(void)
 }
 
 PRIVATE void
+BestRemove(int p)
+{
+	int	i;
+
+	for (i = 0; i < numB; i++) {
+		if (!strcmp(bestB[i].name, parray[p].name))
+			break;
+	}
+	if (i < numB) {
+		for (; i < numB - 1; i++) {
+			strcpy(bestB[i].name, bestB[i + 1].name);
+			bestB[i].rating = bestB[i + 1].rating;
+		}
+		numB--;
+	}
+
+	for (i = 0; i < numS; i++) {
+		if (!strcmp(bestS[i].name, parray[p].name))
+			break;
+	}
+	if (i < numS) {
+		for (; i < numS - 1; i++) {
+			strcpy(bestS[i].name, bestS[i + 1].name);
+			bestS[i].rating = bestS[i + 1].rating;
+		}
+		numS--;
+	}
+
+	for (i = 0; i < numW; i++) {
+		if (!strcmp(bestW[i].name, parray[p].name))
+			break;
+	}
+	if (i < numW) {
+		for (; i < numW - 1; i++) {
+			strcpy(bestW[i].name, bestW[i + 1].name);
+			bestW[i].rating = bestW[i + 1].rating;
+		}
+		numW--;
+	}
+}
+
+PRIVATE void
+BestAdd(int p)
+{
+	int where, j;
+
+	if (parray[p].b_stats.rating > 0 &&
+	    parray[p].b_stats.num > 19) {
+		for (where = 0; where < numB; where++) {
+			if (parray[p].b_stats.rating > bestB[where].rating)
+				break;
+		}
+
+		if (where < MAX_BEST) {
+			for (j = numB; j > where; j--) {
+				if (j == MAX_BEST)
+					continue;
+				strcpy(bestB[j].name, bestB[j - 1].name);
+				bestB[j].rating = bestB[j - 1].rating;
+			}
+
+			strcpy(bestB[where].name, parray[p].name);
+			bestB[where].rating = parray[p].b_stats.rating;
+
+			if (numB < MAX_BEST)
+				numB++;
+		}
+	}
+
+	if (parray[p].s_stats.rating > 0 &&
+	    parray[p].s_stats.num > 19) {
+		for (where = 0; where < numS; where++) {
+			if (parray[p].s_stats.rating > bestS[where].rating)
+				break;
+		}
+
+		if (where < MAX_BEST) {
+			for (j = numS; j > where; j--) {
+				if (j == MAX_BEST)
+					continue;
+				strcpy(bestS[j].name, bestS[j - 1].name);
+				bestS[j].rating = bestS[j - 1].rating;
+			}
+
+			strcpy(bestS[where].name, parray[p].name);
+			bestS[where].rating = parray[p].s_stats.rating;
+
+			if (numS < MAX_BEST)
+				numS++;
+		}
+	}
+
+	if (parray[p].w_stats.rating > 0 &&
+	    parray[p].w_stats.num > 19) {
+		for (where = 0; where < numW; where++) {
+			if (parray[p].w_stats.rating > bestW[where].rating)
+				break;
+		}
+
+		if (where < MAX_BEST) {
+			for (j = numW; j > where; j--) {
+				if (j == MAX_BEST)
+					continue;
+				strcpy(bestW[j].name, bestW[j - 1].name);
+				bestW[j].rating = bestW[j - 1].rating;
+			}
+
+			strcpy(bestW[where].name, parray[p].name);
+			bestW[where].rating = parray[p].w_stats.rating;
+
+			if (numW < MAX_BEST)
+				numW++;
+		}
+	}
+}
+
+PUBLIC void
+BestUpdate(int p)
+{
+	BestRemove(p);
+	BestAdd(p);
+}
+
+PRIVATE void
 zero_stats(void)
 {
 	for (int i = 0; i < MAXHIST; i++) {
