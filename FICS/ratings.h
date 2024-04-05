@@ -64,6 +64,7 @@ extern int	com_statistics(int, param_list);
 extern int	is_active(int);
 extern int	rating_delta(int, int, int, int, int);
 extern int	rating_update(int);
+extern void	BestUpdate(int);
 extern void	UpdateRank(int, char *, statistics *, char *);
 extern void	rating_add(int, int);
 extern void	rating_init(void);
