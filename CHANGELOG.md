@@ -13,6 +13,7 @@ documented in this file.
   occurrences.)
 - Made functions and variables private where possible.
 - Reformatted code according to OpenBSD's KNF:
+  - `ratings.c`
   - `variable.c`
   - ...
 - Replaced unbounded string handling functions. _Multiple_
