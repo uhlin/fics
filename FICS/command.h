@@ -128,7 +128,6 @@ extern time_t	 startuptime;
 extern int commanding_player;
 
 extern int	 alias_lookup();
-extern int	 gethostname();
 extern int	 process_command(int, char *, char **);
 extern int	 process_disconnection(int);
 extern int	 process_heartbeat(int *);
