@@ -137,4 +137,8 @@ extern int	 process_new_connection(int, unsigned int);
 extern void	 TerminateCleanup(void);
 extern void	 commands_init(void);
 
+/* From variable.c */
+extern int	 com_partner(int, param_list);
+extern int	 com_variables(int, param_list);
+
 #endif /* _COMMAND_H */
