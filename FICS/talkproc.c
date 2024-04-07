@@ -904,11 +904,13 @@ PUBLIC int com_qtell(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int on_channel(int ch, int p)
+PUBLIC int
+on_channel(int ch, int p)
 {
- char tmp[10];  /* 9 digits ought to be enough :) */
+	char tmp[20];
 
- sprintf (tmp,"%d",ch);
- return in_list(p, L_CHANNEL,tmp );  /* since needs ch converted to a string keep
-                                        hidden from view */
+	snprintf(tmp, sizeof tmp, "%d", ch);
+	return in_list(p, L_CHANNEL, tmp);	// since needs 'ch' converted
+						// to a string keep hidden from
+						// view
 }
