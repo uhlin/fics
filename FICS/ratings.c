@@ -1034,13 +1034,13 @@ com_assess(int p, param_list param)
 {
 	double	newsterr1;
 	double	newsterr2;
-	int	p1 = p, p2, nowtime;
+	int	p1 = p, p2;
 	int	p1_connected = 1, p2_connected = 1;
 	int	win1, draw1, loss1;
 	int	win2, draw2, loss2;
+	time_t	nowtime;
 
-	// XXX
-	nowtime = time(0);
+	nowtime = time(NULL);
 
 	if (param[0].type == TYPE_NULL) {
 		if (parray[p].game < 0) {
