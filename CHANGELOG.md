@@ -9,6 +9,8 @@ documented in this file.
   overflow.
 - Cleared sensitive data with `explicit_bzero()`.
 - Fixed an empty hostname in the addplayer program.
+- Fixed bogus type for storing the return value of `time()`. It should
+  really be `time_t`. Multiple occurrences.
 - Fixed non-ANSI function declarations of functions. (Multiple
   occurrences.)
 - Made functions and variables private where possible.
