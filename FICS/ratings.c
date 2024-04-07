@@ -1470,7 +1470,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	system(command);
 #else
 	if (rename(TmpRankFile, RankFile) == -1) {
-		(void) fprintf(stderr, "FICS: %s: warning: rename(): %s",
+		(void) fprintf(stderr, "FICS: %s: warning: rename(): %s\n",
 		    __func__, strerror(errno));
 	}
 	UNUSED_VAR(command);
