@@ -7,6 +7,7 @@ documented in this file.
 - Added parameter lists to many function declarations.
 - Added usage of `reallocarray()` which handles multiplication
   overflow.
+- Added usage of the functions from `err.h`.
 - Cleared sensitive data with `explicit_bzero()`.
 - Fixed an empty hostname in the addplayer program.
 - Fixed bogus type for storing the return value of `time()`. It should
