@@ -30,6 +30,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "command.h"
 #include "comproc.h"
 #include "config.h"
@@ -321,7 +323,7 @@ load_ratings(void)
 	    STATS_VERSION);
 
 	if ((fp = fopen(fname, "r")) == NULL) {
-		fprintf(stderr, "FICS: Can't read ratings data!\n");
+		warn("%s: can't read ratings data", __func__);
 		return;
 	}
 
@@ -377,7 +379,7 @@ save_ratings(void)
 	    STATS_VERSION);
 
 	if ((fp = fopen(fname, "w")) == NULL) {
-		fprintf(stderr, "FICS: Can't write ratings data!\n");
+		warn("%s: can't write ratings data", __func__);
 		return;
 	}
 
@@ -1426,14 +1428,14 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 		return;
 
 	if ((fp = fopen(RankFile, "r")) == NULL) {
-		fprintf(stderr, "Can't open rank file to update.\n");
+		warn("%s: can't open rank file to update", __func__);
 		return;
 	}
 
 	snprintf(TmpRankFile, sizeof TmpRankFile, "%s/tmpRank", sdir);
 
 	if ((fptemp = fopen(TmpRankFile, "w")) == NULL) {
-		fprintf(stderr, "Unable to open rank file for updating.\n");
+		warn("%s: unable to open rank file for updating", __func__);
 		return;
 	}
 
@@ -1469,10 +1471,8 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	snprintf(command, sizeof command, "mv %s %s", TmpRankFile, RankFile);
 	system(command);
 #else
-	if (rename(TmpRankFile, RankFile) == -1) {
-		(void) fprintf(stderr, "FICS: %s: warning: rename(): %s\n",
-		    __func__, strerror(errno));
-	}
+	if (rename(TmpRankFile, RankFile) == -1)
+		warn("%s: rename()", __func__);
 	UNUSED_VAR(command);
 #endif
 }
