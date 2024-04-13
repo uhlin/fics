@@ -61,4 +61,23 @@ Replace `sudo` with `doas` if you are running OpenBSD.
 The destination will always be prefixed to `/usr/local`, i.e. system wide,
 therefore extra privileges are required.
 
+## Creating registered players ##
+
+As root, do the following:
+
+    # su -l chess
+    $ fics_addplayer UserName FullName EmailAddress
+
+Log out:
+
+    $ (CTRL+d)
+
+The `fics_addplayer` program is located in `/home/chess/bin`,
+along with `makerank`.
+The dir `/home/chess/bin` should in general be automatically added to
+the PATH of the chess user.
+
+    $ man 1 fics_addplayer
+    $ man 1 makerank
+
 Happy gaming!
