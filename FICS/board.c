@@ -147,7 +147,7 @@ holding_str(int *holding)
 }
 
 PRIVATE char *
-append_holding_machine(char *buf, int g, int c, int p)
+append_holding_machine(char *buf, const size_t bufsize, int g, int c, int p)
 {
 	char		 tmp[50];
 	game_state_t	*gs = &garray[g].game_state;
@@ -155,25 +155,26 @@ append_holding_machine(char *buf, int g, int c, int p)
 	msnprintf(tmp, sizeof tmp, "<b1> game %d white [%s] black [", (g + 1),
 	    holding_str(gs->holding[0]));
 	mstrlcat(tmp, holding_str(gs->holding[1]), sizeof tmp);
-	strcat(buf, tmp);
+	mstrlcat(buf, tmp, bufsize);
 
 	if (p) {
 		msnprintf(tmp, sizeof tmp, "] <- %c%s\n", "WB"[c], wpstring[p]);
-		strcat(buf, tmp);
+		mstrlcat(buf, tmp, bufsize);
 	} else
-		strcat(buf, "]\n");
+		mstrlcat(buf, "]\n", bufsize);
 	return buf;
 }
 
 PRIVATE char *
-append_holding_display(char *buf, game_state_t *gs, int white)
+append_holding_display(char *buf, const size_t bufsize, game_state_t *gs,
+    int white)
 {
 	if (white)
-		strcat(buf, "White holding: [");
+		mstrlcat(buf, "White holding: [", bufsize);
 	else
-		strcat(buf, "Black holding: [");
-	strcat(buf, holding_str(gs->holding[white ? 0 : 1]));
-	strcat(buf, "]\n");
+		mstrlcat(buf, "Black holding: [", bufsize);
+	mstrlcat(buf, holding_str(gs->holding[white ? 0 : 1]), bufsize);
+	mstrlcat(buf, "]\n", bufsize);
 	return buf;
 }
 
@@ -198,7 +199,7 @@ update_holding(int g, int pieceCaptured)
 	gs->holding[c][p - 1]++;
 
 	tmp1[0] = '\0';
-	append_holding_machine(tmp1, g, c, p);
+	append_holding_machine(tmp1, sizeof tmp1, g, c, p);
 
 	msnprintf(tmp2, sizeof tmp2, "Game %d %s received: %s -> [%s]\n",
 	    (g + 1),
@@ -242,15 +243,18 @@ board_to_string(char *wn, char *bn, int wt, int bt, game_state_t *b, move_t *ml,
 	} else
 		bstring[0] = '\0';
 
-	if (bh && !IsMachineStyle(style))
-		append_holding_display(bstring, b, (orientation == BLACK));
+	if (bh && !IsMachineStyle(style)) {
+		append_holding_display(bstring, sizeof bstring, b,
+		    (orientation == BLACK));
+	}
 	if (styleFuncs[style] (b, ml))
 		return NULL;
 	if (bh) {
-		if (IsMachineStyle(style))
-			append_holding_machine(bstring, b->gameNum, 0, 0);
-		else {
-			append_holding_display(bstring, b,
+		if (IsMachineStyle(style)) {
+			append_holding_machine(bstring, sizeof bstring,
+			    b->gameNum, 0, 0);
+		} else {
+			append_holding_display(bstring, sizeof bstring, b,
 			    (orientation == WHITE));
 		}
 	}
