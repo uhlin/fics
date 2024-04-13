@@ -27,6 +27,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "board.h"
 #include "gamedb.h"
 #include "playerdb.h"
@@ -1286,8 +1288,7 @@ wild_update(int style)
 		sprintf(fname, "%s/wild/%d", board_dir, style);
 
 		if ((fp = fopen(fname, "w")) == NULL) {
-			fprintf(stderr, "FICS: Can't write file name %s\n",
-			    fname);
+			warn("%s: can't write file name: %s", __func__, fname);
 			return;
 		}
 
