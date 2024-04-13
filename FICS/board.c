@@ -249,7 +249,7 @@ board_to_string(char *wn, char *bn, int wt, int bt, game_state_t *b, move_t *ml,
 		append_holding_display(bstring, sizeof bstring, b,
 		    (orientation == BLACK));
 	}
-	if (styleFuncs[style] (b, ml))
+	if (styleFuncs[style](b, ml))
 		return NULL;
 	if (bh) {
 		if (IsMachineStyle(style)) {
