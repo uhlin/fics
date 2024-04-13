@@ -18,6 +18,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)legal.o\
 	$(SRC_DIR)lists.o\
 	$(SRC_DIR)matchproc.o\
+	$(SRC_DIR)maxxes-utils.o\
 	$(SRC_DIR)movecheck.o\
 	$(SRC_DIR)multicol.o\
 	$(SRC_DIR)network.o\
