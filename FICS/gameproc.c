@@ -241,7 +241,7 @@ game_ended(int g, int winner, int why)
 		break;
 	}
 
-	strlcat(outstr, tmp, sizeof outstr);
+	mstrlcat(outstr, tmp, sizeof outstr);
 
 	if (beingplayed) {
 		pprintf_noformat(garray[g].white, "%s", outstr);
