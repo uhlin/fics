@@ -50,7 +50,7 @@ PUBLIC char	*bpstring[] = {" ", "p", "n", "b", "r", "q", "k"};
 
 PUBLIC int pieceValues[7] = {0, 1, 3, 3, 5, 9, 0};
 
-PUBLIC int (*styleFuncs[MAX_STYLES])(game_state_t *, move_t *) = {
+PRIVATE int (*styleFuncs[MAX_STYLES])(game_state_t *, move_t *) = {
 	style1,
 	style2,
 	style3,
