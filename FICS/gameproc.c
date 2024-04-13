@@ -27,6 +27,8 @@
    Markus Uhlin			24/03/30	Refactored and reformatted all
 						functions.
    Markus Uhlin			24/03/30	Size-bounded string handling.
+   Markus Uhlin			24/04/13	Added usage of msnprintf(),
+						mstrlcpy() and mstrlcat().
 */
 
 #include "stdinclude.h"
