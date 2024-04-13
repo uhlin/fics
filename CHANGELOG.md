@@ -4,31 +4,31 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Added parameter lists to many function declarations.
-- Added usage of `reallocarray()` which handles multiplication
+- **Added** parameter lists to many function declarations.
+- **Added** usage of `reallocarray()` which handles multiplication
   overflow.
-- Added usage of `msnprintf()`, `mstrlcpy()` and `mstrlcat()` which
+- **Added** usage of `msnprintf()`, `mstrlcpy()` and `mstrlcat()` which
   detects and logs truncation.
-- Added usage of the functions from `err.h`.
-- Checked out the following files by tag 1.0, because the previous
+- **Added** usage of the functions from `err.h`.
+- **Checked out** the following files by tag 1.0, because the previous
   changes made to them possibly introduced game bugs:
   - `algcheck.c`
   - `algcheck.h`
   - `board.c`
   - `movecheck.c`
   - `movecheck.h`
-- Cleared sensitive data with `explicit_bzero()`.
-- Fixed an empty hostname in the addplayer program.
-- Fixed bogus type for storing the return value of `time()`. It should
+- **Cleared** sensitive data with `explicit_bzero()`.
+- **Fixed** an empty hostname in the addplayer program.
+- **Fixed** bogus type for storing the return value of `time()`. It should
   really be `time_t`. Multiple occurrences.
-- Fixed non-ANSI function declarations of functions. (Multiple
+- **Fixed** non-ANSI function declarations of functions. (Multiple
   occurrences.)
-- Made functions and variables private where possible.
-- Reformatted code according to OpenBSD's KNF:
+- **Made** functions and variables private where possible.
+- **Reformatted code** according to OpenBSD's KNF:
   - `ratings.c`
   - `variable.c`
   - ...
-- Replaced unbounded string handling functions. _Multiple_
+- **Replaced** unbounded string handling functions. _Multiple_
   occurrences.
 
 ## [1.1] - 2024-03-30 ##
