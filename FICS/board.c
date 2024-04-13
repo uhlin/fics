@@ -22,6 +22,8 @@
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/17	Fixed compiler warnings
    Markus Uhlin                 23/12/23	Reformatted all functions
+   Markus Uhlin                 24/04/13	Added usage of the functions
+						from 'maxxes-utils.h'.
 */
 
 #include "stdinclude.h"
