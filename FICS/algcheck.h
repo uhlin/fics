@@ -29,13 +29,13 @@
 #include "board.h"
 #endif
 
-#define ALG_UNKNOWN -1
+#define DROP_CHAR '@'	/* used by algcheck.c and movecheck.c */
+#define DROP_STR  "@"
 
-#define DROP_CHAR	'@' /* used by algcheck.c and movecheck.c */
-#define DROP_STR	"@"
+extern int alg_is_move(char *);
+extern int alg_parse_move(char *, game_state_t *, move_t *);
+extern char *alg_unparse(game_state_t *, move_t *);
 
-extern char	*alg_unparse(game_state_t *, move_t *);
-extern int	 alg_is_move(char *);
-extern int	 alg_parse_move(char *, game_state_t *, move_t *);
+/* extern int tolower(); */
 
 #endif /* _ALGCHECK_H */

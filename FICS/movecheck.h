@@ -19,26 +19,25 @@
 
 /* Revision history:
    name		email		yy/mm/dd	Change
-   Richard Nash                 93/10/22	Created
-   Markus Uhlin                 24/03/17	Revised
+   Richard Nash	              	93/10/22	Created
 */
 
 #ifndef _MOVECHECK_H
 #define _MOVECHECK_H
 
-#define MOVE_OK          0
-#define MOVE_ILLEGAL     1
-#define MOVE_STALEMATE   2
-#define MOVE_CHECKMATE   3
-#define MOVE_AMBIGUOUS   4
-#define MOVE_NOMATERIAL  5
+#define MOVE_OK 0
+#define MOVE_ILLEGAL 1
+#define MOVE_STALEMATE 2
+#define MOVE_CHECKMATE 3
+#define MOVE_AMBIGUOUS 4
+#define MOVE_NOMATERIAL 5
 
-#define MS_NOTMOVE       0
-#define MS_COMP          1
-#define MS_COMPDASH      2
-#define MS_ALG           3
-#define MS_KCASTLE       4
-#define MS_QCASTLE       5
+#define MS_NOTMOVE 0
+#define MS_COMP 1
+#define MS_COMPDASH 2
+#define MS_ALG 3
+#define MS_KCASTLE 4
+#define MS_QCASTLE 5
 
 #define isrank(c) (((c) <= '8') && ((c) >= '1'))
 #define isfile(c) (((c) >= 'a') && ((c) <= 'h'))
@@ -47,15 +46,16 @@
 #include "board.h"
 #endif
 
-extern int	InitPieceLoop(board_t, int *, int *, int);
-extern int	NextPieceLoop(board_t, int *, int *, int);
+extern int is_move(char *);
+extern int parse_move(char *, game_state_t *, move_t *, int);
+extern int execute_move(game_state_t *, move_t *, int);
+extern int backup_move(int, int);
 
-extern int	backup_move(int, int);
-extern int	execute_move(game_state_t *, move_t *, int);
-extern int	in_check(game_state_t *);
-extern int	is_move(char *);
-extern int	legal_andcheck_move(game_state_t *, int, int, int, int);
-extern int	legal_move(game_state_t *, int, int, int, int);
-extern int	parse_move(char *, game_state_t *, move_t *, int);
+/* Some useful chess utilities */
+extern int NextPieceLoop(board_t, int *, int *, int);
+extern int InitPieceLoop(board_t, int *, int *, int);
+extern int legal_move(game_state_t *, int, int, int, int);
+extern int legal_andcheck_move(game_state_t *, int, int, int, int);
+extern int in_check(game_state_t *);
 
 #endif /* _MOVECHECK_H */
