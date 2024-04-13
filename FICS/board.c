@@ -214,8 +214,9 @@ update_holding(int g, int pieceCaptured)
 			continue;
 
 		if (player_is_observe(pl, g) || parray[pl].game == g) {
-			pprintf_prompt(pl, (IsMachineStyle(parray[pl].style) ?
-			    tmp1 : tmp2));
+			pprintf_prompt(pl, "%s",
+			    (IsMachineStyle(parray[pl].style) ? &tmp1[0] :
+			    &tmp2[0]));
 		}
 	}
 }
