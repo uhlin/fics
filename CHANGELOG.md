@@ -7,6 +7,8 @@ documented in this file.
 - Added parameter lists to many function declarations.
 - Added usage of `reallocarray()` which handles multiplication
   overflow.
+- Added usage of `msnprintf()`, `mstrlcpy()` and `mstrlcat()` which
+  detects and logs truncation.
 - Added usage of the functions from `err.h`.
 - Checked out the following files by tag 1.0, because the previous
   changes made to them possibly introduced game bugs:
