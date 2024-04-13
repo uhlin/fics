@@ -8,6 +8,12 @@ documented in this file.
 - Added usage of `reallocarray()` which handles multiplication
   overflow.
 - Added usage of the functions from `err.h`.
+- Checked out the following files by tag 1.0, because the previous
+  changes made to them possibly introduced game bugs:
+  - `algcheck.c`
+  - `algcheck.h`
+  - `movecheck.c`
+  - `movecheck.h`
 - Cleared sensitive data with `explicit_bzero()`.
 - Fixed an empty hostname in the addplayer program.
 - Fixed bogus type for storing the return value of `time()`. It should
