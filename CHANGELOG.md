@@ -12,6 +12,7 @@ documented in this file.
   changes made to them possibly introduced game bugs:
   - `algcheck.c`
   - `algcheck.h`
+  - `board.c`
   - `movecheck.c`
   - `movecheck.h`
 - Cleared sensitive data with `explicit_bzero()`.
