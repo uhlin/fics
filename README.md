@@ -75,7 +75,7 @@ Log out:
 The `fics_addplayer` program is located in `/home/chess/bin`,
 along with `makerank`.
 The dir `/home/chess/bin` should in general be automatically added to
-the PATH of the chess user.
+the PATH for the chess user.
 
     $ man 1 fics_addplayer
     $ man 1 makerank
