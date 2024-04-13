@@ -81,12 +81,12 @@ game_ended(int g, int winner, int why)
 
 	if (winner == WHITE) {
 		whiteResult = RESULT_WIN;
-		strlcpy(winSymbol, "1-0", sizeof winSymbol);
+		mstrlcpy(winSymbol, "1-0", sizeof winSymbol);
 		NameOfWinner = parray[garray[g].white].name;
 		NameOfLoser = parray[garray[g].black].name;
 	} else {
 		whiteResult = RESULT_LOSS;
-		strlcpy(winSymbol, "0-1", sizeof winSymbol);
+		mstrlcpy(winSymbol, "0-1", sizeof winSymbol);
 		NameOfWinner = parray[garray[g].black].name;
 		NameOfLoser = parray[garray[g].white].name;
 	}
@@ -96,68 +96,68 @@ game_ended(int g, int winner, int why)
 		msnprintf(tmp, sizeof tmp, "%s checkmated} %s\n",
 		    NameOfLoser,
 		    winSymbol);
-		strlcpy(EndSymbol, "Mat", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Mat", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_RESIGN:
 		msnprintf(tmp, sizeof tmp, "%s resigns} %s\n",
 		    NameOfLoser,
 		    winSymbol);
-		strlcpy(EndSymbol, "Res", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Res", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_FLAG:
 		msnprintf(tmp, sizeof tmp, "%s forfeits on time} %s\n",
 		    NameOfLoser,
 		    winSymbol);
-		strlcpy(EndSymbol, "Fla", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Fla", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_STALEMATE:
-		strlcpy(tmp, "Game drawn by stalemate} 1/2-1/2\n", sizeof tmp);
+		mstrlcpy(tmp, "Game drawn by stalemate} 1/2-1/2\n", sizeof tmp);
 		isDraw = 1;
-		strlcpy(EndSymbol, "Sta", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Sta", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_AGREEDDRAW:
-		strlcpy(tmp, "Game drawn by mutual agreement} 1/2-1/2\n",
+		mstrlcpy(tmp, "Game drawn by mutual agreement} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strlcpy(EndSymbol, "Agr", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Agr", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_BOTHFLAG:
-		strlcpy(tmp, "Game drawn because both players ran out of "
+		mstrlcpy(tmp, "Game drawn because both players ran out of "
 		    "time} 1/2-1/2\n", sizeof tmp);
 		isDraw = 1;
-		strlcpy(EndSymbol, "Fla", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Fla", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_REPETITION:
-		strlcpy(tmp, "Game drawn by repetition} 1/2-1/2\n", sizeof tmp);
+		mstrlcpy(tmp, "Game drawn by repetition} 1/2-1/2\n", sizeof tmp);
 		isDraw = 1;
-		strlcpy(EndSymbol, "Rep", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Rep", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_50MOVERULE:
-		strlcpy(tmp, "Game drawn by the 50 move rule} 1/2-1/2\n",
+		mstrlcpy(tmp, "Game drawn by the 50 move rule} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strlcpy(EndSymbol, "50", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "50", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_ADJOURN:
 		if (gl >= 0) {
-			strlcpy(tmp, "Bughouse game aborted.} *\n",
+			mstrlcpy(tmp, "Bughouse game aborted.} *\n",
 			    sizeof tmp);
 			whiteResult = RESULT_ABORT;
 		} else {
-			strlcpy(tmp, "Game adjourned by mutual agreement} *\n",
+			mstrlcpy(tmp, "Game adjourned by mutual agreement} *\n",
 			    sizeof tmp);
 			game_save(g);
 		}
@@ -169,14 +169,14 @@ game_ended(int g, int winner, int why)
 		if (parray[garray[g].white].registered &&
 		    parray[garray[g].black].registered &&
 		    gl < 0) {
-			strlcpy(tmp, "adjourned} *\n", sizeof tmp);
+			mstrlcpy(tmp, "adjourned} *\n", sizeof tmp);
 			game_save(g);
 		} else
-			strlcpy(tmp, "aborted} *\n", sizeof tmp);
+			mstrlcpy(tmp, "aborted} *\n", sizeof tmp);
 		whiteResult = RESULT_ABORT;
 		break;
 	case END_ABORT:
-		strlcpy(tmp, "Game aborted by mutual agreement} *\n",
+		mstrlcpy(tmp, "Game aborted by mutual agreement} *\n",
 		    sizeof tmp);
 		whiteResult = RESULT_ABORT;
 		break;
@@ -200,10 +200,10 @@ game_ended(int g, int winner, int why)
 		break;
 	case END_NOMATERIAL:
 		// Draw by insufficient material (e.g., lone K vs. lone K)
-		strlcpy(tmp, "Neither player has mating material} 1/2-1/2\n",
+		mstrlcpy(tmp, "Neither player has mating material} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strlcpy(EndSymbol, "NM ", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "NM ", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
@@ -213,30 +213,30 @@ game_ended(int g, int winner, int why)
 		    NameOfLoser,
 		    NameOfWinner);
 		isDraw = 1;
-		strlcpy(EndSymbol, "TM ", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "TM ", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_ADJWIN:
 		msnprintf(tmp, sizeof tmp, "%s wins by adjudication} %s\n",
 		    NameOfWinner, winSymbol);
-		strlcpy(EndSymbol, "Adj", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Adj", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_ADJDRAW:
-		strlcpy(tmp, "Game drawn by adjudication} 1/2-1/2\n",
+		mstrlcpy(tmp, "Game drawn by adjudication} 1/2-1/2\n",
 		    sizeof tmp);
 		isDraw = 1;
-		strlcpy(EndSymbol, "Adj", sizeof EndSymbol);
+		mstrlcpy(EndSymbol, "Adj", sizeof EndSymbol);
 		rate_change = 1;
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_ADJABORT:
-		strlcpy(tmp, "Game aborted by adjudication} *\n", sizeof tmp);
+		mstrlcpy(tmp, "Game aborted by adjudication} *\n", sizeof tmp);
 		whiteResult = RESULT_ABORT;
 		break;
 	default:
-		strlcpy(tmp, "Hmm, the game ended and I don't know why} *\n",
+		mstrlcpy(tmp, "Hmm, the game ended and I don't know why} *\n",
 		    sizeof tmp);
 		break;
 	}
@@ -1466,9 +1466,9 @@ com_switch(int p, param_list param)
 		parray[p].side = (parray[p].side == WHITE ? BLACK : WHITE);
 
 		strTmp = xstrdup(garray[g].white_name);
-		strlcpy(garray[g].white_name, garray[g].black_name,
+		mstrlcpy(garray[g].white_name, garray[g].black_name,
 		    sizeof(garray[g].white_name));
-		strlcpy(garray[g].black_name, strTmp,
+		mstrlcpy(garray[g].black_name, strTmp,
 		    sizeof(garray[g].black_name));
 		strfree(strTmp);
 
