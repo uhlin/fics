@@ -61,6 +61,38 @@ Replace `sudo` with `doas` if you are running OpenBSD.
 The destination will always be prefixed to `/usr/local`, i.e. system wide,
 therefore extra privileges are required.
 
+## Running the server ##
+
+As root, do the following (unless you aren't already logged in as
+`chess`):
+
+    # su -l chess
+    $ screen fics
+
+This assumes that
+[GNU Screen](https://www.gnu.org/software/screen/)
+is installed on your computer.
+
+To detach the screen, type:
+
+    $ (CTRL+a+d)
+
+And to resume, use:
+
+    $ screen -r
+
+The same is achievable with the terminal multiplexer `tmux` in case
+you prefer that over GNU Screen.
+
+### Install GNU Screen ###
+
+To install
+[GNU Screen](https://www.gnu.org/software/screen/)
+on
+[OpenBSD](http://www.openbsd.org/), run:
+
+    # pkg_add -i screen
+
 ## Creating registered players ##
 
 As root, do the following:
