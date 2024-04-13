@@ -41,6 +41,7 @@
 #include "gameproc.h"
 #include "lists.h"
 #include "matchproc.h"
+#include "maxxes-utils.h"
 #include "movecheck.h"
 #include "network.h"
 #include "obsproc.h"
@@ -70,7 +71,7 @@ game_ended(int g, int winner, int why)
 
 	beingplayed = (parray[garray[g].black].game == g);
 
-	(void) snprintf(outstr, sizeof outstr, "\n{Game %d (%s vs. %s) ",
+	msnprintf(outstr, sizeof outstr, "\n{Game %d (%s vs. %s) ",
 	    (g + 1),
 	    parray[garray[g].white].name,
 	    parray[garray[g].black].name);
@@ -92,21 +93,21 @@ game_ended(int g, int winner, int why)
 
 	switch (why) {
 	case END_CHECKMATE:
-		snprintf(tmp, sizeof tmp, "%s checkmated} %s\n",
+		msnprintf(tmp, sizeof tmp, "%s checkmated} %s\n",
 		    NameOfLoser,
 		    winSymbol);
 		strlcpy(EndSymbol, "Mat", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_RESIGN:
-		snprintf(tmp, sizeof tmp, "%s resigns} %s\n",
+		msnprintf(tmp, sizeof tmp, "%s resigns} %s\n",
 		    NameOfLoser,
 		    winSymbol);
 		strlcpy(EndSymbol, "Res", sizeof EndSymbol);
 		rate_change = 1;
 		break;
 	case END_FLAG:
-		snprintf(tmp, sizeof tmp, "%s forfeits on time} %s\n",
+		msnprintf(tmp, sizeof tmp, "%s forfeits on time} %s\n",
 		    NameOfLoser,
 		    winSymbol);
 		strlcpy(EndSymbol, "Fla", sizeof EndSymbol);
@@ -162,7 +163,7 @@ game_ended(int g, int winner, int why)
 		}
 		break;
 	case END_LOSTCONNECTION:
-		snprintf(tmp, sizeof tmp, "%s lost connection; game ",
+		msnprintf(tmp, sizeof tmp, "%s lost connection; game ",
 		    NameOfWinner);
 
 		if (parray[garray[g].white].registered &&
@@ -180,18 +181,18 @@ game_ended(int g, int winner, int why)
 		whiteResult = RESULT_ABORT;
 		break;
 	case END_COURTESY:
-		snprintf(tmp, sizeof tmp, "Game courtesyaborted by %s} *\n",
+		msnprintf(tmp, sizeof tmp, "Game courtesyaborted by %s} *\n",
 		    NameOfWinner);
 		whiteResult = RESULT_ABORT;
 		break;
 	case END_COURTESYADJOURN:
 		if (gl >= 0) {
-			snprintf(tmp, sizeof tmp, "Bughouse game "
+			msnprintf(tmp, sizeof tmp, "Bughouse game "
 			    "courtesyaborted by %s.} *\n",
 			    NameOfWinner);
 			whiteResult = RESULT_ABORT;
 		} else {
-			snprintf(tmp, sizeof tmp, "Game courtesyadjourned by "
+			msnprintf(tmp, sizeof tmp, "Game courtesyadjourned by "
 			    "%s} *\n",
 			    NameOfWinner);
 			game_save(g);
@@ -207,7 +208,7 @@ game_ended(int g, int winner, int why)
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_FLAGNOMATERIAL:
-		snprintf(tmp, sizeof tmp, "%s ran out of time and %s has no "
+		msnprintf(tmp, sizeof tmp, "%s ran out of time and %s has no "
 		    "material to mate} 1/2-1/2\n",
 		    NameOfLoser,
 		    NameOfWinner);
@@ -217,7 +218,7 @@ game_ended(int g, int winner, int why)
 		whiteResult = RESULT_DRAW;
 		break;
 	case END_ADJWIN:
-		snprintf(tmp, sizeof tmp, "%s wins by adjudication} %s\n",
+		msnprintf(tmp, sizeof tmp, "%s wins by adjudication} %s\n",
 		    NameOfWinner, winSymbol);
 		strlcpy(EndSymbol, "Adj", sizeof EndSymbol);
 		rate_change = 1;
@@ -1562,10 +1563,10 @@ com_boards(int p, param_list param)
 
 	if (category) {
 		pprintf(p, "Boards Available For Category %s:\n", category);
-		snprintf(dname, sizeof dname, "%s/%s", board_dir, category);
+		msnprintf(dname, sizeof dname, "%s/%s", board_dir, category);
 	} else {
 		pprintf(p, "Categories Available:\n");
-		snprintf(dname, sizeof dname, "%s", board_dir);
+		msnprintf(dname, sizeof dname, "%s", board_dir);
 	}
 
 	if ((dirp = opendir(dname)) == NULL) {
@@ -1660,7 +1661,7 @@ com_simmatch(int p, param_list param)
 		} else { // resume adjourned game
 			game_delete(p, p1);
 
-			snprintf(tmp, sizeof tmp, "{Game %d (%s vs. %s) "
+			msnprintf(tmp, sizeof tmp, "{Game %d (%s vs. %s) "
 			    "Continuing %s %s simul.}\n",
 			    (g + 1),
 			    parray[p].name,
