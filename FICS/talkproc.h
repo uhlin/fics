@@ -22,6 +22,7 @@
    hersco and Marsalis		95/07/24	Created
    Markus Uhlin			23/12/10	Deleted declarations
    Markus Uhlin			23/12/10	Sorted the declarations
+   Markus Uhlin			24/04/14	Added parameter lists
 */
 
 #ifndef _TALKPROC_H
