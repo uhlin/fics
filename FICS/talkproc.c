@@ -31,6 +31,8 @@
    Markus Uhlin                 23/12/10	Cleaned up the file
    Markus Uhlin                 23/12/10	Fixed compiler warnings
    Markus Uhlin                 24/01/04	Fixed pprintf() calls
+   Markus Uhlin                 24/04/14	Refactored and reformatted ALL
+						functions.
 */
 
 #include "stdinclude.h"
