@@ -825,7 +825,9 @@ com_qtell(int p, param_list param)
 
 	sprintf(tmp, "%s", param[1].val.string);
 
-	for (i = 0, count = 0; ((tmp[i] != '\0') && (count < 1029));) {
+	count = 0;
+	i = 0;
+	while (tmp[i] != '\0' && count < 1029) {
 		if (tmp[i] == '\\' && tmp[i + 1] == 'n') {
 			strcat(buffer1, "\n:");
 			strcat(buffer2, "\n:");
@@ -864,7 +866,7 @@ com_qtell(int p, param_list param)
 			count++;
 			i++;
 		}
-	}
+	} // while
 
 	if (param[0].type == TYPE_WORD) {
 		if ((p1 = player_find_bylogin(param[0].val.word)) < 0) {
