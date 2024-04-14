@@ -55,6 +55,12 @@
 
 #include <sys/resource.h>
 
+#define TELL_TELL        0
+#define TELL_SAY         1
+#define TELL_WHISPER     2
+#define TELL_KIBITZ      3
+#define TELL_CHANNEL     4
+
 int quota_time;
 
 /* hawk: hacked it to fit ALL persons - quota list is not needed anymore */
@@ -232,12 +238,6 @@ PUBLIC int com_it(int p, param_list param)
   }
   return COM_OK;
 }
-
-#define TELL_TELL 0
-#define TELL_SAY 1
-#define TELL_WHISPER 2
-#define TELL_KIBITZ 3
-#define TELL_CHANNEL 4
 
 PRIVATE int
 tell(int p, int p1, char *msg, int why, int ch)
