@@ -576,17 +576,20 @@ PUBLIC int com_xtell(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_say(int p, param_list param)
+PUBLIC int
+com_say(int p, param_list param)
 {
-  if (parray[p].opponent < 0) {
-    if (parray[p].last_opponent < 0) {
-      pprintf(p, "No one to say anything to, try tell.\n");
-      return COM_OK;
-    } else {
-      return tell(p, parray[p].last_opponent, param[0].val.string, TELL_SAY, 0);
-    }
-  }
-  return tell(p, parray[p].opponent, param[0].val.string, TELL_SAY, 0);
+	if (parray[p].opponent < 0) {
+		if (parray[p].last_opponent < 0) {
+			pprintf(p, "No one to say anything to, try tell.\n");
+			return COM_OK;
+		} else {
+			return tell(p, parray[p].last_opponent,
+			    param[0].val.string, TELL_SAY, 0);
+		}
+	}
+
+	return tell(p, parray[p].opponent, param[0].val.string, TELL_SAY, 0);
 }
 
 PUBLIC int
