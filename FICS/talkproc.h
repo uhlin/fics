@@ -33,22 +33,23 @@
 
 extern int quota_time;
 
-extern int com_clearmessages();
-extern int com_cshout();
-extern int com_inchannel(int, param_list);
-extern int com_it();
-extern int com_kibitz();
-extern int com_mailmess(int, param_list);
-extern int com_messages();
-extern int com_ptell();
-extern int com_qtell();
-extern int com_say();
-extern int com_sendmessage();
-extern int com_shout();
-extern int com_tell();
-extern int com_whisper();
-extern int com_xtell();
-extern int com_znotify();
-extern int on_channel(int, int);
+extern int	com_clearmessages(int, param_list);
+extern int	com_cshout(int, param_list);
+extern int	com_inchannel(int, param_list);
+extern int	com_it(int, param_list);
+extern int	com_kibitz(int, param_list);
+extern int	com_mailmess(int, param_list);
+extern int	com_messages(int, param_list);
+extern int	com_ptell(int, param_list);
+extern int	com_qtell(int, param_list);
+extern int	com_say(int, param_list);
+extern int	com_sendmessage(int, param_list);
+extern int	com_shout(int, param_list);
+extern int	com_tell(int, param_list);
+extern int	com_whisper(int, param_list);
+extern int	com_xtell(int, param_list);
+extern int	com_znotify(int, param_list);
+
+extern int	on_channel(int, int);
 
 #endif /* _TALKPROC_H */
