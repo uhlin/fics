@@ -133,41 +133,49 @@ PUBLIC int com_shout(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_cshout(int p, param_list param)
+PUBLIC int
+com_cshout(int p, param_list param)
 {
-  int p1;
-  int count = 0;
+	int	count = 0;
+	int	p1;
 
-  if (!parray[p].registered) {
-    pprintf(p, "Only registered players can use the cshout command.\n");
-    return COM_OK;
-  }
-  if (in_list(p, L_CMUZZLE, parray[p].login)) {
-    pprintf(p, "You are c-muzzled.\n");
-    return COM_OK;
-  }
-  if (!printablestring(param[0].val.string)) {
-    pprintf(p, "Your message contains some unprintable character(s).\n");
-    return COM_OK;
-  }
-/*  in_push(IN_SHOUT); */
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (p1 == p)
-      continue;
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    if (!parray[p1].i_cshout)
-      continue;
-    if (player_censored(p1, p))
-      continue;
-    count++;
-    pprintf_prompt(p1, "\n%s c-shouts: %s\n", parray[p].name,
-		   param[0].val.string);
-  }
-  pprintf(p, "(%d) %s c-shouts: %s\n", count, parray[p].name,
-	  param[0].val.string);
-/*  in_pop(); */
-  return COM_OK;
+	if (!parray[p].registered) {
+		pprintf(p, "Only registered players can use the cshout "
+		    "command.\n");
+		return COM_OK;
+	}
+
+	if (in_list(p, L_CMUZZLE, parray[p].login)) {
+		pprintf(p, "You are c-muzzled.\n");
+		return COM_OK;
+	}
+
+	if (!printablestring(param[0].val.string)) {
+		pprintf(p, "Your message contains some unprintable "
+		    "character(s).\n");
+		return COM_OK;
+	}
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (p1 == p)
+			continue;
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+		if (!parray[p1].i_cshout)
+			continue;
+		if (player_censored(p1, p))
+			continue;
+
+		count++;
+
+		pprintf_prompt(p1, "\n%s c-shouts: %s\n",
+		    parray[p].name,
+		    param[0].val.string);
+	}
+
+	pprintf(p, "(%d) %s c-shouts: %s\n", count, parray[p].name,
+	    param[0].val.string);
+	return COM_OK;
 }
 
 PUBLIC int
