@@ -44,6 +44,7 @@
 #include "gamedb.h"
 #include "gameproc.h"
 #include "lists.h"
+#include "maxxes-utils.h"
 #include "network.h"
 #include "playerdb.h"
 #include "talkproc.h"
@@ -369,12 +370,12 @@ tell(int p, int p1, char *msg, int why, int ch)
 	tmp[0] = '\0';
 
 	if (!(parray[p1].busy[0] == '\0')) {
-		sprintf(tmp, ", who %s (idle: %s)",
+		msnprintf(tmp, sizeof tmp, ", who %s (idle: %s)",
 		    parray[p1].busy,
 		    hms_desc(player_idle(p1)));
 	} else {
 		if (((player_idle(p1) % 3600) / 60) > 2) {
-			sprintf(tmp, ", who has been idle %s",
+			msnprintf(tmp, sizeof tmp, ", who has been idle %s",
 			    hms_desc(player_idle(p1)));
 		}
 	}
@@ -427,12 +428,12 @@ com_ptell(int p, param_list param)
 	tmp[0] = '\0';
 
 	if (!(parray[p1].busy[0] == '\0')) {
-		sprintf(tmp, ", who %s (idle: %s)",
+		msnprintf(tmp, sizeof tmp, ", who %s (idle: %s)",
 		    parray[p1].busy,
 		    hms_desc(player_idle(p1)));
 	} else {
 		if (((player_idle(p1) % 3600) / 60) > 2) {
-			sprintf(tmp, ", who has been idle %s",
+			msnprintf(tmp, sizeof tmp, ", who has been idle %s",
 			    hms_desc(player_idle(p1)));
 		}
 	}
@@ -670,11 +671,12 @@ com_xtell(int p, param_list param)
 	tmp[0] = '\0';
 
 	if (!(parray[p1].busy[0] == '\0')) {
-		sprintf(tmp, ", who %s (idle: %s)", parray[p1].busy,
+		msnprintf(tmp, sizeof tmp, ", who %s (idle: %s)",
+		    parray[p1].busy,
 		    hms_desc(player_idle(p1)));
 	} else {
 		if (((player_idle(p1) % 3600) / 60) > 2) {
-			sprintf(tmp, ", who has been idle %s",
+			msnprintf(tmp, sizeof tmp, ", who has been idle %s",
 			    hms_desc(player_idle(p1)));
 		}
 	}
@@ -733,7 +735,7 @@ com_inchannel(int p, param_list param)
 			pprintf(p, " No channels found.\n");
 		return COM_OK;
 	} else {
-		sprintf(tmp, "%d", param[0].val.integer);
+		msnprintf(tmp, sizeof tmp, "%d", param[0].val.integer);
 
 		for (p1 = 0; p1 < p_num; p1++) {
 			if (parray[p1].status != PLAYER_PROMPT)
@@ -971,7 +973,7 @@ com_qtell(int p, param_list param)
 	strcpy(buffer3, ":\0");
 	strcpy(buffer4, ":\0");
 
-	sprintf(tmp, "%s", param[1].val.string);
+	msnprintf(tmp, sizeof tmp, "%s", param[1].val.string);
 
 	count = 0;
 	i = 0;
@@ -1047,7 +1049,7 @@ com_qtell(int p, param_list param)
 			return COM_OK;
 		}
 
-		sprintf(tmp, "%d", param[0].val.integer);
+		msnprintf(tmp, sizeof tmp, "%d", param[0].val.integer);
 
 		for (p1 = 0; p1 < p_num ; p1++) {
 			if (p1 == p || player_censored(p1, p) ||
