@@ -13,6 +13,8 @@ documented in this file.
 - Reformatted code according to OpenBSD's KNF:
   - `talkproc.c`
   - ...
+- Replaced unbounded string handling functions. _Multiple_
+  occurrences.
 
 ## [1.2] - 2024-04-14 ##
 - **Added** parameter lists to many function declarations.
