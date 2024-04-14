@@ -490,40 +490,51 @@ PUBLIC int com_kibitz(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_tell(int p, param_list param)
+PUBLIC int
+com_tell(int p, param_list param)
 {
-  int p1;
+	int	p1;
 
-  if (param[0].type == TYPE_NULL)
-    return COM_BADPARAMETERS;
-  if (param[0].type == TYPE_WORD) {
-    stolower(param[0].val.word);
-    if (!strcmp(param[0].val.word, ".")) {
-      if (parray[p].last_tell < 0) {
-	pprintf(p, "No one to tell anything to.\n");
-	return COM_OK;
-      } else {
-	return tell(p, parray[p].last_tell, param[1].val.string, TELL_TELL, 0);
-      }
-    }
-    if (!strcmp(param[0].val.word, ",")) {
-      if (parray[p].last_channel < 0) {
-	pprintf(p, "No previous channel.\n");
-	return COM_OK;
-      } else {
-	return chtell(p, parray[p].last_channel, param[1].val.string);
-      }
-    }
-    p1 = player_find_part_login(param[0].val.word);
-    if ((p1 < 0) || (parray[p1].status == PLAYER_PASSWORD)
-	|| (parray[p1].status == PLAYER_LOGIN)) {
-      pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-      return COM_OK;
-    }
-    return tell(p, p1, param[1].val.string, TELL_TELL, 0);
-  } else {			/* Channel */
-    return chtell(p, param[0].val.integer, param[1].val.string);
-  }
+	if (param[0].type == TYPE_NULL)
+		return COM_BADPARAMETERS;
+
+	if (param[0].type == TYPE_WORD) {
+		stolower(param[0].val.word);
+
+		if (!strcmp(param[0].val.word, ".")) {
+			if (parray[p].last_tell < 0) {
+				pprintf(p, "No one to tell anything to.\n");
+				return COM_OK;
+			} else {
+				return tell(p, parray[p].last_tell,
+				    param[1].val.string, TELL_TELL, 0);
+			}
+		}
+
+		if (!strcmp(param[0].val.word, ",")) {
+			if (parray[p].last_channel < 0) {
+				pprintf(p, "No previous channel.\n");
+				return COM_OK;
+			} else {
+				return chtell(p, parray[p].last_channel,
+				    param[1].val.string);
+			}
+		}
+
+		p1 = player_find_part_login(param[0].val.word);
+
+		if (p1 < 0 ||
+		    parray[p1].status == PLAYER_PASSWORD ||
+		    parray[p1].status == PLAYER_LOGIN) {
+			pprintf(p, "No user named \"%s\" is logged in.\n",
+			    param[0].val.word);
+			return COM_OK;
+		}
+
+		return tell(p, p1, param[1].val.string, TELL_TELL, 0);
+	} else {	// Channel
+		return chtell(p, param[0].val.integer, param[1].val.string);
+	}
 }
 
 PUBLIC int
