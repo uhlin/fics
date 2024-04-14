@@ -340,45 +340,58 @@ PRIVATE int tell(int p, int p1, char *msg, int why, int ch)
   return COM_OK;
 }
 
-PUBLIC int com_ptell(int p, param_list param) /*tells partner - doesn't change last tell */
-
+/*
+ * Tells partner - doesn't change last tell.
+ */
+PUBLIC int
+com_ptell(int p, param_list param)
 {
-  char tmp[MAX_LINE_SIZE];
-  int p1;
+	char	tmp[MAX_LINE_SIZE];
+	int	p1;
 
-   if (parray[p].partner < 0) {
-     pprintf (p, "You do not have a partner at present.\n");
-     return COM_OK;
-   }
+	if (parray[p].partner < 0) {
+		pprintf(p, "You do not have a partner at present.\n");
+		return COM_OK;
+	}
 
-   p1 = parray[p].partner;
-   if ((p1 < 0) || (parray[p1].status == PLAYER_PASSWORD)
-       || (parray[p1].status == PLAYER_LOGIN)) {
-     pprintf(p, "Your partner is not logged in.\n");
-     return COM_OK;
-   }
-   if (parray[p1].highlight) {
-      pprintf_highlight(p1, "\n%s", parray[p].name);
-    } else {
-      pprintf(p1, "\n%s", parray[p].name);
-    }
-    pprintf_prompt(p1, " (your partner) tells you: %s\n", param[0].val.string);
-    tmp[0] = '\0';
-    if (!(parray[p1].busy[0] == '\0')) {
-      sprintf(tmp, ", who %s (idle: %s)", parray[p1].busy,
-              hms_desc(player_idle(p1)));
-    } else {
-      if (((player_idle(p1) % 3600) / 60) > 2) {
-        sprintf(tmp, ", who has been idle %s", hms_desc(player_idle(p1)));
-      }
-    }
-    /* else sprintf(tmp," "); */
-    pprintf(p, "(told %s%s)\n", parray[p1].name,
-            (((parray[p1].game>=0) && (garray[parray[p1].game].status == GAME_EXAMINE))
-            ? ", who is examining a game" :
-            (parray[p1].game >= 0 && (parray[p1].game != parray[p].game))
-            ? ", who is playing" : tmp));
- return COM_OK;
+	p1 = parray[p].partner;
+
+	if (p1 < 0 ||
+	    parray[p1].status == PLAYER_PASSWORD ||
+	    parray[p1].status == PLAYER_LOGIN) {
+		pprintf(p, "Your partner is not logged in.\n");
+		return COM_OK;
+	}
+
+	if (parray[p1].highlight) {
+		pprintf_highlight(p1, "\n%s", parray[p].name);
+	} else {
+		pprintf(p1, "\n%s", parray[p].name);
+	}
+
+	pprintf_prompt(p1, " (your partner) tells you: %s\n",
+	    param[0].val.string);
+	tmp[0] = '\0';
+
+	if (!(parray[p1].busy[0] == '\0')) {
+		sprintf(tmp, ", who %s (idle: %s)",
+		    parray[p1].busy,
+		    hms_desc(player_idle(p1)));
+	} else {
+		if (((player_idle(p1) % 3600) / 60) > 2) {
+			sprintf(tmp, ", who has been idle %s",
+			    hms_desc(player_idle(p1)));
+		}
+	}
+
+	pprintf(p, "(told %s%s)\n", parray[p1].name,
+	    (((parray[p1].game >= 0) &&
+	    (garray[parray[p1].game].status == GAME_EXAMINE)) ?
+	    ", who is examining a game" :
+	    (parray[p1].game >= 0 &&
+	    (parray[p1].game != parray[p].game)) ?
+	    ", who is playing" : tmp));
+	return COM_OK;
 }
 
 PRIVATE int
