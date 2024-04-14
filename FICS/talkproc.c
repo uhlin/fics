@@ -627,10 +627,12 @@ com_inchannel(int p, param_list param)
 					pprintf(p, "Channel %d:",
 					    param[0].val.integer);
 				}
+
 				pprintf(p, " %s%s", parray[p1].name,
 				    (((parray[p1].adminLevel >= 10) &&
 				    (parray[p1].i_admin) &&
 				    (param[0].val.integer < 2)) ? "(*)" : ""));
+
 				count++;
 			}
 		}
@@ -643,6 +645,7 @@ com_inchannel(int p, param_list param)
 			    (count == 1 ? "person is" : "people are"),
 			    param[0].val.integer);
 		}
+
 		return COM_OK;
 	}
 }
