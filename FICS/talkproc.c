@@ -453,41 +453,51 @@ PUBLIC int com_whisper(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_kibitz(int p, param_list param)
+PUBLIC int
+com_kibitz(int p, param_list param)
 {
-  int g;
-  int p1;
-  int count = 0;
+	int	count = 0;
+	int	g;
+	int	p1;
 
-  if (!parray[p].num_observe && parray[p].game < 0) {
-    pprintf(p, "You are not playing or observing a game.\n");
-    return COM_OK;
-  }
-  if (!parray[p].registered && (parray[p].game == -1)) {
-    pprintf(p, "You must be registered to kibitz other people's games.\n");
-    return COM_OK;
-  }
-  if (parray[p].game >= 0)
-    g = parray[p].game;
-  else
-    g = parray[p].observe_list[0];
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (p1 == p)
-      continue;
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    if ((player_is_observe(p1, g) || parray[p1].game == g ||
-         (garray[g].link >= 0 &&
-          (player_is_observe(p1, garray[g].link) || parray[p1].game == garray[g].link)
-         )
-        ) && parray[p1].i_kibitz) {
-      tell(p, p1, param[0].val.string, TELL_KIBITZ, 0);
-      if ((parray[p].adminLevel >= ADMIN_ADMIN) || !garray[g].private || (parray[p1].game == g))
-	count++;
-    }
-  }
-  pprintf(p, "kibitzed to %d.\n", count);
-  return COM_OK;
+	if (!parray[p].num_observe && parray[p].game < 0) {
+		pprintf(p, "You are not playing or observing a game.\n");
+		return COM_OK;
+	}
+
+	if (!parray[p].registered && (parray[p].game == -1)) {
+		pprintf(p, "You must be registered to kibitz other people's "
+		    "games.\n");
+		return COM_OK;
+	}
+
+	if (parray[p].game >= 0)
+		g = parray[p].game;
+	else
+		g = parray[p].observe_list[0];
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (p1 == p)
+			continue;
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+		if ((player_is_observe(p1, g) ||
+		    parray[p1].game == g ||
+		    (garray[g].link >= 0 &&
+		    (player_is_observe(p1, garray[g].link) ||
+		    parray[p1].game == garray[g].link))) &&
+		    parray[p1].i_kibitz) {
+			tell(p, p1, param[0].val.string, TELL_KIBITZ, 0);
+
+			if (parray[p].adminLevel >= ADMIN_ADMIN ||
+			    !garray[g].private ||
+			    parray[p1].game == g)
+				count++;
+		}
+	}
+
+	pprintf(p, "kibitzed to %d.\n", count);
+	return COM_OK;
 }
 
 PUBLIC int
