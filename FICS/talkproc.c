@@ -647,45 +647,54 @@ com_inchannel(int p, param_list param)
 	}
 }
 
-PUBLIC int com_sendmessage(int p, param_list param)
+PUBLIC int
+com_sendmessage(int p, param_list param)
 {
-  int p1, connected = 1;
+	int p1, connected = 1;
 
-  if (!parray[p].registered) {
-    pprintf(p, "You are not registered and cannot send messages.\n");
-    return COM_OK;
-  }
-  if ((param[0].type == TYPE_NULL) || (param[1].type == TYPE_NULL)) {
-    pprintf(p, "No message sent.\n");
-    return COM_OK;
-  }
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
+	if (!parray[p].registered) {
+		pprintf(p, "You are not registered and cannot send messages."
+		    "\n");
+		return COM_OK;
+	}
 
-  if (!parray[p1].registered) {
-    pprintf(p, "Player \"%s\" is unregistered and cannot receive messages.\n",
-            parray[p1].name);
-    return COM_OK; /* no need to removed */
-  }
+	if (param[0].type == TYPE_NULL || param[1].type == TYPE_NULL) {
+		pprintf(p, "No message sent.\n");
+		return COM_OK;
+	}
 
-  if ((player_censored(p1, p)) && (parray[p].adminLevel == 0)) {
-    pprintf(p, "Player \"%s\" is censoring you.\n", parray[p1].name);
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  if (player_add_message(p1, p, param[1].val.string)) {
-    pprintf(p, "Couldn't send message to %s. Message buffer full.\n",
-	    parray[p1].name);
-  } else {
-    if (connected) {
-      pprintf(p1, "\n%s just sent you a message:\n", parray[p].name);
-      pprintf_prompt(p1, "    %s\n", param[1].val.string);
-    }
-  }
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
+
+	if (!parray[p1].registered) {
+		pprintf(p, "Player \"%s\" is unregistered and cannot receive "
+		    "messages.\n", parray[p1].name);
+		return COM_OK;
+	}
+
+	if (player_censored(p1, p) && parray[p].adminLevel == 0) {
+		pprintf(p, "Player \"%s\" is censoring you.\n",
+		    parray[p1].name);
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	if (player_add_message(p1, p, param[1].val.string)) {
+		pprintf(p, "Couldn't send message to %s. "
+		    "Message buffer full.\n", parray[p1].name);
+	} else {
+		if (connected) {
+			pprintf(p1, "\n%s just sent you a message:\n",
+			    parray[p].name);
+			pprintf_prompt(p1, "    %s\n", param[1].val.string);
+		}
+	}
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PUBLIC int
