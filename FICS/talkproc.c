@@ -688,26 +688,30 @@ PUBLIC int com_sendmessage(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_messages(int p, param_list param)
+PUBLIC int
+com_messages(int p, param_list param)
 {
-  int start;
-  /* int end = -1; */
+	int start;
 
-  if (!parray[p].registered) {
-    pprintf (p, "Unregistered players may not send or receive messages.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL) {
-    player_show_messages (p);
-  } else if (param[0].type == TYPE_WORD) {
-    if (param[1].type != TYPE_NULL)
-      return com_sendmessage(p, param);
-    else ShowMsgsBySender(p, param);
-  } else {
-    start = param[0].val.integer;
-    ShowMsgRange (p, start, start);
-  }
-  return COM_OK;
+	if (!parray[p].registered) {
+		pprintf(p, "Unregistered players may not send or receive "
+		    "messages.\n");
+		return COM_OK;
+	}
+
+	if (param[0].type == TYPE_NULL) {
+		player_show_messages (p);
+	} else if (param[0].type == TYPE_WORD) {
+		if (param[1].type != TYPE_NULL)
+			return com_sendmessage(p, param);
+		else
+			ShowMsgsBySender(p, param);
+	} else {
+		start = param[0].val.integer;
+		ShowMsgRange(p, start, start);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
