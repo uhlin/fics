@@ -77,60 +77,76 @@ int CheckShoutQuota(int p)
   }
 }
 
-PUBLIC int com_shout(int p, param_list param)
+PUBLIC int
+com_shout(int p, param_list param)
 {
-  int p1;
-  int count = 0;
-  int timeleft;			/* time left for quota if applicable */
+	int	count = 0;
+	int	p1;
+	int	timeleft; // time left for quota if applicable
 
-  if (!parray[p].registered) {
-    pprintf(p, "Only registered players can use the shout command.\n");
-    return COM_OK;
-  }
-  if (in_list(p, L_MUZZLE, parray[p].login)) {
-    pprintf(p, "You are muzzled.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL) {
-    if ((timeleft = CheckShoutQuota(p))) {
-      pprintf(p, "Next shout available in %d seconds.\n", timeleft);
-    } else {
-      pprintf(p, "Your next shout is ready for use.\n");
-    }
-    return COM_OK;
-  }
-  if ((timeleft = CheckShoutQuota(p))) {
-    pprintf(p, "Shout not sent. Next shout in %d seconds.\n", timeleft);
-    return COM_OK;
-  }
-  parray[p].lastshout_a = parray[p].lastshout_b;
-  parray[p].lastshout_b = time(0);
-  if (!printablestring(param[0].val.string)) {
-    pprintf(p, "Your message contains some unprintable character(s).\n");
-    return COM_OK;
-  }
-/*  in_push(IN_SHOUT); */
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (p1 == p)
-      continue;
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    if (!parray[p1].i_shout)
-      continue;
-    if (player_censored(p1, p))
-      continue;
-    count++;
-    pprintf_prompt(p1, "\n%s shouts: %s\n", parray[p].name,
-		   param[0].val.string);
-  }
-  pprintf(p, "(%d) %s shouts: %s\n", count, parray[p].name,
-	  param[0].val.string);
-/*  in_pop(); */
-  if ((timeleft = CheckShoutQuota(p))) {
-    pprintf(p, "Next shout in %d seconds.\n", timeleft);
-    return COM_OK;
-  }
-  return COM_OK;
+	if (!parray[p].registered) {
+		pprintf(p, "Only registered players can use the shout "
+		    "command.\n");
+		return COM_OK;
+	}
+
+	if (in_list(p, L_MUZZLE, parray[p].login)) {
+		pprintf(p, "You are muzzled.\n");
+		return COM_OK;
+	}
+
+	if (param[0].type == TYPE_NULL) {
+		if ((timeleft = CheckShoutQuota(p))) {
+			pprintf(p, "Next shout available in %d seconds.\n",
+			    timeleft);
+		} else {
+			pprintf(p, "Your next shout is ready for use.\n");
+		}
+
+		return COM_OK;
+	}
+
+	if ((timeleft = CheckShoutQuota(p))) {
+		pprintf(p, "Shout not sent. Next shout in %d seconds.\n",
+		    timeleft);
+		return COM_OK;
+	}
+
+	parray[p].lastshout_a = parray[p].lastshout_b;
+	parray[p].lastshout_b = time(0);
+
+	if (!printablestring(param[0].val.string)) {
+		pprintf(p, "Your message contains some unprintable "
+		    "character(s).\n");
+		return COM_OK;
+	}
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (p1 == p)
+			continue;
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+		if (!parray[p1].i_shout)
+			continue;
+		if (player_censored(p1, p))
+			continue;
+
+		count++;
+
+		pprintf_prompt(p1, "\n%s shouts: %s\n",
+		    parray[p].name,
+		    param[0].val.string);
+	}
+
+	pprintf(p, "(%d) %s shouts: %s\n", count, parray[p].name,
+	    param[0].val.string);
+
+	if ((timeleft = CheckShoutQuota(p))) {
+		pprintf(p, "Next shout in %d seconds.\n", timeleft);
+		return COM_OK;
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
