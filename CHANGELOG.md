@@ -4,6 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added usage of the functions from `err.h`.
 - Changed the make install target to not overwrite the data messages
   in case they're already present.
 
