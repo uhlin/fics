@@ -526,54 +526,69 @@ PUBLIC int com_tell(int p, param_list param)
   }
 }
 
-PUBLIC int com_xtell(int p, param_list param)
+PUBLIC int
+com_xtell(int p, param_list param)
 {
-  int p1;
-  char *msg;
-  char tmp[2048];
+	char	*msg;
+	char	 tmp[2048];
+	int	 p1;
 
-  msg = param[1].val.string;
-  p1 = player_find_part_login(param[0].val.word);
-  if ((p1 < 0) || (parray[p1].status == PLAYER_PASSWORD)
-      || (parray[p1].status == PLAYER_LOGIN)) {
-    pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-    return COM_OK;
-  }
-  if (!printablestring(msg)) {
-    pprintf(p, "Your message contains some unprintable character(s).\n");
-    return COM_OK;
-  }
-  if ((!parray[p1].i_tell) && (!parray[p].registered)) {
-    pprintf(p, "Player \"%s\" isn't listening to unregistered tells.\n",
-	    parray[p1].name);
-    return COM_OK;
-  }
-  if ((player_censored(p1, p)) && (parray[p].adminLevel == 0)) {
-    pprintf(p, "Player \"%s\" is censoring you.\n", parray[p1].name);
-    return COM_OK;
-  }
-  if (parray[p1].highlight) {
-    pprintf_highlight(p1, "\n%s", parray[p].name);
-  } else {
-    pprintf(p1, "\n%s", parray[p].name);
-  }
-  pprintf_prompt(p1, " tells you: %s\n", msg);
+	msg	= param[1].val.string;
+	p1	= player_find_part_login(param[0].val.word);
 
-  tmp[0] = '\0';
-  if (!(parray[p1].busy[0] == '\0')) {
-    sprintf(tmp, ", who %s (idle: %s)", parray[p1].busy,
-	    hms_desc(player_idle(p1)));
-  } else {
-    if (((player_idle(p1) % 3600) / 60) > 2) {
-      sprintf(tmp, ", who has been idle %s", hms_desc(player_idle(p1)));
-    }
-  }
-  pprintf(p, "(told %s%s)\n", parray[p1].name,
-          (((parray[p1].game>=0) && (garray[parray[p1].game].status == GAME_EXAMINE))
-          ? ", who is examining a game" :
-	  (parray[p1].game >= 0 && (parray[p1].game != parray[p].game))
-          ? ", who is playing" : tmp));
-  return COM_OK;
+	if (p1 < 0 ||
+	    parray[p1].status == PLAYER_PASSWORD ||
+	    parray[p1].status == PLAYER_LOGIN) {
+		pprintf(p, "No user named \"%s\" is logged in.\n",
+		    param[0].val.word);
+		return COM_OK;
+	}
+
+	if (!printablestring(msg)) {
+		pprintf(p, "Your message contains some unprintable "
+		    "character(s).\n");
+		return COM_OK;
+	}
+
+	if ((!parray[p1].i_tell) && (!parray[p].registered)) {
+		pprintf(p, "Player \"%s\" isn't listening to unregistered "
+		    "tells.\n", parray[p1].name);
+		return COM_OK;
+	}
+
+	if (player_censored(p1, p) && parray[p].adminLevel == 0) {
+		pprintf(p, "Player \"%s\" is censoring you.\n",
+		    parray[p1].name);
+		return COM_OK;
+	}
+
+	if (parray[p1].highlight) {
+		pprintf_highlight(p1, "\n%s", parray[p].name);
+	} else {
+		pprintf(p1, "\n%s", parray[p].name);
+	}
+
+	pprintf_prompt(p1, " tells you: %s\n", msg);
+	tmp[0] = '\0';
+
+	if (!(parray[p1].busy[0] == '\0')) {
+		sprintf(tmp, ", who %s (idle: %s)", parray[p1].busy,
+		    hms_desc(player_idle(p1)));
+	} else {
+		if (((player_idle(p1) % 3600) / 60) > 2) {
+			sprintf(tmp, ", who has been idle %s",
+			    hms_desc(player_idle(p1)));
+		}
+	}
+
+	pprintf(p, "(told %s%s)\n", parray[p1].name,
+	    ((parray[p1].game >= 0 &&
+	    garray[parray[p1].game].status == GAME_EXAMINE) ?
+	    ", who is examining a game" :
+	    (parray[p1].game >= 0 && parray[p1].game != parray[p].game) ?
+	    ", who is playing" : tmp));
+
+	return COM_OK;
 }
 
 PUBLIC int
