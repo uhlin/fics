@@ -3,6 +3,10 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Changed the make install target to not overwrite the data messages
+  in case they're already present.
+
 ## [1.2] - 2024-04-14 ##
 - **Added** parameter lists to many function declarations.
 - **Added** usage of `reallocarray()` which handles multiplication
