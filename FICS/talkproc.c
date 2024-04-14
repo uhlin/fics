@@ -800,108 +800,124 @@ PUBLIC int com_znotify(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_qtell(int p, param_list param)
+PUBLIC int
+com_qtell(int p, param_list param)
 {
-  int p1;
-  char tmp[MAX_STRING_LENGTH];
-  char dummy[2];
-  char buffer1[MAX_STRING_LENGTH];	/* no highlight and no bell */
-  char buffer2[MAX_STRING_LENGTH];	/* no highlight and bell */
-  char buffer3[MAX_STRING_LENGTH];	/* highlight and no bell */
-  char buffer4[MAX_STRING_LENGTH];	/* highlight and and bell */
-  int i,count;
-/*  FILE *fp; */
+	char buffer1[MAX_STRING_LENGTH];	// no highlight and no bell
+	char buffer2[MAX_STRING_LENGTH];	// no highlight and bell
+	char buffer3[MAX_STRING_LENGTH];	// highlight and no bell
+	char buffer4[MAX_STRING_LENGTH];	// highlight and and bell
+	char dummy[2];
+	char tmp[MAX_STRING_LENGTH];
+	int i, count;
+	int p1;
 
-  if (!in_list(p, L_TD, parray[p].name)) {
-    pprintf(p, "Only TD programs are allowed to use this command.\n");
-    return COM_OK;
-  }
-  strcpy(buffer1, ":\0");
-  strcpy(buffer2, ":\0");
-  strcpy(buffer3, ":\0");
-  strcpy(buffer4, ":\0");
+	if (!in_list(p, L_TD, parray[p].name)) {
+		pprintf(p, "Only TD programs are allowed to use this command."
+		    "\n");
+		return COM_OK;
+	}
 
-  sprintf(tmp, "%s", param[1].val.string);
-  for (i = 0, count = 0; ((tmp[i] != '\0') && (count < 1029));) {
-    if ((tmp[i] == '\\') && (tmp[i + 1] == 'n')) {
-      strcat(buffer1, "\n:");
-      strcat(buffer2, "\n:");
-      strcat(buffer3, "\n:");
-      strcat(buffer4, "\n:");
-      count += 2;
-      i += 2;
-    } else if ((tmp[i] == '\\') && (tmp[i + 1] == 'b')) {
-      strcat(buffer2, "\007");
-      strcat(buffer4, "\007");
-      count++;
-      i += 2;
-    } else if ((tmp[i] == '\\') && (tmp[i + 1] == 'H')) {
-      strcat(buffer3, "\033[7m");
-      strcat(buffer4, "\033[7m");
-      count += 4;
-      i += 2;
-    } else if ((tmp[i] == '\\') && (tmp[i + 1] == 'h')) {
-      strcat(buffer3, "\033[0m");
-      strcat(buffer4, "\033[0m");
-      count += 4;
-      i += 2;
-    } else {
-      dummy[0] = tmp[i];
-      dummy[1] = '\0';
-      strcat(buffer1, dummy);
-      strcat(buffer2, dummy);
-      strcat(buffer3, dummy);
-      strcat(buffer4, dummy);
-      count++;
-      i++;
-    }
-  }
+	strcpy(buffer1, ":\0");
+	strcpy(buffer2, ":\0");
+	strcpy(buffer3, ":\0");
+	strcpy(buffer4, ":\0");
 
-  if (param[0].type == TYPE_WORD) {
-/*
-    fp = fopen("/tmp/fics-log", "a");
-    fprintf(fp, "PLAYER \"%s\" - MESSAGE \"%s\"\n", param[0].val.word, param[1].val.string);
-    fclose(fp);
-*/
-    if ((p1 = player_find_bylogin(param[0].val.word)) < 0) {
-      pprintf(p, "*qtell %s 1*\n", param[0].val.word);
-      return COM_OK;
-    }
-    pprintf_prompt(p1, "\n%s\n", (parray[p1].highlight && parray[p1].bell) ? buffer4 :
-		   (parray[p1].highlight && !parray[p1].bell) ? buffer3 :
-		   (!parray[p1].highlight && parray[p1].bell) ? buffer2 :
-		   buffer1);
-    pprintf(p, "*qtell %s 0*\n", parray[p1].name);
+	sprintf(tmp, "%s", param[1].val.string);
 
-  } else {
-    int p1;
-    int ch = param[0].val.integer;
+	for (i = 0, count = 0; ((tmp[i] != '\0') && (count < 1029));) {
+		if (tmp[i] == '\\' && tmp[i + 1] == 'n') {
+			strcat(buffer1, "\n:");
+			strcat(buffer2, "\n:");
+			strcat(buffer3, "\n:");
+			strcat(buffer4, "\n:");
 
-    if (ch == 0) {
-      pprintf(p, "*qtell %d 1*\n", param[0].val.integer);
-      return COM_OK;
-    }
-    if (ch < 0) {
-      pprintf(p, "*qtell %d 1*\n", param[0].val.integer);
-      return COM_OK;
-    }
-    if (ch >= MAX_CHANNELS) {
-      pprintf(p, "*qtell %d 1*\n", param[0].val.integer);
-      return COM_OK;
-    }
-    sprintf (tmp,"%d",param[0].val.integer);
-    for (p1 = 0; p1 < p_num ; p1++) {
-      if ((p1 == p) || (player_censored(p1, p)) || (parray[p1].status != PLAYER_PROMPT))
-	continue;
-      if (in_list(p1,L_CHANNEL,tmp))
-        pprintf_prompt(p1, "\n%s\n", (parray[p1].highlight && parray[p1].bell) ? buffer4 :
-		     (parray[p1].highlight && !parray[p1].bell) ? buffer3 :
-		     (!parray[p1].highlight && parray[p1].bell) ? buffer2 :
-		     buffer1);
-    }
-    pprintf(p, "*qtell %d 0*\n", param[0].val.integer);
-  }
-  return COM_OK;
+			count += 2;
+			i += 2;
+		} else if (tmp[i] == '\\' && tmp[i + 1] == 'b') {
+			strcat(buffer2, "\007");
+			strcat(buffer4, "\007");
+
+			count++;
+			i += 2;
+		} else if (tmp[i] == '\\' && tmp[i + 1] == 'H') {
+			strcat(buffer3, "\033[7m");
+			strcat(buffer4, "\033[7m");
+
+			count += 4;
+			i += 2;
+		} else if (tmp[i] == '\\' && tmp[i + 1] == 'h') {
+			strcat(buffer3, "\033[0m");
+			strcat(buffer4, "\033[0m");
+
+			count += 4;
+			i += 2;
+		} else {
+			dummy[0] = tmp[i];
+			dummy[1] = '\0';
+
+			strcat(buffer1, dummy);
+			strcat(buffer2, dummy);
+			strcat(buffer3, dummy);
+			strcat(buffer4, dummy);
+
+			count++;
+			i++;
+		}
+	}
+
+	if (param[0].type == TYPE_WORD) {
+		if ((p1 = player_find_bylogin(param[0].val.word)) < 0) {
+			pprintf(p, "*qtell %s 1*\n", param[0].val.word);
+			return COM_OK;
+		}
+
+		pprintf_prompt(p1, "\n%s\n",
+		    (parray[p1].highlight && parray[p1].bell) ?
+		    buffer4 :
+		    (parray[p1].highlight && !parray[p1].bell) ?
+		    buffer3 :
+		    (!parray[p1].highlight && parray[p1].bell) ?
+		    buffer2 : buffer1);
+		pprintf(p, "*qtell %s 0*\n", parray[p1].name);
+	} else {
+		int	ch = param[0].val.integer;
+		int	p1;
+
+		if (ch == 0) {
+			pprintf(p, "*qtell %d 1*\n", param[0].val.integer);
+			return COM_OK;
+		}
+		if (ch < 0) {
+			pprintf(p, "*qtell %d 1*\n", param[0].val.integer);
+			return COM_OK;
+		}
+		if (ch >= MAX_CHANNELS) {
+			pprintf(p, "*qtell %d 1*\n", param[0].val.integer);
+			return COM_OK;
+		}
+
+		sprintf(tmp, "%d", param[0].val.integer);
+
+		for (p1 = 0; p1 < p_num ; p1++) {
+			if (p1 == p || player_censored(p1, p) ||
+			    parray[p1].status != PLAYER_PROMPT)
+				continue;
+			if (in_list(p1, L_CHANNEL, tmp)) {
+				pprintf_prompt(p1, "\n%s\n",
+				    (parray[p1].highlight && parray[p1].bell) ?
+				    buffer4 :
+				    (parray[p1].highlight && !parray[p1].bell) ?
+				    buffer3 :
+				    (!parray[p1].highlight && parray[p1].bell) ?
+				    buffer2 : buffer1);
+			}
+		}
+
+		pprintf(p, "*qtell %d 0*\n", param[0].val.integer);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
