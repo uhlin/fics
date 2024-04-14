@@ -753,8 +753,10 @@ com_mailmess(int p, param_list param)
 	if (search_directory(mdir, filename, buffer, 1000)) {
 		snprintf(subj, sizeof subj, "Your FICS messages from server %s",
 		    fics_hostname);
+
 		ret = snprintf(fname, sizeof fname, "%s/%s", mdir, filename);
 		too_long = (ret < 0 || (size_t)ret >= sizeof fname);
+
 		if (!too_long) {
 			mail_file_to_user(p, subj, fname);
 			pprintf(p, "Messages sent to %s\n",
@@ -763,6 +765,7 @@ com_mailmess(int p, param_list param)
 	} else {
 		pprintf(p, "You have no messages.\n");
 	}
+
 	return COM_OK;
 }
 
