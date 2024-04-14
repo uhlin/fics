@@ -979,28 +979,28 @@ com_qtell(int p, param_list param)
 	i = 0;
 	while (tmp[i] != '\0' && count < 1029) {
 		if (tmp[i] == '\\' && tmp[i + 1] == 'n') {
-			strcat(buffer1, "\n:");
-			strcat(buffer2, "\n:");
-			strcat(buffer3, "\n:");
-			strcat(buffer4, "\n:");
+			mstrlcat(buffer1, "\n:", sizeof buffer1);
+			mstrlcat(buffer2, "\n:", sizeof buffer2);
+			mstrlcat(buffer3, "\n:", sizeof buffer3);
+			mstrlcat(buffer4, "\n:", sizeof buffer4);
 
 			count += 2;
 			i += 2;
 		} else if (tmp[i] == '\\' && tmp[i + 1] == 'b') {
-			strcat(buffer2, "\007");
-			strcat(buffer4, "\007");
+			mstrlcat(buffer2, "\007", sizeof buffer2);
+			mstrlcat(buffer4, "\007", sizeof buffer4);
 
 			count++;
 			i += 2;
 		} else if (tmp[i] == '\\' && tmp[i + 1] == 'H') {
-			strcat(buffer3, "\033[7m");
-			strcat(buffer4, "\033[7m");
+			mstrlcat(buffer3, "\033[7m", sizeof buffer3);
+			mstrlcat(buffer4, "\033[7m", sizeof buffer4);
 
 			count += 4;
 			i += 2;
 		} else if (tmp[i] == '\\' && tmp[i + 1] == 'h') {
-			strcat(buffer3, "\033[0m");
-			strcat(buffer4, "\033[0m");
+			mstrlcat(buffer3, "\033[0m", sizeof buffer3);
+			mstrlcat(buffer4, "\033[0m", sizeof buffer4);
 
 			count += 4;
 			i += 2;
@@ -1008,10 +1008,10 @@ com_qtell(int p, param_list param)
 			dummy[0] = tmp[i];
 			dummy[1] = '\0';
 
-			strcat(buffer1, dummy);
-			strcat(buffer2, dummy);
-			strcat(buffer3, dummy);
-			strcat(buffer4, dummy);
+			mstrlcat(buffer1, dummy, sizeof buffer1);
+			mstrlcat(buffer2, dummy, sizeof buffer2);
+			mstrlcat(buffer3, dummy, sizeof buffer3);
+			mstrlcat(buffer4, dummy, sizeof buffer4);
 
 			count++;
 			i++;
