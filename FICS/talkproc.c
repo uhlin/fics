@@ -63,18 +63,18 @@
 
 int quota_time;
 
-/* hawk: hacked it to fit ALL persons - quota list is not needed anymore */
-int CheckShoutQuota(int p)
+// hawk: hacked it to fit ALL persons - quota list is not needed anymore
+int
+CheckShoutQuota(int p)
 {
-  int timenow = time(0);
-  int timeleft = 0;
+	int	timeleft = 0;
+	int	timenow = time(0);
 
-  if (((timeleft = timenow - parray[p].lastshout_a) < quota_time) &&
-      (parray[p].adminLevel == 0))  {
-    return (quota_time - timeleft);
-  } else {
-    return 0;
-  }
+	timeleft = timenow - parray[p].lastshout_a;
+
+	if (timeleft < quota_time && parray[p].adminLevel == 0)
+		return (quota_time - timeleft);
+	return 0;
 }
 
 PUBLIC int
