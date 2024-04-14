@@ -1,5 +1,5 @@
 #!/bin/sh
-# SPDX-FileCopyrightText: 2023 Markus Uhlin <maxxe@rpblc.net>
+# SPDX-FileCopyrightText: 2023, 2024 Markus Uhlin <maxxe@rpblc.net>
 # SPDX-License-Identifier: ISC
 
 i_data_messages () {
@@ -24,8 +24,17 @@ welcome
 
 	for file in ${_files}; do
 		printf "%s -> %s: " "${_src_prefix}/${file}" "${_dest}/${file}"
+
 		if [ -r "${_src_prefix}/${file}" ]; then
+			if [ -r "${_dest}/${file}" ]; then
+				echo "already exists (not overwriting)"
+				diff -u -w \
+				    "${_dest}/${file}" "${_src_prefix}/${file}"
+				continue
+			fi
+
 			install -m 0644 "${_src_prefix}/${file}" "${_dest}"
+
 			if [ $? -eq 0 ]; then
 				echo "ok"
 			else
