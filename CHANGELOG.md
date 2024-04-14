@@ -7,6 +7,10 @@ documented in this file.
 - Added usage of the functions from `err.h`.
 - Changed the make install target to not overwrite the data messages
   in case they're already present.
+- Made functions and variables private where possible.
+- Reformatted code according to OpenBSD's KNF:
+  - `talkproc.c`
+  - ...
 
 ## [1.2] - 2024-04-14 ##
 - **Added** parameter lists to many function declarations.
