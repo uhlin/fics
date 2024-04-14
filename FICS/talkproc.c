@@ -710,24 +710,27 @@ PUBLIC int com_messages(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_clearmessages(int p, param_list param)
+PUBLIC int
+com_clearmessages(int p, param_list param)
 {
-  int start;
+	int start;
 
-  if (player_num_messages(p) <= 0) {
-    pprintf(p, "You have no messages.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL) {
-    pprintf(p, "Messages cleared.\n");
-    player_clear_messages(p);
-  } else if (param[0].type == TYPE_WORD) {
-    ClearMsgsBySender(p, param);
-  } else if (param[0].type == TYPE_INT) {
-    start = param[0].val.integer;
-    ClrMsgRange (p, start, start);
-  }
-  return COM_OK;
+	if (player_num_messages(p) <= 0) {
+		pprintf(p, "You have no messages.\n");
+		return COM_OK;
+	}
+
+	if (param[0].type == TYPE_NULL) {
+		pprintf(p, "Messages cleared.\n");
+		player_clear_messages(p);
+	} else if (param[0].type == TYPE_WORD) {
+		ClearMsgsBySender(p, param);
+	} else if (param[0].type == TYPE_INT) {
+		start = param[0].val.integer;
+		ClrMsgRange(p, start, start);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
