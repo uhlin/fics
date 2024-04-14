@@ -766,38 +766,48 @@ com_mailmess(int p, param_list param)
 	return COM_OK;
 }
 
-PUBLIC int com_znotify(int p, param_list param)
+PUBLIC int
+com_znotify(int p, param_list param)
 {
-  int p1, count = 0;
+	int	p1, count = 0;
 
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (player_notified(p, p1)) {
-      if (!count)
-	pprintf(p, "Present company on your notify list:\n  ");
-      pprintf(p, " %s", parray[p1].name);
-      count++;
-    }
-  }
-  if (count)
-    pprintf(p, ".\n");
-  else
-    pprintf(p, "No one from your notify list is logged on.\n");
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (player_notified(p, p1)) {
+			if (!count) {
+				pprintf(p, "Present company on your notify "
+				    "list:\n  ");
+			}
 
-  count = 0;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (player_notified(p1, p) && parray[p1].status == PLAYER_PROMPT) {
-      if (!count)
-	pprintf(p,
-		"The following players have you on their notify list:\n  ");
-      pprintf(p, " %s", parray[p1].name);
-      count++;
-    }
-  }
-  if (count)
-    pprintf(p, ".\n");
-  else
-    pprintf(p, "No one logged in has you on their notify list.\n");
-  return COM_OK;
+			pprintf(p, " %s", parray[p1].name);
+			count++;
+		}
+	}
+
+	if (count)
+		pprintf(p, ".\n");
+	else
+		pprintf(p, "No one from your notify list is logged on.\n");
+
+	count = 0;
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (player_notified(p1, p) &&
+		    parray[p1].status == PLAYER_PROMPT) {
+			if (!count) {
+				pprintf(p, "The following players have you "
+				    "on their notify list:\n  ");
+			}
+
+			pprintf(p, " %s", parray[p1].name);
+			count++;
+		}
+	}
+
+	if (count)
+		pprintf(p, ".\n");
+	else
+		pprintf(p, "No one logged in has you on their notify list.\n");
+	return COM_OK;
 }
 
 PUBLIC int
