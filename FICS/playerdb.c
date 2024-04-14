@@ -34,6 +34,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "command.h"
 #include "comproc.h"
 #include "config.h"
@@ -1076,8 +1078,7 @@ player_save(int p)
 	    parray[p].login[0], parray[p].login);
 
 	if ((fp = fopen(fname, "w")) == NULL) {
-		fprintf(stderr, "FICS: Problem opening file %s for write\n",
-		    fname);
+		warn("%s: Problem opening file %s for write", __func__, fname);
 		return -1;
 	}
 
