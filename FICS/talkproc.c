@@ -238,106 +238,124 @@ PUBLIC int com_it(int p, param_list param)
 #define TELL_WHISPER 2
 #define TELL_KIBITZ 3
 #define TELL_CHANNEL 4
-PRIVATE int tell(int p, int p1, char *msg, int why, int ch)
+
+PRIVATE int
+tell(int p, int p1, char *msg, int why, int ch)
 {
-  char tmp[MAX_LINE_SIZE];
-  int rating;
-  int rating1;
+	char	tmp[MAX_LINE_SIZE] = { '\0' };
+	int	rating1;
+	int	rating;
 
-  if (!printablestring(msg)) {
-    pprintf(p, "Your message contains some unprintable character(s).\n");
-    return COM_OK;
-  }
-/*  if (p1 == p) {
- *   pprintf(p, "Quit talking to yourself! It's embarrassing.\n");
- *   return COM_OK;
- * }
- */
-  if ((!parray[p1].i_tell) && (!parray[p].registered)) {
-    pprintf(p, "Player \"%s\" isn't listening to unregistered tells.\n",
-	    parray[p1].name);
-    return COM_OK;
-  }
-  if ((player_censored(p1, p)) && (parray[p].adminLevel == 0)) {
-    if ((why != TELL_KIBITZ) || (why != TELL_WHISPER) || (why != TELL_CHANNEL))
-    {
-       pprintf(p, "Player \"%s\" is censoring you.\n", parray[p1].name);
-    }
-    return COM_OK;
-  }
-/*  in_push(IN_TELL); */
-  switch (why) {
-  case TELL_SAY:
-    pprintf_highlight(p1, "\n%s", parray[p].name);
-    pprintf_prompt(p1, " says: %s\n", msg);
-    break;
-  case TELL_WHISPER:
-  case TELL_KIBITZ:
-    rating = GetRating(&parray[p], TYPE_BLITZ);
-    if (rating < ( rating1 = ( GetRating(&parray[p], TYPE_STAND ) ) ) )
-      rating = rating1;
-    if (in_list(p, L_FM, parray[p].name))
-      pprintf(p1, "\n%s(FM)", parray[p].name);
-    else if (in_list(p, L_IM, parray[p].name))
-      pprintf(p1, "\n%s(IM)", parray[p].name);
-    else if (in_list(p, L_GM, parray[p].name))
-      pprintf(p1, "\n%s(GM)", parray[p].name);
-    else if ((parray[p].adminLevel >= 10) && (parray[p].i_admin))
-      pprintf(p1, "\n%s(*)", parray[p].name);
-    else if ((rating >= parray[p1].kiblevel) ||
-             ((parray[p].adminLevel >= 10) && (parray[p].i_admin)))
-        if (!parray[p].registered)
-            pprintf(p1, "\n%s(++++)", parray[p].name);
+	if (!printablestring(msg)) {
+		pprintf(p, "Your message contains some unprintable "
+		    "character(s).\n");
+		return COM_OK;
+	}
 
-        else if (rating != 0)
-           if (in_list(p, L_COMPUTER, parray[p].name))
-               pprintf(p1, "\n%s(%d)(C)", parray[p].name, rating);
-           else
-               pprintf(p1, "\n%s(%d)", parray[p].name, rating);
-        else
-            pprintf(p1, "\n%s(----)", parray[p].name);
-    else break;
+	if ((!parray[p1].i_tell) && (!parray[p].registered)) {
+		pprintf(p, "Player \"%s\" isn't listening to unregistered "
+		    "tells.\n", parray[p1].name);
+		return COM_OK;
+	}
 
-    if (why == TELL_WHISPER)
-       pprintf_prompt(p1, " whispers: %s\n", msg);
-    else
-       pprintf_prompt(p1, " kibitzes: %s\n", msg);
+	if (player_censored(p1, p) && parray[p].adminLevel == 0) {
+		if (why != TELL_KIBITZ ||
+		    why != TELL_WHISPER ||
+		    why != TELL_CHANNEL) {
+			pprintf(p, "Player \"%s\" is censoring you.\n",
+			    parray[p1].name);
+		}
 
-    break;
-  case TELL_CHANNEL:
-    pprintf(p1, "\n%s", parray[p].name);
-    pprintf_prompt(p1, "(%d): %s\n", ch, msg);
-    break;
-  case TELL_TELL:
-  default:
-    if (parray[p1].highlight) {
-      pprintf_highlight(p1, "\n%s", parray[p].name);
-    } else {
-      pprintf(p1, "\n%s", parray[p].name);
-    }
-    pprintf_prompt(p1, " tells you: %s\n", msg);
-    break;
-  }
-  tmp[0] = '\0';
-  if (!(parray[p1].busy[0] == '\0')) {
-    sprintf(tmp, ", who %s (idle: %s)", parray[p1].busy,
-	    hms_desc(player_idle(p1)));
-  } else {
-    if (((player_idle(p1) % 3600) / 60) > 2) {
-      sprintf(tmp, ", who has been idle %s", hms_desc(player_idle(p1)));
-    }
-    /* else sprintf(tmp," "); */
-  }
-  if ((why == TELL_SAY) || (why == TELL_TELL)) {
-    pprintf(p, "(told %s%s)\n", parray[p1].name,
-            (((parray[p1].game>=0) && (garray[parray[p1].game].status == GAME_EXAMINE))
-            ? ", who is examining a game" :
-	    (parray[p1].game >= 0 && (parray[p1].game != parray[p].game))
-	    ? ", who is playing" : tmp));
-    parray[p].last_tell = p1;
-  }
-/*  in_pop(); */
-  return COM_OK;
+		return COM_OK;
+	}
+
+	switch (why) {
+	case TELL_SAY:
+		pprintf_highlight(p1, "\n%s", parray[p].name);
+		pprintf_prompt(p1, " says: %s\n", msg);
+		break;
+	case TELL_WHISPER:
+	case TELL_KIBITZ:
+		rating = GetRating(&parray[p], TYPE_BLITZ);
+
+		if (rating < (rating1 = (GetRating(&parray[p], TYPE_STAND))))
+			rating = rating1;
+
+		if (in_list(p, L_FM, parray[p].name)) {
+			pprintf(p1, "\n%s(FM)", parray[p].name);
+		} else if (in_list(p, L_IM, parray[p].name)) {
+			pprintf(p1, "\n%s(IM)", parray[p].name);
+		} else if (in_list(p, L_GM, parray[p].name)) {
+			pprintf(p1, "\n%s(GM)", parray[p].name);
+		} else if (parray[p].adminLevel >= 10 && parray[p].i_admin) {
+			pprintf(p1, "\n%s(*)", parray[p].name);
+		} else if ((rating >= parray[p1].kiblevel) ||
+		    ((parray[p].adminLevel >= 10) && (parray[p].i_admin))) {
+			if (!parray[p].registered) {
+				pprintf(p1, "\n%s(++++)", parray[p].name);
+			} else if (rating != 0) {
+				if (in_list(p, L_COMPUTER, parray[p].name)) {
+					pprintf(p1, "\n%s(%d)(C)",
+					    parray[p].name,
+					    rating);
+				} else {
+					pprintf(p1, "\n%s(%d)",
+					    parray[p].name,
+					    rating);
+				}
+			} else {
+				pprintf(p1, "\n%s(----)", parray[p].name);
+			}
+		} else {
+			break;
+		}
+
+		if (why == TELL_WHISPER)
+			pprintf_prompt(p1, " whispers: %s\n", msg);
+		else
+			pprintf_prompt(p1, " kibitzes: %s\n", msg);
+		break;
+	case TELL_CHANNEL:
+		pprintf(p1, "\n%s", parray[p].name);
+		pprintf_prompt(p1, "(%d): %s\n", ch, msg);
+		break;
+	case TELL_TELL:
+	default:
+		if (parray[p1].highlight) {
+			pprintf_highlight(p1, "\n%s", parray[p].name);
+		} else {
+			pprintf(p1, "\n%s", parray[p].name);
+		}
+
+		pprintf_prompt(p1, " tells you: %s\n", msg);
+		break;
+	}
+
+	tmp[0] = '\0';
+
+	if (!(parray[p1].busy[0] == '\0')) {
+		sprintf(tmp, ", who %s (idle: %s)",
+		    parray[p1].busy,
+		    hms_desc(player_idle(p1)));
+	} else {
+		if (((player_idle(p1) % 3600) / 60) > 2) {
+			sprintf(tmp, ", who has been idle %s",
+			    hms_desc(player_idle(p1)));
+		}
+	}
+
+	if (why == TELL_SAY || why == TELL_TELL) {
+		pprintf(p, "(told %s%s)\n", parray[p1].name,
+		    (((parray[p1].game >= 0) &&
+		    (garray[parray[p1].game].status == GAME_EXAMINE)) ?
+		    ", who is examining a game" :
+		    (parray[p1].game >= 0 &&
+		    (parray[p1].game != parray[p].game)) ?
+		    ", who is playing" : tmp));
+		parray[p].last_tell = p1;
+	}
+
+	return COM_OK;
 }
 
 /*
