@@ -381,42 +381,44 @@ PUBLIC int com_ptell(int p, param_list param) /*tells partner - doesn't change l
  return COM_OK;
 }
 
-PRIVATE int chtell(int p, int ch, char *msg)
+PRIVATE int
+chtell(int p, int ch, char *msg)
 {
-  int p1, count = 0;
+	int	p1, count = 0;
 
-  if ((ch == 0) && (parray[p].adminLevel == 0)) {
-    pprintf(p, "Only admins may send tells to channel 0.\n");
-    return COM_OK;
-  }
+	if (ch == 0 && parray[p].adminLevel == 0) {
+		pprintf(p, "Only admins may send tells to channel 0.\n");
+		return COM_OK;
+	}
 
-  if (ch < 0) {
-    pprintf(p, "The lowest channel number is 0.\n");
-    return COM_OK;
-  }
+	if (ch < 0) {
+		pprintf(p, "The lowest channel number is 0.\n");
+		return COM_OK;
+	}
 
-  if (ch >= MAX_CHANNELS) {
-    pprintf(p, "The maximum channel number is %d.\n", MAX_CHANNELS - 1);
-    return COM_OK;
-  }
+	if (ch >= MAX_CHANNELS) {
+		pprintf(p, "The maximum channel number is %d.\n",
+		    (MAX_CHANNELS - 1));
+		return COM_OK;
+	}
 
-  for (p1 = 0; p1 < p_num; p1++) {
-    if ((p1 == p) || (parray[p1].status != PLAYER_PROMPT))
-      continue;
-    if ((on_channel(ch, p1)) && (!player_censored(p1, p))) {
-      tell(p, p1, msg, TELL_CHANNEL, ch);
-      count++;
-    }
-  }
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (p1 == p || parray[p1].status != PLAYER_PROMPT)
+			continue;
+		if (on_channel(ch, p1) && !player_censored(p1, p)) {
+			tell(p, p1, msg, TELL_CHANNEL, ch);
+			count++;
+		}
+	}
 
-  if (count)
-    parray[p].last_channel = ch;
+	if (count)
+		parray[p].last_channel = ch;
 
-  pprintf(p, "(%d->(%d))\n", ch, count);
-  if (!on_channel(ch, p))
-    pprintf(p, " (You're not listening to channel %d.)\n", ch);
+	pprintf(p, "(%d->(%d))\n", ch, count);
 
-  return COM_OK;
+	if (!on_channel(ch, p))
+		pprintf(p, " (You're not listening to channel %d.)\n", ch);
+	return COM_OK;
 }
 
 PUBLIC int
