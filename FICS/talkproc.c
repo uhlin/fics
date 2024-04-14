@@ -66,7 +66,7 @@
 int quota_time;
 
 // hawk: hacked it to fit ALL persons - quota list is not needed anymore
-int
+PRIVATE int
 CheckShoutQuota(int p)
 {
 	int	timeleft = 0;
