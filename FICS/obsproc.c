@@ -1354,25 +1354,27 @@ PUBLIC int com_revert(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_history(int p, param_list param)
+PUBLIC int
+com_history(int p, param_list param)
 {
-  int p1, connected;
-  char fname[MAX_FILENAME_SIZE];
+	char	fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	p1, connected;
 
-  if (param[0].type == TYPE_WORD) {
-    if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-      return COM_OK;
-  } else {
-      p1 = p;
-      connected = 1;
-  }
+	if (param[0].type == TYPE_WORD) {
+		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+			return COM_OK;
+	} else {
+		p1 = p;
+		connected = 1;
+	}
 
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p1].login[0],
-          parray[p1].login, STATS_GAMES);
-  pgames(p, p1, fname);
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
+	    parray[p1].login[0], parray[p1].login, STATS_GAMES);
+	pgames(p, p1, fname);
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PUBLIC int
