@@ -910,20 +910,25 @@ PUBLIC int process_input(int fd, char *com_string)
   return retval;
 }
 
-PUBLIC int process_new_connection(int fd, unsigned int fromHost)
+PUBLIC int
+process_new_connection(int fd, unsigned int fromHost)
 {
-  int p = player_new();
+	int p = player_new();
 
-  parray[p].status = PLAYER_LOGIN;
-  parray[p].socket = fd;
-  parray[p].thisHost = fromHost;
-  parray[p].logon_time = time(0);
-  psend_raw_file(p, mess_dir, MESS_WELCOME);
-  pprintf(p, "Head admin : %s   Complaints to : %s\n", hadmin_handle, hadmin_email);
-  pprintf(p, "Server location: %s   Server version : %s\n", fics_hostname, VERS_NUM);
-  psend_raw_file(p, mess_dir, MESS_LOGIN);
-  pprintf(p, "login: ");
-  return 0;
+	parray[p].status	= PLAYER_LOGIN;
+	parray[p].socket	= fd;
+	parray[p].thisHost	= fromHost;
+	parray[p].logon_time	= time(0);
+
+	psend_raw_file(p, mess_dir, MESS_WELCOME);
+	pprintf(p, "Head admin : %s   Complaints to : %s\n",
+	    hadmin_handle,
+	    hadmin_email);
+	pprintf(p, "Server location: %s   Server version : %s\n", fics_hostname,
+	    VERS_NUM);
+	psend_raw_file(p, mess_dir, MESS_LOGIN);
+	pprintf(p, "login: ");
+	return 0;
 }
 
 PUBLIC int
