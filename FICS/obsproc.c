@@ -1375,37 +1375,45 @@ PUBLIC int com_history(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_journal(int p, param_list param)
+PUBLIC int
+com_journal(int p, param_list param)
 {
-  int p1, connected;
-  char fname[MAX_FILENAME_SIZE];
+	char	fname[MAX_FILENAME_SIZE];
+	int	p1, connected;
 
-    if (param[0].type == TYPE_WORD) {
-    if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-      return COM_OK;
-  } else {
-      p1 = p;
-      connected = 1;
-  }
+	if (param[0].type == TYPE_WORD) {
+		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+			return COM_OK;
+	} else {
+		p1 = p;
+		connected = 1;
+	}
 
-if (!parray[p1].registered) {
-    pprintf (p,"Only registered players may keep a journal.\n");
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  if ((parray[p1].jprivate) && (p != p1) && (parray[p].adminLevel < ADMIN_ADMIN)) {
-    pprintf (p,"Sorry, this journal is private.\n");
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p1].login[0],
-	  parray[p1].login, STATS_JOURNAL);
-  pjournal(p, p1, fname);
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (!parray[p1].registered) {
+		pprintf(p, "Only registered players may keep a journal.\n");
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	if (parray[p1].jprivate &&
+	    p != p1 &&
+	    parray[p].adminLevel < ADMIN_ADMIN) {
+		pprintf(p, "Sorry, this journal is private.\n");
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
+	    parray[p1].login[0], parray[p1].login, STATS_JOURNAL);
+	pjournal(p, p1, fname);
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PRIVATE void
