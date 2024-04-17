@@ -1462,77 +1462,95 @@ PRIVATE void jsave_journalentry(int p,char save_spot,int p1,char from_spot,char*
  pprintf(p,"Journal entry %s %c saved in slot %c in journal.\n",parray[p1].name, toupper(from_spot), toupper(save_spot));
 }
 
-PUBLIC void jsave_history(int p,char save_spot,int p1,int from,char* to_file)
+PUBLIC void
+jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 {
+	FILE	*Game;
+	char	*EndSymbol;
+	char	*HistoryFname;
+	char	*filename[MAX_FILENAME_SIZE + 1];
+	char	*name_to = parray[p].login;
+	char	 End[100];
+	char	 command[MAX_FILENAME_SIZE * 2 + 3];
+	char	 jfname[MAX_FILENAME_SIZE];
+	char	 type[4];
+	int	 g;
 
+	if ((HistoryFname = FindHistory2(p, p1, from, End)) != NULL) {
+		if ((Game = fopen(HistoryFname, "r")) == NULL) {
+			pprintf(p, "History game %d not available for %s.\n",
+			    from,
+			    parray[p1].name);
+		} else {
+			msnprintf(jfname, sizeof jfname, "%s/%c/%s.%c",
+			    journal_dir,
+			    name_to[0],
+			    name_to,
+			    save_spot);
+			unlink(jfname);
 
- char End[100];
- char jfname[MAX_FILENAME_SIZE];
- char* HistoryFname = FindHistory2(p, p1, from, End);
-     /* End symbol Mat Res, etc is the only thing we can't find out */
- char command[MAX_FILENAME_SIZE*2+3];
- char* name_to = parray[p].login;
- char* EndSymbol;
- FILE *Game;
- char type[4];
- int g;
- char* filename[MAX_FILENAME_SIZE+1];
+			msnprintf(command, sizeof command, "cp %s %s",
+			    HistoryFname, jfname);
+			if (system(command)) { // XXX: A little messy, but works
+				pprintf(p, "System command in jsave_history "
+				    "failed!\n");
+				pprintf(p, "Please report this to an admin.\n");
+				fprintf(stderr, "FICS: System command failed "
+				    "in jsave_journalentry\n");
+				return;
+			}
 
-  if (HistoryFname != NULL) {
-    Game = fopen(HistoryFname, "r");
-    if (Game == NULL) {
-      pprintf(p, "History game %d not available for %s.\n", from, parray[p1].name);
-    } else {
-      sprintf(jfname, "%s/%c/%s.%c", journal_dir, name_to[0],name_to,save_spot);
-      unlink(jfname); /* necessary if cp is hard aliased to cp -i */
-      sprintf(command, "cp %s %s",HistoryFname,jfname);
-    if (system(command)) { /* A little messy, but works */
-       pprintf (p,"System command in jsave_history failed!\n");
-       pprintf (p,"Please report this to an admin.\n");
-       fprintf (stderr, "FICS: System command failed in jsave_journalentry\n");
-       return;
-       }
-    g = game_new(); /* Open a dummy game */
+			g = game_new(); // Open a dummy game
 
-    if (ReadGameAttrs(Game, filename, g) < 0) {
-      pprintf (p,"Gamefile is corrupt. Please tell an admin.\n");
-      game_free(g);
-      fclose (Game);
-      return;
-    }
-    fclose (Game);
-    if (garray[g].private) {
-      type[0] = 'p';
-    } else {
-      type[0] = ' ';
-    }
-    if (garray[g].type == TYPE_BLITZ) {
-      type[1] = 'b';
-    } else if (garray[g].type == TYPE_WILD) {
-      type[1] = 'w';
-    } else if (garray[g].type == TYPE_STAND) {
-      type[1] = 's';
-    } else {
-      if (garray[g].type == TYPE_NONSTANDARD)
-        type[1] = 'n';
-      else
-        type[1] = 'u';
-    }
-    if (garray[g].rated) {
-      type[2] = 'r';
-    } else {
-      type[2] = 'u';
-    }
-    type[3] = '\0';
+			if (ReadGameAttrs(Game, filename, g) < 0) {
+				pprintf(p, "Gamefile is corrupt. Please tell "
+				    "an admin.\n");
+				game_free(g);
+				fclose(Game);
+				return;
+			}
 
-   EndSymbol = EndSym(g);
-   addjournalitem(p, toupper(save_spot), garray[g].white_name, garray[g].white_rating,
-  garray[g].black_name,garray[g].black_rating,type,garray[g].wInitTime,garray[g].wIncrement,getECO(g),
-   End,EndSymbol, to_file);
-   game_free(g);
-   pprintf(p,"Game %s %d saved in slot %c in journal.\n",parray[p1].name, from, toupper(save_spot));
-   }
-  }
+			fclose(Game);
+
+			if (garray[g].private) {
+				type[0] = 'p';
+			} else {
+				type[0] = ' ';
+			}
+
+			if (garray[g].type == TYPE_BLITZ) {
+				type[1] = 'b';
+			} else if (garray[g].type == TYPE_WILD) {
+				type[1] = 'w';
+			} else if (garray[g].type == TYPE_STAND) {
+				type[1] = 's';
+			} else {
+				if (garray[g].type == TYPE_NONSTANDARD)
+					type[1] = 'n';
+				else
+					type[1] = 'u';
+			}
+
+			if (garray[g].rated) {
+				type[2] = 'r';
+			} else {
+				type[2] = 'u';
+			}
+
+			type[3] = '\0';
+			EndSymbol = EndSym(g);
+			addjournalitem(p, toupper(save_spot),
+			    garray[g].white_name, garray[g].white_rating,
+			    garray[g].black_name, garray[g].black_rating,
+			    type,
+			    garray[g].wInitTime,
+			    garray[g].wIncrement,
+			    getECO(g), End, EndSymbol, to_file);
+			game_free(g);
+			pprintf(p, "Game %s %d saved in slot %c in journal.\n",
+			    parray[p1].name, from, toupper(save_spot));
+		}
+	}
 }
 
 PUBLIC int
