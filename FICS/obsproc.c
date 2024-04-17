@@ -1408,58 +1408,63 @@ if (!parray[p1].registered) {
   return COM_OK;
 }
 
-PRIVATE void jsave_journalentry(int p,char save_spot,int p1,char from_spot,char* to_file)
-
+PRIVATE void
+jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 {
-  FILE *Game;
+	FILE	*Game;
+	char	*name_from = parray[p1].login;
+	char	*name_to = parray[p].login;
+	char	 BlackName[MAX_LOGIN_NAME + 1];
+	char	 WhiteName[MAX_LOGIN_NAME + 1];
+	char	 command[MAX_FILENAME_SIZE * 2 + 3];
+	char	 eco[100];
+	char	 ending[100];
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 fname2[MAX_FILENAME_SIZE];
+	char	 result[100];
+	char	 type[100];
+	int	 BlackRating;
+	int	 WhiteRating;
+	int	 i, t;
 
-  char fname[MAX_FILENAME_SIZE], fname2[MAX_FILENAME_SIZE];
-  char command[MAX_FILENAME_SIZE*2+3];
-  char* name_from = parray[p1].login;
-  char* name_to = parray[p].login;
-  char WhiteName[MAX_LOGIN_NAME + 1];
-  char BlackName[MAX_LOGIN_NAME + 1];
-  int  WhiteRating;
-  int  BlackRating;
-  int  i,t;
-  char type[100];
-  char eco[100];
-  char ending[100];
-  char result[100];
+	msnprintf(fname, sizeof fname, "%s/%c/%s.%c", journal_dir, name_from[0],
+	    name_from, from_spot);
 
-  sprintf(fname, "%s/%c/%s.%c", journal_dir, name_from[0],name_from,from_spot);
-  Game = fopen(fname, "r");
-  if (Game == NULL) {
-     pprintf(p, "Journal entry %c not available for %s.\n", toupper(from_spot), parray[p1].name);
-     return;
-     }
-  fclose (Game);
+	if ((Game = fopen(fname, "r")) == NULL) {
+		pprintf(p, "Journal entry %c not available for %s.\n",
+		    toupper(from_spot),
+		    parray[p1].name);
+		return;
+	}
 
-  sprintf(fname2, "%s/%c/%s.%c", journal_dir, name_to[0],name_to,save_spot);
-  unlink (fname2); /* necessarity if cp is hard aliased to cp -i */
-  sprintf(command, "cp %s %s",fname,fname2);
+	fclose(Game);
 
-  if (system(command)) { /* A little messy, but works */
-     pprintf (p,"System command in jsave_journalentry failed!\n");
-     pprintf (p,"Please report this to an admin.\n");
-     fprintf (stderr, "FICS: System command failed in jsave_journalentry\n");
-     return;
-     }
+	msnprintf(fname2, sizeof fname2, "%s/%c/%s.%c", journal_dir, name_to[0],
+	    name_to, save_spot);
+	unlink(fname2);
 
- sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, name_to[0],
-          name_to, STATS_JOURNAL);
+	msnprintf(command, sizeof command, "cp %s %s", fname, fname2);
+	if (system(command)) { // XXX
+		pprintf(p, "System command in jsave_journalentry failed!\n");
+		pprintf(p, "Please report this to an admin.\n");
+		fprintf(stderr, "FICS: System command failed in "
+		    "jsave_journalentry\n");
+		return;
+	}
 
- if (!journal_get_info(p,from_spot,WhiteName,&WhiteRating,
- BlackName,&BlackRating,type,&t,&i,eco,
- ending,result,fname)) {
-   return;
- }
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
+	    name_to[0], name_to, STATS_JOURNAL);
 
- addjournalitem(p, toupper(save_spot), WhiteName, WhiteRating,
-  BlackName,BlackRating,type,t,i,eco,
-  ending,result, to_file);
+	if (!journal_get_info(p, from_spot, WhiteName, &WhiteRating,
+	    BlackName, &BlackRating, type, &t, &i, eco, ending, result, fname))
+		return;
 
- pprintf(p,"Journal entry %s %c saved in slot %c in journal.\n",parray[p1].name, toupper(from_spot), toupper(save_spot));
+	addjournalitem(p, toupper(save_spot),
+	    WhiteName, WhiteRating,
+	    BlackName, BlackRating,
+	    type, t, i, eco, ending, result, to_file);
+	pprintf(p, "Journal entry %s %c saved in slot %c in journal.\n",
+	    parray[p1].name, toupper(from_spot), toupper(save_spot));
 }
 
 PUBLIC void
