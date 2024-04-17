@@ -3,7 +3,7 @@
 .\" SPDX-FileCopyrightText: Copyright 2024 Markus Uhlin
 .\" SPDX-License-Identifier: ISC
 .\"
-.Dd March 12, 2024
+.Dd April 17, 2024
 .Dt FICS_ADDPLAYER 1
 .Os
 .Sh NAME
@@ -18,5 +18,9 @@
 .Nm
 creates a registered chess player on a server that runs FICS.
 An email will be sent to the given address with the login details.
+.Sh EXAMPLES
+.Bd -literal -offset indent
+$ fics_addplayer nash "Richard V. Nash" nash@nomos.com
+.Ed
 .Sh SEE ALSO
 .Xr fics 1 , Xr makerank 1
