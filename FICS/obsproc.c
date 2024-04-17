@@ -38,6 +38,7 @@
 #include "gamedb.h"
 #include "gameproc.h"
 #include "matchproc.h"
+#include "maxxes-utils.h"
 #include "movecheck.h"
 #include "network.h"
 #include "obsproc.h"
