@@ -1534,75 +1534,89 @@ PUBLIC void jsave_history(int p,char save_spot,int p1,int from,char* to_file)
   }
 }
 
-PUBLIC int com_jsave(int p, param_list param)
+PUBLIC int
+com_jsave(int p, param_list param)
 {
-  int p1, p1conn;
-  char* to = param[0].val.word;
-  char* from;
-  char fname[MAX_FILENAME_SIZE];
+	char	*from;
+	char	*to = param[0].val.word;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	 p1, p1conn;
 
-  if (!parray[p].registered) {
-     pprintf (p,"Only registered players may keep a journal.\n");
-     return COM_OK;
-  }
+	if (!parray[p].registered) {
+		pprintf(p, "Only registered players may keep a journal.\n");
+		return COM_OK;
+	}
 
-  if ((strlen(to) != 1) || (!(isalpha(to[0])))) {
-    pprintf (p,"Journal entries are referenced by single letters.\n");
-    return COM_OK;
-  }
+	if (strlen(to) != 1 || !(isalpha(to[0]))) {
+		pprintf(p, "Journal entries are referenced by single "
+		    "letters.\n");
+		return COM_OK;
+	}
 
-  if (((to[0] - 'a' - 1) > MAX_JOURNAL) && (parray[p].adminLevel < ADMIN_ADMIN) && (!titled_player(p,parray[p].login))) {
-    pprintf (p,"Your maximum journal entry is %c\n",toupper ((char)(MAX_JOURNAL + 'A' - 1)));
-    return COM_OK;
-  }
+	if ((to[0] - 'a' - 1) > MAX_JOURNAL &&
+	    parray[p].adminLevel < ADMIN_ADMIN &&
+	    !titled_player(p,parray[p].login)) {
+		pprintf(p, "Your maximum journal entry is %c\n",
+		    toupper((char)(MAX_JOURNAL + 'A' - 1)));
+		return COM_OK;
+	}
 
-  if (!FindPlayer(p, param[1].val.word, &p1, &p1conn))
-    return COM_OK;
+	if (!FindPlayer(p, param[1].val.word, &p1, &p1conn))
+		return COM_OK;
 
-  if (param[2].type == TYPE_INT) {
+	if (param[2].type == TYPE_INT) {
+		// grab from a history
+		msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+		    stats_dir, parray[p].login[0], parray[p].login,
+		    STATS_JOURNAL);
+		jsave_history(p, to[0], p1, param[2].val.integer, fname);
+	} else {
+		from = param[2].val.word;
 
-  /* grab from a history */
-    sprintf (fname,"%s/player_data/%c/%s.%s",stats_dir,parray[p].login[0],parray[p].login, STATS_JOURNAL);
-    jsave_history(p, to[0], p1, param[2].val.integer,fname);
+		if (strlen(from) != 1 || !(isalpha(from[0]))) {
+			pprintf(p, "Journal entries are referenced by single "
+			    "letters.\n");
+			if (!p1conn)
+				player_remove(p1);
+			return COM_OK;
+		}
 
-  } else {
+		if (parray[p1].jprivate &&
+		    parray[p].adminLevel < ADMIN_ADMIN &&
+		    p != p1) {
+			pprintf(p, "Sorry, the journal from which you are "
+			    "trying to fetch is private.\n");
+			if (!p1conn)
+				player_remove(p1);
+			return COM_OK;
+		}
 
-  from = param[2].val.word;
+		if ((to[0] - 'a' - 1) > MAX_JOURNAL &&
+		    parray[p1].adminLevel < ADMIN_ADMIN &&
+		    !titled_player(p, parray[p1].login)) {
+			pprintf(p, "%s's maximum journal entry is %c\n",
+			    parray[p1].name,
+			    toupper((char)(MAX_JOURNAL + 'A' - 1)));
 
-  if ((strlen(from) != 1) || (!(isalpha(from[0])))) {
-    pprintf (p,"Journal entries are referenced by single letters.\n");
-    if (!p1conn)
-      player_remove(p1);
-    return COM_OK;
-    }
+			if (!p1conn)
+				player_remove(p1);
+			return COM_OK;
+		}
 
-  if ((parray[p1].jprivate) && (parray[p].adminLevel < ADMIN_ADMIN) && (p != p1)) {
-    pprintf (p,"Sorry, the journal from which you are trying to fetch is private.\n");
+		if ((p == p1) && (to[0] == from[0])) {
+			pprintf(p, "Source and destination entries are the "
+			    "same.\n");
+			return COM_OK;
+		}
 
-    if (!p1conn)
-       player_remove(p1);
-    return COM_OK;
-    }
+		// grab from a journal
+		msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+		    stats_dir, parray[p].login[0], parray[p].login,
+		    STATS_JOURNAL);
+		jsave_journalentry(p, to[0], p1, from[0], fname);
+	}
 
-  if (((to[0] - 'a' - 1) > MAX_JOURNAL) && (parray[p1].adminLevel < ADMIN_ADMIN) && (!titled_player(p,parray[p1].login))) {
-    pprintf (p,"%s's maximum journal entry is %c\n",parray[p1].name,toupper((char)(MAX_JOURNAL + 'A' - 1)));
-    if (!p1conn)
-       player_remove(p1);
-    return COM_OK;
-  }
-  if (( p == p1) && (to[0] == from [0])) {
-    pprintf (p,"Source and destination entries are the same.\n");
-    return COM_OK;
-  }
-
-  /* grab from a journal */
-
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir, parray[p].login[0],
-          parray[p].login, STATS_JOURNAL);
-  jsave_journalentry(p,to[0],p1, from[0], fname);
-
-  }
-  if (!p1conn)
-     player_remove(p1);
-  return COM_OK;
+	if (!p1conn)
+		player_remove(p1);
+	return COM_OK;
 }
