@@ -1252,60 +1252,73 @@ PUBLIC int com_forward(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_backward(int p, param_list param)
+PUBLIC int
+com_backward(int p, param_list param)
 {
-  int nHalfMoves = 1;
-  int g, i;
-  int p1;
-  unsigned now;
+	int		g, i;
+	int		nHalfMoves = 1;
+	int		p1;
+	unsigned int	now;
 
-  if (!((parray[p].game >=0) &&(garray[parray[p].game].status == GAME_EXAMINE))) {
-    pprintf(p, "You are not examining any games.\n");
-    return COM_OK;
-  }
-  g = parray[p].game;
-  if (param[0].type == TYPE_INT) {
-    nHalfMoves = param[0].val.integer;
-  }
-  if (garray[g].numHalfMoves != 0) {
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p1].status != PLAYER_PROMPT)
-	continue;
-      if (player_is_observe(p1, g) || parray[p1].game == g) {
-	pprintf(p1, "%s backs up %d move%s.\n",
-		parray[p].name, nHalfMoves, (nHalfMoves == 1) ? "" : "s");
-      }
-    }
-  }
-  for (i = 0; i < nHalfMoves; i++) {
-    if (backup_move(g, REL_EXAMINE) != MOVE_OK) {
-      for (p1 = 0; p1 < p_num; p1++) {
-	if (parray[p1].status != PLAYER_PROMPT)
-	  continue;
-	if (player_is_observe(p1, g) || parray[p1].game == g) {
-	  pprintf(p1, "Beginning of game.\n");
+	if (!(parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE)) {
+		pprintf(p, "You are not examining any games.\n");
+		return COM_OK;
 	}
-      }
 
-      break;
-    }
-  }
-  if (garray[g].numHalfMoves < garray[g].revertHalfMove) {
-    garray[g].revertHalfMove = garray[g].numHalfMoves;
-  }
-  /* roll back time */
-  if (garray[g].game_state.onMove == WHITE) {
-    garray[g].wTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-  } else {
-    garray[g].bTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-  }
-  now = tenth_secs();
-  if (garray[g].numHalfMoves == 0)
-    garray[g].timeOfStart = now;
-  garray[g].lastMoveTime = now;
-  garray[g].lastDecTime = now;
-  send_boards(g);
-  return COM_OK;
+	g = parray[p].game;
+
+	if (param[0].type == TYPE_INT)
+		nHalfMoves = param[0].val.integer;
+
+	if (garray[g].numHalfMoves != 0) {
+		for (p1 = 0; p1 < p_num; p1++) {
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+			if (player_is_observe(p1, g) || parray[p1].game == g) {
+				pprintf(p1, "%s backs up %d move%s.\n",
+				    parray[p].name,
+				    nHalfMoves,
+				    (nHalfMoves == 1 ? "" : "s"));
+			}
+		}
+	}
+
+	for (i = 0; i < nHalfMoves; i++) {
+		if (backup_move(g, REL_EXAMINE) != MOVE_OK) {
+			for (p1 = 0; p1 < p_num; p1++) {
+				if (parray[p1].status != PLAYER_PROMPT)
+					continue;
+				if (player_is_observe(p1, g) ||
+				    parray[p1].game == g)
+					pprintf(p1, "Beginning of game.\n");
+			}
+
+			break;
+		}
+	}
+
+	if (garray[g].numHalfMoves < garray[g].revertHalfMove)
+		garray[g].revertHalfMove = garray[g].numHalfMoves;
+
+	// roll back time
+	if (garray[g].game_state.onMove == WHITE) {
+		garray[g].wTime += (garray[g].lastDecTime -
+				    garray[g].lastMoveTime);
+	} else {
+		garray[g].bTime += (garray[g].lastDecTime -
+				    garray[g].lastMoveTime);
+	}
+
+	now = tenth_secs();
+
+	if (garray[g].numHalfMoves == 0)
+		garray[g].timeOfStart = now;
+	garray[g].lastMoveTime = now;
+	garray[g].lastDecTime = now;
+
+	send_boards(g);
+	return COM_OK;
 }
 
 PUBLIC int
