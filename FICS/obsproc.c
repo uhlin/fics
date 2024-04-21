@@ -1115,18 +1115,18 @@ stored_mail_moves(int p, int mail, param_list param)
 		game_remove(g);
 }
 
-/* Tidied up a bit but still messy */
-
-PUBLIC int com_mailstored(int p, param_list param)
+PUBLIC int
+com_mailstored(int p, param_list param)
 {
-  stored_mail_moves(p, 1, param);
-  return COM_OK;
+	stored_mail_moves(p, 1, param);
+	return COM_OK;
 }
 
-PUBLIC int com_smoves(int p, param_list param)
+PUBLIC int
+com_smoves(int p, param_list param)
 {
-  stored_mail_moves(p, 0, param);
-  return COM_OK;
+	stored_mail_moves(p, 0, param);
+	return COM_OK;
 }
 
 PUBLIC int
