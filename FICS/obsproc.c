@@ -1129,53 +1129,69 @@ PUBLIC int com_smoves(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_sposition(int p, param_list param)
+PUBLIC int
+com_sposition(int p, param_list param)
 {
-  int wp, wconnected, bp, bconnected, confused = 0;
-  int g;
+	int	g;
+	int	wp, wconnected, bp, bconnected, confused = 0;
 
-  if (!FindPlayer(p, param[0].val.word, &wp, &wconnected))
-    return (COM_OK);
-  if (!FindPlayer(p, param[1].val.word, &bp, &bconnected)) {
-    if (!wconnected)
-      player_remove(wp);
-    return (COM_OK);
-  }
+	if (!FindPlayer(p, param[0].val.word, &wp, &wconnected))
+		return (COM_OK);
+	if (!FindPlayer(p, param[1].val.word, &bp, &bconnected)) {
+		if (!wconnected)
+			player_remove(wp);
+		return (COM_OK);
+	}
 
-  g = game_new();
-  if (game_read(g, wp, bp) < 0) {	/* if no game white-black, */
-    if (game_read(g, bp, wp) < 0) {	/* look for black-white */
-      confused = 1;
-      pprintf(p, "There is no stored game %s vs. %s\n", parray[wp].name, parray[bp].name);
-    } else {
-      int tmp;
-      tmp = wp;
-      wp = bp;
-      bp = tmp;
-      tmp = wconnected;
-      wconnected = bconnected;
-      bconnected = tmp;
-    }
-  }
-  if (!confused) {
-    if ((wp != p) && (bp != p) && (garray[g].private) && (parray[p].adminLevel < ADMIN_ADMIN)) {
-      pprintf(p, "Sorry, that is a private game.\n");
-    } else {
-      garray[g].white = wp;
-      garray[g].black = bp;
-      garray[g].startTime = tenth_secs();
-      garray[g].lastMoveTime = garray[g].startTime;
-      garray[g].lastDecTime = garray[g].startTime;
-      pprintf(p, "Position of stored game %s vs. %s\n", parray[wp].name, parray[bp].name);
-      send_board_to(g, p);
-    }
-  }
-  game_remove(g);
-  if (!wconnected)
-    player_remove(wp);
-  if (!bconnected)
-    player_remove(bp);
-  return COM_OK;
+	g = game_new();
+
+	if (game_read(g, wp, bp) < 0) {		// if no game white-black,
+		if (game_read(g, bp, wp) < 0) {	// look for black-white
+			confused = 1;
+
+			pprintf(p, "There is no stored game %s vs. %s\n",
+			    parray[wp].name,
+			    parray[bp].name);
+		} else {
+			int	tmp;
+
+			tmp		= wp;
+			wp		= bp;
+			bp		= tmp;
+			tmp		= wconnected;
+			wconnected	= bconnected;
+			bconnected	= tmp;
+		}
+	}
+
+	if (!confused) {
+		if ((wp != p) &&
+		    (bp != p) &&
+		    (garray[g].private) &&
+		    (parray[p].adminLevel < ADMIN_ADMIN)) {
+			pprintf(p, "Sorry, that is a private game.\n");
+		} else {
+			garray[g].white		= wp;
+			garray[g].black		= bp;
+			garray[g].startTime	= tenth_secs();
+			garray[g].lastMoveTime	= garray[g].startTime;
+			garray[g].lastDecTime	= garray[g].startTime;
+
+			pprintf(p, "Position of stored game %s vs. %s\n",
+			    parray[wp].name,
+			    parray[bp].name);
+
+			send_board_to(g, p);
+		}
+	}
+
+	game_remove(g);
+
+	if (!wconnected)
+		player_remove(wp);
+	if (!bconnected)
+		player_remove(bp);
+	return COM_OK;
 }
 
 PUBLIC int
