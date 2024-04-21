@@ -1178,78 +1178,111 @@ PUBLIC int com_sposition(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_forward(int p, param_list param)
+PUBLIC int
+com_forward(int p, param_list param)
 {
-  int nHalfMoves = 1;
-  int g, i;
-  int p1;
-  unsigned now;
+	int		g, i;
+	int		nHalfMoves = 1;
+	int		p1;
+	unsigned int	now;
 
-  if (!((parray[p].game >=0) &&(garray[parray[p].game].status == GAME_EXAMINE))) {
-    pprintf(p, "You are not examining any games.\n");
-    return COM_OK;
-  }
-  g = parray[p].game;
-  if (!strcmp(garray[g].white_name, garray[g].black_name)) {
-    pprintf(p, "You cannot go forward; no moves are stored.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_INT) {
-    nHalfMoves = param[0].val.integer;
-  }
-  if (garray[g].numHalfMoves > garray[g].revertHalfMove) {
-    pprintf(p, "No more moves.\n");
-    return COM_OK;
-  }
-  if (garray[g].numHalfMoves < garray[g].totalHalfMoves) {
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p1].status != PLAYER_PROMPT)
-	continue;
-      if (player_is_observe(p1, g) || parray[p1].game == g) {
-	pprintf(p1, "%s goes forward %d move%s.\n",
-		parray[p].name, nHalfMoves, (nHalfMoves == 1) ? "" : "s");
-      }
-    }
-  }
-  for (i = 0; i < nHalfMoves; i++) {
-    if (garray[g].numHalfMoves < garray[g].totalHalfMoves) {
-      execute_move(&garray[g].game_state, &garray[g].moveList[garray[g].numHalfMoves], 1);
-      if (garray[g].numHalfMoves + 1 > garray[g].examMoveListSize) {
-	garray[g].examMoveListSize += 20;	/* Allocate 20 moves at a
-						   time */
-	if (!garray[g].examMoveList) {
-	  garray[g].examMoveList = (move_t *) rmalloc(sizeof(move_t) * garray[g].examMoveListSize);
+	if (!(parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE)) {
+		pprintf(p, "You are not examining any games.\n");
+		return COM_OK;
+	}
+
+	g = parray[p].game;
+
+	if (!strcmp(garray[g].white_name, garray[g].black_name)) {
+		pprintf(p, "You cannot go forward; no moves are stored.\n");
+		return COM_OK;
+	}
+
+	if (param[0].type == TYPE_INT)
+		nHalfMoves = param[0].val.integer;
+
+	if (garray[g].numHalfMoves > garray[g].revertHalfMove) {
+		pprintf(p, "No more moves.\n");
+		return COM_OK;
+	}
+
+	if (garray[g].numHalfMoves < garray[g].totalHalfMoves) {
+		for (p1 = 0; p1 < p_num; p1++) {
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+			if (player_is_observe(p1, g) || parray[p1].game == g) {
+				pprintf(p1, "%s goes forward %d move%s.\n",
+				    parray[p].name,
+				    nHalfMoves,
+				    (nHalfMoves == 1 ? "" : "s"));
+			}
+		}
+	}
+
+	for (i = 0; i < nHalfMoves; i++) {
+		if (garray[g].numHalfMoves < garray[g].totalHalfMoves) {
+			execute_move(&garray[g].game_state,
+			    &garray[g].moveList[garray[g].numHalfMoves], 1);
+
+			if (garray[g].numHalfMoves + 1 >
+			    garray[g].examMoveListSize) {
+				// Allocate 20 moves at a time.
+				garray[g].examMoveListSize += 20;
+
+				if (!garray[g].examMoveList) {
+					garray[g].examMoveList =
+					    reallocarray(NULL,
+					    sizeof(move_t),
+					    garray[g].examMoveListSize);
+					if (garray[g].examMoveList == NULL)
+						err(1, "%s", __func__);
+					malloc_count++;
+				} else {
+					garray[g].examMoveList =
+					    reallocarray(garray[g].examMoveList,
+					    sizeof(move_t),
+					    garray[g].examMoveListSize);
+					if (garray[g].examMoveList == NULL)
+						err(1, "%s", __func__);
+				}
+			}
+
+			garray[g].examMoveList[garray[g].numHalfMoves] =
+			    garray[g].moveList[garray[g].numHalfMoves];
+			garray[g].revertHalfMove++;
+			garray[g].numHalfMoves++;
+		} else {
+			for (p1 = 0; p1 < p_num; p1++) {
+				if (parray[p1].status != PLAYER_PROMPT)
+					continue;
+				if (player_is_observe(p1, g) ||
+				    parray[p1].game == g)
+					pprintf(p1, "End of game.\n");
+			}
+
+			break;
+		}
+	}
+
+	// roll back time
+	if (garray[g].game_state.onMove == WHITE) {
+		garray[g].wTime += (garray[g].lastDecTime -
+				    garray[g].lastMoveTime);
 	} else {
-	  garray[g].examMoveList = (move_t *) rrealloc(garray[g].examMoveList, sizeof(move_t) * garray[g].examMoveListSize);
+		garray[g].bTime += (garray[g].lastDecTime -
+				    garray[g].lastMoveTime);
 	}
-      }
-      garray[g].examMoveList[garray[g].numHalfMoves] = garray[g].moveList[garray[g].numHalfMoves];
-      garray[g].revertHalfMove++;
-      garray[g].numHalfMoves++;
-    } else {
-      for (p1 = 0; p1 < p_num; p1++) {
-	if (parray[p1].status != PLAYER_PROMPT)
-	  continue;
-	if (player_is_observe(p1, g) || parray[p1].game == g) {
-	  pprintf(p1, "End of game.\n");
-	}
-      }
-      break;
-    }
-  }
-  /* roll back time */
-  if (garray[g].game_state.onMove == WHITE) {
-    garray[g].wTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-  } else {
-    garray[g].bTime += (garray[g].lastDecTime - garray[g].lastMoveTime);
-  }
-  now = tenth_secs();
-  if (garray[g].numHalfMoves == 0)
-    garray[g].timeOfStart = now;
-  garray[g].lastMoveTime = now;
-  garray[g].lastDecTime = now;
-  send_boards(g);
-  return COM_OK;
+
+	now = tenth_secs();
+
+	if (garray[g].numHalfMoves == 0)
+		garray[g].timeOfStart = now;
+	garray[g].lastMoveTime = now;
+	garray[g].lastDecTime = now;
+
+	send_boards(g);
+	return COM_OK;
 }
 
 PUBLIC int
