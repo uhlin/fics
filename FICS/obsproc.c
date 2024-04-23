@@ -778,36 +778,39 @@ PRIVATE char *FindHistory(int p, int p1, int game)
   return(fileName);
 }
 
-/* I want to know how game ended */
-
-PRIVATE char *FindHistory2(int p, int p1,int game,char* End)
+PRIVATE char *
+FindHistory2(int p, int p1, int game, char *End)
 {
-  FILE *fpHist;
-  static char fileName[MAX_FILENAME_SIZE];
-  int index;
-  long when;
+	FILE		*fpHist;
+	int		 index;
+	long int	 when;
+	static char	 fileName[MAX_FILENAME_SIZE];
 
-  sprintf(fileName, "%s/player_data/%c/%s.%s", stats_dir,
-          parray[p1].login[0], parray[p1].login, STATS_GAMES);
-  fpHist = fopen(fileName, "r");
-  if (fpHist == NULL) {
-    pprintf(p, "No games in history for %s.\n", parray[p1].name);
-    return(NULL);
-  }
-  do {
-    fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d %*s %s %ld",
-	   &index, End, &when);
-  } while (!feof(fpHist) && index != game);
+	msnprintf(fileName, sizeof fileName, "%s/player_data/%c/%s.%s",
+	    stats_dir, parray[p1].login[0], parray[p1].login, STATS_GAMES);
 
-  if (feof(fpHist)) {
-    pprintf(p, "There is no history game %d for %s.\n", game, parray[p1].name);
-    fclose(fpHist);
-    return(NULL);
-  }
-  fclose(fpHist);
+	if ((fpHist = fopen(fileName, "r")) == NULL) {
+		pprintf(p, "No games in history for %s.\n", parray[p1].name);
+		return NULL;
+	}
 
-  sprintf(fileName, "%s/%ld/%ld", hist_dir, when % 100, when);
-  return(fileName);
+	do {
+		fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d "
+		    "%*s %s %ld", &index, End, &when);
+	} while (!feof(fpHist) && index != game);
+
+	if (feof(fpHist)) {
+		pprintf(p, "There is no history game %d for %s.\n", game,
+		    parray[p1].name);
+		fclose(fpHist);
+		return NULL;
+	}
+
+	fclose(fpHist);
+
+	msnprintf(fileName, sizeof fileName, "%s/%ld/%ld", hist_dir,
+	    (when % 100), when);
+	return (&fileName[0]);
 }
 
 PRIVATE void
