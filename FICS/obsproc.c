@@ -907,45 +907,53 @@ PUBLIC int com_examine(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_stored(int p, param_list param)
+PUBLIC int
+com_stored(int p, param_list param)
 {
-  DIR *dirp;
+	DIR		*dirp;
+	char		 dname[MAX_FILENAME_SIZE];
+	int		 p1, connected;
 #ifdef USE_DIRENT
-  struct dirent *dp;
+	struct dirent	*dp;
 #else
-  struct direct *dp;
+	struct direct	*dp;
 #endif
-  int p1, connected;
-  char dname[MAX_FILENAME_SIZE];
 
-  if (param[0].type == TYPE_WORD) {
-    if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-      return COM_OK;
-  } else {
-      p1 = p;
-      connected = 1;
-  }
+	if (param[0].type == TYPE_WORD) {
+		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+			return COM_OK;
+	} else {
+		p1 = p;
+		connected = 1;
+	}
 
-  sprintf(dname, "%s/%c", adj_dir, parray[p1].login[0]);
-  dirp = opendir(dname);
-  if (!dirp) {
-    pprintf(p, "Player %s has no games stored.\n", parray[p1].name);
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  pprintf(p, "Stored games for %s:\n", parray[p1].name);
-  for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
-    if (file_has_pname(dp->d_name, parray[p1].login)) {
-      pprintf(p, "   %s vs. %s\n", file_wplayer(dp->d_name), file_bplayer(dp->d_name));
-    }
-  }
+	sprintf(dname, "%s/%c", adj_dir, parray[p1].login[0]);
+	dirp = opendir(dname);
 
-  closedir(dirp);
-  pprintf(p, "\n");
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (!dirp) {
+		pprintf(p, "Player %s has no games stored.\n", parray[p1].name);
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	pprintf(p, "Stored games for %s:\n", parray[p1].name);
+
+	for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
+		if (file_has_pname(dp->d_name, parray[p1].login)) {
+			pprintf(p, "   %s vs. %s\n",
+			    file_wplayer(dp->d_name),
+			    file_bplayer(dp->d_name));
+		}
+	}
+
+	closedir(dirp);
+	pprintf(p, "\n");
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PRIVATE void
