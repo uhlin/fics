@@ -854,57 +854,71 @@ PRIVATE void ExamineJournal(int p,int p1,char slot)
   return;
 }
 
-PUBLIC int com_examine(int p, param_list param)
+PUBLIC int
+com_examine(int p, param_list param)
 {
-  int p1, p2 = p, p1conn, p2conn = 1;
-  char* param2string;
-  char fname[MAX_FILENAME_SIZE];
+	char	*param2string;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	 p1, p2 = p, p1conn, p2conn = 1;
 
-  if ((parray[p].game >=0) &&(garray[parray[p].game].status == GAME_EXAMINE)) {
-    pprintf(p, "You are already examining a game.\n");
-  } else if (parray[p].game >=0) {
-    pprintf(p, "You are playing a game.\n");
-  } else if (param[0].type == TYPE_NULL) {
-    ExamineScratch(p, param);
-  } else if (param[0].type == TYPE_WORD) {
-      if (param[1].type == TYPE_WORD) {
-        sprintf(fname, "%s/%s/%s", board_dir, param[0].val.word, param[1].val.word);
-        if (file_exists(fname)) {
-          ExamineScratch(p, param);
-          return COM_OK;
-        }
-      }
-      if (!FindPlayer(p, param[0].val.word, &p1, &p1conn))
-        return COM_OK;
+	if (parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE) {
+		pprintf(p, "You are already examining a game.\n");
+	} else if (parray[p].game >=0) {
+		pprintf(p, "You are playing a game.\n");
+	} else if (param[0].type == TYPE_NULL) {
+		ExamineScratch(p, param);
+	} else if (param[0].type == TYPE_WORD) {
+		if (param[1].type == TYPE_WORD) {
+			msnprintf(fname, sizeof fname, "%s/%s/%s", board_dir,
+			    param[0].val.word, param[1].val.word);
 
-    if (param[1].type == TYPE_INT)
-      ExamineHistory(p, p1, param[1].val.integer);
-    else {
-      if (param[1].type == TYPE_WORD) {
+			if (file_exists(fname)) {
+				ExamineScratch(p, param);
+				return COM_OK;
+			}
+		}
 
-        /* Lets check the journal */
-        param2string = param[1].val.word;
-        if ((strlen(param2string) == 1) && (isalpha(param2string[0]))) {
-          ExamineJournal(p,p1,param2string[0]);
-          if (!p1conn)
-            player_remove(p1);
-          return COM_OK;
-        } else {
-          if (!FindPlayer(p, param[1].val.word, &p2, &p2conn)) {
-            if (!p1conn)
-              player_remove(p1);
-            return COM_OK;
-          }
-        }
-      }
-      ExamineAdjourned(p, p1, p2);
-      if (!p2conn)
-       player_remove(p2);
-    }
-    if (!p1conn)
-     player_remove(p1);
-  }
-  return COM_OK;
+		if (!FindPlayer(p, param[0].val.word, &p1, &p1conn))
+			return COM_OK;
+
+		if (param[1].type == TYPE_INT)
+			ExamineHistory(p, p1, param[1].val.integer);
+		else {
+			if (param[1].type == TYPE_WORD) {
+				/*
+				 * Lets check the journal
+				 */
+				param2string = param[1].val.word;
+
+				if (strlen(param2string) == 1 &&
+				    isalpha(param2string[0])) {
+					ExamineJournal(p, p1, param2string[0]);
+
+					if (!p1conn)
+						player_remove(p1);
+					return COM_OK;
+				} else {
+					if (!FindPlayer(p, param[1].val.word,
+					    &p2, &p2conn)) {
+						if (!p1conn)
+							player_remove(p1);
+						return COM_OK;
+					}
+				}
+			}
+
+			ExamineAdjourned(p, p1, p2);
+
+			if (!p2conn)
+				player_remove(p2);
+		}
+
+		if (!p1conn)
+			player_remove(p1);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
