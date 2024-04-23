@@ -827,31 +827,40 @@ PRIVATE void ExamineHistory(int p, int p1, int game)
   return;
 }
 
-PRIVATE void ExamineJournal(int p,int p1,char slot)
+PRIVATE void
+ExamineJournal(int p, int p1, char slot)
 {
-  char fname[MAX_FILENAME_SIZE];
-  char* name_from = parray[p1].login;
-  FILE *fpGame;
+	FILE	*fpGame;
+	char	*name_from = parray[p1].login;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 
-  if ((parray[p1].jprivate) && (p != p1) && (parray[p].adminLevel < ADMIN_ADMIN)) {
-    pprintf (p,"Sorry, this journal is private.\n");
-    return;
-  }
-  if (((slot - 'a' - 1) > MAX_JOURNAL) && (parray[p1].adminLevel < ADMIN_ADMIN)
-&& (!titled_player(p,parray[p1].login))) {
-    pprintf (p,"%s's maximum journal entry is %c\n",parray[p1].name,toupper((char)(MAX_JOURNAL + 'A' - 1)));
-    return;
-  }
+	if ((parray[p1].jprivate) &&
+	    (p != p1) &&
+	    (parray[p].adminLevel < ADMIN_ADMIN)) {
+		pprintf(p, "Sorry, this journal is private.\n");
+		return;
+	}
 
-  sprintf(fname, "%s/%c/%s.%c", journal_dir, name_from[0],name_from,slot);
-  fpGame = fopen(fname, "r");
-    if (fpGame == NULL) {
-      pprintf(p, "Journal entry %c is not available for %s.\n", toupper (slot), parray[p1].name);
-    } else {
-      ExamineStored(fpGame, p, fname);
-      fclose(fpGame);
-    }
-  return;
+	if (((slot - 'a' - 1) > MAX_JOURNAL) &&
+	    (parray[p1].adminLevel < ADMIN_ADMIN) &&
+	    (!titled_player(p,parray[p1].login))) {
+		pprintf(p, "%s's maximum journal entry is %c\n",
+		    parray[p1].name,
+		    toupper((char)(MAX_JOURNAL + 'A' - 1)));
+		return;
+	}
+
+	msnprintf(fname, sizeof fname, "%s/%c/%s.%c", journal_dir, name_from[0],
+	    name_from, slot);
+
+	if ((fpGame = fopen(fname, "r")) == NULL) {
+		pprintf(p, "Journal entry %c is not available for %s.\n",
+		    toupper(slot),
+		    parray[p1].name);
+	} else {
+		ExamineStored(fpGame, p, fname);
+		fclose(fpGame);
+	}
 }
 
 PUBLIC int
