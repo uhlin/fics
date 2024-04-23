@@ -810,21 +810,21 @@ PRIVATE char *FindHistory2(int p, int p1,int game,char* End)
   return(fileName);
 }
 
-PRIVATE void ExamineHistory(int p, int p1, int game)
+PRIVATE void
+ExamineHistory(int p, int p1, int game)
 {
-  char *fileName;
+	FILE	*fpGame;
+	char	*fileName;
 
-  fileName = FindHistory(p, p1, game);
-  if (fileName != NULL) {
-    FILE *fpGame = fopen(fileName, "r");
-    if (fpGame == NULL) {
-      pprintf(p, "History game %d not available for %s.\n", game, parray[p1].name);
-    } else {
-      ExamineStored(fpGame, p, fileName);
-      fclose(fpGame);
-    }
-  }
-  return;
+	if ((fileName = FindHistory(p, p1, game)) != NULL) {
+		if ((fpGame = fopen(fileName, "r")) == NULL) {
+			pprintf(p, "History game %d not available for %s.\n",
+			    game, parray[p1].name);
+		} else {
+			ExamineStored(fpGame, p, fileName);
+			fclose(fpGame);
+		}
+	}
 }
 
 PRIVATE void
