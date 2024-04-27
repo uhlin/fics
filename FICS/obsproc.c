@@ -549,14 +549,16 @@ PRIVATE int old_mail_moves(int p,int mail, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_oldmoves(int p, param_list param)
+PUBLIC int
+com_oldmoves(int p, param_list param)
 {
-  return old_mail_moves(p , 0, param);
+	return old_mail_moves(p, 0, param);
 }
 
-PUBLIC int com_mailoldmoves(int p, param_list param)
+PUBLIC int
+com_mailoldmoves(int p, param_list param)
 {
-  return old_mail_moves(p , 1, param);
+	return old_mail_moves(p, 1, param);
 }
 
 PUBLIC void
