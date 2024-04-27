@@ -707,45 +707,62 @@ ExamineStored(FILE *fp, int p, char *filename)
 	return g;
 }
 
-PRIVATE void ExamineAdjourned(int p, int p1, int p2)
+PRIVATE void
+ExamineAdjourned(int p, int p1, int p2)
 {
-  FILE *fp;
-  char filename[1024];
-  char *p1Login, *p2Login;
-  int g;
+	FILE	*fp;
+	char	*p1Login, *p2Login;
+	char	 filename[1024] = { '\0' };
+	int	 g;
 
-  p1Login = parray[p1].login;
-  p2Login = parray[p2].login;
+	p1Login = parray[p1].login;
+	p2Login = parray[p2].login;
 
-  sprintf(filename, "%s/%c/%s-%s", adj_dir, *p1Login, p1Login, p2Login);
-  fp = fopen(filename, "r");
-  if (!fp) {
-    sprintf(filename, "%s/%c/%s-%s", adj_dir, *p2Login, p1Login, p2Login);
-    fp = fopen(filename, "r");
-    if (!fp) {
-      sprintf(filename, "%s/%c/%s-%s", adj_dir, *p2Login, p2Login, p1Login);
-      fp = fopen(filename, "r");
-      if (!fp) {
-	sprintf(filename, "%s/%c/%s-%s", adj_dir, *p1Login, p2Login, p1Login);
+	(void)snprintf(filename, sizeof filename, "%s/%c/%s-%s",
+	    adj_dir, *p1Login, p1Login, p2Login);
 	fp = fopen(filename, "r");
-	if (!fp) {
-	  pprintf(p, "No stored game between \"%s\" and \"%s\".\n",
-		  parray[p1].name, parray[p2].name);
-	  return;
-	}
-      }
-    }
-  }
-  g = ExamineStored(fp, p, filename);
-  fclose(fp);
 
-  if (g >= 0) {
-    if (garray[g].white_name[0] == '\0')
-      strcpy(garray[g].white_name, p1Login);
-    if (garray[g].black_name[0] == '\0')
-      strcpy(garray[g].black_name, p2Login);
-  }
-  return;
+	if (!fp) {
+		(void)snprintf(filename, sizeof filename, "%s/%c/%s-%s",
+		    adj_dir, *p2Login, p1Login, p2Login);
+		fp = fopen(filename, "r");
+
+		if (!fp) {
+			(void)snprintf(filename, sizeof filename,
+			    "%s/%c/%s-%s",
+			    adj_dir, *p2Login, p2Login, p1Login);
+			fp = fopen(filename, "r");
+
+			if (!fp) {
+				(void)snprintf(filename, sizeof filename,
+				    "%s/%c/%s-%s",
+				    adj_dir, *p1Login, p2Login, p1Login);
+				fp = fopen(filename, "r");
+
+				if (!fp) {
+					pprintf(p, "No stored game between "
+					    "\"%s\" and \"%s\".\n",
+					    parray[p1].name,
+					    parray[p2].name);
+					return;
+				}
+			}
+		}
+	}
+
+	g = ExamineStored(fp, p, filename);
+	fclose(fp);
+
+	if (g >= 0) {
+		if (garray[g].white_name[0] == '\0') {
+			mstrlcpy(garray[g].white_name, p1Login,
+			    sizeof(garray[g].white_name));
+		}
+		if (garray[g].black_name[0] == '\0') {
+			mstrlcpy(garray[g].black_name, p2Login,
+			    sizeof(garray[g].black_name));
+		}
+	}
 }
 
 PRIVATE char *
