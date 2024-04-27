@@ -458,44 +458,61 @@ PUBLIC int com_moves(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_mailmoves(int p, param_list param)
+PUBLIC int
+com_mailmoves(int p, param_list param)
 {
-  int g;
-  int p1;
-  char subj[81];
+	char	subj[81] = { '\0' };
+	int	g;
+	int	p1;
 
-  if (!parray[p].registered) {
-    pprintf (p,"Unregistered players cannot use mailmoves.\n");
-    return COM_OK;
-  }
+	if (!parray[p].registered) {
+		pprintf(p, "Unregistered players cannot use mailmoves.\n");
+		return COM_OK;
+	}
 
-  if (param[0].type == TYPE_NULL) {
-    if (parray[p].game >=0) {
-      g = parray[p].game;
-    } else {
-      pprintf(p, "You are neither playing, observing nor examining a game.\n");
-      return COM_OK;
-    }
-  } else {
-    g = GameNumFromParam(p, &p1, &param[0]);
-    if (g < 0)
-      return COM_OK;
-  }
-  if ((g < 0) || (g >= g_num) || ((garray[g].status != GAME_ACTIVE) && (garray[g].status != GAME_EXAMINE))) {
-    pprintf(p, "There is no such game.\n");
-    return COM_OK;
-  }
-  if ((garray[g].white != p) && (garray[g].black != p) && (garray[g].private) && (parray[p].adminLevel < ADMIN_ADMIN)) {
-    pprintf(p, "Sorry, that is a private game.\n");
-    return COM_OK;
-  }
-  sprintf(subj, "FICS game report %s vs %s", garray[g].white_name, garray[g].black_name);
-  if (mail_string_to_user(p, subj, movesToString(g, parray[p].pgn))) {
-    pprintf(p, "Moves NOT mailed, perhaps your address is incorrect.\n");
-  } else {
-    pprintf(p, "Moves mailed.\n");
-  }
-  return COM_OK;
+	if (param[0].type == TYPE_NULL) {
+		if (parray[p].game >= 0) {
+			g = parray[p].game;
+		} else {
+			pprintf(p, "You are neither playing, observing nor "
+			    "examining a game.\n");
+			return COM_OK;
+		}
+	} else {
+		g = GameNumFromParam(p, &p1, &param[0]);
+
+		if (g < 0)
+			return COM_OK;
+	}
+
+	if ((g < 0) ||
+	    (g >= g_num) ||
+	    ((garray[g].status != GAME_ACTIVE) &&
+	    (garray[g].status != GAME_EXAMINE))) {
+		pprintf(p, "There is no such game.\n");
+		return COM_OK;
+	}
+
+	if ((garray[g].white != p) &&
+	    (garray[g].black != p) &&
+	    (garray[g].private) &&
+	    (parray[p].adminLevel < ADMIN_ADMIN)) {
+		pprintf(p, "Sorry, that is a private game.\n");
+		return COM_OK;
+	}
+
+	msnprintf(subj, sizeof subj, "FICS game report %s vs %s",
+	    garray[g].white_name,
+	    garray[g].black_name);
+
+	if (mail_string_to_user(p, subj, movesToString(g, parray[p].pgn))) {
+		pprintf(p, "Moves NOT mailed, perhaps your address is "
+		    "incorrect.\n");
+	} else {
+		pprintf(p, "Moves mailed.\n");
+	}
+
+	return COM_OK;
 }
 
 PRIVATE int
