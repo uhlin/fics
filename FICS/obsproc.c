@@ -498,55 +498,58 @@ PUBLIC int com_mailmoves(int p, param_list param)
   return COM_OK;
 }
 
-PRIVATE int old_mail_moves(int p,int mail, param_list param)
+PRIVATE int
+old_mail_moves(int p, int mail, param_list param)
 {
-  int p1, connected;
-  int count;
-  FILE *fp;
-  char fname[MAX_FILENAME_SIZE];
-  char tmp[2048];
-  char *ptmp = tmp;
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	 tmp[2048] = { '\0' };
+	char	*ptmp = tmp;
+	int	 count;
+	int	 p1, connected;
 
- if (mail && (!parray[p].registered)) {
-    pprintf (p,"Unregistered players cannot use mailoldmoves.\n");
-    return COM_OK;
-  }
+	if (mail && (!parray[p].registered)) {
+		pprintf(p, "Unregistered players cannot use mailoldmoves.\n");
+		return COM_OK;
+	}
 
-   if (param[0].type == TYPE_WORD) {
-    if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-      return COM_OK;
-  } else {
-      p1 = p;
-      connected = 1;
-  }
+	if (param[0].type == TYPE_WORD) {
+		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+			return COM_OK;
+	} else {
+		p1		= p;
+		connected	= 1;
+	}
 
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
-          parray[p1].login[0], parray[p1].login, STATS_GAMES);
-  fp = fopen(fname, "r"); /* old moves now looks in history to save mem - DAV */
+	(void) snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+	    stats_dir, parray[p1].login[0], parray[p1].login, STATS_GAMES);
+	fp = fopen(fname, "r");	// old moves now looks in history to save mem
+				// - DAV
 
-  if (!fp) {
-    pprintf (p,"There is no old game for %s.\n", parray[p1].name);
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
+	if (!fp) {
+		pprintf(p, "There is no old game for %s.\n", parray[p1].name);
 
-  while (!feof(fp))
-      fgets(tmp, 1024, fp);
-  sscanf(ptmp, "%d", &count);
-  fclose(fp); /* find the last game played in history */
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
 
-  pprintf (p,"Last game for %s was history game %d.\n",parray[p1].name,count);
+	while (!feof(fp))
+		fgets(tmp, 1024, fp);
 
-  if (mail)
-   pcommand (p,"mailstored %s %d",parray[p1].name,count);
-  else
-   pcommand (p,"smoves %s %d",parray[p1].name,count);
+	sscanf(ptmp, "%d", &count);
+	fclose(fp);
+	pprintf(p, "Last game for %s was history game %d.\n", parray[p1].name,
+	    count);
 
-  if (!connected)
-    player_remove(p1);
+	if (mail)
+		pcommand(p, "mailstored %s %d", parray[p1].name, count);
+	else
+		pcommand(p, "smoves %s %d", parray[p1].name, count);
 
-  return COM_OK;
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 PUBLIC int
