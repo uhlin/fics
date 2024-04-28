@@ -78,103 +78,145 @@ PRIVATE int gamesortfunc(const void *i, const void *j)
 }
 
 
-PUBLIC int com_games(int p, param_list param)
+PUBLIC int
+com_games(int p, param_list param)
 {
-  int i, j;
-  int wp, bp;
-  int ws, bs;
-  int selected = 0;
-  int count = 0;
-  int totalcount;
-  char *s = NULL;
-  int slen = 0;
-  int *sortedgames;		/* for qsort */
+	char	*s = NULL;
+	int	*sortedgames;	// for qsort
+	int	 count = 0;
+	int	 i, j;
+	int	 selected = 0;
+	int	 slen = 0;
+	int	 totalcount;
+	int	 wp, bp;
+	int	 ws, bs;
 
-  totalcount = game_count();
-  if (totalcount == 0) {
-    pprintf(p, "There are no games in progress.\n");
-  } else {
-    sortedgames = rmalloc(totalcount * sizeof(int));	/* for qsort */
+	totalcount = game_count();
 
-    if (param[0].type == TYPE_WORD) {
-      s = param[0].val.word;
-      slen = strlen(s);
-      selected = atoi(s);
-      if (selected < 0)
-	selected = 0;
-    }
-    for (i = 0; i < g_num; i++) {
-      if ((garray[i].status != GAME_ACTIVE) && (garray[i].status != GAME_EXAMINE))
-	continue;
-      if ((selected) && (selected != i + 1))
-	continue;		/* not selected game number */
-      wp = garray[i].white;
-      bp = garray[i].black;
-      if ((!selected) && s && strncasecmp(s, garray[i].white_name, slen) &&
-	  strncasecmp(s, garray[i].black_name, slen))
-	continue;		/* player names did not match */
-      sortedgames[count++] = i;
-    }
-    if (!count)
-      pprintf(p, "No matching games were found (of %d in progress).\n", totalcount);
-    else {
-      qsort(sortedgames, count, sizeof(int), gamesortfunc);
-      pprintf(p, "\n");
-      for (j = 0; j < count; j++) {
-	i = sortedgames[j];
-	wp = garray[i].white;
-	bp = garray[i].black;
-	board_calc_strength(&garray[i].game_state, &ws, &bs);
-	if (garray[i].status != GAME_EXAMINE) {
-	  pprintf_noformat(p, "%2d %4s %-11.11s %4s %-10.10s [%c%c%c%3d %3d] ",
-			   i + 1,
-			   ratstrii(GetRating(&parray[wp],
-					      garray[i].type),
-				    parray[wp].registered),
-			   parray[wp].name,
-			   ratstrii(GetRating(&parray[bp],
-					      garray[i].type),
-				    parray[bp].registered),
-			   parray[bp].name,
-			   (garray[i].private) ? 'p' : ' ',
-			   *bstr[garray[i].type],
-			   *rstr[garray[i].rated],
-			   garray[i].wInitTime / 600,
-			   garray[i].wIncrement / 10);
-	  game_update_time(i);
-	  pprintf_noformat(p, "%6s -",
-		 tenth_str((garray[i].wTime > 0 ? garray[i].wTime : 0), 0));
-	  pprintf_noformat(p, "%6s (%2d-%2d) %c: %2d\n",
-		  tenth_str((garray[i].bTime > 0 ? garray[i].bTime : 0), 0),
-			   ws, bs,
-			 (garray[i].game_state.onMove == WHITE) ? 'W' : 'B',
-			   garray[i].game_state.moveNum);
+	if (totalcount == 0) {
+		pprintf(p, "There are no games in progress.\n");
 	} else {
-	  pprintf_noformat(p, "%2d (Exam. %4d %-11.11s %4d %-10.10s) [%c%c%c%3d %3d] ",
-			   i + 1,
-			   garray[i].white_rating,
-			   garray[i].white_name,
-			   garray[i].black_rating,
-			   garray[i].black_name,
-			   (garray[i].private) ? 'p' : ' ',
-			   *bstr[garray[i].type],
-			   *rstr[garray[i].rated],
-			   garray[i].wInitTime / 600,
-			   garray[i].wIncrement / 10);
-	  pprintf_noformat(p, "%c: %2d\n",
-			 (garray[i].game_state.onMove == WHITE) ? 'W' : 'B',
-			   garray[i].game_state.moveNum);
+		// for qsort
+		sortedgames = reallocarray(NULL, totalcount, sizeof(int));
+
+		if (sortedgames == NULL)
+			err(1, "%s", __func__);
+		else
+			malloc_count++;
+
+		if (param[0].type == TYPE_WORD) {
+			s	= param[0].val.word;
+			slen	= strlen(s);
+
+			if ((selected = atoi(s)) < 0)
+				selected = 0;
+		}
+
+		for (i = 0; i < g_num; i++) {
+			if (garray[i].status != GAME_ACTIVE &&
+			    garray[i].status != GAME_EXAMINE)
+				continue;
+			if ((selected) && (selected != i + 1))
+				continue;	// not selected game number
+
+			wp	= garray[i].white;
+			bp	= garray[i].black;
+
+			if ((!selected) &&
+			    s &&
+			    strncasecmp(s, garray[i].white_name, slen) &&
+			    strncasecmp(s, garray[i].black_name, slen))
+				continue;	// player names did not match
+			sortedgames[count++] = i;
+		} /* for */
+
+		if (!count) {
+			pprintf(p, "No matching games were found "
+			    "(of %d in progress).\n", totalcount);
+		} else {
+			qsort(sortedgames, count, sizeof(int), gamesortfunc);
+			pprintf(p, "\n");
+
+			for (j = 0; j < count; j++) {
+				i = sortedgames[j];
+
+				wp	= garray[i].white;
+				bp	= garray[i].black;
+
+				board_calc_strength(&garray[i].game_state,
+				    &ws, &bs);
+
+				if (garray[i].status != GAME_EXAMINE) {
+					pprintf_noformat(p, "%2d %4s %-11.11s "
+					    "%4s %-10.10s [%c%c%c%3d %3d] ",
+					    (i + 1),
+					    ratstrii(GetRating(&parray[wp],
+					    garray[i].type),
+					    parray[wp].registered),
+					    parray[wp].name,
+					    ratstrii(GetRating(&parray[bp],
+					    garray[i].type),
+					    parray[bp].registered),
+					    parray[bp].name,
+					    (garray[i].private ? 'p' : ' '),
+					    *bstr[garray[i].type],
+					    *rstr[garray[i].rated],
+					    (garray[i].wInitTime / 600),
+					    (garray[i].wIncrement / 10));
+
+					game_update_time(i);
+
+					pprintf_noformat(p, "%6s -",
+					    tenth_str((garray[i].wTime > 0 ?
+					    garray[i].wTime : 0), 0));
+
+					pprintf_noformat(p, "%6s (%2d-%2d) "
+					    "%c: %2d\n",
+					    tenth_str((garray[i].bTime > 0 ?
+					    garray[i].bTime : 0), 0),
+					    ws,
+					    bs,
+					    (garray[i].game_state.onMove ==
+					    WHITE ? 'W' : 'B'),
+					    garray[i].game_state.moveNum);
+				} else {
+					pprintf_noformat(p, "%2d "
+					    "(Exam. %4d %-11.11s %4d %-10.10s) "
+					    "[%c%c%c%3d %3d] ",
+					    (i + 1),
+					    garray[i].white_rating,
+					    garray[i].white_name,
+					    garray[i].black_rating,
+					    garray[i].black_name,
+					    (garray[i].private ? 'p' : ' '),
+					    *bstr[garray[i].type],
+					    *rstr[garray[i].rated],
+					    (garray[i].wInitTime / 600),
+					    (garray[i].wIncrement / 10));
+
+					pprintf_noformat(p, "%c: %2d\n",
+					    (garray[i].game_state.onMove ==
+					    WHITE ? 'W' : 'B'),
+					    garray[i].game_state.moveNum);
+				}
+			} /* for */
+
+			if (count < totalcount) {
+				pprintf(p, "\n  %d game%s displayed "
+				    "(of %d in progress).\n",
+				    count,
+				    (count == 1 ? "" : "s"),
+				    totalcount);
+			} else {
+				pprintf(p, "\n  %d game%s displayed.\n",
+				    totalcount, (totalcount == 1 ? "" : "s"));
+			}
+		} /* else */
+
+		rfree(sortedgames);
 	}
-      }
-      if (count < totalcount)
-	pprintf(p, "\n  %d game%s displayed (of %d in progress).\n", count,
-		(count == 1) ? "" : "s", totalcount);
-      else
-	pprintf(p, "\n  %d game%s displayed.\n", totalcount, (totalcount == 1) ? "" : "s");
-    }
-    rfree(sortedgames);
-  }
-  return COM_OK;
+
+	return COM_OK;
 }
 
 PRIVATE int
