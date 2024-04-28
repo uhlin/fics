@@ -10,6 +10,8 @@ documented in this file.
 - Changed the make install target to not overwrite the data messages
   in case they're already present.
 - Deleted unused includes.
+- Fixed passing argument 2 of `ReadGameAttrs()` from incompatible
+  pointer type in `jsave_history()`.
 - Made functions and variables private where possible.
 - Reformatted code according to OpenBSD's KNF:
   - `obsproc.c`
