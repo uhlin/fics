@@ -177,30 +177,40 @@ PUBLIC int com_games(int p, param_list param)
   return COM_OK;
 }
 
-PRIVATE int do_observe(int p, int obgame)
+PRIVATE int
+do_observe(int p, int obgame)
 {
-  if ((garray[obgame].private) && (parray[p].adminLevel < ADMIN_ADMIN)) {
-    pprintf(p, "Sorry, game %d is a private game.\n", obgame + 1);
-    return COM_OK;
-  }
-  if ((garray[obgame].white == p) || (garray[obgame].black == p)) {
-    if (garray[obgame].status != GAME_EXAMINE) {
-      pprintf(p, "You cannot observe a game that you are playing.\n");
-      return COM_OK;
-    }
-  }
-  if (player_is_observe(p, obgame)) {
-    pprintf(p, "Removing game %d from observation list.\n", obgame + 1);
-    player_remove_observe(p, obgame);
-  } else {
-    if (!player_add_observe(p, obgame)) {
-      pprintf(p, "You are now observing game %d.\n", obgame + 1);
-      send_board_to(obgame, p);
-    } else {
-      pprintf(p, "You are already observing the maximum number of games.\n");
-    }
-  }
-  return COM_OK;
+	if (garray[obgame].private &&
+	    parray[p].adminLevel < ADMIN_ADMIN) {
+		pprintf(p, "Sorry, game %d is a private game.\n", (obgame + 1));
+		return COM_OK;
+	}
+
+	if (garray[obgame].white == p ||
+	    garray[obgame].black == p) {
+		if (garray[obgame].status != GAME_EXAMINE) {
+			pprintf(p, "You cannot observe a game that you are "
+			    "playing.\n");
+			return COM_OK;
+		}
+	}
+
+	if (player_is_observe(p, obgame)) {
+		pprintf(p, "Removing game %d from observation list.\n",
+		    (obgame + 1));
+		player_remove_observe(p, obgame);
+	} else {
+		if (!player_add_observe(p, obgame)) {
+			pprintf(p, "You are now observing game %d.\n",
+			    (obgame + 1));
+			send_board_to(obgame, p);
+		} else {
+			pprintf(p, "You are already observing the maximum "
+			    "number of games.\n");
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC void
