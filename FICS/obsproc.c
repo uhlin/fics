@@ -379,48 +379,63 @@ PUBLIC int com_unexamine(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_mexamine(int p, param_list param)
+PUBLIC int
+com_mexamine(int p, param_list param)
 {
-  int g, p1, p2;
+	int	g, p1, p2;
 
-  if ((parray[p].game <0) ||(garray[parray[p].game].status != GAME_EXAMINE)) {
-    pprintf(p, "You are not examining any games.\n");
-    return COM_OK;
-  }
-  p1 = player_find_part_login(param[0].val.word);
-  if (p1 < 0) {
-    pprintf(p, "No user named \"%s\" is logged in.\n", param[0].val.word);
-    return COM_OK;
-  }
-  g = parray[p].game;
-  if (!player_is_observe(p1, g)) {
-    pprintf(p, "%s must observe the game you are analysing.\n", parray[p1].name);
-    return COM_OK;
-  } else {
-    if (parray[p1].game >=0) {
-      pprintf(p, "%s is already analysing the game.\n", parray[p1].name);
-      return COM_OK;
-    }
-    /* if we get here - let's make him examiner of the game */
-    unobserveAll(p1);		/* fix for Xboard */
-    player_decline_offers(p1, -1, PEND_MATCH);
-    player_withdraw_offers(p1, -1, PEND_MATCH);
-    player_withdraw_offers(p1, -1, PEND_SIMUL);
+	if (parray[p].game < 0 || garray[parray[p].game].status !=
+	    GAME_EXAMINE) {
+		pprintf(p, "You are not examining any games.\n");
+		return COM_OK;
+	}
 
-    parray[p1].game = g;	/* yep - it really is that easy :-) */
-    pprintf(p1, "You are now examiner of game %d.\n", g + 1);
-    send_board_to(g, p1);	/* pos not changed - but fixes Xboard */
-    for (p2 = 0; p2 < p_num; p2++) {
-      if (parray[p2].status != PLAYER_PROMPT)
-	continue;
-      if (p2 == p1)
-	continue;
-      if ((player_is_observe(p2, g)) || (parray[p2].game == g)) {
-	pprintf_prompt(p2, "%s is now examiner of game %d.\n", parray[p1].name, g + 1);
-      }
-    }
-  }
-  return COM_OK;
+	if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
+		pprintf(p, "No user named \"%s\" is logged in.\n",
+		    param[0].val.word);
+		return COM_OK;
+	}
+
+	g = parray[p].game;
+
+	if (!player_is_observe(p1, g)) {
+		pprintf(p, "%s must observe the game you are analysing.\n",
+		    parray[p1].name);
+		return COM_OK;
+	} else {
+		if (parray[p1].game >= 0) {
+			pprintf(p, "%s is already analysing the game.\n",
+			    parray[p1].name);
+			return COM_OK;
+		}
+
+		/*
+		 * If we get here - let's make him examiner of the
+		 * game.
+		 */
+		unobserveAll(p1);	// Fix for Xboard
+
+		player_decline_offers(p1, -1, PEND_MATCH);
+		player_withdraw_offers(p1, -1, PEND_MATCH);
+		player_withdraw_offers(p1, -1, PEND_SIMUL);
+
+		parray[p1].game = g;
+		pprintf(p1, "You are now examiner of game %d.\n", (g + 1));
+		send_board_to(g, p1);	// Pos not changed - but fixes Xboard
+
+		for (p2 = 0; p2 < p_num; p2++) {
+			if (parray[p2].status != PLAYER_PROMPT)
+				continue;
+			if (p2 == p1)
+				continue;
+			if (player_is_observe(p2, g) || parray[p2].game == g) {
+				pprintf_prompt(p2, "%s is now examiner of "
+				    "game %d.\n", parray[p1].name, (g + 1));
+			}
+		}
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
