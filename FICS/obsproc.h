@@ -25,33 +25,34 @@
 #ifndef _OBSPROC_H
 #define _OBSPROC_H
 
+#include "command.h" /* param_list */
+
 #define MAX_JOURNAL 10
 
-extern int GameNumFromParam();
-extern int com_games();
-extern int com_observe();
-extern void unobserveAll(int);
-extern int com_unobserve();
-extern int com_allobservers();
-extern int com_moves();
-extern int com_mailmoves();
-extern int com_oldmoves();
-extern int com_mailoldmoves();
-extern int com_mailstored();
-extern int com_stored();
-extern int com_smoves();
-extern int com_sposition();
-extern int com_history();
-extern int com_journal();
-extern int com_jsave();
-
-extern int com_examine();
-extern int com_mexamine();
-extern int com_unexamine();
-extern int com_forward();
-extern int com_backward();
-extern int com_revert();
-
-extern void ExamineScratch ();
+extern int	GameNumFromParam(int, int *, parameter *);
+extern int	com_allobservers(int, param_list);
+extern int	com_backward(int, param_list);
+extern int	com_examine(int, param_list);
+extern int	com_forward(int, param_list);
+extern int	com_games(int, param_list);
+extern int	com_history(int, param_list);
+extern int	com_journal(int, param_list);
+extern int	com_jsave(int, param_list);
+extern int	com_mailmoves(int, param_list);
+extern int	com_mailoldmoves(int, param_list);
+extern int	com_mailstored(int, param_list);
+extern int	com_mexamine(int, param_list);
+extern int	com_moves(int, param_list);
+extern int	com_observe(int, param_list);
+extern int	com_oldmoves(int, param_list);
+extern int	com_revert(int, param_list);
+extern int	com_smoves(int, param_list);
+extern int	com_sposition(int, param_list);
+extern int	com_stored(int, param_list);
+extern int	com_unexamine(int, param_list);
+extern int	com_unobserve(int, param_list);
+extern void	ExamineScratch(int, param_list);
+extern void	jsave_history(int, char, int, int, char *);
+extern void	unobserveAll(int);
 
 #endif /* _OBSPROC_H */
