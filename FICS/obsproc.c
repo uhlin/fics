@@ -343,40 +343,53 @@ PUBLIC int com_allobservers(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_unexamine(int p, param_list param)
+PUBLIC int
+com_unexamine(int p, param_list param)
 {
-  int g, p1, flag = 0;
+	int	g, p1, flag = 0;
 
-  if ((parray[p].game <0) ||(garray[parray[p].game].status != GAME_EXAMINE)) {
-    pprintf(p, "You are not examining any games.\n");
-    return COM_OK;
-  }
-  g = parray[p].game;
-  parray[p].game = -1;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    if ((parray[p1].game == g) &&(p != p1)) {
-      /* ok - there are other examiners to take over the game */
-      flag = 1;
-    }
-    if ((player_is_observe(p1, g)) || (parray[p1].game == g)) {
-      pprintf(p1, "%s stopped examining game %d.\n", parray[p].name, g + 1);
-    }
-  }
-  if (!flag) {
-    for (p1 = 0; p1 < p_num; p1++) {
-      if (parray[p1].status != PLAYER_PROMPT)
-	continue;
-      if (player_is_observe(p1, g)) {
-	pprintf(p1, "There are no examiners.\n");
-	pcommand(p1, "unobserve %d", g + 1);
-      }
-    }
-    game_remove(g);
-  }
-  pprintf(p, "You are no longer examining game %d.\n", g + 1);
-  return COM_OK;
+	if (parray[p].game < 0 || garray[parray[p].game].status !=
+	    GAME_EXAMINE) {
+		pprintf(p, "You are not examining any games.\n");
+		return COM_OK;
+	}
+
+	g = parray[p].game;
+	parray[p].game = -1;
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+
+		if (parray[p1].game == g && p != p1) {
+			/*
+			 * ok - there are other examiners to take over
+			 * the game.
+			 */
+			flag = 1;
+		}
+
+		if (player_is_observe(p1, g) || parray[p1].game == g) {
+			pprintf(p1, "%s stopped examining game %d.\n",
+			    parray[p].name, (g + 1));
+		}
+	}
+
+	if (!flag) {
+		for (p1 = 0; p1 < p_num; p1++) {
+			if (parray[p1].status != PLAYER_PROMPT)
+				continue;
+			if (player_is_observe(p1, g)) {
+				pprintf(p1, "There are no examiners.\n");
+				pcommand(p1, "unobserve %d", (g + 1));
+			}
+		}
+
+		game_remove(g);
+	}
+
+	pprintf(p, "You are no longer examining game %d.\n", (g + 1));
+	return COM_OK;
 }
 
 PUBLIC int
