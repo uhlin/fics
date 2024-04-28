@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/20	Cleaned up the file
+   Markus Uhlin                 24/04/29	Added missing parameter lists
 */
 
 #ifndef _GAMEDB_H
