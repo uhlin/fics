@@ -266,81 +266,108 @@ PUBLIC int com_observe(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_allobservers(int p, param_list param)
+PUBLIC int
+com_allobservers(int p, param_list param)
 {
-  int obgame;
-  int p1;
-  int start, end;
-  int g;
-  int first;
+	int	first;
+	int	g;
+	int	obgame;
+	int	p1;
+	int	start, end;
 
-  if (param[0].type == TYPE_NULL) {
-    obgame = -1;
-  } else {
-    obgame = GameNumFromParam(p, &p1, &param[0]);
-    if (obgame < 0)
-      return COM_OK;
-  }
-  if (obgame == -1) {
-    start = 0;
-    end = g_num;
-  } else if ((obgame >= g_num) || ((obgame < g_num)
-				   && ((garray[obgame].status != GAME_ACTIVE)
-			     && (garray[obgame].status != GAME_EXAMINE)))) {
-    pprintf(p, "There is no such game.\n");
-    return COM_OK;
-  } else {
-    start = obgame;
-    end = obgame + 1;
-  }
+	if (param[0].type == TYPE_NULL) {
+		obgame = -1;
+	} else {
+		obgame = GameNumFromParam(p, &p1, &param[0]);
 
-  /* list games being played */
-
-  for (g = start; g < end; g++) {
-    if ((garray[g].status == GAME_ACTIVE) &&
-	((parray[p].adminLevel > 0) || (garray[g].private == 0))) {
-      for (first = 1, p1 = 0; p1 < p_num; p1++) {
-	if ((parray[p1].status != PLAYER_EMPTY) && (player_is_observe(p1, g))) {
-	  if (first) {
-	    pprintf(p, "Observing %2d [%s vs. %s]:",
-		    g + 1,
-		    parray[garray[g].white].name,
-		    parray[garray[g].black].name);
-	    first = 0;
-	  }
-	  pprintf(p, " %s%s", (parray[p1].game >=0) ? "#" : "", parray[p1].name);
+		if (obgame < 0)
+			return COM_OK;
 	}
-      }
-      if (!first)
-	pprintf(p, "\n");
-    }
-  }
 
-  /* list games being examined last */
-
-  for (g = start; g < end; g++) {
-    if ((garray[g].status == GAME_EXAMINE) &&
-	((parray[p].adminLevel > 0) || (garray[g].private == 0))) {
-      for (first = 1, p1 = 0; p1 < p_num; p1++) {
-	if ((parray[p1].status != PLAYER_EMPTY) && (player_is_observe(p1, g) ||
-						  (parray[p1].game == g))) {
-	  if (first) {
-	    if (strcmp(garray[g].white_name, garray[g].black_name)) {
-	      pprintf(p, "Examining %2d [%s vs %s]:", g + 1,
-		      garray[g].white_name, garray[g].black_name);
-	    } else {
-	      pprintf(p, "Examining %2d (scratch):", g + 1);
-	    }
-	    first = 0;
-	  }
-	  pprintf(p, " %s%s", (parray[p1].game == g) ? "#" : "", parray[p1].name);
+	if (obgame == -1) {
+		start = 0;
+		end = g_num;
+	} else if ((obgame >= g_num) ||
+	    ((obgame < g_num) &&
+	    ((garray[obgame].status != GAME_ACTIVE) &&
+	    (garray[obgame].status != GAME_EXAMINE)))) {
+		pprintf(p, "There is no such game.\n");
+		return COM_OK;
+	} else {
+		start = obgame;
+		end = obgame + 1;
 	}
-      }
-      if (!first)
-	pprintf(p, "\n");
-    }
-  }
-  return COM_OK;
+
+	/*
+	 * list games being played
+	 */
+	for (g = start; g < end; g++) {
+		if ((garray[g].status == GAME_ACTIVE) &&
+		    ((parray[p].adminLevel > 0) ||
+		    (garray[g].private == 0))) {
+			for (first = 1, p1 = 0; p1 < p_num; p1++) {
+				if (parray[p1].status != PLAYER_EMPTY &&
+				    player_is_observe(p1, g)) {
+					if (first) {
+						pprintf(p, "Observing %2d "
+						    "[%s vs. %s]:",
+						    (g + 1),
+						    parray[garray[g].white].name,
+						    parray[garray[g].black].name);
+						first = 0;
+					}
+
+					pprintf(p, " %s%s",
+					    (parray[p1].game >= 0 ? "#" : ""),
+					    parray[p1].name);
+				}
+			}
+
+			if (!first)
+				pprintf(p, "\n");
+		}
+	} /* for */
+
+	/*
+	 * list games being examined last
+	 */
+	for (g = start; g < end; g++) {
+		if ((garray[g].status == GAME_EXAMINE) &&
+		    ((parray[p].adminLevel > 0) ||
+		    (garray[g].private == 0))) {
+			for (first = 1, p1 = 0; p1 < p_num; p1++) {
+				if ((parray[p1].status != PLAYER_EMPTY) &&
+				    (player_is_observe(p1, g) ||
+				    (parray[p1].game == g))) {
+					if (first) {
+						if (strcmp(garray[g].white_name,
+						    garray[g].black_name)) {
+							pprintf(p, "Examining "
+							    "%2d [%s vs %s]:",
+							    (g + 1),
+							    garray[g].white_name,
+							    garray[g].black_name);
+						} else {
+							pprintf(p, "Examining "
+							    "%2d (scratch):",
+							    (g + 1));
+						}
+
+						first = 0;
+					}
+
+					pprintf(p, " %s%s",
+					    (parray[p1].game == g ? "#" : ""),
+					    parray[p1].name);
+				}
+			}
+
+			if (!first)
+				pprintf(p, "\n");
+		}
+	} /* for */
+
+	return COM_OK;
 }
 
 PUBLIC int
