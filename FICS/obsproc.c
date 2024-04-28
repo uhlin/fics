@@ -1793,10 +1793,10 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 	FILE	*Game;
 	char	*EndSymbol;
 	char	*HistoryFname;
-	char	*filename[MAX_FILENAME_SIZE + 1];
 	char	*name_to = parray[p].login;
 	char	 End[100];
 	char	 command[MAX_FILENAME_SIZE * 2 + 3];
+	char	 filename[MAX_FILENAME_SIZE + 1] = { '\0' }; // XXX
 	char	 jfname[MAX_FILENAME_SIZE];
 	char	 type[4];
 	int	 g;
@@ -1827,6 +1827,7 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 
 			g = game_new(); // Open a dummy game
 
+			// XXX: is 'filename' right here?
 			if (ReadGameAttrs(Game, filename, g) < 0) {
 				pprintf(p, "Gamefile is corrupt. Please tell "
 				    "an admin.\n");
