@@ -423,39 +423,53 @@ PUBLIC int com_mexamine(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_moves(int p, param_list param)
+PUBLIC int
+com_moves(int p, param_list param)
 {
-  int g;
-  int p1;
+	int	g;
+	int	p1;
 
-  if (param[0].type == TYPE_NULL) {
-    if (parray[p].game >=0) {
-      g = parray[p].game;
-    } else if (parray[p].num_observe) {
-      for (g = 0; g < parray[p].num_observe; g++) {
-	pprintf(p, "%s\n", movesToString(parray[p].observe_list[g], 0));
-      }
-      return COM_OK;
-    } else {
-      pprintf(p, "You are neither playing, observing nor examining a game.\n");
-      return COM_OK;
-    }
-  } else {
-    g = GameNumFromParam(p, &p1, &param[0]);
-    if (g < 0)
-      return COM_OK;
-  }
-  if ((g < 0) || (g >= g_num) || ((garray[g].status != GAME_ACTIVE) &&
-				  (garray[g].status != GAME_EXAMINE))) {
-    pprintf(p, "There is no such game.\n");
-    return COM_OK;
-  }
-  if ((garray[g].white != p) && (garray[g].black != p) && (garray[g].private) && (parray[p].adminLevel < ADMIN_ADMIN)) {
-    pprintf(p, "Sorry, that is a private game.\n");
-    return COM_OK;
-  }
-  pprintf(p, "%s\n", movesToString(g, 0));	/* pgn may break interfaces? */
-  return COM_OK;
+	if (param[0].type == TYPE_NULL) {
+		if (parray[p].game >=0) {
+			g = parray[p].game;
+		} else if (parray[p].num_observe) {
+			for (g = 0; g < parray[p].num_observe; g++) {
+				pprintf(p, "%s\n",
+				    movesToString(parray[p].observe_list[g],
+				    0));
+			}
+
+			return COM_OK;
+		} else {
+			pprintf(p, "You are neither playing, observing nor "
+			    "examining a game.\n");
+			return COM_OK;
+		}
+	} else {
+		g = GameNumFromParam(p, &p1, &param[0]);
+
+		if (g < 0)
+			return COM_OK;
+	}
+
+	if ((g < 0) ||
+	    (g >= g_num) ||
+	    ((garray[g].status != GAME_ACTIVE) &&
+	    (garray[g].status != GAME_EXAMINE))) {
+		pprintf(p, "There is no such game.\n");
+		return COM_OK;
+	}
+
+	if ((garray[g].white != p) &&
+	    (garray[g].black != p) &&
+	    (garray[g].private) &&
+	    (parray[p].adminLevel < ADMIN_ADMIN)) {
+		pprintf(p, "Sorry, that is a private game.\n");
+		return COM_OK;
+	}
+
+	pprintf(p, "%s\n", movesToString(g, 0)); // pgn may break interfaces?
+	return COM_OK;
 }
 
 PUBLIC int
