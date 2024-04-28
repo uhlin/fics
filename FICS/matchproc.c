@@ -44,6 +44,7 @@
 #include "formula.h"
 #include "gamedb.h"
 #include "lists.h"
+#include "matchproc.h"
 #include "network.h"
 #include "obsproc.h"
 #include "playerdb.h"
