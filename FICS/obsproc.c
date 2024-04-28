@@ -1149,7 +1149,7 @@ com_stored(int p, param_list param)
 		connected = 1;
 	}
 
-	sprintf(dname, "%s/%c", adj_dir, parray[p1].login[0]);
+	msnprintf(dname, sizeof dname, "%s/%c", adj_dir, parray[p1].login[0]);
 	dirp = opendir(dname);
 
 	if (!dirp) {
@@ -1240,7 +1240,8 @@ stored_mail_moves(int p, int mail, param_list param)
 					    toupper((char)(MAX_JOURNAL +
 					    'A' - 1)));
 				} else {
-					sprintf(fileName2, "%s/%c/%s.%c",
+					msnprintf(fileName2, sizeof fileName2,
+					    "%s/%c/%s.%c",
 					    journal_dir,
 					    name_from[0],
 					    name_from,
@@ -1306,8 +1307,8 @@ stored_mail_moves(int p, int mail, param_list param)
 				char	subj[81];
 
 				if (param[1].type == TYPE_INT) {
-					sprintf(subj, "FICS history game: "
-					    "%s %d",
+					msnprintf(subj, sizeof subj, "FICS "
+					    "history game: %s %d",
 					    parray[wp].name,
 					    param[1].val.integer);
 				} else {
@@ -1316,12 +1317,14 @@ stored_mail_moves(int p, int mail, param_list param)
 						    "NULL", __func__);
 					if (strlen(param2string) == 1 &&
 					    isalpha(param2string[0])) {
-						sprintf(subj, "FICS journal "
+						msnprintf(subj, sizeof subj,
+						    "FICS journal "
 						    "game %s vs %s",
 						    garray[g].white_name,
 						    garray[g].black_name);
 					} else {
-						sprintf(subj, "FICS adjourned "
+						msnprintf(subj, sizeof subj,
+						    "FICS adjourned "
 						    "game %s vs %s",
 						    garray[g].white_name,
 						    garray[g].black_name);
