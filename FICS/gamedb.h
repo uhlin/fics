@@ -152,7 +152,7 @@ extern char	*game_time_str(int, int, int, int);
 extern char	*movesToString(int, int);
 extern int	 CharToPiece(char);
 extern int	 PieceToChar(int);
-extern int	 ReadGameAttrs();
+extern int	 ReadGameAttrs(FILE *, char *, int);
 extern int	 game_clear(int);
 extern int	 game_count(void);
 extern int	 game_delete(int, int);
@@ -164,7 +164,7 @@ extern int	 game_read(int, int, int);
 extern int	 game_remove(int);
 extern int	 game_save(int);
 extern int	 game_zero(int);
-extern int	 got_attr_value();
+extern int	 got_attr_value(int, char *, char *, FILE *, char *);
 extern int	 journal_get_info(int, char, char *, int *, char *, int *,
 		     char *, int *, int *, char *, char *, char *, char *);
 extern int	 pgames(int, int, char *);
