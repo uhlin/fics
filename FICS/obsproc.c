@@ -47,23 +47,34 @@
 #include "rmalloc.h"
 #include "utils.h"
 
-PUBLIC int GameNumFromParam(int p, int *p1, parameter *param)
+PUBLIC int
+GameNumFromParam(int p, int *p1, parameter *param)
 {
-  if (param->type == TYPE_WORD) {
-    *p1 = player_find_part_login(param->val.word);
-    if (*p1 < 0) {
-      pprintf(p, "No user named \"%s\" is logged in.\n", param->val.word);
-      return -1;
-    }
-    if (parray[*p1].game < 0)
-      pprintf(p, "%s is not playing a game.\n", parray[*p1].name);
-    return parray[*p1].game;
-  } else {			/* Must be an integer */
-    *p1 = -1;
-    if (param->val.integer <= 0)
-      pprintf(p, "%d is not a valid game number.\n", param->val.integer);
-    return param->val.integer - 1;
-  }
+	if (param->type == TYPE_WORD) {
+		*p1 = player_find_part_login(param->val.word);
+
+		if (*p1 < 0) {
+			pprintf(p, "No user named \"%s\" is logged in.\n",
+			    param->val.word);
+			return -1;
+		}
+
+		if (parray[*p1].game < 0) {
+			pprintf(p, "%s is not playing a game.\n",
+			    parray[*p1].name);
+		}
+
+		return parray[*p1].game;
+	} else { // Must be an integer
+		*p1 = -1;
+
+		if (param->val.integer <= 0) {
+			pprintf(p, "%d is not a valid game number.\n",
+			    param->val.integer);
+		}
+
+		return (param->val.integer - 1);
+	}
 }
 
 PRIVATE int
