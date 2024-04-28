@@ -23,6 +23,8 @@
    Markus Uhlin			23/12/13	Fixed bugs
    Markus Uhlin			23/12/13	Reformatted functions
    Markus Uhlin			24/04/28	Completed reformatting
+   Markus Uhlin			24/04/28	Replaced unbounded string
+						handling functions.
 */
 
 #include "stdinclude.h"
