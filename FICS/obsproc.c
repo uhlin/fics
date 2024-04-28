@@ -66,17 +66,23 @@ PUBLIC int GameNumFromParam(int p, int *p1, parameter *param)
   }
 }
 
-PRIVATE int gamesortfunc(const void *i, const void *j)
+PRIVATE int
+gamesortfunc(const void *i, const void *j)
 {
-/* examine mode games moved to top of "games" output */
-  return (GetRating(&parray[garray[*(int *) i].white], garray[*(int *) i].type) +
-     GetRating(&parray[garray[*(int *) i].black], garray[*(int *) i].type) -
-	  ((garray[*(int *) i].status == GAME_EXAMINE) ? 10000 : 0) -
-     GetRating(&parray[garray[*(int *) j].white], garray[*(int *) j].type) -
-     GetRating(&parray[garray[*(int *) j].black], garray[*(int *) j].type) +
-	  ((garray[*(int *) j].status == GAME_EXAMINE) ? 10000 : 0));
+	/*
+	 * examine mode games moved to top of "games" output
+	 */
+	return (GetRating(&parray[garray[*(int *)i].white],
+	    garray[*(int *)i].type) +
+	    GetRating(&parray[garray[*(int *)i].black],
+	    garray[*(int *)i].type) -
+	    (garray[*(int *)i].status == GAME_EXAMINE ? 10000 : 0) -
+	    GetRating(&parray[garray[*(int *)j].white],
+	    garray[*(int *)j].type) -
+	    GetRating(&parray[garray[*(int *)j].black],
+	    garray[*(int *)j].type) +
+	    (garray[*(int *)j].status == GAME_EXAMINE ? 10000 : 0));
 }
-
 
 PUBLIC int
 com_games(int p, param_list param)
