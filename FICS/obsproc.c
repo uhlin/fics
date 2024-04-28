@@ -234,36 +234,42 @@ PUBLIC int com_unobserve(int p, param_list param)
   return COM_OK;
 }
 
-PUBLIC int com_observe(int p, param_list param)
+PUBLIC int
+com_observe(int p, param_list param)
 {
-  int i;
-  int p1, obgame;
+	int	i;
+	int	p1, obgame;
 
-  if ((parray[p].game >=0) &&(garray[parray[p].game].status == GAME_EXAMINE)) {
-    pprintf(p, "You are still examining a game.\n");
-    return COM_OK;
-  }
-  if (param[0].type == TYPE_NULL) {
-    unobserveAll(p);
-    return COM_OK;
-  }
-  obgame = GameNumFromParam(p, &p1, &param[0]);
-  if (obgame < 0)
-    return COM_OK;
+	if (parray[p].game >= 0 && garray[parray[p].game].status ==
+	    GAME_EXAMINE) {
+		pprintf(p, "You are still examining a game.\n");
+		return COM_OK;
+	}
 
-  if ((obgame >= g_num) || ((garray[obgame].status != GAME_ACTIVE) &&
-			    (garray[obgame].status != GAME_EXAMINE))) {
-    pprintf(p, "There is no such game.\n");
-    return COM_OK;
-  }
-  if ((p1 >= 0) && parray[p1].simul_info.numBoards) {
-    for (i = 0; i < parray[p1].simul_info.numBoards; i++)
-      if (parray[p1].simul_info.boards[i] >= 0)
-	do_observe(p, parray[p1].simul_info.boards[i]);
-  } else {
-    do_observe(p, obgame);
-  }
-  return COM_OK;
+	if (param[0].type == TYPE_NULL) {
+		unobserveAll(p);
+		return COM_OK;
+	}
+
+	if ((obgame = GameNumFromParam(p, &p1, &param[0])) < 0)
+		return COM_OK;
+
+	if ((obgame >= g_num) ||
+	    ((garray[obgame].status != GAME_ACTIVE) &&
+	    (garray[obgame].status != GAME_EXAMINE))) {
+		pprintf(p, "There is no such game.\n");
+		return COM_OK;
+	}
+
+	if (p1 >= 0 && parray[p1].simul_info.numBoards) {
+		for (i = 0; i < parray[p1].simul_info.numBoards; i++)
+			if (parray[p1].simul_info.boards[i] >= 0)
+				do_observe(p, parray[p1].simul_info.boards[i]);
+	} else {
+		do_observe(p, obgame);
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
