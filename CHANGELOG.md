@@ -12,6 +12,7 @@ documented in this file.
 - Deleted unused includes.
 - Made functions and variables private where possible.
 - Reformatted code according to OpenBSD's KNF:
+  - `obsproc.c`
   - `talkproc.c`
   - ...
 - Replaced unbounded string handling functions. _Multiple_
