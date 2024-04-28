@@ -203,35 +203,39 @@ PRIVATE int do_observe(int p, int obgame)
   return COM_OK;
 }
 
-PUBLIC void unobserveAll(int p)
+PUBLIC void
+unobserveAll(int p)
 {
-  int i;
+	for (int i = 0; i < parray[p].num_observe; i++) {
+		pprintf(p, "Removing game %d from observation list.\n",
+		    (parray[p].observe_list[i] + 1));
+	}
 
-  for (i = 0; i < parray[p].num_observe; i++) {
-    pprintf(p, "Removing game %d from observation list.\n", parray[p].observe_list[i] + 1);
-  }
-  parray[p].num_observe = 0;
-  return;
+	parray[p].num_observe = 0;
 }
 
-PUBLIC int com_unobserve(int p, param_list param)
+PUBLIC int
+com_unobserve(int p, param_list param)
 {
-  int gNum, p1;
+	int	gNum, p1;
 
-  if (param[0].type == TYPE_NULL) {
-    unobserveAll(p);
-    return COM_OK;
-  }
-  gNum = GameNumFromParam(p, &p1, &param[0]);
-  if (gNum < 0)
-    return COM_OK;
-  if (!player_is_observe(p, gNum)) {
-    pprintf(p, "You are not observing game %d.\n", gNum);
-  } else {
-    player_remove_observe(p, gNum);
-    pprintf(p, "Removing game %d from observation list.\n", gNum + 1);
-  }
-  return COM_OK;
+	if (param[0].type == TYPE_NULL) {
+		unobserveAll(p);
+		return COM_OK;
+	}
+
+	if ((gNum = GameNumFromParam(p, &p1, &param[0])) < 0)
+		return COM_OK;
+
+	if (!player_is_observe(p, gNum)) {
+		pprintf(p, "You are not observing game %d.\n", gNum);
+	} else {
+		player_remove_observe(p, gNum);
+		pprintf(p, "Removing game %d from observation list.\n",
+		    (gNum + 1));
+	}
+
+	return COM_OK;
 }
 
 PUBLIC int
