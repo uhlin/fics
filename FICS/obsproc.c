@@ -25,6 +25,7 @@
    Markus Uhlin			24/04/28	Completed reformatting
    Markus Uhlin			24/04/28	Replaced unbounded string
 						handling functions.
+   Markus Uhlin			24/04/29	Fixed compiler warnings
 */
 
 #include "stdinclude.h"
