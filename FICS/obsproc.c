@@ -769,8 +769,8 @@ ExamineScratch(int p, param_list param)
 
 	if (param[0].val.string != parray[p].name &&
 	    param[1].type == TYPE_WORD) {
-		strcpy(category, param[0].val.string);
-		strcpy(board, param[1].val.string);
+		mstrlcpy(category, param[0].val.string, sizeof category);
+		mstrlcpy(board, param[1].val.string, sizeof board);
 	} else if (param[1].type != TYPE_NULL) {
 		val = param[1].val.string;
 
@@ -778,13 +778,13 @@ ExamineScratch(int p, param_list param)
 			val = eatword(eatwhite(val));
 
 			if (category[0] != '\0' && board[0] == '\0') {
-				strcpy(board, parsebuf);
+				mstrlcpy(board, parsebuf, sizeof board);
 			} else if (isdigit(*parsebuf)) {
 				pprintf(p, "You can't specify time controls."
 				    "\n");
 				return;
 			} else if (category[0] == '\0') {
-				strcpy(category, parsebuf);
+				mstrlcpy(category, parsebuf, sizeof category);
 			} else {
 				confused = 1;
 			}
@@ -816,9 +816,12 @@ ExamineScratch(int p, param_list param)
 	}
 
 	garray[g].game_state.gameNum = g;
-	strcpy(garray[g].white_name, parray[p].name);
-	strcpy(garray[g].black_name, parray[p].name);
-	garray[g].white_rating = garray[g].black_rating = parray[p].s_stats.rating;
+	mstrlcpy(garray[g].white_name, parray[p].name,
+	    sizeof(garray[g].white_name));
+	mstrlcpy(garray[g].black_name, parray[p].name,
+	    sizeof(garray[g].black_name));
+	garray[g].white_rating = garray[g].black_rating =
+	    parray[p].s_stats.rating;
 	send_boards(g);
 	MakeFENpos(g, (char *)garray[g].FENstartPos);
 }
