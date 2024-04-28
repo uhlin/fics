@@ -22,6 +22,7 @@
    Dave Herscovici		95/11/26	Created
    Markus Uhlin			23/12/13	Fixed bugs
    Markus Uhlin			23/12/13	Reformatted functions
+   Markus Uhlin			24/04/28	Completed reformatting
 */
 
 #include "stdinclude.h"
