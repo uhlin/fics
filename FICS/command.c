@@ -866,48 +866,55 @@ PRIVATE int process_prompt(int p, char *command)
 }
 
 /* Return 1 to disconnect */
-PUBLIC int process_input(int fd, char *com_string)
+PUBLIC int
+process_input(int fd, char *com_string)
 {
-  int p = player_find(fd);
-  int retval = 0;
+	int	p = player_find(fd);
+	int	retval = 0;
 
-  if (p < 0) {
-    fprintf(stderr, "FICS: Input from a player not in array!\n");
-    return -1;
-  }
+	if (p < 0) {
+		fprintf(stderr, "FICS: Input from a player not in array!\n");
+		return -1;
+	}
 
-  commanding_player = p;
-  parray[p].last_command_time = time(0);
+	commanding_player = p;
+	parray[p].last_command_time = time(0);
 
-  switch (parray[p].status) {
-  case PLAYER_EMPTY:
-    fprintf(stderr, "FICS: Command from an empty player!\n");
-    break;
-  case PLAYER_NEW:
-    fprintf(stderr, "FICS: Command from a new player!\n");
-    break;
-  case PLAYER_INQUEUE:
-    /* Ignore input from player in queue */
-    break;
-  case PLAYER_LOGIN:
-    retval = process_login(p, com_string);
-    if (retval == COM_LOGOUT && com_string != NULL)
-      fprintf (stderr, "%s tried to log in and failed.\n", com_string);
-    break;
-  case PLAYER_PASSWORD:
-    retval = process_password(p, com_string);
-    break;
-  case PLAYER_PROMPT:
-    parray[p].busy[0] = '\0';
-    /* added this to stop buggy admin levels; shane */
-    if (parray[p].adminLevel < 10)
-      parray[p].adminLevel = 0;
-    retval = process_prompt(p, com_string);
-    break;
-  }
+	switch (parray[p].status) {
+	case PLAYER_EMPTY:
+		fprintf(stderr, "FICS: Command from an empty player!\n");
+		break;
+	case PLAYER_NEW:
+		fprintf(stderr, "FICS: Command from a new player!\n");
+		break;
+	case PLAYER_INQUEUE:
+		// Ignore input from player in queue
+		break;
+	case PLAYER_LOGIN:
+		retval = process_login(p, com_string);
 
-  commanding_player = -1;
-  return retval;
+		if (retval == COM_LOGOUT && com_string != NULL) {
+			fprintf(stderr, "%s tried to log in and failed.\n",
+			    com_string);
+		}
+
+		break;
+	case PLAYER_PASSWORD:
+		retval = process_password(p, com_string);
+		break;
+	case PLAYER_PROMPT:
+		parray[p].busy[0] = '\0';
+
+		// added this to stop buggy admin levels; shane
+		if (parray[p].adminLevel < 10)
+			parray[p].adminLevel = 0;
+
+		retval = process_prompt(p, com_string);
+		break;
+	}
+
+	commanding_player = -1;
+	return retval;
 }
 
 PUBLIC int
