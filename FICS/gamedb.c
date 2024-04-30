@@ -1732,15 +1732,18 @@ PUBLIC void game_write_complete(int g, int isDraw, char *EndSymbol)
   write_g_out(g, fname, 10, isDraw, EndSymbol, parray[bp].name, &now);
 }
 
-PUBLIC int game_count(void)
+PUBLIC int
+game_count(void)
 {
-  int g, count = 0;
+	int	g, count = 0;
 
-  for (g = 0; g < g_num; g++) {
-    if ((garray[g].status == GAME_ACTIVE) || (garray[g].status == GAME_EXAMINE))
-      count++;
-  }
-  if (count > game_high)
-    game_high = count;
-  return count;
+	for (g = 0; g < g_num; g++) {
+		if (garray[g].status == GAME_ACTIVE ||
+		    garray[g].status == GAME_EXAMINE)
+			count++;
+	}
+
+	if (count > game_high)
+		game_high = count;
+	return count;
 }
