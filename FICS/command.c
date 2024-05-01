@@ -727,7 +727,8 @@ check_news(int p, int admin)
 	time_t		 lc = player_lastconnect(p);
 
 	if (admin) {
-		sprintf(filename, "%s/newadminnews.index", news_dir);
+		msnprintf(filename, sizeof filename, "%s/newadminnews.index",
+		    news_dir);
 
 		if ((fp = fopen(filename, "r")) == NULL) {
 			fprintf(stderr, "Can't find admin news index.\n");
@@ -763,7 +764,8 @@ check_news(int p, int admin)
 			    "admin news file)\n", num_anews);
 		}
 	} else {
-		sprintf(filename, "%s/newnews.index", news_dir);
+		msnprintf(filename, sizeof filename, "%s/newnews.index",
+		    news_dir);
 
 		if ((fp = fopen(filename, "r")) == NULL) {
 			fprintf(stderr, "Can't find news index.\n");
