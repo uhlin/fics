@@ -1700,36 +1700,50 @@ PUBLIC int pgames(int p, int p1, char *fname)
   return COM_OK;
 }
 
-PUBLIC void game_write_complete(int g, int isDraw, char *EndSymbol)
+PUBLIC void
+game_write_complete(int g, int isDraw, char *EndSymbol)
 {
-  char fname[MAX_FILENAME_SIZE];
-  int wp = garray[g].white, bp = garray[g].black;
-  time_t now = time(NULL);
-  int fd;
-  FILE *fp;
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	 fd;
+	int	 wp = garray[g].white, bp = garray[g].black;
+	time_t	 now = time(NULL);
 
-  do {
-    sprintf(fname, "%s/%ld/%ld", hist_dir, (long) now % 100, (long) now);
-    fd = open(fname, O_WRONLY | O_CREAT | O_EXCL, 0644);
-    if (fd == EEXIST)
-      now++;
-  } while (fd == EEXIST);
+	do {
+		msnprintf(fname, sizeof fname, "%s/%ld/%ld",
+		    hist_dir,
+		    (long int)(now % 100),
+		    (long int)now);
+		fd = open(fname, (O_WRONLY | O_CREAT | O_EXCL), 0644);
+		if (fd == EEXIST)
+			now++;
+	} while (fd == EEXIST);
 
-  if (fd >= 0) {
-    fp = fdopen(fd, "w");
-    if (fp != NULL)
-      WriteGameFile(fp, g);
-    else
-      fprintf(stderr, "Trouble writing history file %s", fname);
-    fclose(fp);
-    close(fd);
-  }
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
-	  parray[wp].login[0], parray[wp].login, STATS_GAMES);
-  write_g_out(g, fname, 10, isDraw, EndSymbol, parray[wp].name, &now);
-  sprintf(fname, "%s/player_data/%c/%s.%s", stats_dir,
-	  parray[bp].login[0], parray[bp].login, STATS_GAMES);
-  write_g_out(g, fname, 10, isDraw, EndSymbol, parray[bp].name, &now);
+	if (fd >= 0) {
+		fp = fdopen(fd, "w");
+		if (fp != NULL)
+			WriteGameFile(fp, g);
+		else {
+			fprintf(stderr, "Trouble writing history file %s",
+			    fname);
+		}
+		fclose(fp);
+		close(fd);
+	}
+
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+	    stats_dir,
+	    parray[wp].login[0],
+	    parray[wp].login,
+	    STATS_GAMES);
+	write_g_out(g, fname, 10, isDraw, EndSymbol, parray[wp].name, &now);
+
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+	    stats_dir,
+	    parray[bp].login[0],
+	    parray[bp].login,
+	    STATS_GAMES);
+	write_g_out(g, fname, 10, isDraw, EndSymbol, parray[bp].name, &now);
 }
 
 PUBLIC int
