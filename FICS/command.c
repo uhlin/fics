@@ -743,7 +743,8 @@ check_news(int p, int admin)
 		    news_dir);
 
 		if ((fp = fopen(filename, "r")) == NULL) {
-			fprintf(stderr, "Can't find admin news index.\n");
+			warn("%s: can't find admin news index (%s)", __func__,
+			    filename);
 			return;
 		}
 
@@ -780,7 +781,8 @@ check_news(int p, int admin)
 		    news_dir);
 
 		if ((fp = fopen(filename, "r")) == NULL) {
-			fprintf(stderr, "Can't find news index.\n");
+			warn("%s: can't find news index (%s)", __func__,
+			    filename);
 			return;
 		}
 
@@ -788,7 +790,8 @@ check_news(int p, int admin)
 			num_news = count_lines(fp);
 			fclose(fp);
 			if ((fp = fopen(filename, "r")) == NULL) {
-				fprintf(stderr, "Can't find news index.\n");
+				warn("%s: can't find news index (%s)", __func__,
+				    filename);
 				return;
 			}
 		}
@@ -1247,15 +1250,16 @@ commands_init(void)
 	snprintf(fname, sizeof fname, "%s/commands", comhelp_dir);
 
 	if ((fp = fopen(fname, "w")) == NULL) {
-		fprintf(stderr, "FICS: Could not write commands help file.\n");
+		warn("%s: could not write commands help file (%s)", __func__,
+		    fname);
 		return;
 	}
 
 	snprintf(fname, sizeof fname, "%s/admin_commands", adhelp_dir);
 
 	if ((afp = fopen(fname, "w")) == NULL) {
-		fprintf(stderr, "FICS: Could not write admin_commands help "
-		    "file.\n");
+		warn("%s: could not write admin_commands help file (%s)",
+		    __func__, fname);
 		fclose(fp);
 		return;
 	}
