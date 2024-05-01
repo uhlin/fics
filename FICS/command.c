@@ -25,6 +25,8 @@
    Markus Uhlin                 23/12/23	Fixed crypt()
    Markus Uhlin                 24/05/01	Refactored and reformatted all
 						functions.
+   Markus Uhlin                 24/05/01	Replaced unbounded string
+						handling functions.
 */
 
 #include "stdinclude.h"
