@@ -1651,54 +1651,57 @@ PUBLIC int pjournal(int p, int p1, char *fname)
   return COM_OK;
 }
 
-PUBLIC int pgames(int p, int p1, char *fname)
+PUBLIC int
+pgames(int p, int p1, char *fname)
 {
-  FILE *fp;
-  time_t t;
-  int MyRating, OppRating;
-  int wt, wi, bt, bi;
-  char OppName[MAX_LOGIN_NAME + 1];
-  char type[100];
-  char eco[100];
-  char ending[100];
-  char MyColor[2];
-  int count;
-  char result[2];
+	FILE	*fp;
+	char	 MyColor[2] = { 0,0 };
+	char	 OppName[MAX_LOGIN_NAME + 1] = { '\0' };
+	char	 eco[100] = { '\0' };
+	char	 ending[100] = { '\0' };
+	char	 result[2] = { 0,0 };
+	char	 type[100] = { '\0' };
+	int	 MyRating, OppRating;
+	int	 count;
+	int	 wt, wi, bt, bi;
+	time_t	 t;
 
-  fp = fopen(fname, "r");
-  if (!fp) {
-    pprintf(p, "Sorry, no game information available.\n");
-    return COM_OK;
-  }
-  pprintf(p, "History for %s:\n", parray[p1].name);
-  pprintf(p, "                  Opponent      Type         ECO End Date\n");
-  while (!feof(fp)) {
-    if (fscanf(fp, "%d %s %d %s %d %s %s %d %d %d %d %s %s %ld\n",
-	       &count,
-	       result,
-	       &MyRating,
-	       MyColor,
-	       &OppRating,
-	       OppName,
-	       type,
-	       &wt, &wi,
-	       &bt, &bi,
-	       eco,
-	       ending,
-	       (long *) &t) != 14) {
-      fprintf(stderr, "FICS: Error in games info format. %s\n", fname);
-      fclose(fp);
-      return COM_OK;
-    }
-    OppName[13] = '\0';		/* only first 13 chars in name */
-    pprintf(p, "%2d: %s %4d %s %4d %-13s [%3s%3d%4d] %s %3s %s",
-	    count, result, MyRating, MyColor,
-	    OppRating, OppName,
-	    type, wt / 600, wi / 10, eco, ending,
-	    ctime(&t));
-  }
-  fclose(fp);
-  return COM_OK;
+	if ((fp = fopen(fname, "r")) == NULL) {
+		pprintf(p, "Sorry, no game information available.\n");
+		return COM_OK;
+	}
+
+	pprintf(p, "History for %s:\n", parray[p1].name);
+	pprintf(p, "                  Opponent      Type         "
+	    "ECO End Date\n");
+
+	while (!feof(fp)) {
+		if (fscanf(fp, "%d %s %d %s %d %s %s %d %d %d %d %s %s %ld\n",
+		    &count, result, &MyRating, MyColor,
+		    &OppRating, OppName,
+		    type,
+		    &wt, &wi,
+		    &bt, &bi,
+		    eco,
+		    ending,
+		    (long int *)&t) != 14) {
+			fprintf(stderr, "FICS: Error in games info format. "
+			    "%s\n", fname);
+			fclose(fp);
+			return COM_OK;
+		}
+
+		OppName[13] = '\0'; // only first 13 chars in name
+
+		pprintf(p, "%2d: %s %4d %s %4d %-13s [%3s%3d%4d] %s %3s %s",
+		    count, result, MyRating, MyColor,
+		    OppRating, OppName,
+		    type, (wt / 600), (wi / 10), eco, ending,
+		    ctime(&t));
+	}
+
+	fclose(fp);
+	return COM_OK;
 }
 
 PUBLIC void
