@@ -191,6 +191,7 @@ alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
 		const size_t diff = atpos - aliasval;
 
 		if (diff >= size) { // XXX
+			outalias[0] = '\0';
 			warnx("%s: diff out of bounds!", __func__);
 			return;
 		}
