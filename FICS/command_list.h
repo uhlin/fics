@@ -39,6 +39,9 @@
 #include "shutdown.h"
 #include "talkproc.h"
 
+extern command_type command_list[];
+extern alias_type g_alias_list[];
+
 /*
   Parameter string format
   w - a word
