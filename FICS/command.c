@@ -437,89 +437,137 @@ PUBLIC int process_command(int p, char *com_string, char **cmd)
   return command_list[which_command].comm_func(p, params);
 }
 
-PRIVATE int process_login(int p, char *loginname)
+PRIVATE int
+process_login(int p, char *loginname)
 {
-  int problem = 1;
+	int	problem = 1;
 
-  loginname = eatwhite(loginname);
+	loginname = eatwhite(loginname);
 
-  if (!*loginname) {		/* do something in here? */
-  } else {
-    char *loginnameii = xstrdup(loginname);
-    stolower(loginname);
-    if (!alphastring(loginname)) {
-      pprintf(p, "\nSorry, names can only consist of lower and upper case letters.  Try again.\n");
-    } else if (strlen(loginname) < 3) {
-      pprintf(p, "\nA name should be at least three characters long!  Try again.\n");
-    } else if (strlen(loginname) > 17) {
-      pprintf(p, "\nSorry, names may be at most 17 characters long.  Try again.\n");
-    } else if (in_list(p, L_BAN, loginnameii)) {
-      pprintf(p, "\nPlayer \"%s\" is banned.\n", loginname);
-      rfree(loginnameii);
-      return COM_LOGOUT;
-    } else if ((!in_list(p, L_ADMIN, loginnameii)) && (player_count(0) >= max_connections - 10)) {
-      psend_raw_file(p, mess_dir, MESS_FULL);
-      rfree(loginnameii);
-      return COM_LOGOUT;
-    } else {
-      problem = 0;
-      if (player_read(p, loginname)) {
-	strcpy(parray[p].name, loginnameii);
-	if (in_list(p, L_FILTER, dotQuad(parray[p].thisHost))) {
-	  pprintf(p, "\nDue to abusive behavior, nobody from your site may login.\n");
-	  pprintf(p, "If you wish to use this server please email %s\n", reg_addr);
-	  pprintf(p, "Include details of a nick-name to be called here, e-mail address and your real name.\n");
-	  pprintf(p, "We will send a password to you. Thanks.\n");
-	  rfree(loginnameii);
-	  return COM_LOGOUT;
+	if (!*loginname) {
+		/* do something in here? */;
+	} else {
+		char	*loginnameii = xstrdup(loginname);
+
+		stolower(loginname);
+
+		if (!alphastring(loginname)) {
+			pprintf(p, "\nSorry, names can only consist of lower "
+			    "and upper case letters. Try again.\n");
+		} else if (strlen(loginname) < 3) {
+			pprintf(p, "\nA name should be at least three "
+			    "characters long! Try again.\n");
+		} else if (strlen(loginname) > 17) {
+			pprintf(p, "\nSorry, names may be at most 17 "
+			    "characters long. Try again.\n");
+		} else if (in_list(p, L_BAN, loginnameii)) {
+			pprintf(p, "\nPlayer \"%s\" is banned.\n", loginname);
+			rfree(loginnameii);
+			return COM_LOGOUT;
+		} else if ((!in_list(p, L_ADMIN, loginnameii)) &&
+		    (player_count(0) >= max_connections - 10)) {
+			psend_raw_file(p, mess_dir, MESS_FULL);
+			rfree(loginnameii);
+			return COM_LOGOUT;
+		} else {
+			problem = 0;
+
+			if (player_read(p, loginname)) {
+				strcpy(parray[p].name, loginnameii);
+
+				if (in_list(p, L_FILTER,
+				    dotQuad(parray[p].thisHost))) {
+					pprintf(p, "\nDue to abusive behavior, "
+					    "nobody from your site may login.\n");
+					pprintf(p, "If you wish to use this "
+					    "server please email %s\n",
+					    reg_addr);
+					pprintf(p, "Include details of a "
+					    "nick-name to be called here, "
+					    "e-mail address and your real name."
+					    "\n");
+					pprintf(p, "We will send a password "
+					    "to you. Thanks.\n");
+					rfree(loginnameii);
+					return COM_LOGOUT;
+				}
+
+				if ((player_count(0)) >=
+				    MAX(max_connections - 60, 200)) {
+					psend_raw_file(p, mess_dir,
+					    MESS_FULL_UNREG);
+					rfree(loginnameii);
+					return COM_LOGOUT;
+				}
+
+				pprintf_noformat(p, "\n\"%s\" is not a "
+				    "registered name. You may use this name "
+				    "to play unrated games.\n(After logging in,"
+				    "do \"help register\" for more info on "
+				    "how to register.)\n\nPress return to "
+				    "enter the FICS as \"%s\":",
+				    parray[p].name,
+				    parray[p].name);
+			} else {
+				pprintf_noformat(p, "\n\"%s\" is a registered "
+				    "name. If it is yours, type the password.\n"
+				    "If not, just hit return to try another "
+				    "name.\n\npassword: ", parray[p].name);
+			}
+
+			parray[p].status = PLAYER_PASSWORD;
+			turn_echo_off(parray[p].socket);
+			rfree(loginnameii);
+
+			if (strcasecmp(loginname, parray[p].name)) {
+				pprintf(p, "\nYou've got a bad name field in "
+				    "your playerfile -- please report this to "
+				    "an admin!\n");
+				rfree(loginnameii);
+				return COM_LOGOUT;
+			}
+
+			if (parray[p].adminLevel != 0 &&
+			    !in_list(p, L_ADMIN, parray[p].name)) {
+				pprintf(p, "\nYou've got a bad playerfile -- "
+				    "please report this to an admin!\n");
+				pprintf(p, "Your handle is missing!");
+				pprintf(p, "Please log on as an unreg until "
+				    "an admin can correct this.\n");
+				rfree(loginnameii);
+				return COM_LOGOUT;
+			}
+
+			if (parray[p].registered &&
+			    parray[p].fullName == NULL) {
+				pprintf(p, "\nYou've got a bad playerfile -- "
+				    "please report this to an admin!\n");
+				pprintf(p, "Your FullName is missing!");
+				pprintf(p, "Please log on as an unreg until "
+				    "an admin can correct this.\n");
+				rfree(loginnameii);
+				return COM_LOGOUT;
+			}
+
+			if (parray[p].registered &&
+			    parray[p].emailAddress == NULL) {
+				pprintf(p, "\nYou've got a bad playerfile -- "
+				    "please report this to an admin!\n");
+				pprintf(p, "Your Email address is missing\n");
+				pprintf(p, "Please log on as an unreg until "
+				    "an admin can correct this.\n");
+				rfree(loginnameii);
+				return COM_LOGOUT;
+			}
+		}
 	}
-	if ((player_count(0)) >= MAX(max_connections - 60, 200)) {
-	  psend_raw_file(p, mess_dir, MESS_FULL_UNREG);
-	  rfree(loginnameii);
-	  return COM_LOGOUT;
-	}
-	pprintf_noformat(p, "\n\"%s\" is not a registered name.  You may use this name to play unrated games.\n(After logging in, do \"help register\" for more info on how to register.)\n\nPress return to enter the FICS as \"%s\":",
-			 parray[p].name, parray[p].name);
-      } else {
-	pprintf_noformat(p, "\n\"%s\" is a registered name.  If it is yours, type the password.\nIf not, just hit return to try another name.\n\npassword: ", parray[p].name);
-      }
-      parray[p].status = PLAYER_PASSWORD;
-      turn_echo_off(parray[p].socket);
-      rfree(loginnameii);
-      if (strcasecmp(loginname, parray[p].name)) {
-	pprintf(p, "\nYou've got a bad name field in your playerfile -- please report this to an admin!\n");
-	rfree(loginnameii);
-	return COM_LOGOUT;
-      }
-      if ((parray[p].adminLevel != 0) && (!in_list(p, L_ADMIN, parray[p].name))) {
-	pprintf(p, "\nYou've got a bad playerfile -- please report this to an admin!\n");
-	pprintf(p, "Your handle is missing!");
-	pprintf(p, "Please log on as an unreg until an admin can correct this.\n");
-	rfree(loginnameii);
-	return COM_LOGOUT;
-      }
-      if ((parray[p].registered) && (parray[p].fullName == NULL)) {
-	pprintf(p, "\nYou've got a bad playerfile -- please report this to an admin!\n");
-	pprintf(p, "Your FullName is missing!");
-	pprintf(p, "Please log on as an unreg until an admin can correct this.\n");
-	rfree(loginnameii);
-	return COM_LOGOUT;
-      }
-      if ((parray[p].registered) && (parray[p].emailAddress == NULL)) {
-	pprintf(p, "\nYou've got a bad playerfile -- please report this to an admin!\n");
-	pprintf(p, "Your Email address is missing\n");
-	pprintf(p, "Please log on as an unreg until an admin can correct this.\n");
-	rfree(loginnameii);
-	return COM_LOGOUT;
-      }
-    }
-  }
 
-  if (problem) {
-    psend_raw_file(p, mess_dir, MESS_LOGIN);
-    pprintf(p, "login: ");
-  }
-  return 0;
+	if (problem) {
+		psend_raw_file(p, mess_dir, MESS_LOGIN);
+		pprintf(p, "login: ");
+	}
+
+	return 0;
 }
 
 void
