@@ -32,6 +32,8 @@
 
 #include <sys/param.h>
 
+#include <err.h>
+
 #include "command.h"
 #include "command_list.h"
 #include "config.h"
@@ -39,6 +41,7 @@
 #include "ficsmain.h"
 #include "gamedb.h"
 #include "gameproc.h"
+#include "maxxes-utils.h"
 #include "movecheck.h"
 #include "network.h"
 #include "obsproc.h"
