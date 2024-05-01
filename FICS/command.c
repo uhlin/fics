@@ -396,45 +396,58 @@ PRIVATE void printusage(int p, char *command_str)
   pprintf(p, "\nSee 'help %s' for a complete description.\n", command_list[lastCommandFound].comm_name);
 }
 
-PUBLIC int process_command(int p, char *com_string, char **cmd)
+PUBLIC int
+process_command(int p, char *com_string, char **cmd)
 {
-  int which_command, retval;
-  param_list params;
-  static char alias_string1[MAX_STRING_LENGTH * 4], alias_string2[MAX_STRING_LENGTH * 4];
-  char *comm, *parameters;
+	char		*comm, *parameters;
+	int		 which_command, retval;
+	param_list	 params;
+	static char	 alias_string1[MAX_STRING_LENGTH * 4] = { '\0' };
+	static char	 alias_string2[MAX_STRING_LENGTH * 4] = { '\0' };
 
 #ifdef DEBUG
-  if (strcasecmp(parray[p].name, parray[p].login)) {
-    fprintf(stderr, "FICS: PROBLEM Name=%s, Login=%s\n", parray[p].name, parray[p].login);
-  }
+	if (strcasecmp(parray[p].name, parray[p].login)) {
+		fprintf(stderr, "FICS: PROBLEM Name=%s, Login=%s\n",
+		    parray[p].name,
+		    parray[p].login);
+	}
 #endif
-  if (!com_string)
-    return COM_FAILED;
+
+	if (!com_string)
+		return COM_FAILED;
+
 #ifdef DEBUG
-  fprintf(stderr, "%s, %s, %d: >%s<\n", parray[p].name, parray[p].login, parray[p].socket, com_string);
+	fprintf(stderr, "%s, %s, %d: >%s<\n", parray[p].name, parray[p].login,
+	    parray[p].socket, com_string);
 #endif
-  alias_substitute(parray[p].alias_list, parray[p].numAlias,
-		   com_string, alias_string1);
-  alias_substitute(g_alias_list, 999,
-		   alias_string1, alias_string2);
+
+	alias_substitute(parray[p].alias_list, parray[p].numAlias, com_string,
+	    alias_string1);
+	alias_substitute(g_alias_list, 999, alias_string1, alias_string2);
+
 #ifdef DEBUG
-  if (strcmp(com_string, alias_string2) != 0)
-    fprintf(stderr, "%s -alias-: >%s<\n", parray[p].name, alias_string2);
+	if (strcmp(com_string, alias_string2) != 0) {
+		fprintf(stderr, "%s -alias-: >%s<\n", parray[p].name,
+		    alias_string2);
+	}
 #endif
-  if ((retval = parse_command(alias_string2, &comm, &parameters)))
-    return retval;
-  if (is_move(comm))
-    return COM_ISMOVE;
-  stolower(comm);		/* All commands are case-insensitive */
-  *cmd = comm;
-  if ((which_command = match_command(comm, p)) < 0)
-    return -which_command;
-  if (parray[p].adminLevel < command_list[which_command].adminLevel) {
-    return COM_RIGHTS;
-  }
-  if ((retval = get_parameters(which_command, parameters, params)))
-    return retval;
-  return command_list[which_command].comm_func(p, params);
+
+	if ((retval = parse_command(alias_string2, &comm, &parameters)))
+		return retval;
+	if (is_move(comm))
+		return COM_ISMOVE;
+
+	stolower(comm); // All commands are case-insensitive
+	*cmd = comm;
+
+	if ((which_command = match_command(comm, p)) < 0)
+		return -which_command;
+	if (parray[p].adminLevel < command_list[which_command].adminLevel)
+		return COM_RIGHTS;
+
+	if ((retval = get_parameters(which_command, parameters, params)))
+		return retval;
+	return command_list[which_command].comm_func(p, params);
 }
 
 PRIVATE int
