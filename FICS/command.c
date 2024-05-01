@@ -146,7 +146,7 @@ alias_count(alias_type *alias_list)
  */
 PRIVATE void
 alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
-    char outalias[])
+    char outalias[], const size_t size)
 {
 	char	*atpos, *aliasval;
 	char	*s = com_str;
@@ -160,7 +160,7 @@ alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
 	 */
 	while (*s && !iswhitespace(*s)) {
 		if (i++ >= MAX_COM_LENGTH) {
-			strcpy(outalias, com_str);
+			mstrlcpy(outalias, com_str, size);
 			return;
 		}
 
@@ -176,7 +176,7 @@ alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
 	i = alias_lookup(name, alias_list, num_alias);
 
 	if (i < 0) {
-		strcpy(outalias, com_str);
+		mstrlcpy(outalias, com_str, size);
 		return;
 	}
 
@@ -191,7 +191,7 @@ alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
 		strcat(outalias, s);
 		strcat(outalias, atpos + 1);
 	} else {
-		strcpy(outalias, aliasval);
+		mstrlcpy(outalias, aliasval, size);
 
 		if (*s) {
 			strcat(outalias, " ");
@@ -507,8 +507,9 @@ process_command(int p, char *com_string, char **cmd)
 #endif
 
 	alias_substitute(parray[p].alias_list, parray[p].numAlias, com_string,
-	    alias_string1);
-	alias_substitute(g_alias_list, 999, alias_string1, alias_string2);
+	    alias_string1, sizeof(alias_string1));
+	alias_substitute(g_alias_list, 999, alias_string1, alias_string2,
+	    sizeof(alias_string2));
 
 #ifdef DEBUG
 	if (strcmp(com_string, alias_string2) != 0) {
