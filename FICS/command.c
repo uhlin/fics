@@ -190,14 +190,14 @@ alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
 	if (atpos != NULL) {
 		strncpy(outalias, aliasval, atpos - aliasval);
 		outalias[atpos - aliasval] = '\0';
-		strcat(outalias, s);
-		strcat(outalias, atpos + 1);
+		mstrlcat(outalias, s, size);
+		mstrlcat(outalias, atpos + 1, size);
 	} else {
 		mstrlcpy(outalias, aliasval, size);
 
 		if (*s) {
-			strcat(outalias, " ");
-			strcat(outalias, s);
+			mstrlcat(outalias, " ", size);
+			mstrlcat(outalias, s, size);
 		}
 	}
 }
