@@ -134,51 +134,63 @@ alias_count(alias_type *alias_list)
 	return i;
 }
 
-/* Puts alias substitution into alias_string */
-PRIVATE void alias_substitute(alias_type *alias_list, int num_alias,
-			       char *com_str, char outalias[])
+/*
+ * Puts alias substitution into alias_string
+ */
+PRIVATE void
+alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
+    char outalias[])
 {
-  char *s = com_str;
-  char name[MAX_COM_LENGTH];
-  char *t = name;
-  int i = 0;
-  char *atpos, *aliasval;
+	char	*atpos, *aliasval;
+	char	*s = com_str;
+	char	*t = name;
+	char	 name[MAX_COM_LENGTH] = { '\0' };
+	int	 i = 0;
 
-  /* Get first word of command, terminated by whitespace or by containing
-     punctuation */
-  while (*s && !iswhitespace(*s)) {
-    if (i++ >= MAX_COM_LENGTH) {
-      strcpy(outalias, com_str);
-      return;
-    }
-    if (ispunct(*t++ = *s++))
-      break;
-  }
-  *t = '\0';
-  if (*s && iswhitespace(*s))
-    s++;
+	/*
+	 * Get first word of command, terminated by whitespace or by
+	 * containing punctuation.
+	 */
+	while (*s && !iswhitespace(*s)) {
+		if (i++ >= MAX_COM_LENGTH) {
+			strcpy(outalias, com_str);
+			return;
+		}
 
-  i = alias_lookup(name, alias_list, num_alias);
-  if (i < 0) {
-    strcpy(outalias, com_str);
-    return;
-  }
-  aliasval = alias_list[i].alias;
+		if (ispunct(*t++ = *s++))
+			break;
+	}
 
-  /* See if alias contains an @ */
-  atpos = strchr(aliasval, '@');
-  if (atpos != NULL) {
-    strncpy(outalias, aliasval, atpos - aliasval);
-    outalias[atpos - aliasval] = '\0';
-    strcat(outalias, s);
-    strcat(outalias, atpos + 1);
-  } else {
-    strcpy(outalias, aliasval);
-    if (*s) {
-      strcat(outalias, " ");
-      strcat(outalias, s);
-    }
-  }
+	*t = '\0';
+
+	if (*s && iswhitespace(*s))
+		s++;
+
+	i = alias_lookup(name, alias_list, num_alias);
+
+	if (i < 0) {
+		strcpy(outalias, com_str);
+		return;
+	}
+
+	aliasval = alias_list[i].alias;
+
+	// See if alias contains an @
+	atpos = strchr(aliasval, '@');
+
+	if (atpos != NULL) {
+		strncpy(outalias, aliasval, atpos - aliasval);
+		outalias[atpos - aliasval] = '\0';
+		strcat(outalias, s);
+		strcat(outalias, atpos + 1);
+	} else {
+		strcpy(outalias, aliasval);
+
+		if (*s) {
+			strcat(outalias, " ");
+			strcat(outalias, s);
+		}
+	}
 }
 
 /*
