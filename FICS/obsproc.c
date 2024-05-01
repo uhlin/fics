@@ -568,7 +568,7 @@ com_moves(int p, param_list param)
 	int	p1;
 
 	if (param[0].type == TYPE_NULL) {
-		if (parray[p].game >=0) {
+		if (parray[p].game >= 0) {
 			g = parray[p].game;
 		} else if (parray[p].num_observe) {
 			for (g = 0; g < parray[p].num_observe; g++) {
