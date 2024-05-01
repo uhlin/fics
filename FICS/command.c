@@ -181,31 +181,39 @@ PRIVATE void alias_substitute(alias_type *alias_list, int num_alias,
   }
 }
 
-/* Returns pointer to command that matches */
-PRIVATE int match_command(char *comm, int p)
+/*
+ * Returns pointer to command that matches
+ */
+PRIVATE int
+match_command(char *comm, int p)
 {
-  int i = 0;
-  int gotIt = -1;
-  int len = strlen(comm);
+	int	gotIt = -1;
+	int	i = 0;
+	int	len = strlen(comm);
 
-  while (command_list[i].comm_name) {
-    if (!strncmp(command_list[i].comm_name, comm, len)
-	&& parray[p].adminLevel >= command_list[i].adminLevel) {
-      if (gotIt >= 0)
-	return -COM_AMBIGUOUS;
-      gotIt = i;
-    }
-    i++;
-  }
-  if (in_list(p, L_REMOVEDCOM, command_list[gotIt].comm_name)) {
-    pprintf(p, "Due to a bug - this command has been temporarily removed.\n");
-    return -COM_FAILED;
-  }
-  if (gotIt >= 0) {
-    lastCommandFound = gotIt;
-    return gotIt;
-  }
-  return -COM_FAILED;
+	while (command_list[i].comm_name) {
+		if (!strncmp(command_list[i].comm_name, comm, len) &&
+		    parray[p].adminLevel >= command_list[i].adminLevel) {
+			if (gotIt >= 0)
+				return -COM_AMBIGUOUS;
+			gotIt = i;
+		}
+
+		i++;
+	}
+
+	if (in_list(p, L_REMOVEDCOM, command_list[gotIt].comm_name)) {
+		pprintf(p, "Due to a bug - this command has been temporarily "
+		    "removed.\n");
+		return -COM_FAILED;
+	}
+
+	if (gotIt >= 0) {
+		lastCommandFound = gotIt;
+		return gotIt;
+	}
+
+	return -COM_FAILED;
 }
 
 /*
