@@ -1603,52 +1603,58 @@ PUBLIC void addjournalitem(int p,char count2,char* WhiteName2, int WhiteRating2,
   return;
 }
 
-PUBLIC int pjournal(int p, int p1, char *fname)
+PUBLIC int
+pjournal(int p, int p1, char *fname)
 {
-  FILE *fp;
-  int WhiteRating, BlackRating;
-  int t, i;
-  char WhiteName[MAX_LOGIN_NAME + 1];
-  char BlackName[MAX_LOGIN_NAME + 1];
-  char type[100];
-  char eco[100];
-  char ending[100];
-  char count;
-  char result[100];
+	FILE	*fp;
+	char	 BlackName[MAX_LOGIN_NAME + 1] = { '\0' };
+	char	 WhiteName[MAX_LOGIN_NAME + 1] = { '\0' };
+	char	 count;
+	char	 eco[100] = { '\0' };
+	char	 ending[100] = { '\0' };
+	char	 result[100] = { '\0' };
+	char	 type[100] = { '\0' };
+	int	 WhiteRating, BlackRating;
+	int	 t, i;
 
-  fp = fopen(fname, "r");
-  if (!fp) {
-    pprintf(p, "Sorry, no journal information available.\n");
-    return COM_OK;
-  }
-  pprintf(p, "Journal for %s:\n", parray[p1].name);
-  pprintf(p, "   White         Rating  Black         Rating  Type         ECO End Result\n");
-  while (!feof(fp)) {
-    if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
-               &count,
-               WhiteName,
-               &WhiteRating,
-               BlackName,
-               &BlackRating,
-               type,
-               &t, &i,
-               eco,
-               ending,
-               result) != 11) {
-      fprintf(stderr, "FICS: Error in journal info format. %s\n", fname);
-      fclose(fp);
-      return COM_OK;
-    }
-    WhiteName[13] = '\0';         /* only first 13 chars in name */
-    BlackName[13] = '\0';
-    pprintf(p, "%c: %-13s %4d    %-13s %4d    [%3s%3d%4d] %s %3s %-7s\n",
-            count, WhiteName, WhiteRating,
-            BlackName, BlackRating,
-            type, t / 600, i / 10, eco, ending,
-            result);
-  }
-  fclose(fp);
-  return COM_OK;
+	if ((fp = fopen(fname, "r")) == NULL) {
+		pprintf(p, "Sorry, no journal information available.\n");
+		return COM_OK;
+	}
+
+	pprintf(p, "Journal for %s:\n", parray[p1].name);
+	pprintf(p, "   White         Rating  Black         Rating  "
+	    "Type         ECO End Result\n");
+
+	while (!feof(fp)) {
+		if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+		    &count,
+		    WhiteName, &WhiteRating,
+		    BlackName, &BlackRating,
+		    type,
+		    &t, &i,
+		    eco,
+		    ending,
+		    result) != 11) {
+			fprintf(stderr, "FICS: Error in journal info format. "
+			    "%s\n", fname);
+			fclose(fp);
+			return COM_OK;
+		}
+
+		WhiteName[13]	= '\0'; // only first 13 chars in name
+		BlackName[13]	= '\0';
+
+		pprintf(p, "%c: %-13s %4d    %-13s %4d    [%3s%3d%4d] %s %3s "
+		    "%-7s\n",
+		    count, WhiteName, WhiteRating,
+		    BlackName, BlackRating,
+		    type, (t / 600), (i / 10), eco, ending,
+		    result);
+	}
+
+	fclose(fp);
+	return COM_OK;
 }
 
 PUBLIC int
