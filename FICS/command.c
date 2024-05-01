@@ -143,8 +143,8 @@ alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
 {
 	char	*atpos, *aliasval;
 	char	*s = com_str;
-	char	*t = name;
 	char	 name[MAX_COM_LENGTH] = { '\0' };
+	char	*t = name;
 	int	 i = 0;
 
 	/*
