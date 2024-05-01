@@ -574,7 +574,8 @@ process_login(int p, char *loginname)
 			problem = 0;
 
 			if (player_read(p, loginname)) {
-				strcpy(parray[p].name, loginnameii);
+				rfree(parray[p].name);
+				parray[p].name = xstrdup(loginnameii);
 
 				if (in_list(p, L_FILTER,
 				    dotQuad(parray[p].thisHost))) {
