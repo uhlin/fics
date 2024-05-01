@@ -208,113 +208,146 @@ PRIVATE int match_command(char *comm, int p)
   return -COM_FAILED;
 }
 
-/* Gets the parameters for this command */
-PRIVATE int get_parameters(int command, char *parameters, param_list params)
+/*
+ * Gets the parameters for this command
+ */
+PRIVATE int
+get_parameters(int command, char *parameters, param_list params)
 {
-  int i, parlen;
-  int paramLower;
-  char c;
-  static char punc[2];
+	char		c;
+	int		i, parlen;
+	int		paramLower;
+	static char	punc[2];
 
-  punc[1] = '\0';		/* Holds punc parameters */
-  for (i = 0; i < MAXNUMPARAMS; i++)
-    (params)[i].type = TYPE_NULL;	/* Set all parameters to NULL */
-  parlen = strlen(command_list[command].param_string);
-  for (i = 0; i < parlen; i++) {
-    c = command_list[command].param_string[i];
-    if (isupper(c)) {
-      paramLower = 0;
-      c = tolower(c);
-    } else {
-      paramLower = 1;
-    }
-    switch (c) {
-    case 'w':
-    case 'o':			/* word or optional word */
-      parameters = eatwhite(parameters);
-      if (!*parameters)
-	return (c == 'o' ? COM_OK : COM_BADPARAMETERS);
-      (params)[i].val.word = parameters;
-      (params)[i].type = TYPE_WORD;
-      if (ispunct(*parameters)) {
-	punc[0] = *parameters;
-	(params)[i].val.word = punc;
-	parameters++;
-	if (*parameters && iswhitespace(*parameters))
-	  parameters++;
-      } else {
-	parameters = eatword(parameters);
-	if (*parameters != '\0') {
-	  *parameters = '\0';
-	  parameters++;
-	}
-      }
-      if (paramLower)
-	stolower((params)[i].val.word);
-      break;
+	punc[1] = '\0'; // Holds punc parameters
 
-    case 'd':
-    case 'p':			/* optional or required integer */
-      parameters = eatwhite(parameters);
-      if (!*parameters)
-	return (c == 'p' ? COM_OK : COM_BADPARAMETERS);
-      if (sscanf(parameters, "%d", &(params)[i].val.integer) != 1)
-	return COM_BADPARAMETERS;
-      (params)[i].type = TYPE_INT;
-      parameters = eatword(parameters);
-      if (*parameters != '\0') {
-	*parameters = '\0';
-	parameters++;
-      }
-      break;
+	for (i = 0; i < MAXNUMPARAMS; i++)
+		(params)[i].type = TYPE_NULL; // Set all parameters to NULL
 
-    case 'i':
-    case 'n':			/* optional or required word or integer */
-      parameters = eatwhite(parameters);
-      if (!*parameters)
-	return (c == 'n' ? COM_OK : COM_BADPARAMETERS);
-      if (sscanf(parameters, "%d", &(params)[i].val.integer) != 1) {
-	(params)[i].val.word = parameters;
-	(params)[i].type = TYPE_WORD;
-      } else {
-	(params)[i].type = TYPE_INT;
-      }
-      if (ispunct(*parameters)) {
-	punc[0] = *parameters;
-	(params)[i].val.word = punc;
-	(params)[i].type = TYPE_WORD;
-	parameters++;
-	if (*parameters && iswhitespace(*parameters))
-	  parameters++;
-      } else {
-	parameters = eatword(parameters);
-	if (*parameters != '\0') {
-	  *parameters = '\0';
-	  parameters++;
-	}
-      }
-      if ((params)[i].type == TYPE_WORD)
-	if (paramLower)
-	  stolower((params)[i].val.word);
-      break;
+	parlen = strlen(command_list[command].param_string);
 
-    case 's':
-    case 't':			/* optional or required string to end */
-      if (!*parameters)
-	return (c == 't' ? COM_OK : COM_BADPARAMETERS);
-      (params)[i].val.string = parameters;
-      (params)[i].type = TYPE_STRING;
-      while (*parameters)
-	parameters = nextword(parameters);
-      if (paramLower)
-	stolower((params)[i].val.string);
-      break;
-    }
-  }
-  if (*parameters)
-    return COM_BADPARAMETERS;
-  else
-    return COM_OK;
+	for (i = 0; i < parlen; i++) {
+		c = command_list[command].param_string[i];
+
+		if (isupper(c)) {
+			paramLower = 0;
+			c = tolower(c);
+		} else {
+			paramLower = 1;
+		}
+
+		switch (c) {
+		case 'w':
+		case 'o':	// word or optional word
+			parameters = eatwhite(parameters);
+
+			if (!*parameters)
+				return (c == 'o' ? COM_OK : COM_BADPARAMETERS);
+
+			(params)[i].val.word = parameters;
+			(params)[i].type = TYPE_WORD;
+
+			if (ispunct(*parameters)) {
+				punc[0] = *parameters;
+
+				(params)[i].val.word = punc;
+
+				parameters++;
+
+				if (*parameters && iswhitespace(*parameters))
+					parameters++;
+			} else {
+				parameters = eatword(parameters);
+
+				if (*parameters != '\0') {
+					*parameters = '\0';
+					parameters++;
+				}
+			}
+
+			if (paramLower)
+				stolower((params)[i].val.word);
+
+			break;
+		case 'd':
+		case 'p':	// optional or required integer
+			parameters = eatwhite(parameters);
+
+			if (!*parameters)
+				return (c == 'p' ? COM_OK : COM_BADPARAMETERS);
+
+			if (sscanf(parameters, "%d", &(params)[i].val.integer)
+			    != 1)
+				return COM_BADPARAMETERS;
+
+			(params)[i].type = TYPE_INT;
+
+			parameters = eatword(parameters);
+
+			if (*parameters != '\0') {
+				*parameters = '\0';
+				parameters++;
+			}
+
+			break;
+		case 'i':
+		case 'n':	// optional or required word or integer
+			parameters = eatwhite(parameters);
+
+			if (!*parameters)
+				return (c == 'n' ? COM_OK : COM_BADPARAMETERS);
+
+			if (sscanf(parameters, "%d", &(params)[i].val.integer)
+			    != 1) {
+				(params)[i].val.word = parameters;
+				(params)[i].type = TYPE_WORD;
+			} else {
+				(params)[i].type = TYPE_INT;
+			}
+
+			if (ispunct(*parameters)) {
+				punc[0] = *parameters;
+
+				(params)[i].val.word = punc;
+				(params)[i].type = TYPE_WORD;
+
+				parameters++;
+
+				if (*parameters && iswhitespace(*parameters))
+					parameters++;
+			} else {
+				parameters = eatword(parameters);
+
+				if (*parameters != '\0') {
+					*parameters = '\0';
+					parameters++;
+				}
+			}
+
+			if ((params)[i].type == TYPE_WORD)
+				if (paramLower)
+					stolower((params)[i].val.word);
+			break;
+		case 's':
+		case 't':	// optional or required string to end
+			if (!*parameters)
+				return (c == 't' ? COM_OK : COM_BADPARAMETERS);
+
+			(params)[i].val.string = parameters;
+			(params)[i].type = TYPE_STRING;
+
+			while (*parameters)
+				parameters = nextword(parameters);
+			if (paramLower)
+				stolower((params)[i].val.string);
+			break;
+		} /* switch */
+	} /* for */
+
+	if (*parameters)
+		return COM_BADPARAMETERS;
+	else
+		return COM_OK;
 }
 
 PRIVATE void
