@@ -792,77 +792,84 @@ process_password(int p, char *password)
 	return 0;
 }
 
-PRIVATE int process_prompt(int p, char *command)
+PRIVATE int
+process_prompt(int p, char *command)
 {
-  int retval;
-  char *cmd = "";
+	char	*cmd = "";
+	int	 i, len;
+	int	 retval;
 
-  command = eattailwhite(eatwhite(command));
-  if (!*command) {
-    pprintf(p, "%s", parray[p].prompt);
-    return COM_OK;
-  }
-  retval = process_command(p, command, &cmd);
-  switch (retval) {
-  case COM_OK:
-    retval = COM_OK;
-    pprintf(p, "%s", parray[p].prompt);
-    break;
-  case COM_OK_NOPROMPT:
-    retval = COM_OK;
-    break;
-  case COM_ISMOVE:
-    retval = COM_OK;
+	command = eattailwhite(eatwhite(command));
+
+	if (!*command) {
+		pprintf(p, "%s", parray[p].prompt);
+		return COM_OK;
+	}
+
+	retval = process_command(p, command, &cmd);
+
+	switch (retval) {
+	case COM_OK:
+		retval = COM_OK;
+		pprintf(p, "%s", parray[p].prompt);
+		break;
+	case COM_OK_NOPROMPT:
+		retval = COM_OK;
+		break;
+	case COM_ISMOVE:
+		retval = COM_OK;
 
 #ifdef TIMESEAL
-    if (parray[p].game >= 0 && garray[parray[p].game].status == GAME_ACTIVE
-        && parray[p].side == garray[parray[p].game].game_state.onMove
-        && garray[parray[p].game].flag_pending != FLAG_NONE) {
-      ExecuteFlagCmd(parray[p].game, con[parray[p].socket].time);
-    }
+		if (parray[p].game >= 0 &&
+		    garray[parray[p].game].status == GAME_ACTIVE &&
+		    parray[p].side == garray[parray[p].game].game_state.onMove &&
+		    garray[parray[p].game].flag_pending != FLAG_NONE) {
+			ExecuteFlagCmd(parray[p].game,
+			    con[parray[p].socket].time);
+		}
 #endif
-    process_move(p, command);
-    pprintf(p, "%s", parray[p].prompt);
 
-    break;
-  case COM_RIGHTS:
-    pprintf(p, "%s: Insufficient rights.\n", cmd);
-    pprintf(p, "%s", parray[p].prompt);
-    retval = COM_OK;
-    break;
-  case COM_AMBIGUOUS:
-/*    pprintf(p, "%s: Ambiguous command.\n", cmd); */
-    {
-      int len = strlen(cmd);
-      int i = 0;
-      pprintf(p, "Ambiguous command. Matches:");
-      while (command_list[i].comm_name) {
-	if ((!strncmp(command_list[i].comm_name, cmd, len)) &&
-	    (parray[p].adminLevel >= command_list[i].adminLevel)) {
-	  pprintf(p, " %s", command_list[i].comm_name);
+		process_move(p, command);
+		pprintf(p, "%s", parray[p].prompt);
+		break;
+	case COM_RIGHTS:
+		pprintf(p, "%s: Insufficient rights.\n", cmd);
+		pprintf(p, "%s", parray[p].prompt);
+		retval = COM_OK;
+		break;
+	case COM_AMBIGUOUS:
+		i = 0;
+		len = strlen(cmd);
+
+		pprintf(p, "Ambiguous command. Matches:");
+
+		while (command_list[i].comm_name) {
+			if (!strncmp(command_list[i].comm_name, cmd, len) &&
+			    parray[p].adminLevel >= command_list[i].adminLevel)
+				pprintf(p, " %s", command_list[i].comm_name);
+			i++;
+		}
+
+		pprintf(p, "\n%s", parray[p].prompt);
+		retval = COM_OK;
+		break;
+	case COM_BADPARAMETERS:
+		printusage(p, command_list[lastCommandFound].comm_name);
+		pprintf(p, "%s", parray[p].prompt);
+		retval = COM_OK;
+		break;
+	case COM_FAILED:
+	case COM_BADCOMMAND:
+		pprintf(p, "%s: Command not found.\n", cmd);
+		retval = COM_OK;
+		pprintf(p, "%s", parray[p].prompt);
+		break;
+	case COM_LOGOUT:
+		retval = COM_LOGOUT;
+		break;
 	}
-	i++;
-      }
-    }
-    pprintf(p, "\n%s", parray[p].prompt);
-    retval = COM_OK;
-    break;
-  case COM_BADPARAMETERS:
-    printusage(p, command_list[lastCommandFound].comm_name);
-    pprintf(p, "%s", parray[p].prompt);
-    retval = COM_OK;
-    break;
-  case COM_FAILED:
-  case COM_BADCOMMAND:
-    pprintf(p, "%s: Command not found.\n", cmd);
-    retval = COM_OK;
-    pprintf(p, "%s", parray[p].prompt);
-    break;
-  case COM_LOGOUT:
-    retval = COM_LOGOUT;
-    break;
-  }
-  return retval;
+
+	return retval;
 }
 
 /* Return 1 to disconnect */
