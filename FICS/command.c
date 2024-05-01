@@ -123,6 +123,7 @@ alias_lookup(char *tmp, alias_type *alias_list, int numalias)
 	return -1; /* not found */
 }
 
+#if 0
 PRIVATE int
 alias_count(alias_type *alias_list)
 {
@@ -133,6 +134,7 @@ alias_count(alias_type *alias_list)
 	}
 	return i;
 }
+#endif
 
 /*
  * Puts alias substitution into alias_string
