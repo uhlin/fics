@@ -23,6 +23,8 @@
    Markus Uhlin                 23/12/17	Fixed compiler warnings
    Markus Uhlin                 23/12/19	Usage of 'time_t'
    Markus Uhlin                 23/12/23	Fixed crypt()
+   Markus Uhlin                 24/05/01	Refactored and reformatted all
+						functions.
 */
 
 #include "stdinclude.h"
