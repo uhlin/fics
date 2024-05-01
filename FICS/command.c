@@ -317,83 +317,108 @@ PRIVATE int get_parameters(int command, char *parameters, param_list params)
     return COM_OK;
 }
 
-PRIVATE void printusage(int p, char *command_str)
+PRIVATE void
+printusage(int p, char *command_str)
 {
-  int i, parlen, UseLang = parray[p].language;
-  int command;
-  char c;
+	char	*filenames[1000]; // enough for all usage names
+	char	 c;
+	int	 command;
+	int	 i, parlen, UseLang = parray[p].language;
 
-  char *filenames[1000];        /* enough for all usage names */
+	if ((command = match_command(command_str, p)) < 0) {
+		pprintf(p, "  UNKNOWN COMMAND\n");
+		return;
+	}
 
-  if ((command = match_command(command_str, p)) < 0) {
-    pprintf(p, "  UNKNOWN COMMAND\n");
-    return;
-  }
+	/*
+	 * Usage added by DAV 11/19/95.
+	 * First lets check if we have a text usage file for it.
+	 */
 
-/*Usage added by DAV 11/19/95 */
-  /* First lets check if we have a text usage file for it */
+	i = search_directory(usage_dir[UseLang], command_str, filenames,
+	    ARRAY_SIZE(filenames));
 
-  i = search_directory(usage_dir[UseLang], command_str, filenames, 1000);
-  if (i == 0) { /* nope none in current Lang */
-    if (UseLang != LANG_DEFAULT) {
-      i += search_directory(usage_dir[LANG_DEFAULT], command_str, filenames, 1000);
-      if (i > 0) {
-        pprintf(p, "No usage available in %s; using %s instead.\n",
-                Language(UseLang), Language(LANG_DEFAULT));
-        UseLang = LANG_DEFAULT;
-      }
-    }
-  }
+	if (i == 0) {
+		if (UseLang != LANG_DEFAULT) {
+			i += search_directory(usage_dir[LANG_DEFAULT],
+			    command_str, filenames, ARRAY_SIZE(filenames));
 
- if (i != 0) {
-  if ((i == 1) || (!strcmp(*filenames, command_str))) { /* found it? then send */
-    if (psend_file(p, usage_dir[UseLang], *filenames)) {
-      /* we should never reach this unless the file was just deleted */
-      pprintf(p, "Usage file %s could not be found! ", *filenames);
-      pprintf(p, "Please inform an admin of this. Thank you.\n");
-      /* no need to print 'system' usage - should never happen */
-    }
-   return;
-  }
- }
+			if (i > 0) {
+				pprintf(p, "No usage available in %s; "
+				    "using %s instead.\n",
+				    Language(UseLang),
+				    Language(LANG_DEFAULT));
+				UseLang = LANG_DEFAULT;
+			}
+		}
+	}
 
-  /* print the default 'system' usage files (which aren't much help!) */
+	if (i != 0) {
+		if (i == 1 ||
+		    !strcmp(*filenames, command_str)) { // found it?
+			if (psend_file(p, usage_dir[UseLang], *filenames)) {
+				/*
+				 * We should never reach this unless
+				 * the file was just deleted.
+				 */
+				pprintf(p, "Usage file %s could not be found! ",
+				    *filenames);
+				pprintf(p, "Please inform an admin of this. "
+				    "Thank you.\n");
 
-  pprintf(p, "Usage: %s", command_list[lastCommandFound].comm_name);
+				/*
+				 * No need to print 'system' usage -
+				 * should never happen.
+				 */
+			}
 
-  parlen = strlen(command_list[command].param_string);
-  for (i = 0; i < parlen; i++) {
-    c = command_list[command].param_string[i];
-    if (isupper(c))
-      c = tolower(c);
-    switch (c) {
-    case 'w':			/* word */
-      pprintf(p, " word");
-      break;
-    case 'o':			/* optional word */
-      pprintf(p, " [word]");
-      break;
-    case 'd':			/* integer */
-      pprintf(p, " integer");
-      break;
-    case 'p':			/* optional integer */
-      pprintf(p, " [integer]");
-      break;
-    case 'i':			/* word or integer */
-      pprintf(p, " {word, integer}");
-      break;
-    case 'n':			/* optional word or integer */
-      pprintf(p, " [{word, integer}]");
-      break;
-    case 's':			/* string to end */
-      pprintf(p, " string");
-      break;
-    case 't':			/* optional string to end */
-      pprintf(p, " [string]");
-      break;
-    }
-  }
-  pprintf(p, "\nSee 'help %s' for a complete description.\n", command_list[lastCommandFound].comm_name);
+			return;
+		}
+	}
+
+	/*
+	 * Print the default 'system' usage files (which aren't much
+	 * help!)
+	 */
+	pprintf(p, "Usage: %s", command_list[lastCommandFound].comm_name);
+	parlen = strlen(command_list[command].param_string);
+
+	for (i = 0; i < parlen; i++) {
+		c = command_list[command].param_string[i];
+
+		if (isupper(c))
+			c = tolower(c);
+
+		switch (c) {
+		case 'w':	// word
+			pprintf(p, " word");
+			break;
+		case 'o':	// optional word
+			pprintf(p, " [word]");
+			break;
+		case 'd':	// integer
+			pprintf(p, " integer");
+			break;
+		case 'p':	// optional integer
+			pprintf(p, " [integer]");
+			break;
+		case 'i':	// word or integer
+			pprintf(p, " {word, integer}");
+			break;
+		case 'n':	// optional word or integer
+			pprintf(p, " [{word, integer}]");
+			break;
+		case 's':	// string to end
+			pprintf(p, " string");
+			break;
+		case 't':	// optional string to end
+			pprintf(p, " [string]");
+			break;
+		}
+	}
+
+	pprintf(p, "\nSee 'help %s' for a complete description.\n",
+	    command_list[lastCommandFound].comm_name);
 }
 
 PUBLIC int
