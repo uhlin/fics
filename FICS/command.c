@@ -123,7 +123,7 @@ alias_lookup(char *tmp, alias_type *alias_list, int numalias)
 	return -1; /* not found */
 }
 
-PUBLIC int
+PRIVATE int
 alias_count(alias_type *alias_list)
 {
 	int i;
@@ -661,7 +661,7 @@ process_login(int p, char *loginname)
 	return 0;
 }
 
-void
+PRIVATE void
 boot_out(int p, int p1)
 {
 	int	fd;
