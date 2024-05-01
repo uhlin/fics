@@ -188,8 +188,16 @@ alias_substitute(alias_type *alias_list, int num_alias, char *com_str,
 	atpos = strchr(aliasval, '@');
 
 	if (atpos != NULL) {
-		strncpy(outalias, aliasval, atpos - aliasval);
-		outalias[atpos - aliasval] = '\0';
+		const size_t diff = atpos - aliasval;
+
+		if (diff >= size) { // XXX
+			warnx("%s: diff out of bounds!", __func__);
+			return;
+		}
+
+		strncpy(outalias, aliasval, diff);
+		outalias[diff] = '\0';
+
 		mstrlcat(outalias, s, size);
 		mstrlcat(outalias, atpos + 1, size);
 	} else {
