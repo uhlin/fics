@@ -1500,107 +1500,111 @@ PUBLIC int journal_get_info(int p,char from_spot,char* WhiteName, int* WhiteRati
   return 0;
 }
 
-PUBLIC void addjournalitem(int p,char count2,char* WhiteName2, int WhiteRating2,
- char* BlackName2, int BlackRating2, char* type2,int t2,int i2,char* eco2,
- char* ending2,char* result2, char* fname)
-
+PUBLIC void
+addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
+    char *BlackName2, int BlackRating2, char *type2, int t2, int i2,
+    char *eco2, char *ending2, char *result2, char *fname)
 {
-  int WhiteRating, BlackRating;
-  int t, i;
-  char WhiteName[MAX_LOGIN_NAME + 1];
-  char BlackName[MAX_LOGIN_NAME + 1];
-  char type[100];
-  char eco[100];
-  char ending[100];
-  char count;
-  char result[100];
-  int have_output=0;
-  char fname2[MAX_FILENAME_SIZE];
+	FILE	*fp;
+	FILE	*fp2;
+	char	 BlackName[MAX_LOGIN_NAME + 1] = { '\0' };
+	char	 WhiteName[MAX_LOGIN_NAME + 1] = { '\0' };
+	char	 count;
+	char	 eco[100] = { '\0' };
+	char	 ending[100] = { '\0' };
+	char	 fname2[MAX_FILENAME_SIZE] = { '\0' };
+	char	 result[100] = { '\0' };
+	char	 type[100] = { '\0' };
+	int	 WhiteRating, BlackRating;
+	int	 have_output = 0;
+	int	 t, i;
 
- FILE *fp;
- FILE *fp2;
+	mstrlcpy(fname2, fname, sizeof fname2);
+	mstrlcat(fname2, ".w", sizeof fname2);
 
-  strcpy (fname2,fname);
-  strcat (fname2,".w");
-  fp2 = fopen(fname2, "w");
-  if (!fp2) {
-    fprintf(stderr, "FICS: Problem opening file %s for write\n", fname);
-    pprintf (p, "Couldn't update journal! Report this to an admin.\n");
-    return;
-  }
-  fp = fopen(fname, "r");
-  if (!fp) { /* Empty? */
-    fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
-       count2, WhiteName2, WhiteRating2, BlackName2, BlackRating2,
-       type2, t2, i2, eco2, ending2,
-       result2);
-  fclose (fp2);
-  rename (fname2, fname);
-  return;
-  } else {
-   while (!feof(fp)) {
-    if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
-               &count,
-               WhiteName,
-               &WhiteRating,
-               BlackName,
-               &BlackRating,
-               type,
-               &t, &i,
-               eco,
-               ending,
-               result) != 11) {
-               fprintf(stderr, "FICS: Error in journal info format - aborting. %s\n", fname);
-               fclose(fp);
-               fclose(fp2);
-               return;
-               }
-    if ((count >= count2) && (!have_output)) {
-      fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
-               count2,
-               WhiteName2,
-               WhiteRating2,
-               BlackName2,
-               BlackRating2,
-               type2,
-               t2, i2,
-               eco2,
-               ending2,
-               result2);
-      have_output = 1;
-    }
-    if (count != count2) {
-    fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
-               count,
-               WhiteName,
-               WhiteRating,
-               BlackName,
-               BlackRating,
-               type,
-               t, i,
-               eco,
-               ending,
-               result);
-   }
-  }
-  if (!have_output) { /* Haven't written yet */
-  fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
-               count2,
-               WhiteName2,
-               WhiteRating2,
-               BlackName2,
-               BlackRating2,
-               type2,
-               t2, i2,
-               eco2,
-               ending2,
-               result2);
-  }
-  }
-  fclose(fp);
-  fclose(fp2);
-  rename(fname2, fname);
-  return;
+	if ((fp2 = fopen(fname2, "w")) == NULL) {
+		fprintf(stderr, "FICS: Problem opening file %s for write\n",
+		    fname);
+		pprintf(p, "Couldn't update journal! Report this to an admin."
+		    "\n");
+		return;
+	}
+
+	if ((fp = fopen(fname, "r")) == NULL) { // Empty?
+		fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+		    count2,
+		    WhiteName2, WhiteRating2,
+		    BlackName2, BlackRating2,
+		    type2,
+		    t2, i2,
+		    eco2,
+		    ending2,
+		    result2);
+		fclose(fp2);
+		rename(fname2, fname);
+		return;
+	} else {
+		while (!feof(fp)) {
+			if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+			    &count,
+			    WhiteName, &WhiteRating,
+			    BlackName, &BlackRating,
+			    type,
+			    &t, &i,
+			    eco,
+			    ending,
+			    result) != 11) {
+				fprintf(stderr, "FICS: Error in journal info "
+				    "format - aborting. %s\n", fname);
+				fclose(fp);
+				fclose(fp2);
+				return;
+			}
+
+			if ((count >= count2) && (!have_output)) {
+				fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+				    count2,
+				    WhiteName2, WhiteRating2,
+				    BlackName2, BlackRating2,
+				    type2,
+				    t2, i2,
+				    eco2,
+				    ending2,
+				    result2);
+				have_output = 1;
+			}
+
+			if (count != count2) {
+				fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s"
+				    "\n",
+				    count,
+				    WhiteName, WhiteRating,
+				    BlackName, BlackRating,
+				    type,
+				    t, i,
+				    eco,
+				    ending,
+				    result);
+			}
+		}
+
+		if (!have_output) {	// Haven't written yet
+			fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+			    count2,
+			    WhiteName2, WhiteRating2,
+			    BlackName2, BlackRating2,
+			    type2,
+			    t2, i2,
+			    eco2,
+			    ending2,
+			    result2);
+		}
+	}
+
+	fclose(fp);
+	fclose(fp2);
+
+	rename(fname2, fname);
 }
 
 PUBLIC int
