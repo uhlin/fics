@@ -522,14 +522,19 @@ PRIVATE int process_login(int p, char *loginname)
   return 0;
 }
 
-void boot_out(int p, int p1)
+void
+boot_out(int p, int p1)
 {
-  int fd;
-  pprintf(p, "\n **** %s is already logged in - kicking them out. ****\n", parray[p].name);
-  pprintf(p1, "**** %s has arrived - you can't both be logged in. ****\n", parray[p].name);
-  fd = parray[p1].socket;
-  process_disconnection(fd);
-  net_close_connection(fd);
+	int	fd;
+
+	pprintf(p, "\n **** %s is already logged in - kicking them out. ****\n",
+	    parray[p].name);
+	pprintf(p1, "**** %s has arrived - you can't both be logged in. ****\n",
+	    parray[p].name);
+
+	fd = parray[p1].socket;
+	process_disconnection(fd);
+	net_close_connection(fd);
 }
 
 PUBLIC void
