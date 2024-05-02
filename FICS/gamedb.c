@@ -1341,126 +1341,137 @@ PUBLIC void RemHist(char *who)
   }
 }
 
-PRIVATE void write_g_out(int g, char *file, int maxlines, int isDraw,
-			  char *EndSymbol, char *name, time_t *now)
+PRIVATE void
+write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
+    char *name, time_t *now)
 {
-  FILE *fp;
-  int wp, bp;
-  int wr, br;
-  char type[4];
-  char tmp[2048];
-  char *ptmp = tmp;
-  char cResult;
-  int count = -1;
-  char *goteco;
+	FILE	*fp;
+	char	*goteco;
+	char	 cResult;
+	char	 tmp[2048] = { '\0' };
+	char	*ptmp = tmp;
+	char	 type[4];
+	int	 count = -1;
+	int	 wp, bp;
+	int	 wr, br;
 
-  wp = garray[g].white;
-  bp = garray[g].black;
+	wp	= garray[g].white;
+	bp	= garray[g].black;
 
-  if (garray[g].private) {
-    type[0] = 'p';
-  } else {
-    type[0] = ' ';
-  }
-  if (garray[g].type == TYPE_BLITZ) {
-    wr = parray[wp].b_stats.rating;
-    br = parray[bp].b_stats.rating;
-    type[1] = 'b';
-  } else if (garray[g].type == TYPE_WILD) {
-    wr = parray[wp].w_stats.rating;
-    br = parray[bp].w_stats.rating;
-    type[1] = 'w';
-  } else if (garray[g].type == TYPE_STAND) {
-    wr = parray[wp].s_stats.rating;
-    br = parray[bp].s_stats.rating;
-    type[1] = 's';
-  } else if (garray[g].type == TYPE_LIGHT) {
-    wr = parray[wp].l_stats.rating;
-    br = parray[bp].l_stats.rating;
-    type[1] = 'l';
-  } else if (garray[g].type == TYPE_BUGHOUSE) {
-    wr = parray[wp].bug_stats.rating;
-    br = parray[bp].bug_stats.rating;
-    type[1] = 'd';
-  } else {
-    wr = 0;
-    br = 0;
-    if (garray[g].type == TYPE_NONSTANDARD)
-      type[1] = 'n';
-    else
-      type[1] = 'u';
-  }
-  if (garray[g].rated) {
-    type[2] = 'r';
-  } else {
-    type[2] = 'u';
-  }
-  type[3] = '\0';
+	if (garray[g].private) {
+		type[0] = 'p';
+	} else {
+		type[0] = ' ';
+	}
 
-  fp = fopen(file, "r");
-  if (fp) {
-    while (!feof(fp))
-      fgets(tmp, 1024, fp);
-    sscanf(ptmp, "%d", &count);
-    fclose(fp);
-  }
-  count = (count + 1) % 100;
+	if (garray[g].type == TYPE_BLITZ) {
+		wr = parray[wp].b_stats.rating;
+		br = parray[bp].b_stats.rating;
 
-  fp = fopen(file, "a");
-  if (!fp)
-    return;
+		type[1] = 'b';
+	} else if (garray[g].type == TYPE_WILD) {
+		wr = parray[wp].w_stats.rating;
+		br = parray[bp].w_stats.rating;
 
-  goteco = getECO(g);
+		type[1] = 'w';
+	} else if (garray[g].type == TYPE_STAND) {
+		wr = parray[wp].s_stats.rating;
+		br = parray[bp].s_stats.rating;
 
-/* Counter Result MyRating MyColor OppRating OppName [pbr 2 12 2 12] ECO End Date */
-  if (name == parray[wp].name) {
-    if (isDraw)
-      cResult = '=';
-    else if (garray[g].winner == WHITE)
-      cResult = '+';
-    else
-      cResult = '-';
+		type[1] = 's';
+	} else if (garray[g].type == TYPE_LIGHT) {
+		wr = parray[wp].l_stats.rating;
+		br = parray[bp].l_stats.rating;
 
-    fprintf(fp, "%d %c %d W %d %s %s %d %d %d %d %s %s %ld\n",
-	    count, cResult, wr, br, parray[bp].name, type,
-	    garray[g].wInitTime, garray[g].wIncrement,
-	    garray[g].bInitTime, garray[g].bIncrement,
-	    goteco,
-	    EndSymbol,
-	    (long) *now);
-  } else {
-    if (isDraw)
-      cResult = '=';
-    else if (garray[g].winner == BLACK)
-      cResult = '+';
-    else
-      cResult = '-';
+		type[1] = 'l';
+	} else if (garray[g].type == TYPE_BUGHOUSE) {
+		wr = parray[wp].bug_stats.rating;
+		br = parray[bp].bug_stats.rating;
 
-    fprintf(fp, "%d %c %d B %d %s %s %d %d %d %d %s %s %ld\n",
-	    count, cResult, br, wr, parray[wp].name, type,
-	    garray[g].wInitTime, garray[g].wIncrement,
-	    garray[g].bInitTime, garray[g].bIncrement,
-	    goteco,
-	    EndSymbol,
-	    (long) *now);
-  }
-  fclose(fp);
+		type[1] = 'd';
+	} else {
+		wr = 0;
+		br = 0;
 
-  RemoveHistGame(file, maxlines);
-/*
-  if ((name == parray[wp].name) && (parray[wp].registered)) {
-    sprintf(tmp, "%s/%c/%s.%d", adj_dir, parray[wp].login[0], parray[wp].login, count);
-    history_game_save(g, tmp);
-  }
-  if ((name == parray[bp].name) && (parray[bp].registered)) {
-    sprintf(tmp, "%s/%c/%s.%d", adj_dir, parray[bp].login[0], parray[bp].login, count);
-    history_game_save(g, tmp);
-  }
-*/
+		if (garray[g].type == TYPE_NONSTANDARD)
+			type[1] = 'n';
+		else
+			type[1] = 'u';
+	}
+
+	if (garray[g].rated) {
+		type[2] = 'r';
+	} else {
+		type[2] = 'u';
+	}
+
+	type[3] = '\0';
+
+	fp = fopen(file, "r");
+
+	if (fp) {
+		while (!feof(fp))
+			fgets(tmp, 1024, fp);
+		sscanf(ptmp, "%d", &count);
+		fclose(fp);
+	}
+
+	count = (count + 1) % 100;
+
+	if ((fp = fopen(file, "a")) == NULL)
+		return;
+	goteco = getECO(g);
+
+	/*
+	 * Counter
+	 * Result
+	 * MyRating
+	 * MyColor
+	 * OppRating
+	 * OppName [pbr 2 12 2 12]
+	 * ECO
+	 * End
+	 * Date
+	 */
+	if (name == parray[wp].name) {
+		if (isDraw)
+			cResult = '=';
+		else if (garray[g].winner == WHITE)
+			cResult = '+';
+		else
+			cResult = '-';
+
+		fprintf(fp, "%d %c %d W %d %s %s %d %d %d %d %s %s %ld\n",
+		    count, cResult, wr, br, parray[bp].name, type,
+		    garray[g].wInitTime, garray[g].wIncrement,
+		    garray[g].bInitTime, garray[g].bIncrement,
+		    goteco,
+		    EndSymbol,
+		    (long int) *now);
+	} else {
+		if (isDraw)
+			cResult = '=';
+		else if (garray[g].winner == BLACK)
+			cResult = '+';
+		else
+			cResult = '-';
+
+		fprintf(fp, "%d %c %d B %d %s %s %d %d %d %d %s %s %ld\n",
+		    count, cResult, br, wr, parray[wp].name, type,
+		    garray[g].wInitTime, garray[g].wIncrement,
+		    garray[g].bInitTime, garray[g].bIncrement,
+		    goteco,
+		    EndSymbol,
+		    (long int) *now);
+	}
+
+	fclose(fp);
+	RemoveHistGame(file, maxlines);
 }
 
-/* Find from_spot in journal list - return 0 if corrupted */
-
+/*
+ * Find from_spot in journal list - return 0 if corrupted
+ */
 PUBLIC int
 journal_get_info(int p, char from_spot, char *WhiteName, int *WhiteRating,
     char *BlackName, int *BlackRating, char *type, int *t, int *i, char *eco,
