@@ -1256,28 +1256,31 @@ PUBLIC int game_save(int g)
   return 0;
 }
 
-PRIVATE long OldestHistGame(char *login)
+PRIVATE long int
+OldestHistGame(char *login)
 {
-  FILE *fp;
-  char pFile[MAX_FILENAME_SIZE];
-  long when;
+	FILE		*fp;
+	char		 pFile[MAX_FILENAME_SIZE] = { '\0' };
+	long int	 when;
 
-  sprintf(pFile, "%s/player_data/%c/%s.%s", stats_dir,
-	  login[0], login, STATS_GAMES);
-  fp = fopen(pFile, "r");
-
-  if (fp == NULL) {
-    sprintf(pFile, "%s/player_data/%c/.rem.%s.%s", stats_dir,
+	msnprintf(pFile, sizeof pFile, "%s/player_data/%c/%s.%s", stats_dir,
 	    login[0], login, STATS_GAMES);
-    fp = fopen(pFile, "r");
-  }
-  if (fp != NULL) {
-    fscanf(fp, "%*d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d %*s %*s %ld",
-	   &when);
-    fclose(fp);
-    return when;
-  } else
-    return 0L;
+
+	fp = fopen(pFile, "r");
+
+	if (fp == NULL) {
+		msnprintf(pFile, sizeof pFile, "%s/player_data/%c/.rem.%s.%s",
+		    stats_dir, login[0], login, STATS_GAMES);
+		fp = fopen(pFile, "r");
+	}
+
+	if (fp != NULL) {
+		fscanf(fp, "%*d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d %*s "
+		    "%*s %ld", &when);
+		fclose(fp);
+		return when;
+	} else
+		return 0L;
 }
 
 PRIVATE void
