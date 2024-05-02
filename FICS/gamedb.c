@@ -1461,43 +1461,46 @@ PRIVATE void write_g_out(int g, char *file, int maxlines, int isDraw,
 
 /* Find from_spot in journal list - return 0 if corrupted */
 
-PUBLIC int journal_get_info(int p,char from_spot,char* WhiteName, int* WhiteRating,
- char* BlackName, int* BlackRating, char* type,int* t,int* i,char* eco,
- char* ending,char* result, char *fname)
+PUBLIC int
+journal_get_info(int p, char from_spot, char *WhiteName, int *WhiteRating,
+    char *BlackName, int *BlackRating, char *type, int *t, int *i, char *eco,
+    char *ending, char *result, char *fname)
 {
-  char count;
-  FILE *fp;
+	FILE	*fp;
+	char	 count;
 
-  fp = fopen(fname, "r");
-  if (!fp) {
-    fprintf (stderr, "Corrupt journal file! %s\n",fname);
-    pprintf (p, "The journal file is corrupt! See an admin.\n");
-    return 0;
-  }
-  while (!feof(fp)) {
-    if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
-               &count,
-               WhiteName,
-               &(*WhiteRating),
-               BlackName,
-               &(*BlackRating),
-               type,
-               &(*t), &(*i),
-               eco,
-               ending,
-               result) != 11) {
-      fprintf(stderr, "FICS: Error in journal info format. %s\n", fname);
-      pprintf(p, "The journal file is corrupt! Error in internal format.\n");
-      fclose(fp);
-      return 0;
-    }
-    if (tolower(count) == from_spot) {
-       fclose(fp);
-       return 1;
-    }
-  }
-  fclose(fp);
-  return 0;
+	if ((fp = fopen(fname, "r")) == NULL) {
+		fprintf(stderr, "Corrupt journal file! %s\n", fname);
+		pprintf(p, "The journal file is corrupt! See an admin.\n");
+		return 0;
+	}
+
+	while (!feof(fp)) {
+		if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+		    &count,
+		    WhiteName, &(*WhiteRating),
+		    BlackName, &(*BlackRating),
+		    type,
+		    &(*t), &(*i),
+		    eco,
+		    ending,
+		    result) != 11) {
+			fprintf(stderr, "FICS: Error in journal info format. "
+			    "%s\n", fname);
+			pprintf(p, "The journal file is corrupt! Error in "
+			    "internal format.\n");
+			fclose(fp);
+			return 0;
+		}
+
+		if (tolower(count) == from_spot) {
+			fclose(fp);
+			return 1;
+		}
+	}
+
+	fclose(fp);
+	return 0;
 }
 
 PUBLIC void
