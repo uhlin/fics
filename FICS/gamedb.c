@@ -1157,18 +1157,20 @@ PUBLIC int game_read(int g, int wp, int bp)
   return 0;
 }
 
-PUBLIC int game_delete(int wp, int bp)
+PUBLIC int
+game_delete(int wp, int bp)
 {
-  char fname[MAX_FILENAME_SIZE];
-  char lname[MAX_FILENAME_SIZE];
+	char	fname[MAX_FILENAME_SIZE];
+	char	lname[MAX_FILENAME_SIZE];
 
-  sprintf(fname, "%s/%c/%s-%s", adj_dir, parray[wp].login[0],
-	  parray[wp].login, parray[bp].login);
-  sprintf(lname, "%s/%c/%s-%s", adj_dir, parray[bp].login[0],
-	  parray[wp].login, parray[bp].login);
-  unlink(fname);
-  unlink(lname);
-  return 0;
+	msnprintf(fname, sizeof fname, "%s/%c/%s-%s", adj_dir,
+	    parray[wp].login[0], parray[wp].login, parray[bp].login);
+	msnprintf(lname, sizeof lname, "%s/%c/%s-%s", adj_dir,
+	    parray[bp].login[0], parray[wp].login, parray[bp].login);
+
+	unlink(fname);
+	unlink(lname);
+	return 0;
 }
 
 void
