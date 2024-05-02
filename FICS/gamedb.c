@@ -1280,65 +1280,74 @@ PRIVATE long OldestHistGame(char *login)
     return 0L;
 }
 
-PRIVATE void RemoveHistGame(char *file, int maxlines)
+PRIVATE void
+RemoveHistGame(char *file, int maxlines)
 {
-  FILE *fp;
-  char GameFile[MAX_FILENAME_SIZE];
-  char Opponent[MAX_LOGIN_NAME];
-  char line[MAX_LINE_SIZE];
-  long When, oppWhen;
-  int count = 0;
+	FILE		*fp;
+	char		 GameFile[MAX_FILENAME_SIZE] = { '\0' };
+	char		 Opponent[MAX_LOGIN_NAME] = { '\0' };
+	char		 line[MAX_LINE_SIZE] = { '\0' };
+	int		 count = 0;
+	long int	 When, oppWhen;
 
-  fp = fopen(file, "r");
-  if (fp == NULL)
-    return;
+	if ((fp = fopen(file, "r")) == NULL)
+		return;
 
-  fgets(line, MAX_LINE_SIZE - 1, fp);
-  sscanf(line, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d %*d %*s %*s %ld",
-	 Opponent, &When);
-  count++;
+	fgets(line, ARRAY_SIZE(line), fp);
+	sscanf(line, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d %*d %*s %*s %ld",
+	    Opponent, &When);
+	count++;
 
-  while (!feof(fp)) {
-    fgets(line, MAX_LINE_SIZE - 1, fp);
-    if (!feof(fp))
-      count++;
-  }
-  fclose(fp);
+	while (!feof(fp)) {
+		fgets(line, ARRAY_SIZE(line), fp);
 
-  stolower(Opponent);
-  if (count > maxlines) {
-    truncate_file(file, maxlines);
+		if (!feof(fp))
+			count++;
+	}
 
-    oppWhen = OldestHistGame(Opponent);
-    if (oppWhen > When || oppWhen <= 0L) {
-      sprintf(GameFile, "%s/%ld/%ld", hist_dir, When % 100, When);
-      unlink(GameFile);
-    }
-  }
+	fclose(fp);
+	stolower(Opponent);
+
+	if (count > maxlines) {
+		truncate_file(file, maxlines);
+		oppWhen = OldestHistGame(Opponent);
+
+		if (oppWhen > When || oppWhen <= 0L) {
+			msnprintf(GameFile, sizeof GameFile, "%s/%ld/%ld",
+			    hist_dir, (When % 100), When);
+			unlink(GameFile);
+		}
+	}
 }
 
-PUBLIC void RemHist(char *who)
+PUBLIC void
+RemHist(char *who)
 {
-  FILE *fp;
-  char fName[MAX_FILENAME_SIZE];
-  char Opp[MAX_LOGIN_NAME];
-  long When, oppWhen;
+	FILE		*fp;
+	char		 Opp[MAX_LOGIN_NAME] = { '\0' };
+	char		 fName[MAX_FILENAME_SIZE] = { '\0' };
+	long int	 When, oppWhen;
 
-  sprintf(fName, "%s/player_data/%c/%s.%s", stats_dir,
-	  who[0], who, STATS_GAMES);
-  fp = fopen(fName, "r");
-  if (fp != NULL) {
-    while (!feof(fp)) {
-      fscanf(fp, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d %*d %*s %*s %ld",
-	     Opp, &When);
-      stolower(Opp);
-      oppWhen = OldestHistGame(Opp);
-      if (oppWhen > When || oppWhen <= 0L) {
-	sprintf(fName, "%s/%ld/%ld", hist_dir, When % 100, When);
-	unlink(fName);
-      }
-    }
-  }
+	msnprintf(fName, sizeof fName, "%s/player_data/%c/%s.%s", stats_dir,
+	    who[0], who, STATS_GAMES);
+
+	fp = fopen(fName, "r");
+
+	if (fp != NULL) {
+		while (!feof(fp)) {
+			fscanf(fp, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d "
+			    "%*d %*s %*s %ld", Opp, &When);
+
+			stolower(Opp);
+			oppWhen = OldestHistGame(Opp);
+
+			if (oppWhen > When || oppWhen <= 0L) {
+				msnprintf(fName, sizeof fName, "%s/%ld/%ld",
+				    hist_dir, When % 100, When);
+				unlink(fName);
+			}
+		}
+	}
 }
 
 PRIVATE void
