@@ -1205,55 +1205,67 @@ WriteGameFile(FILE *fp, int g)
 	WriteGameState(fp, &garray[g].game_state);
 }
 
-PUBLIC int game_save(int g)
+PUBLIC int
+game_save(int g)
 {
-  FILE *fp;
-  player *wp, *bp;
-  game *gg = &garray[g];
-  char fname[MAX_FILENAME_SIZE];
-  char lname[MAX_FILENAME_SIZE];
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE];
+	char	 lname[MAX_FILENAME_SIZE];
+	game	*gg = &garray[g];
+	player	*wp, *bp;
 
-  wp = &parray[gg->white];
-  bp = &parray[gg->black];
-  sprintf(fname, "%s/%c/%s-%s", adj_dir, wp->login[0],
-	  wp->login, bp->login);
-  sprintf(lname, "%s/%c/%s-%s", adj_dir, bp->login[0],
-	  wp->login, bp->login);
-  fp = fopen(fname, "w");
-  if (!fp) {
-    fprintf(stderr, "FICS: Problem opening file %s for write\n", fname);
-    return -1;
-  }
-  WriteGameFile(fp, g);
+	wp	= &parray[gg->white];
+	bp	= &parray[gg->black];
+
+	msnprintf(fname, sizeof fname, "%s/%c/%s-%s", adj_dir, wp->login[0],
+	    wp->login, bp->login);
+	msnprintf(lname, sizeof lname, "%s/%c/%s-%s", adj_dir, bp->login[0],
+	    wp->login, bp->login);
+
+	fp = fopen(fname, "w");
+
+	if (!fp) {
+		fprintf(stderr, "FICS: Problem opening file %s for write\n",
+		    fname);
+		return -1;
+	}
+
+	WriteGameFile(fp, g);
+
 #if 0
-  fprintf(fp, "W_Init: %d\n", garray[g].wInitTime);
-  fprintf(fp, "W_Inc: %d\n", garray[g].wIncrement);
-  fprintf(fp, "B_Init: %d\n", garray[g].bInitTime);
-  fprintf(fp, "B_Inc: %d\n", garray[g].bIncrement);
-  fprintf(fp, "white_name: %s\n", wp->name);
-  fprintf(fp, "black_name: %s\n", bp->name);
-  fprintf(fp, "white_rating: %d\n", garray[g].white_rating);
-  fprintf(fp, "black_rating: %d\n", garray[g].black_rating);
-  fprintf(fp, "result: %d\n", garray[g].result);
-  fprintf(fp, "TimeStart: %d\n", (int) garray[g].timeOfStart);
-  fprintf(fp, "W_Time: %d\n", garray[g].wTime);
-  fprintf(fp, "B_Time: %d\n", garray[g].bTime);
-  fprintf(fp, "ClockStopped: %d\n", garray[g].clockStopped);
-  fprintf(fp, "Rated: %d\n", garray[g].rated);
-  fprintf(fp, "Private: %d\n", garray[g].private);
-  fprintf(fp, "Type: %d\n", garray[g].type);
-  fprintf(fp, "HalfMoves: %d\n", garray[g].numHalfMoves);
-  for (i = 0; i < garray[g].numHalfMoves; i++) {
-    WriteMoves(fp, &garray[g].moveList[i]);
-  }
-  fprintf(fp, "GameState: IsNext\n");
-  WriteGameState(fp, &garray[g].game_state);
+	fprintf(fp, "W_Init: %d\n", garray[g].wInitTime);
+	fprintf(fp, "W_Inc: %d\n", garray[g].wIncrement);
+	fprintf(fp, "B_Init: %d\n", garray[g].bInitTime);
+	fprintf(fp, "B_Inc: %d\n", garray[g].bIncrement);
+	fprintf(fp, "white_name: %s\n", wp->name);
+	fprintf(fp, "black_name: %s\n", bp->name);
+	fprintf(fp, "white_rating: %d\n", garray[g].white_rating);
+	fprintf(fp, "black_rating: %d\n", garray[g].black_rating);
+	fprintf(fp, "result: %d\n", garray[g].result);
+	fprintf(fp, "TimeStart: %d\n", (int) garray[g].timeOfStart);
+	fprintf(fp, "W_Time: %d\n", garray[g].wTime);
+	fprintf(fp, "B_Time: %d\n", garray[g].bTime);
+	fprintf(fp, "ClockStopped: %d\n", garray[g].clockStopped);
+	fprintf(fp, "Rated: %d\n", garray[g].rated);
+	fprintf(fp, "Private: %d\n", garray[g].private);
+	fprintf(fp, "Type: %d\n", garray[g].type);
+	fprintf(fp, "HalfMoves: %d\n", garray[g].numHalfMoves);
+
+	for (int i = 0; i < garray[g].numHalfMoves; i++)
+		WriteMoves(fp, &garray[g].moveList[i]);
+
+	fprintf(fp, "GameState: IsNext\n");
+	WriteGameState(fp, &garray[g].game_state);
 #endif
-  fclose(fp);
-  /* Create link for easier stored game finding */
-  if (bp->login[0] != wp->login[0])
-    link(fname, lname);
-  return 0;
+
+	fclose(fp);
+
+	/*
+	 * Create link for easier stored game finding
+	 */
+	if (bp->login[0] != wp->login[0])
+		link(fname, lname);
+	return 0;
 }
 
 PRIVATE long int
