@@ -86,11 +86,14 @@ PRIVATE int get_empty_slot()
   return g_num - 1;
 }
 
-PUBLIC int game_new()
+PUBLIC int
+game_new(void)
 {
-  int new = get_empty_slot();
-  game_zero(new);
-  return new;
+	int	new = get_empty_slot();
+
+	game_zero(new);
+
+	return new;
 }
 
 PUBLIC int
