@@ -1001,16 +1001,21 @@ ReadOneV1Move(FILE *fp, move_t *m)
 		strcat(m->algString, "+");
 }
 
-int ReadV1Moves(game *g, FILE * fp)
+int
+ReadV1Moves(game *g, FILE *fp)
 {
-  int i;
+	g->moveListSize = g->numHalfMoves;
+	g->moveList = reallocarray(NULL, sizeof(move_t), g->moveListSize);
 
-  g->moveListSize = g->numHalfMoves;
-  g->moveList = (move_t *) rmalloc(sizeof(move_t) * g->moveListSize);
-  for (i = 0; i < g->numHalfMoves; i++) {
-    ReadOneV1Move(fp, &g->moveList[i]);
-  }
-  return 0;
+	if (g->moveList == NULL)
+		err(1, "%s: reallocarray", __func__);
+	else
+		malloc_count++;
+
+	for (int i = 0; i < g->numHalfMoves; i++)
+		ReadOneV1Move(fp, &g->moveList[i]);
+
+	return 0;
 }
 
 int
