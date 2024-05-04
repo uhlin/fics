@@ -1054,7 +1054,7 @@ got_attr_value(int g, char *attr, char *value, FILE *fp, char *file)
 	return 0;
 }
 
-void
+PRIVATE void
 ReadOneV1Move(FILE *fp, move_t *m)
 {
 	char		 PieceChar;
@@ -1187,7 +1187,7 @@ ReadOneV1Move(FILE *fp, move_t *m)
 		strcat(m->algString, "+");
 }
 
-int
+PRIVATE int
 ReadV1Moves(game *g, FILE *fp)
 {
 	g->moveListSize = g->numHalfMoves;
@@ -1204,7 +1204,7 @@ ReadV1Moves(game *g, FILE *fp)
 	return 0;
 }
 
-int
+PRIVATE int
 ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 {
 	long int lval;
@@ -1391,7 +1391,7 @@ game_delete(int wp, int bp)
 	return 0;
 }
 
-void
+PRIVATE void
 WriteGameFile(FILE *fp, int g)
 {
 	game		*gg = &garray[g];
