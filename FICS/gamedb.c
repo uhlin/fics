@@ -326,17 +326,16 @@ PUBLIC void game_update_time(int g)
   garray[g].lastDecTime = now;
 }
 
-PUBLIC void game_update_times()
+PUBLIC void
+game_update_times(void)
 {
-  int g;
-
-  for (g = 0; g < g_num; g++) {
-    if (garray[g].status != GAME_ACTIVE)
-      continue;
-    if (garray[g].clockStopped)
-      continue;
-    game_update_time(g);
-  }
+	for (int g = 0; g < g_num; g++) {
+		if (garray[g].status != GAME_ACTIVE)
+			continue;
+		if (garray[g].clockStopped)
+			continue;
+		game_update_time(g);
+	}
 }
 
 PUBLIC char *
