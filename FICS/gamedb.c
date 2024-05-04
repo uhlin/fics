@@ -187,25 +187,27 @@ PUBLIC char *game_time_str(int wt, int winc, int bt, int binc)
   return tstr;
 }
 
-PUBLIC char *game_str(int rated, int wt, int winc, int bt, int binc,
-		       char *cat, char *board)
+PUBLIC char *
+game_str(int rated, int wt, int winc, int bt, int binc, char *cat, char *board)
 {
-  static char tstr[200];
+	static char	tstr[200] = { '\0' };
 
-  if (cat && cat[0] && board && board[0] &&
-      (strcmp(cat, "standard") || strcmp(board, "standard"))) {
-    sprintf(tstr, "%s %s%s Loaded from %s/%s",
-	    rstr[rated],
-	    bstr[game_isblitz(wt / 60, winc, bt / 60, binc, cat, board)],
-	    game_time_str(wt / 60, winc, bt / 60, binc),
-	    cat, board);
-  } else {
-    sprintf(tstr, "%s %s%s",
-	    rstr[rated],
-	    bstr[game_isblitz(wt / 60, winc, bt / 60, binc, cat, board)],
-	    game_time_str(wt / 60, winc, bt / 60, binc));
-  }
-  return tstr;
+	if (cat && cat[0] && board && board[0] && (strcmp(cat, "standard") ||
+	    strcmp(board, "standard"))) {
+		msnprintf(tstr, sizeof(tstr), "%s %s%s Loaded from %s/%s",
+		    rstr[rated],
+		    bstr[game_isblitz(wt / 60, winc, bt / 60, binc, cat, board)],
+		    game_time_str(wt / 60, winc, bt / 60, binc),
+		    cat,
+		    board);
+	} else {
+		msnprintf(tstr, sizeof(tstr), "%s %s%s",
+		    rstr[rated],
+		    bstr[game_isblitz(wt / 60, winc, bt / 60, binc, cat, board)],
+		    game_time_str(wt / 60, winc, bt / 60, binc));
+	}
+
+	return tstr;
 }
 
 PUBLIC int
