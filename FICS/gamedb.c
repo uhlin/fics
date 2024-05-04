@@ -51,6 +51,19 @@
 PUBLIC game	*garray = NULL;
 PUBLIC int	 g_num = 0;
 
+PUBLIC char *bstr[] = {
+	"untimed",
+	"blitz",
+	"standard",
+	"non-standard",
+	"wild",
+	"lightning",
+	"bughouse"};
+PUBLIC char *rstr[] = {
+	"unrated",
+	"rated"
+};
+
 PRIVATE char gameString[GAME_STRING_LEN];
 
 PRIVATE int get_empty_slot()
@@ -173,9 +186,6 @@ PUBLIC char *game_time_str(int wt, int winc, int bt, int binc)
   }
   return tstr;
 }
-
-PUBLIC char *bstr[] = {"untimed", "blitz", "standard", "non-standard", "wild", "lightning", "bughouse"};
-PUBLIC char *rstr[] = {"unrated", "rated"};
 
 PUBLIC char *game_str(int rated, int wt, int winc, int bt, int binc,
 		       char *cat, char *board)
