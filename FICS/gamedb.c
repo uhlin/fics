@@ -28,6 +28,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "command.h"
 #include "config.h"
 #include "eco.h"
