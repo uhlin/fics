@@ -141,29 +141,30 @@ PUBLIC int game_free(int g)
   return 0;
 }
 
-PUBLIC int game_clear(int g)
+PUBLIC int
+game_clear(int g)
 {
-  game_free(g);
-  game_zero(g);
-  return 0;
+	game_free(g);
+	game_zero(g);
+	return 0;
 }
 
-PUBLIC int game_remove(int g)
+PUBLIC int
+game_remove(int g)
 {
-  /* Should remove game from players observation list */
-  game_clear(g);
-  garray[g].status = GAME_EMPTY;
-  return 0;
+	// Should remove game from players observation list
+	game_clear(g);
+	garray[g].status = GAME_EMPTY;
+	return 0;
 }
 
-/* old moves not stored now - uses smoves */
-PUBLIC int game_finish(int g)
+// old moves not stored now - uses smoves
+PUBLIC int
+game_finish(int g)
 {
-  player_game_ended(g);		/* Alert playerdb that game ended */
-/*  NewOldGame(g); */
-/*  game_free(g) */
-  game_remove(g);
-  return 0;
+	player_game_ended(g);	// Alert playerdb that game ended
+	game_remove(g);
+	return 0;
 }
 
 PUBLIC void
