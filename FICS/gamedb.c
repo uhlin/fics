@@ -130,15 +130,18 @@ PUBLIC int game_zero(int g)
   return 0;
 }
 
-PUBLIC int game_free(int g)
+PUBLIC int
+game_free(int g)
 {
-  if (garray[g].moveListSize)
-    rfree(garray[g].moveList);
-  if (garray[g].examMoveListSize)
-    rfree(garray[g].examMoveList);
-  garray[g].moveListSize = 0;
-  garray[g].examMoveListSize = 0;
-  return 0;
+	if (garray[g].moveListSize)
+		rfree(garray[g].moveList);
+	if (garray[g].examMoveListSize)
+		rfree(garray[g].examMoveList);
+
+	garray[g].moveListSize = 0;
+	garray[g].examMoveListSize = 0;
+
+	return 0;
 }
 
 PUBLIC int
