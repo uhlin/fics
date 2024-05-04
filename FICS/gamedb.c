@@ -590,71 +590,77 @@ PUBLIC char *movesToString(int g, int pgn)
   return gameString;
 }
 
-PUBLIC void game_disconnect(int g, int p)
+PUBLIC void
+game_disconnect(int g, int p)
 {
-  game_ended(g, (garray[g].white == p) ? WHITE : BLACK, END_LOSTCONNECTION);
+	game_ended(g, (garray[g].white == p) ? WHITE : BLACK,
+	    END_LOSTCONNECTION);
 }
 
-PUBLIC int CharToPiece(char c)
+PUBLIC int
+CharToPiece(char c)
 {
-  switch (c) {
-    case 'P':return W_PAWN;
-  case 'p':
-    return B_PAWN;
-  case 'N':
-    return W_KNIGHT;
-  case 'n':
-    return B_KNIGHT;
-  case 'B':
-    return W_BISHOP;
-  case 'b':
-    return B_BISHOP;
-  case 'R':
-    return W_ROOK;
-  case 'r':
-    return B_ROOK;
-  case 'Q':
-    return W_QUEEN;
-  case 'q':
-    return B_QUEEN;
-  case 'K':
-    return W_KING;
-  case 'k':
-    return B_KING;
-  default:
-    return NOPIECE;
-  }
+	switch (c) {
+	case 'P':
+		return W_PAWN;
+	case 'p':
+		return B_PAWN;
+	case 'N':
+		return W_KNIGHT;
+	case 'n':
+		return B_KNIGHT;
+	case 'B':
+		return W_BISHOP;
+	case 'b':
+		return B_BISHOP;
+	case 'R':
+		return W_ROOK;
+	case 'r':
+		return B_ROOK;
+	case 'Q':
+		return W_QUEEN;
+	case 'q':
+		return B_QUEEN;
+	case 'K':
+		return W_KING;
+	case 'k':
+		return B_KING;
+	default:
+		return NOPIECE;
+	}
 }
 
-PUBLIC int PieceToChar(int piece)
+PUBLIC int
+PieceToChar(int piece)
 {
-  switch (piece) {
-    case W_PAWN:return 'P';
-  case B_PAWN:
-    return 'p';
-  case W_KNIGHT:
-    return 'N';
-  case B_KNIGHT:
-    return 'n';
-  case W_BISHOP:
-    return 'B';
-  case B_BISHOP:
-    return 'b';
-  case W_ROOK:
-    return 'R';
-  case B_ROOK:
-    return 'r';
-  case W_QUEEN:
-    return 'Q';
-  case B_QUEEN:
-    return 'q';
-  case W_KING:
-    return 'K';
-  case B_KING:
-    return 'k';
-  default:
-    return ' ';
-  }
+	switch (piece) {
+	case W_PAWN:
+		return 'P';
+	case B_PAWN:
+		return 'p';
+	case W_KNIGHT:
+		return 'N';
+	case B_KNIGHT:
+		return 'n';
+	case W_BISHOP:
+		return 'B';
+	case B_BISHOP:
+		return 'b';
+	case W_ROOK:
+		return 'R';
+	case B_ROOK:
+		return 'r';
+	case W_QUEEN:
+		return 'Q';
+	case B_QUEEN:
+		return 'q';
+	case W_KING:
+		return 'K';
+	case B_KING:
+		return 'k';
+	default:
+		return ' ';
+	}
 }
 
 /* One line has everything on it */
