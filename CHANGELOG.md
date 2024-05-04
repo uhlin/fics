@@ -5,7 +5,8 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added parameter lists to many function declarations.
-- Added usage of `reallocarray()`.
+- Added usage of `ARRAY_SIZE()`.
+- Added usage of `reallocarray()`. Multiple occurrences.
 - Added usage of the functions from `err.h`.
 - Changed the make install target to not overwrite the data messages
   in case they're already present.
