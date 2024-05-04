@@ -93,41 +93,47 @@ PUBLIC int game_new()
   return new;
 }
 
-PUBLIC int game_zero(int g)
+PUBLIC int
+game_zero(int g)
 {
-  garray[g].white = -1;
-  garray[g].black = -1;
-/*  garray[g].old_white = -1;
-    garray[g].old_black = -1;
-*/
-  garray[g].status = GAME_NEW;
-  garray[g].link = -1;
-  garray[g].rated = 0;
-  garray[g].private = 0;
-  garray[g].result = END_NOTENDED;
-  garray[g].type = TYPE_UNTIMED;
-  garray[g].passes = 0;
-  board_init(&garray[g].game_state, NULL, NULL);
-  garray[g].game_state.gameNum = g;
-  garray[g].numHalfMoves = 0;
-  garray[g].moveListSize = 0;
-  garray[g].moveList = NULL;
-  garray[g].examMoveListSize = 0;
-  garray[g].examMoveList = NULL;
-  garray[g].wInitTime = 300;	/* 5 minutes */
-  garray[g].wIncrement = 0;
-  garray[g].bInitTime = 300;	/* 5 minutes */
-  garray[g].bIncrement = 0;
+	garray[g].white = -1;
+	garray[g].black = -1;
+
+	garray[g].link		= -1;
+	garray[g].passes	= 0;
+	garray[g].private	= 0;
+	garray[g].rated		= 0;
+	garray[g].result	= END_NOTENDED;
+	garray[g].status	= GAME_NEW;
+	garray[g].type		= TYPE_UNTIMED;
+
+	board_init(&garray[g].game_state, NULL, NULL);
+
+	garray[g].bIncrement		= 0;
+	garray[g].bInitTime		= 300; // 5 minutes
+	garray[g].black_name[0]		= '\0';
+	garray[g].black_rating		= 0;
+
+	garray[g].wIncrement		= 0;
+	garray[g].wInitTime		= 300; // 5 minutes
+	garray[g].white_name[0]		= '\0';
+	garray[g].white_rating		= 0;
+
+	garray[g].examMoveList		= NULL;
+	garray[g].examMoveListSize	= 0;
+
 #ifdef TIMESEAL
-  garray[g].flag_pending = FLAG_NONE;
-  garray[g].flag_check_time = 0L;
+	garray[g].flag_check_time	= 0L;
+	garray[g].flag_pending		= FLAG_NONE;
 #endif
-  garray[g].white_name[0] = '\0';
-  garray[g].black_name[0] = '\0';
-  garray[g].white_rating = 0;
-  garray[g].black_rating = 0;
-  garray[g].revertHalfMove = 0;
-  return 0;
+
+	garray[g].game_state.gameNum	= g;
+	garray[g].moveList		= NULL;
+	garray[g].moveListSize		= 0;
+	garray[g].numHalfMoves		= 0;
+	garray[g].revertHalfMove	= 0;
+
+	return 0;
 }
 
 PUBLIC int
