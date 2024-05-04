@@ -66,24 +66,36 @@ PUBLIC char *rstr[] = {
 
 PRIVATE char gameString[GAME_STRING_LEN];
 
-PRIVATE int get_empty_slot()
-/* this method is awful! how about allocation as we need it and freeing
-    afterwards! */
+/*
+ * This method is awful! How about allocation as we need it and
+ * freeing afterwards!
+ */
+PRIVATE int
+get_empty_slot(void)
 {
-  int i;
+	for (int i = 0; i < g_num; i++) {
+		if (garray[i].status == GAME_EMPTY)
+			return i;
+	}
 
-  for (i = 0; i < g_num; i++) {
-    if (garray[i].status == GAME_EMPTY)
-      return i;
-  }
-  g_num++;
-  if (!garray) {
-    garray = (game *) rmalloc(sizeof(game) * g_num);
-  } else {
-    garray = (game *) rrealloc(garray, sizeof(game) * g_num);
-  } /* yeah great, bet this causes lag!  - DAV*/
-  garray[g_num - 1].status = GAME_EMPTY;
-  return g_num - 1;
+	g_num++;
+
+	if (!garray) {
+		garray = reallocarray(NULL, sizeof(game), g_num);
+
+		if (garray == NULL)
+			err(1, "%s: reallocarray", __func__);
+		else
+			malloc_count++;
+	} else {
+		garray = reallocarray(garray, sizeof(game), g_num);
+
+		if (garray == NULL)
+			err(1, "%s: reallocarray", __func__);
+	}	// Yeah great, bet this causes lag! - DAV
+
+	garray[g_num - 1].status = GAME_EMPTY;
+	return g_num - 1;
 }
 
 PUBLIC int
