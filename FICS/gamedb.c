@@ -208,28 +208,35 @@ PUBLIC char *game_str(int rated, int wt, int winc, int bt, int binc,
   return tstr;
 }
 
-PUBLIC int game_isblitz(int wt, int winc, int bt, int binc,
-			 char *cat, char *board)
+PUBLIC int
+game_isblitz(int wt, int winc, int bt, int binc, char *cat, char *board)
 {
-  int total;
+	int total;
 
-  if (cat && cat[0] && board && board[0] && (!strcmp(cat, "wild")))
-    return TYPE_WILD;
-  if (cat && cat[0] && board && board[0] &&
-      (strcmp(cat, "standard") || strcmp(board, "standard")))
-    return TYPE_NONSTANDARD;
-  if (((wt == 0) && (winc == 0)) || ((bt == 0) && (binc == 0)))
-			/* nonsense if one is timed and one is not */
-    return TYPE_UNTIMED;
-  if ((wt != bt) || (winc != binc))
-    return TYPE_NONSTANDARD;
-  total = wt * 60 + winc * 40;
-  if (total < 180)		/* 3 minute */
-    return TYPE_LIGHT;
-  if (total >= 900)		/* 15 minutes */
-    return TYPE_STAND;
-  else
-    return TYPE_BLITZ;
+	if (cat && cat[0] && board && board[0] && (!strcmp(cat, "wild")))
+		return TYPE_WILD;
+	if (cat && cat[0] && board && board[0] && (strcmp(cat, "standard") ||
+	    strcmp(board, "standard")))
+		return TYPE_NONSTANDARD;
+
+	if (((wt == 0) && (winc == 0)) || ((bt == 0) && (binc == 0))) {
+		/*
+		 * nonsense if one is timed and one is not
+		 */
+		return TYPE_UNTIMED;
+	}
+
+	if ((wt != bt) || (winc != binc))
+		return TYPE_NONSTANDARD;
+
+	total = wt * 60 + winc * 40;
+
+	if (total < 180)	// 3 minutes
+		return TYPE_LIGHT;
+	if (total >= 900)	// 15 minutes
+		return TYPE_STAND;
+	else
+		return TYPE_BLITZ;
 }
 
 PUBLIC void
