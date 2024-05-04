@@ -222,76 +222,80 @@ PUBLIC int game_isblitz(int wt, int winc, int bt, int binc,
     return TYPE_BLITZ;
 }
 
-PUBLIC void send_board_to(int g, int p)
+PUBLIC void
+send_board_to(int g, int p)
 {
-  char *b;
-  int side;
-  int relation;
+	char	*b;
+	int	 relation;
+	int	 side;
 
-/* since we know g and p, figure out our relationship to this game */
+	/*
+	 * Since we know 'g' and 'p', figure out our relationship to
+	 * this game...
+	 */
 
-  side = WHITE;
-  if (garray[g].status == GAME_EXAMINE) {
-    if (parray[p].game == g) {
-      relation = 2;
-    } else {
-      relation = -2;
-    }
-  } else {
-    if (parray[p].game == g) {
-      side = parray[p].side;
-      relation = ((side == garray[g].game_state.onMove) ? 1 : -1);
-    } else {
-      relation = 0;
-    }
-  }
+	side = WHITE;
 
-  if (parray[p].flip) {		/* flip board? */
-    if (side == WHITE)
-      side = BLACK;
-    else
-      side = WHITE;
-  }
-  game_update_time(g);
-  b = board_to_string(garray[g].white_name,
-		      garray[g].black_name,
-		      garray[g].wTime,
-		      garray[g].bTime,
-		      &garray[g].game_state,
-		      (garray[g].status == GAME_EXAMINE) ?
-		      garray[g].examMoveList : garray[g].moveList,
-		      parray[p].style,
-		      side, relation, p);
+	if (garray[g].status == GAME_EXAMINE) {
+		if (parray[p].game == g) {
+			relation = 2;
+		} else {
+			relation = -2;
+		}
+	} else {
+		if (parray[p].game == g) {
+			side = parray[p].side;
+			relation = (side == garray[g].game_state.onMove ? 1 :
+			    -1);
+		} else {
+			relation = 0;
+		}
+	}
+
+	if (parray[p].flip) {	// flip board?
+		if (side == WHITE)
+			side = BLACK;
+		else
+			side = WHITE;
+	}
+
+	game_update_time(g);
+	b = board_to_string(garray[g].white_name, garray[g].black_name,
+	    garray[g].wTime,
+	    garray[g].bTime,
+	    &garray[g].game_state,
+	    (garray[g].status == GAME_EXAMINE)
+	    ? garray[g].examMoveList
+	    : garray[g].moveList,
+	    parray[p].style,
+	    side,
+	    relation,
+	    p);
 
 #ifdef TIMESEAL
-
-  if (con[parray[p].socket].timeseal) {
-    if (parray[p].bell) {
-      pprintf_noformat(p, "\007\n[G]\n%s", b);
-    } else {
-      pprintf_noformat(p, "\n[G]\n%s", b);
-    }
-  } else {
-    if (parray[p].bell) {
-      pprintf_noformat(p, "\007\n%s", b);
-    } else {
-      pprintf_noformat(p, "\n%s", b);
-    }
-  }
-
+	if (con[parray[p].socket].timeseal) {
+		if (parray[p].bell) {
+			pprintf_noformat(p, "\007\n[G]\n%s", b);
+		} else {
+			pprintf_noformat(p, "\n[G]\n%s", b);
+		}
+	} else {
+		if (parray[p].bell) {
+			pprintf_noformat(p, "\007\n%s", b);
+		} else {
+			pprintf_noformat(p, "\n%s", b);
+		}
+	}
 #else
-
-  if (parray[p].bell) {
-    pprintf_noformat(p, "\007\n%s", b);
-  } else {
-    pprintf_noformat(p, "\n%s", b);
-  }
-
+	if (parray[p].bell) {
+		pprintf_noformat(p, "\007\n%s", b);
+	} else {
+		pprintf_noformat(p, "\n%s", b);
+	}
 #endif
 
-  if (p != commanding_player) {
-    pprintf(p, "%s", parray[p].prompt);
-  }
+	if (p != commanding_player)
+		pprintf(p, "%s", parray[p].prompt);
 }
 
 PUBLIC void
