@@ -755,20 +755,27 @@ PRIVATE int ReadMove(FILE * fp, move_t *m)
   return 0;
 }
 
-PRIVATE void WriteGameState(FILE * fp, game_state_t *gs)
+PRIVATE void
+WriteGameState(FILE *fp, game_state_t *gs)
 {
-  int i, j;
+	int	i, j;
 
-  for (i = 0; i < 8; i++)
-    for (j = 0; j < 8; j++) {
-      fprintf(fp, "%c", PieceToChar(gs->board[i][j]));
-    }
-  fprintf(fp, "%d %d %d %d %d %d",
-	  gs->wkmoved, gs->wqrmoved, gs->wkrmoved,
-	  gs->bkmoved, gs->bqrmoved, gs->bkrmoved);
-  for (i = 0; i < 8; i++)
-    fprintf(fp, " %d %d", gs->ep_possible[0][i], gs->ep_possible[1][i]);
-  fprintf(fp, " %d %d %d\n", gs->lastIrreversable, gs->onMove, gs->moveNum);
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++)
+			fprintf(fp, "%c", PieceToChar(gs->board[i][j]));
+	}
+
+	fprintf(fp, "%d %d %d %d %d %d",
+		gs->wkmoved, gs->wqrmoved, gs->wkrmoved,
+		gs->bkmoved, gs->bqrmoved, gs->bkrmoved);
+
+	for (i = 0; i < 8; i++) {
+		fprintf(fp, " %d %d", gs->ep_possible[0][i],
+		    gs->ep_possible[1][i]);
+	}
+
+	fprintf(fp, " %d %d %d\n", gs->lastIrreversable, gs->onMove,
+	    gs->moveNum);
 }
 
 PRIVATE int
