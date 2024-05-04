@@ -42,8 +42,16 @@
 #include "rmalloc.h"
 #include "utils.h"
 
+/*
+ * This should be enough to hold any game up to at least 250 moves. If
+ * we overwrite this, the server will crash.
+ */
+#define GAME_STRING_LEN 16000
+
 PUBLIC game	*garray = NULL;
 PUBLIC int	 g_num = 0;
+
+PRIVATE char gameString[GAME_STRING_LEN];
 
 PRIVATE int get_empty_slot()
 /* this method is awful! how about allocation as we need it and freeing
@@ -444,12 +452,8 @@ PUBLIC char *EndSym(int g)
   return (symbols[3]);
 }
 
-/* This should be enough to hold any game up to at least 250 moves
- * If we overwrite this, the server will crash.
- */
-#define GAME_STRING_LEN 16000
-PRIVATE char gameString[GAME_STRING_LEN];
-PUBLIC char *movesToString(int g, int pgn)
+PUBLIC char *
+movesToString(int g, int pgn)
 {
   char tmp[160];
   int wr, br;
