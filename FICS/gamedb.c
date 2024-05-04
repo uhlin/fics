@@ -743,16 +743,29 @@ WriteMoves(FILE *fp, move_t *m)
 	return 0;
 }
 
-PRIVATE int ReadMove(FILE * fp, move_t *m)
+PRIVATE int
+ReadMove(FILE *fp, move_t *m)
 {
-  char line[MAX_GLINE_SIZE];
-  fgets(line, MAX_GLINE_SIZE - 1, fp);
-  if (sscanf(line, "%d %d %d %d %d %d %d %d %d \"%[^\"]\" \"%[^\"]\" %u %u\n",
-	     &m->color, &m->fromFile, &m->fromRank, &m->toFile, &m->toRank,
-     &m->pieceCaptured, &m->piecePromotionTo, &m->enPassant, &m->doublePawn,
-	     m->moveString, m->algString, &m->atTime, &m->tookTime) != 13)
-    return -1;
-  return 0;
+	char	line[MAX_GLINE_SIZE] = { '\0' };
+
+	fgets(line, sizeof line, fp);
+
+	if (sscanf(line, "%d %d %d %d %d %d %d %d %d \"%[^\"]\" \"%[^\"]\" "
+	    "%u %u\n",
+	    &m->color,
+	    &m->fromFile, &m->fromRank,
+	    &m->toFile, &m->toRank,
+	    &m->pieceCaptured,
+	    &m->piecePromotionTo,
+	    &m->enPassant,
+	    &m->doublePawn,
+	    m->moveString,
+	    m->algString,
+	    &m->atTime,
+	    &m->tookTime) != 13)
+		return -1;
+
+	return 0;
 }
 
 PRIVATE void
