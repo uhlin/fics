@@ -308,22 +308,26 @@ PUBLIC void send_boards(int g)
     }
 }
 
-PUBLIC void game_update_time(int g)
+PUBLIC void
+game_update_time(int g)
 {
-  unsigned now, timesince;
+	unsigned int now, timesince;
 
-  if (garray[g].clockStopped)
-    return;
-  if (garray[g].type == TYPE_UNTIMED)
-    return;
-  now = tenth_secs();
-  timesince = now - garray[g].lastDecTime;
-  if (garray[g].game_state.onMove == WHITE) {
-    garray[g].wTime -= timesince;
-  } else {
-    garray[g].bTime -= timesince;
-  }
-  garray[g].lastDecTime = now;
+	if (garray[g].clockStopped)
+		return;
+	if (garray[g].type == TYPE_UNTIMED)
+		return;
+
+	now = tenth_secs();
+	timesince = now - garray[g].lastDecTime;
+
+	if (garray[g].game_state.onMove == WHITE) {
+		garray[g].wTime -= timesince;
+	} else {
+		garray[g].bTime -= timesince;
+	}
+
+	garray[g].lastDecTime = now;
 }
 
 PUBLIC void
