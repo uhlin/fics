@@ -771,41 +771,54 @@ PRIVATE void WriteGameState(FILE * fp, game_state_t *gs)
   fprintf(fp, " %d %d %d\n", gs->lastIrreversable, gs->onMove, gs->moveNum);
 }
 
-PRIVATE int ReadGameState(FILE * fp, game_state_t *gs, int version)
+PRIVATE int
+ReadGameState(FILE *fp, game_state_t *gs, int version)
 {
-  int i, j;
-  char pieceChar;
-  int wkmoved, wqrmoved, wkrmoved, bkmoved, bqrmoved, bkrmoved;
+	char	pieceChar;
+	int	i, j;
+	int	wkmoved, wqrmoved, wkrmoved, bkmoved, bqrmoved, bkrmoved;
 
-  if (version == 0) {
-    for (i = 0; i < 8; i++)
-      for (j = 0; j < 8; j++)
-	if (fscanf(fp, "%d ", &gs->board[i][j]) != 1)
-	  return -1;
-  } else {
-    getc(fp);			/* Skip past a newline. */
-    for (i = 0; i < 8; i++)
-      for (j = 0; j < 8; j++) {
-	pieceChar = getc(fp);
-	gs->board[i][j] = CharToPiece(pieceChar);
-      }
-  }
-  if (fscanf(fp, "%d %d %d %d %d %d",
-	     &wkmoved, &wqrmoved, &wkrmoved,
-	     &bkmoved, &bqrmoved, &bkrmoved) != 6)
-    return -1;
-  gs->wkmoved = wkmoved;
-  gs->wqrmoved = wqrmoved;
-  gs->wkrmoved = wkrmoved;
-  gs->bkmoved = bkmoved;
-  gs->bqrmoved = bqrmoved;
-  gs->bkrmoved = bkrmoved;
-  for (i = 0; i < 8; i++)
-    if (fscanf(fp, " %d %d", &gs->ep_possible[0][i], &gs->ep_possible[1][i]) != 2)
-      return -1;
-  if (fscanf(fp, " %d %d %d\n", &gs->lastIrreversable, &gs->onMove, &gs->moveNum) != 3)
-    return -1;
-  return 0;
+	if (version == 0) {
+		for (i = 0; i < 8; i++) {
+			for (j = 0; j < 8; j++) {
+				if (fscanf(fp, "%d ", &gs->board[i][j]) != 1)
+					return -1;
+			}
+		}
+	} else {
+		getc(fp);	/* Skip past a newline. */
+
+		for (i = 0; i < 8; i++) {
+			for (j = 0; j < 8; j++) {
+				pieceChar = getc(fp);
+				gs->board[i][j] = CharToPiece(pieceChar);
+			}
+		}
+	}
+
+	if (fscanf(fp, "%d %d %d %d %d %d",
+	    &wkmoved, &wqrmoved, &wkrmoved,
+	    &bkmoved, &bqrmoved, &bkrmoved) != 6)
+		return -1;
+
+	gs->wkmoved	= wkmoved;
+	gs->wqrmoved	= wqrmoved;
+	gs->wkrmoved	= wkrmoved;
+
+	gs->bkmoved	= bkmoved;
+	gs->bqrmoved	= bqrmoved;
+	gs->bkrmoved	= bkrmoved;
+
+	for (i = 0; i < 8; i++) {
+		if (fscanf(fp, " %d %d", &gs->ep_possible[0][i],
+		    &gs->ep_possible[1][i]) != 2)
+			return -1;
+	}
+
+	if (fscanf(fp, " %d %d %d\n", &gs->lastIrreversable, &gs->onMove,
+	    &gs->moveNum) != 3)
+		return -1;
+	return 0;
 }
 
 PUBLIC int
