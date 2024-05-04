@@ -339,91 +339,102 @@ PUBLIC void game_update_times()
   }
 }
 
-PUBLIC char *EndString(int g, int personal)
+PUBLIC char *
+EndString(int g, int personal)
 {
-/* personal 0 == White checkmated; personal 1 == loon checkmated */
+	/*
+	 * personal 0 == White checkmated
+	 * personal 1 == loon checkmated
+	 */
+	char		*blackguy, *whiteguy;
+	static char	 blackstr[] = "Black";
+	static char	 whitestr[] = "White";
+	static char	 endstr[200] = { '\0' };
 
-  static char endstr[200];
-  char *blackguy, *whiteguy;
-  static char blackstr[] = "Black";
-  static char whitestr[] = "White";
+	blackguy = (personal ? garray[g].black_name : blackstr);
+	whiteguy = (personal ? garray[g].white_name : whitestr);
 
-  blackguy = (personal ? garray[g].black_name : blackstr);
-  whiteguy = (personal ? garray[g].white_name : whitestr);
+	switch (garray[g].result) {
+	case END_CHECKMATE:
+		msnprintf(endstr, sizeof endstr, "%s checkmated",
+		    garray[g].winner == WHITE ? blackguy : whiteguy);
+		break;
+	case END_RESIGN:
+		msnprintf(endstr, sizeof endstr, "%s resigned",
+		    garray[g].winner == WHITE ? blackguy : whiteguy);
+		break;
+	case END_FLAG:
+		msnprintf(endstr, sizeof endstr, "%s ran out of time",
+		    garray[g].winner == WHITE ? blackguy : whiteguy);
+		break;
+	case END_AGREEDDRAW:
+		msnprintf(endstr, sizeof endstr, "Game drawn by mutual "
+		    "agreement");
+		break;
+	case END_BOTHFLAG:
+		msnprintf(endstr, sizeof endstr, "Game drawn because both "
+		    "players ran out of time");
+		break;
+	case END_REPETITION:
+		msnprintf(endstr, sizeof endstr, "Game drawn by repetition");
+		break;
+	case END_50MOVERULE:
+		msnprintf(endstr, sizeof endstr, "Draw by the 50 move rule");
+		break;
+	case END_ADJOURN:
+		msnprintf(endstr, sizeof endstr, "Game adjourned by mutual "
+		    "agreement");
+		break;
+	case END_LOSTCONNECTION:
+		msnprintf(endstr, sizeof endstr, "%s lost connection, "
+		    "game adjourned",
+		    garray[g].winner == WHITE ? whiteguy : blackguy);
+		break;
+	case END_ABORT:
+		msnprintf(endstr, sizeof endstr, "Game aborted by mutual "
+		    "agreement");
+		break;
+	case END_STALEMATE:
+		msnprintf(endstr, sizeof endstr, "Stalemate.");
+		break;
+	case END_NOTENDED:
+		msnprintf(endstr, sizeof endstr, "Still in progress");
+		break;
+	case END_COURTESY:
+		msnprintf(endstr, sizeof endstr, "Game courtesyaborted by %s",
+		    garray[g].winner == WHITE ? whiteguy : blackguy);
+		break;
+	case END_COURTESYADJOURN:
+		msnprintf(endstr, sizeof endstr, "Game courtesyadjourned by %s",
+		    garray[g].winner == WHITE ? whiteguy : blackguy);
+		break;
+	case END_NOMATERIAL:
+		msnprintf(endstr, sizeof endstr, "Game drawn because neither "
+		    "player has mating material");
+		break;
+	case END_FLAGNOMATERIAL:
+		msnprintf(endstr, sizeof endstr, "%s ran out of time and %s "
+		    "has no material to mate",
+		    garray[g].winner == WHITE ? blackguy : whiteguy,
+		    garray[g].winner == WHITE ? whiteguy : blackguy);
+		break;
+	case END_ADJDRAW:
+		msnprintf(endstr, sizeof endstr, "Game drawn by adjudication");
+		break;
+	case END_ADJWIN:
+		msnprintf(endstr, sizeof endstr, "%s wins by adjudication",
+		    garray[g].winner == WHITE ? whiteguy : blackguy);
+		break;
+	case END_ADJABORT:
+		msnprintf(endstr, sizeof endstr, "Game aborted by "
+		    "adjudication");
+		break;
+	default:
+		msnprintf(endstr, sizeof endstr, "???????");
+		break;
+	}
 
-  switch (garray[g].result) {
-  case END_CHECKMATE:
-    sprintf(endstr, "%s checkmated",
-	    garray[g].winner == WHITE ? blackguy : whiteguy);
-    break;
-  case END_RESIGN:
-    sprintf(endstr, "%s resigned",
-	    garray[g].winner == WHITE ? blackguy : whiteguy);
-    break;
-  case END_FLAG:
-    sprintf(endstr, "%s ran out of time",
-	    garray[g].winner == WHITE ? blackguy : whiteguy);
-    break;
-  case END_AGREEDDRAW:
-    sprintf(endstr, "Game drawn by mutual agreement");
-    break;
-  case END_BOTHFLAG:
-    sprintf(endstr, "Game drawn because both players ran out of time");
-    break;
-  case END_REPETITION:
-    sprintf(endstr, "Game drawn by repetition");
-    break;
-  case END_50MOVERULE:
-    sprintf(endstr, "Draw by the 50 move rule");
-    break;
-  case END_ADJOURN:
-    sprintf(endstr, "Game adjourned by mutual agreement");
-    break;
-  case END_LOSTCONNECTION:
-    sprintf(endstr, "%s lost connection, game adjourned",
-	    garray[g].winner == WHITE ? whiteguy : blackguy);
-    break;
-  case END_ABORT:
-    sprintf(endstr, "Game aborted by mutual agreement");
-    break;
-  case END_STALEMATE:
-    sprintf(endstr, "Stalemate.");
-    break;
-  case END_NOTENDED:
-    sprintf(endstr, "Still in progress");
-    break;
-  case END_COURTESY:
-    sprintf(endstr, "Game courtesyaborted by %s",
-	    garray[g].winner == WHITE ? whiteguy : blackguy);
-    break;
-  case END_COURTESYADJOURN:
-    sprintf(endstr, "Game courtesyadjourned by %s",
-	    garray[g].winner == WHITE ? whiteguy : blackguy);
-    break;
-  case END_NOMATERIAL:
-    sprintf(endstr, "Game drawn because neither player has mating material");
-    break;
-  case END_FLAGNOMATERIAL:
-    sprintf(endstr, "%s ran out of time and %s has no material to mate",
-	    garray[g].winner == WHITE ? blackguy : whiteguy,
-	    garray[g].winner == WHITE ? whiteguy : blackguy);
-    break;
-  case END_ADJDRAW:
-    sprintf(endstr, "Game drawn by adjudication");
-    break;
-  case END_ADJWIN:
-    sprintf(endstr, "%s wins by adjudication",
-	    garray[g].winner == WHITE ? whiteguy : blackguy);
-    break;
-  case END_ADJABORT:
-    sprintf(endstr, "Game aborted by adjudication");
-    break;
-  default:
-    sprintf(endstr, "???????");
-    break;
-  }
-
-  return (endstr);
+	return endstr;
 }
 
 PUBLIC char *
