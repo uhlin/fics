@@ -455,143 +455,195 @@ PUBLIC char *EndSym(int g)
 PUBLIC char *
 movesToString(int g, int pgn)
 {
-  char tmp[160];
-  int wr, br;
-  int i, col;
-  unsigned curTime;
-  char *serv_loc = SERVER_LOCATION;
-  char *serv_name = SERVER_NAME;
+	char		*serv_loc = SERVER_LOCATION;
+	char		*serv_name = SERVER_NAME;
+	char		 tmp[160] = { '\0' };
+	int		 i, col;
+	int		 wr, br;
+	unsigned int	 curTime;
 
-  wr = garray[g].white_rating;
-  br = garray[g].black_rating;
+	wr = garray[g].white_rating;
+	br = garray[g].black_rating;
 
+	curTime = untenths(garray[g].timeOfStart);
 
-  curTime = untenths(garray[g].timeOfStart);
+	if (pgn) {
+		msnprintf(gameString, sizeof gameString,
+		    "\n[Event \"%s %s %s game\"]\n"
+		    "[Site \"%s, %s\"]\n",
+		    serv_name,
+		    rstr[garray[g].rated],
+		    bstr[garray[g].type],
+		    serv_name,
+		    serv_loc);
+		strftime(tmp, sizeof(tmp),
+		    "[Date \"%Y.%m.%d\"]\n"
+		    "[Time \"%H:%M:%S\"]\n",
+		    localtime((time_t *) &curTime));
+		mstrlcat(gameString, tmp, sizeof gameString);
 
-  if (pgn) {
-    sprintf(gameString,
-	    "\n[Event \"%s %s %s game\"]\n"
-	    "[Site \"%s, %s\"]\n",
-	    serv_name,rstr[garray[g].rated], bstr[garray[g].type],serv_name,serv_loc);
-    strftime(tmp, sizeof(tmp),
-	     "[Date \"%Y.%m.%d\"]\n"
-	     "[Time \"%H:%M:%S\"]\n",
-	     localtime((time_t *) &curTime));
-    strcat(gameString, tmp);
-    sprintf(tmp,
-	    "[Round \"-\"]\n"
-	    "[White \"%s\"]\n"
-	    "[Black \"%s\"]\n"
-	    "[WhiteElo \"%d\"]\n"
-	    "[BlackElo \"%d\"]\n",
-	    garray[g].white_name, garray[g].black_name, wr, br);
-    strcat(gameString, tmp);
-    sprintf(tmp,
-	    "[TimeControl \"%d+%d\"]\n"
-	    "[Mode \"ICS\"]\n"
-	    "[Result \"%s\"]\n\n",
-	    garray[g].wInitTime / 10, garray[g].wIncrement / 10, EndSym(g));
-    strcat(gameString, tmp);
+		msnprintf(tmp, sizeof tmp,
+		    "[Round \"-\"]\n"
+		    "[White \"%s\"]\n"
+		    "[Black \"%s\"]\n"
+		    "[WhiteElo \"%d\"]\n"
+		    "[BlackElo \"%d\"]\n",
+		    garray[g].white_name,
+		    garray[g].black_name,
+		    wr, br);
+		mstrlcat(gameString, tmp, sizeof gameString);
 
-    col = 0;
-    for (i = 0; i < garray[g].numHalfMoves; i++) {
-      if (!(i % 2)) {
-	if ((col += sprintf(tmp, "%d. ", i / 2 + 1)) > 70) {
-	  strcat(gameString, "\n");
-	  col = 0;
+		msnprintf(tmp, sizeof tmp,
+		    "[TimeControl \"%d+%d\"]\n"
+		    "[Mode \"ICS\"]\n"
+		    "[Result \"%s\"]\n\n",
+		    garray[g].wInitTime / 10,
+		    garray[g].wIncrement / 10,
+		    EndSym(g));
+		mstrlcat(gameString, tmp, sizeof gameString);
+
+		col = 0;
+
+		for (i = 0; i < garray[g].numHalfMoves; i++) {
+			if (!(i % 2)) {
+				if ((col += snprintf(tmp, sizeof tmp, "%d. ",
+				    i / 2 + 1)) > 70) {
+					mstrlcat(gameString, "\n",
+					    sizeof gameString);
+					col = 0;
+				}
+
+				mstrlcat(gameString, tmp, sizeof gameString);
+			}
+
+			if ((col += snprintf(tmp, sizeof tmp, "%s ",
+			    (garray[g].status == GAME_EXAMINE)
+			    ? garray[g].examMoveList[i].algString
+			    : garray[g].moveList[i].algString)) > 70) {
+				mstrlcat(gameString, "\n", sizeof gameString);
+				col = 0;
+			}
+
+			mstrlcat(gameString, tmp, sizeof gameString);
+		}
+
+		mstrlcat(gameString, "\n", sizeof gameString);
+	} else {
+		msnprintf(gameString, sizeof gameString, "\n%s ",
+		    garray[g].white_name);
+
+		if (wr > 0) {
+			msnprintf(tmp, sizeof tmp, "(%d) ", wr);
+		} else {
+			msnprintf(tmp, sizeof tmp, "(UNR) ");
+		}
+
+		mstrlcat(gameString, tmp, sizeof gameString);
+		msnprintf(tmp, sizeof tmp, "vs. %s ", garray[g].black_name);
+		mstrlcat(gameString, tmp, sizeof gameString);
+
+		if (br > 0) {
+			msnprintf(tmp, sizeof tmp, "(%d) ", br);
+		} else {
+			msnprintf(tmp, sizeof tmp, "(UNR) ");
+		}
+
+		mstrlcat(gameString, tmp, sizeof gameString);
+		mstrlcat(gameString, "--- ", sizeof gameString);
+		mstrlcat(gameString, (char *) (localtime((time_t *) &curTime)),
+		    sizeof gameString);
+
+		if (garray[g].rated) {
+			mstrlcat(gameString, "\nRated ", sizeof gameString);
+		} else {
+			mstrlcat(gameString, "\nUnrated ", sizeof gameString);
+		}
+
+		if (garray[g].type == TYPE_BLITZ) {
+			mstrlcat(gameString, "Blitz ", sizeof(gameString));
+		} else if (garray[g].type == TYPE_LIGHT) {
+			mstrlcat(gameString, "Lighting ", sizeof(gameString));
+		} else if (garray[g].type == TYPE_BUGHOUSE) {
+			mstrlcat(gameString, "Bughouse ", sizeof(gameString));
+		} else if (garray[g].type == TYPE_STAND) {
+			mstrlcat(gameString, "Standard ", sizeof(gameString));
+		} else if (garray[g].type == TYPE_WILD) {
+			mstrlcat(gameString, "Wild ", sizeof(gameString));
+		} else if (garray[g].type == TYPE_NONSTANDARD) {
+			mstrlcat(gameString, "Non-standard ",
+			    sizeof(gameString));
+		} else {
+			mstrlcat(gameString, "Untimed ", sizeof(gameString));
+		}
+
+		mstrlcat(gameString, "match, initial time: ",
+		    sizeof gameString);
+
+		if ((garray[g].bInitTime != garray[g].wInitTime) ||
+		    (garray[g].wIncrement != garray[g].bIncrement)) {
+			/*
+			 * different starting times
+			 */
+
+			msnprintf(tmp, sizeof tmp, "%d minutes, increment: %d "
+			    "seconds AND %d minutes, increment: %d seconds."
+			    "\n\n",
+			    garray[g].wInitTime / 600,
+			    garray[g].wIncrement / 10,
+			    garray[g].bInitTime / 600,
+			    garray[g].bIncrement / 10);
+		} else {
+			msnprintf(tmp, sizeof tmp, "%d minutes, increment: "
+			    "%d seconds.\n\n",
+			    garray[g].wInitTime / 600,
+			    garray[g].wIncrement / 10);
+		}
+
+		mstrlcat(gameString, tmp, sizeof gameString);
+		msnprintf(tmp, sizeof tmp, "Move  %-19s%-19s\n",
+		    garray[g].white_name,
+		    garray[g].black_name);
+		mstrlcat(gameString, tmp, sizeof gameString);
+		mstrlcat(gameString, "----  ----------------   ----------------"
+		    "\n", sizeof gameString);
+
+		for (i = 0; i < garray[g].numHalfMoves; i += 2) {
+			if (i + 1 < garray[g].numHalfMoves) {
+				msnprintf(tmp, sizeof tmp, "%3d.  %-16s   ",
+				    i / 2 + 1,
+				    (garray[g].status == GAME_EXAMINE)
+				    ? move_and_time(&garray[g].examMoveList[i])
+				    : move_and_time(&garray[g].moveList[i]));
+
+				mstrlcat(gameString, tmp, sizeof gameString);
+
+				msnprintf(tmp, sizeof tmp, "%-16s\n",
+				    (garray[g].status == GAME_EXAMINE)
+				    ? move_and_time(&garray[g].examMoveList[i + 1])
+				    : move_and_time(&garray[g].moveList[i + 1]));
+			} else {
+				msnprintf(tmp, sizeof tmp, "%3d.  %-16s\n",
+				    i / 2 + 1,
+				    (garray[g].status == GAME_EXAMINE)
+				    ? move_and_time(&garray[g].examMoveList[i])
+				    : move_and_time(&garray[g].moveList[i]));
+			}
+
+			mstrlcat(gameString, tmp, sizeof gameString);
+
+			if (strlen(gameString) > GAME_STRING_LEN - 100)
+				return gameString;	// Bug out if getting
+							// close to filling this
+							// string
+		}
+
+		mstrlcat(gameString, "      ", sizeof gameString);
 	}
-	strcat(gameString, tmp);
-      }
-      if ((col += sprintf(tmp, "%s ", (garray[g].status == GAME_EXAMINE) ? garray[g].examMoveList[i].algString : garray[g].moveList[i].algString)) > 70) {
-	strcat(gameString, "\n");
-	col = 0;
-      }
-      strcat(gameString, tmp);
-    }
-    strcat(gameString, "\n");
 
-  } else {
+	msnprintf(tmp, sizeof tmp, "{%s} %s\n", EndString(g, 0), EndSym(g));
+	mstrlcat(gameString, tmp, sizeof gameString);
 
-    sprintf(gameString, "\n%s ", garray[g].white_name);
-    if (wr > 0) {
-      sprintf(tmp, "(%d) ", wr);
-    } else {
-      sprintf(tmp, "(UNR) ");
-    }
-    strcat(gameString, tmp);
-    sprintf(tmp, "vs. %s ", garray[g].black_name);
-    strcat(gameString, tmp);
-    if (br > 0) {
-      sprintf(tmp, "(%d) ", br);
-    } else {
-      sprintf(tmp, "(UNR) ");
-    }
-    strcat(gameString, tmp);
-    strcat(gameString, "--- ");
-    strcat(gameString, (char*) (localtime((time_t *) &curTime)));
-    if (garray[g].rated) {
-      strcat(gameString, "\nRated ");
-    } else {
-      strcat(gameString, "\nUnrated ");
-    }
-    if (garray[g].type == TYPE_BLITZ) {
-      strcat(gameString, "Blitz ");
-    } else if (garray[g].type == TYPE_LIGHT) {
-      strcat(gameString, "Lighting ");
-    } else if (garray[g].type == TYPE_BUGHOUSE) {
-      strcat(gameString, "Bughouse ");
-    } else if (garray[g].type == TYPE_STAND) {
-      strcat(gameString, "Standard ");
-    } else if (garray[g].type == TYPE_WILD) {
-      strcat(gameString, "Wild ");
-    } else if (garray[g].type == TYPE_NONSTANDARD) {
-      strcat(gameString, "Non-standard ");
-    } else {
-      strcat(gameString, "Untimed ");
-    }
-    strcat(gameString, "match, initial time: ");
-    if ((garray[g].bInitTime != garray[g].wInitTime) || (garray[g].wIncrement != garray[g].bIncrement)) { /* different starting times */
-      sprintf(tmp, "%d minutes, increment: %d seconds AND %d minutes, increment: %d seconds.\n\n", garray[g].wInitTime / 600, garray[g].wIncrement / 10, garray[g].bInitTime / 600, garray[g].bIncrement / 10);
-    } else {
-      sprintf(tmp, "%d minutes, increment: %d seconds.\n\n", garray[g].wInitTime / 600, garray[g].wIncrement / 10);
-    }
-    strcat(gameString, tmp);
-    sprintf(tmp, "Move  %-19s%-19s\n", garray[g].white_name, garray[g].black_name);
-    strcat(gameString, tmp);
-    strcat(gameString, "----  ----------------   ----------------\n");
-
-    for (i = 0; i < garray[g].numHalfMoves; i += 2) {
-      if (i + 1 < garray[g].numHalfMoves) {
-	sprintf(tmp, "%3d.  %-16s   ", i / 2 + 1,
-		(garray[g].status == GAME_EXAMINE) ?
-		move_and_time(&garray[g].examMoveList[i]) :
-		move_and_time(&garray[g].moveList[i]));
-	strcat(gameString, tmp);
-	sprintf(tmp, "%-16s\n",
-		(garray[g].status == GAME_EXAMINE) ?
-		move_and_time(&garray[g].examMoveList[i + 1]) :
-		move_and_time(&garray[g].moveList[i + 1]));
-      } else {
-	sprintf(tmp, "%3d.  %-16s\n", i / 2 + 1,
-		(garray[g].status == GAME_EXAMINE) ?
-		move_and_time(&garray[g].examMoveList[i]) :
-		move_and_time(&garray[g].moveList[i]));
-      }
-      strcat(gameString, tmp);
-      if (strlen(gameString) > GAME_STRING_LEN - 100) {	/* Bug out if getting
-							   close to filling this
-							   string */
 	return gameString;
-      }
-    }
-
-    strcat(gameString, "      ");
-  }
-
-  sprintf(tmp, "{%s} %s\n", EndString(g, 0), EndSym(g));
-  strcat(gameString, tmp);
-
-  return gameString;
 }
 
 PUBLIC void
