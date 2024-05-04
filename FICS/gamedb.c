@@ -1104,57 +1104,71 @@ PUBLIC int ReadGameAttrs(FILE * fp, char *fname, int g)
   return 0;
 }
 
-PUBLIC int game_read(int g, int wp, int bp)
+PUBLIC int
+game_read(int g, int wp, int bp)
 {
-  FILE *fp;
-  char fname[MAX_FILENAME_SIZE];
+	FILE	*fp;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 
-  garray[g].white = wp;
-  garray[g].black = bp;
-/*  garray[g].old_white = -1;
-    garray[g].old_black = -1;
-*/
-  garray[g].moveListSize = 0;
-  garray[g].game_state.gameNum = g;
-  strcpy(garray[g].white_name, parray[wp].name);
-  strcpy(garray[g].black_name, parray[bp].name);
-  if (garray[g].type == TYPE_BLITZ) {
-    garray[g].white_rating = parray[wp].b_stats.rating;
-    garray[g].black_rating = parray[bp].b_stats.rating;
-  } else if (garray[g].type == TYPE_WILD) {
-    garray[g].white_rating = parray[wp].w_stats.rating;
-    garray[g].black_rating = parray[bp].w_stats.rating;
-  } else if (garray[g].type == TYPE_LIGHT) {
-    garray[g].white_rating = parray[wp].l_stats.rating;
-    garray[g].black_rating = parray[bp].l_stats.rating;
-  } else if (garray[g].type == TYPE_BUGHOUSE) {
-    garray[g].white_rating = parray[wp].bug_stats.rating;
-    garray[g].black_rating = parray[bp].bug_stats.rating;
-  } else {
-    garray[g].white_rating = parray[wp].s_stats.rating;
-    garray[g].black_rating = parray[bp].s_stats.rating;
-  }
-  sprintf(fname, "%s/%c/%s-%s", adj_dir, parray[wp].login[0],
-	  parray[wp].login, parray[bp].login);
-  fp = fopen(fname, "r");
-  if (!fp) {
-    return -1;
-  }
-  if (ReadGameAttrs(fp, fname, g) < 0) {
-    fclose(fp);
-    return -1;
-  }
-  fclose(fp);
+	garray[g].white = wp;
+	garray[g].black = bp;
 
-  if (garray[g].result == END_ADJOURN
-      || garray[g].result == END_COURTESYADJOURN)
-    garray[g].result = END_NOTENDED;
-  garray[g].status = GAME_ACTIVE;
-  garray[g].startTime = tenth_secs();
-  garray[g].lastMoveTime = garray[g].startTime;
-  garray[g].lastDecTime = garray[g].startTime;
-  /* Need to do notification and pending cleanup */
-  return 0;
+#if 0
+	garray[g].old_white = -1;
+	garray[g].old_black = -1;
+#endif
+
+	garray[g].moveListSize = 0;
+	garray[g].game_state.gameNum = g;
+
+	mstrlcpy(garray[g].white_name, parray[wp].name,
+	    sizeof(garray[g].white_name));
+	mstrlcpy(garray[g].black_name, parray[bp].name,
+	    sizeof(garray[g].black_name));
+
+	if (garray[g].type == TYPE_BLITZ) {
+		garray[g].white_rating = parray[wp].b_stats.rating;
+		garray[g].black_rating = parray[bp].b_stats.rating;
+	} else if (garray[g].type == TYPE_WILD) {
+		garray[g].white_rating = parray[wp].w_stats.rating;
+		garray[g].black_rating = parray[bp].w_stats.rating;
+	} else if (garray[g].type == TYPE_LIGHT) {
+		garray[g].white_rating = parray[wp].l_stats.rating;
+		garray[g].black_rating = parray[bp].l_stats.rating;
+	} else if (garray[g].type == TYPE_BUGHOUSE) {
+		garray[g].white_rating = parray[wp].bug_stats.rating;
+		garray[g].black_rating = parray[bp].bug_stats.rating;
+	} else {
+		garray[g].white_rating = parray[wp].s_stats.rating;
+		garray[g].black_rating = parray[bp].s_stats.rating;
+	}
+
+	msnprintf(fname, sizeof fname, "%s/%c/%s-%s", adj_dir,
+	    parray[wp].login[0], parray[wp].login, parray[bp].login);
+	fp = fopen(fname, "r");
+
+	if (!fp) {
+		return -1;
+	}
+
+	if (ReadGameAttrs(fp, fname, g) < 0) {
+		fclose(fp);
+		return -1;
+	}
+
+	fclose(fp);
+
+	if (garray[g].result == END_ADJOURN || garray[g].result ==
+	    END_COURTESYADJOURN)
+		garray[g].result = END_NOTENDED;
+
+	garray[g].status = GAME_ACTIVE;
+	garray[g].startTime = tenth_secs();
+	garray[g].lastMoveTime = garray[g].startTime;
+	garray[g].lastDecTime = garray[g].startTime;
+
+	// Need to do notification and pending cleanup
+	return 0;
 }
 
 PUBLIC int
