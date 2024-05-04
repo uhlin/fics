@@ -426,30 +426,36 @@ PUBLIC char *EndString(int g, int personal)
   return (endstr);
 }
 
-PUBLIC char *EndSym(int g)
+PUBLIC char *
+EndSym(int g)
 {
-  static char *symbols[] = {"1-0", "0-1", "1/2-1/2", "*"};
+	static char *symbols[] = {
+		"1-0",
+		"0-1",
+		"1/2-1/2",
+		"*"
+	};
 
-  switch (garray[g].result) {
-  case END_CHECKMATE:
-  case END_RESIGN:
-  case END_FLAG:
-  case END_ADJWIN:
-    return ((garray[g].winner == WHITE) ? symbols[0] : symbols[1]);
-    break;
-  case END_AGREEDDRAW:
-  case END_BOTHFLAG:
-  case END_REPETITION:
-  case END_50MOVERULE:
-  case END_STALEMATE:
-  case END_NOMATERIAL:
-  case END_FLAGNOMATERIAL:
-  case END_ADJDRAW:
-    return (symbols[2]);
-    break;
-  }
+	switch (garray[g].result) {
+	case END_CHECKMATE:
+	case END_RESIGN:
+	case END_FLAG:
+	case END_ADJWIN:
+		return ((garray[g].winner == WHITE) ? symbols[0] : symbols[1]);
+		break;
+	case END_AGREEDDRAW:
+	case END_BOTHFLAG:
+	case END_REPETITION:
+	case END_50MOVERULE:
+	case END_STALEMATE:
+	case END_NOMATERIAL:
+	case END_FLAGNOMATERIAL:
+	case END_ADJDRAW:
+		return (symbols[2]);
+		break;
+	}
 
-  return (symbols[3]);
+	return (symbols[3]);
 }
 
 PUBLIC char *
