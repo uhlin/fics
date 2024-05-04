@@ -294,18 +294,19 @@ PUBLIC void send_board_to(int g, int p)
   }
 }
 
-PUBLIC void send_boards(int g)
+PUBLIC void
+send_boards(int g)
 {
-  int p;
-  simul_info_t *simInfo = &parray[garray[g].white].simul_info;
+	simul_info_t *simInfo = &parray[garray[g].white].simul_info;
 
-  if (simInfo->numBoards == 0 || simInfo->boards[simInfo->onBoard] == g)
-    for (p = 0; p < p_num; p++) {
-      if (parray[p].status == PLAYER_EMPTY)
-	continue;
-      if (player_is_observe(p, g) || (parray[p].game == g))
-	send_board_to(g, p);
-    }
+	if (simInfo->numBoards == 0 || simInfo->boards[simInfo->onBoard] == g) {
+		for (int p = 0; p < p_num; p++) {
+			if (parray[p].status == PLAYER_EMPTY)
+				continue;
+			if (player_is_observe(p, g) || (parray[p].game == g))
+				send_board_to(g, p);
+		}
+	}
 }
 
 PUBLIC void
