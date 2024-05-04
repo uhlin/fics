@@ -1053,55 +1053,66 @@ ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 	return 0;
 }
 
-PUBLIC int ReadGameAttrs(FILE * fp, char *fname, int g)
+PUBLIC int
+ReadGameAttrs(FILE *fp, char *fname, int g)
 {
-  int len;
-  int version = 0;
-  char *attr, *value;
-  char line[MAX_GLINE_SIZE];
+	char	*attr, *value;
+	char	 line[MAX_GLINE_SIZE] = { '\0' };
+	int	 len;
+	int	 version = 0;
 
-  fgets(line, MAX_GLINE_SIZE - 1, fp);
+	fgets(line, sizeof line, fp);
 
-  if (line[0] == 'v') {
-    sscanf(line, "%*c %d", &version);
-  }
-  if (version > 0) {
-    ReadV1GameFmt(&garray[g], fp, fname, version);
-  }
-  /* Read the game file here */
-  else
-    do {
-      if ((len = strlen(line)) <= 1) {
-	fgets(line, MAX_GLINE_SIZE - 1, fp);
-	continue;
-      }
-      line[len - 1] = '\0';
-      attr = eatwhite(line);
-      if (attr[0] == '#')
-	continue;		/* Comment */
-      value = eatword(attr);
-      if (!*value) {
-	fprintf(stderr, "FICS: Error reading file %s\n", fname);
-	fgets(line, MAX_GLINE_SIZE - 1, fp);
-	continue;
-      }
-      *value = '\0';
-      value++;
-      value = eatwhite(value);
-      if (!*value) {
-	fprintf(stderr, "FICS: Error reading file %s\n", fname);
-	fgets(line, MAX_GLINE_SIZE - 1, fp);
-	continue;
-      }
-      stolower(attr);
-      if (got_attr_value(g, attr, value, fp, fname)) {
-	return -1;
-      }
-      fgets(line, MAX_GLINE_SIZE - 1, fp);
-    } while (!feof(fp));
-  if (!(garray[g].bInitTime))
-     garray[g].bInitTime = garray[g].wInitTime;
-  return 0;
+	if (line[0] == 'v')
+		sscanf(line, "%*c %d", &version);
+
+	if (version > 0)
+		ReadV1GameFmt(&garray[g], fp, fname, version);
+	else {
+		do {
+			if ((len = strlen(line)) <= 1) {
+				fgets(line, sizeof line, fp);
+				continue;
+			}
+
+			line[len - 1] = '\0';
+			attr = eatwhite(line);
+
+			if (attr[0] == '#')
+				continue;	// Comment
+
+			value = eatword(attr);
+
+			if (!*value) {
+				fprintf(stderr, "FICS: Error reading file %s\n",
+				    fname);
+				fgets(line, sizeof line, fp);
+				continue;
+			}
+
+			*value = '\0';
+			value++;
+			value = eatwhite(value);
+
+			if (!*value) {
+				fprintf(stderr, "FICS: Error reading file %s\n",
+				    fname);
+				fgets(line, sizeof line, fp);
+				continue;
+			}
+
+			stolower(attr);
+
+			if (got_attr_value(g, attr, value, fp, fname))
+				return -1;
+
+			fgets(line, sizeof line, fp);
+		} while (!feof(fp));
+	}
+
+	if (!(garray[g].bInitTime))
+		garray[g].bInitTime = garray[g].wInitTime;
+	return 0;
 }
 
 PUBLIC int
