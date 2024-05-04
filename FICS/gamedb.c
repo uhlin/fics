@@ -808,64 +808,78 @@ PRIVATE int ReadGameState(FILE * fp, game_state_t *gs, int version)
   return 0;
 }
 
-PUBLIC int got_attr_value(int g, char *attr, char *value, FILE * fp, char *file)
+PUBLIC int
+got_attr_value(int g, char *attr, char *value, FILE *fp, char *file)
 {
-  int i;
+	if (!strcmp(attr, "w_init:")) {
+		garray[g].wInitTime = atoi(value);
+	} else if (!strcmp(attr, "w_inc:")) {
+		garray[g].wIncrement = atoi(value);
+	} else if (!strcmp(attr, "b_init:")) {
+		garray[g].bInitTime = atoi(value);
+	} else if (!strcmp(attr, "b_inc:")) {
+		garray[g].bIncrement = atoi(value);
+	} else if (!strcmp(attr, "white_name:")) {
+		mstrlcpy(garray[g].white_name, value,
+		    sizeof(garray[g].white_name));
+	} else if (!strcmp(attr, "black_name:")) {
+		mstrlcpy(garray[g].black_name, value,
+		    sizeof(garray[g].black_name));
+	} else if (!strcmp(attr, "white_rating:")) {
+		garray[g].white_rating = atoi(value);
+	} else if (!strcmp(attr, "black_rating:")) {
+		garray[g].black_rating = atoi(value);
+	} else if (!strcmp(attr, "result:")) {
+		garray[g].result = atoi(value);
+	} else if (!strcmp(attr, "timestart:")) {
+		garray[g].timeOfStart = atoi(value);
+	} else if (!strcmp(attr, "w_time:")) {
+		garray[g].wTime = atoi(value);
+	} else if (!strcmp(attr, "b_time:")) {
+		garray[g].bTime = atoi(value);
+	} else if (!strcmp(attr, "clockstopped:")) {
+		garray[g].clockStopped = atoi(value);
+	} else if (!strcmp(attr, "rated:")) {
+		garray[g].rated = atoi(value);
+	} else if (!strcmp(attr, "private:")) {
+		garray[g].private = atoi(value);
+	} else if (!strcmp(attr, "type:")) {
+		garray[g].type = atoi(value);
+	} else if (!strcmp(attr, "halfmoves:")) {
+		garray[g].numHalfMoves = atoi(value);
 
-  if (!strcmp(attr, "w_init:")) {
-    garray[g].wInitTime = atoi(value);
-  } else if (!strcmp(attr, "w_inc:")) {
-    garray[g].wIncrement = atoi(value);
-  } else if (!strcmp(attr, "b_init:")) {
-    garray[g].bInitTime = atoi(value);
-  } else if (!strcmp(attr, "b_inc:")) {
-    garray[g].bIncrement = atoi(value);
-  } else if (!strcmp(attr, "white_name:")) {
-    strcpy(garray[g].white_name, value);
-  } else if (!strcmp(attr, "black_name:")) {
-    strcpy(garray[g].black_name, value);
-  } else if (!strcmp(attr, "white_rating:")) {
-    garray[g].white_rating = atoi(value);
-  } else if (!strcmp(attr, "black_rating:")) {
-    garray[g].black_rating = atoi(value);
-  } else if (!strcmp(attr, "result:")) {
-    garray[g].result = atoi(value);
-  } else if (!strcmp(attr, "timestart:")) {
-    garray[g].timeOfStart = atoi(value);
-  } else if (!strcmp(attr, "w_time:")) {
-    garray[g].wTime = atoi(value);
-  } else if (!strcmp(attr, "b_time:")) {
-    garray[g].bTime = atoi(value);
-  } else if (!strcmp(attr, "clockstopped:")) {
-    garray[g].clockStopped = atoi(value);
-  } else if (!strcmp(attr, "rated:")) {
-    garray[g].rated = atoi(value);
-  } else if (!strcmp(attr, "private:")) {
-    garray[g].private = atoi(value);
-  } else if (!strcmp(attr, "type:")) {
-    garray[g].type = atoi(value);
-  } else if (!strcmp(attr, "halfmoves:")) {
-    garray[g].numHalfMoves = atoi(value);
-    if (garray[g].numHalfMoves == 0)
-      return 0;
-    garray[g].moveListSize = garray[g].numHalfMoves;
-    garray[g].moveList = (move_t *) rmalloc(sizeof(move_t) * garray[g].moveListSize);
-    for (i = 0; i < garray[g].numHalfMoves; i++) {
-      if (ReadMove(fp, &garray[g].moveList[i])) {
-	fprintf(stderr, "FICS: Trouble reading moves from %s.\n", file);
-	return -1;
-      }
-    }
-  } else if (!strcmp(attr, "gamestate:")) {	/* Value meaningless */
-    if (garray[g].status != GAME_EXAMINE &&
-	ReadGameState(fp, &garray[g].game_state, 0)) {
-      fprintf(stderr, "FICS: Trouble reading game state from %s.\n", file);
-      return -1;
-    }
-  } else {
-    fprintf(stderr, "FICS: Error bad attribute >%s< from file %s\n", attr, file);
-  }
-  return 0;
+		if (garray[g].numHalfMoves == 0)
+			return 0;
+
+		garray[g].moveListSize = garray[g].numHalfMoves;
+		garray[g].moveList = reallocarray(NULL, sizeof(move_t),
+		    garray[g].moveListSize);
+
+		if (garray[g].moveList == NULL)
+			err(1, "%s: reallocarray", __func__);
+		else
+			malloc_count++;
+
+		for (int i = 0; i < garray[g].numHalfMoves; i++) {
+			if (ReadMove(fp, &garray[g].moveList[i])) {
+				fprintf(stderr, "FICS: Trouble reading moves "
+				    "from %s.\n", file);
+				return -1;
+			}
+		}
+	} else if (!strcmp(attr, "gamestate:")) {	// Value meaningless
+		if (garray[g].status != GAME_EXAMINE &&
+		    ReadGameState(fp, &garray[g].game_state, 0)) {
+			fprintf(stderr, "FICS: Trouble reading game state "
+			    "from %s.\n", file);
+			return -1;
+		}
+	} else {
+		fprintf(stderr, "FICS: Error bad attribute >%s< from file %s\n",
+		    attr, file);
+	}
+
+	return 0;
 }
 
 void
