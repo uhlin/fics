@@ -166,25 +166,31 @@ PUBLIC int game_finish(int g)
   return 0;
 }
 
-PUBLIC void MakeFENpos (int g, char *FEN)
+PUBLIC void
+MakeFENpos(int g, char *FEN)
 {
-  strcpy(FEN, boardToFEN(g));
+	strcpy(FEN, boardToFEN(g));
 }
 
-PUBLIC char *game_time_str(int wt, int winc, int bt, int binc)
+PUBLIC char *
+game_time_str(int wt, int winc, int bt, int binc)
 {
-  static char tstr[50];
+	static char	tstr[50] = { '\0' };
 
-  if ((!wt) && (!winc)) {			/* Untimed */
-    strcpy(tstr, "");
-    return tstr;
-  }
-  if ((wt == bt) && (winc == binc)) {
-    sprintf(tstr, " %d %d", wt, winc);
-  } else {
-    sprintf(tstr, " %d %d : %d %d", wt, winc, bt, binc);
-  }
-  return tstr;
+	if ((!wt) && (!winc)) { // Untimed
+		strcpy(tstr, "");
+		return tstr;
+	}
+
+	if ((wt == bt) && (winc == binc)) {
+		msnprintf(tstr, sizeof tstr, " %d %d", wt, winc);
+	} else {
+		msnprintf(tstr, sizeof tstr, " %d %d : %d %d",
+		    wt, winc,
+		    bt, binc);
+	}
+
+	return tstr;
 }
 
 PUBLIC char *
