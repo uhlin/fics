@@ -16,6 +16,7 @@ documented in this file.
 - Made functions and variables private where possible.
 - Reformatted code according to OpenBSD's KNF:
   - `command.c`
+  - `gamedb.c`
   - `obsproc.c`
   - `talkproc.c`
   - ...
