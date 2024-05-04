@@ -23,6 +23,8 @@
    Markus Uhlin                 23/12/16	Fixed compiler warnings
    Markus Uhlin                 23/12/17	Reformatted functions
    Markus Uhlin                 23/12/23	Fixed clang warnings
+   Markus Uhlin                 24/05/04	Refactored and reformatted all
+						functions plus more...
 */
 
 #include "stdinclude.h"
