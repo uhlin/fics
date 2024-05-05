@@ -36,80 +36,82 @@
 #include "playerdb.h"
 #include "utils.h"
 
-/* Simply tests if the input string is a move or not. */
-/* If it matches patterns below */
-/* Add to this list as you improve the move parser */
-/* MS_COMP e2e4 */
-/* MS_COMPDASH e2-e4 */
-/* MS_CASTLE o-o, o-o-o */
-/* Not done yet */
-/* MS_ALG e4, Nd5 Ncd5 */
-PUBLIC int is_move(char *mstr)
+/*
+ * Simply tests if the input string is a move or not. If it matches
+ * patterns below.
+ *
+ * Add to this list as you improve the move parser:
+ *   MS_COMP e2e4
+ *   MS_COMPDASH e2-e4
+ *   MS_CASTLE o-o, o-o-o
+ * Not done yet:
+ *   MS_ALG e4, Nd5 Ncd5
+ */
+PUBLIC int
+is_move(char *mstr)
 {
-  int len = strlen(mstr);
-  if ((len > 3) && (mstr[len - 2] == '='))
-    len -= 2;
+	int	len = strlen(mstr);
 
-  if (len == 4) {		/* Test for e2e4 */
-    if (isfile(mstr[0]) && isrank(mstr[1]) &&
-	isfile(mstr[2]) && isrank(mstr[3])) {
-      return MS_COMP;
-    }
-  }
-  if (len == 5) {		/* Test for e2-e4 */
-    if (isfile(mstr[0]) && isrank(mstr[1]) &&
-	(mstr[2] == '-') &&
-	isfile(mstr[3]) && isrank(mstr[4])) {
-      return MS_COMPDASH;
-    }
-  }
-  if (len == 3) {		/* Test for o-o */
-    if ((mstr[0] == 'o') && (mstr[1] == '-') && (mstr[2] == 'o')) {
-      return MS_KCASTLE;
-    }
-    if ((mstr[0] == 'O') && (mstr[1] == '-') && (mstr[2] == 'O')) {
-      return MS_KCASTLE;
-    }
-    if ((mstr[0] == '0') && (mstr[1] == '-') && (mstr[2] == '0')) {
-      return MS_KCASTLE;
-    }
-  }
-  if (len == 2) {		/* Test for oo */
-    if ((mstr[0] == 'o') && (mstr[1] == 'o')) {
-      return MS_KCASTLE;
-    }
-    if ((mstr[0] == 'O') && (mstr[1] == 'O')) {
-      return MS_KCASTLE;
-    }
-    if ((mstr[0] == '0') && (mstr[1] == '0')) {
-      return MS_KCASTLE;
-    }
-  }
-  if (len == 5) {		/* Test for o-o-o */
-    if ((mstr[0] == 'o') && (mstr[1] == '-') && (mstr[2] == 'o') && (mstr[3] == '-') && (mstr[4] == 'o')) {
-      return MS_QCASTLE;
-    }
-    if ((mstr[0] == 'O') && (mstr[1] == '-') && (mstr[2] == 'O') && (mstr[3] == '-') && (mstr[4] == 'O')) {
-      return MS_QCASTLE;
-    }
-    if ((mstr[0] == '0') && (mstr[1] == '-') && (mstr[2] == '0') && (mstr[3] == '-') && (mstr[4] == '0')) {
-      return MS_QCASTLE;
-    }
-  }
-  if (len == 3) {		/* Test for ooo */
-    if ((mstr[0] == 'o') && (mstr[1] == 'o') && (mstr[2] == 'o')) {
-      return MS_QCASTLE;
-    }
-    if ((mstr[0] == 'O') && (mstr[1] == 'O') && (mstr[2] == 'O')) {
-      return MS_QCASTLE;
-    }
-    if ((mstr[0] == '0') && (mstr[1] == '0') && (mstr[2] == '0')) {
-      return MS_QCASTLE;
-    }
-  }
-  return alg_is_move(mstr);
+	if ((len > 3) && (mstr[len - 2] == '='))
+		len -= 2;
+
+	if (len == 4) { // Test for e2e4
+		if (isfile(mstr[0]) && isrank(mstr[1]) &&
+		    isfile(mstr[2]) && isrank(mstr[3])) {
+			return MS_COMP;
+		}
+	}
+
+	if (len == 5) { // Test for e2-e4
+		if (isfile(mstr[0]) &&
+		    isrank(mstr[1]) &&
+		    (mstr[2] == '-') &&
+		    isfile(mstr[3]) &&
+		    isrank(mstr[4]))
+			return MS_COMPDASH;
+	}
+
+	if (len == 3) { // Test for o-o
+		if ((mstr[0] == 'o') && (mstr[1] == '-') && (mstr[2] == 'o'))
+			return MS_KCASTLE;
+		if ((mstr[0] == 'O') && (mstr[1] == '-') && (mstr[2] == 'O'))
+			return MS_KCASTLE;
+		if ((mstr[0] == '0') && (mstr[1] == '-') && (mstr[2] == '0'))
+			return MS_KCASTLE;
+	}
+
+	if (len == 2) { // Test for oo
+		if ((mstr[0] == 'o') && (mstr[1] == 'o'))
+			return MS_KCASTLE;
+		if ((mstr[0] == 'O') && (mstr[1] == 'O'))
+			return MS_KCASTLE;
+		if ((mstr[0] == '0') && (mstr[1] == '0'))
+			return MS_KCASTLE;
+	}
+
+	if (len == 5) { // Test for o-o-o
+		if ((mstr[0] == 'o') && (mstr[1] == '-') && (mstr[2] == 'o') &&
+		    (mstr[3] == '-') && (mstr[4] == 'o'))
+			return MS_QCASTLE;
+		if ((mstr[0] == 'O') && (mstr[1] == '-') && (mstr[2] == 'O') &&
+		    (mstr[3] == '-') && (mstr[4] == 'O'))
+			return MS_QCASTLE;
+		if ((mstr[0] == '0') && (mstr[1] == '-') && (mstr[2] == '0') &&
+		    (mstr[3] == '-') && (mstr[4] == '0'))
+			return MS_QCASTLE;
+	}
+
+	if (len == 3) { // Test for ooo
+		if ((mstr[0] == 'o') && (mstr[1] == 'o') && (mstr[2] == 'o'))
+			return MS_QCASTLE;
+		if ((mstr[0] == 'O') && (mstr[1] == 'O') && (mstr[2] == 'O'))
+			return MS_QCASTLE;
+		if ((mstr[0] == '0') && (mstr[1] == '0') && (mstr[2] == '0'))
+			return MS_QCASTLE;
+	}
+
+	return alg_is_move(mstr);
 }
-
 
 PUBLIC int
 NextPieceLoop(board_t b, int *f, int *r, int color)
