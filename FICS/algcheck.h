@@ -29,8 +29,8 @@
 #include "board.h"
 #endif
 
-#define DROP_CHAR '@'	/* used by algcheck.c and movecheck.c */
-#define DROP_STR  "@"
+#define DROP_CHAR	'@' // used by algcheck.c and movecheck.c
+#define DROP_STR	"@"
 
 extern char	*alg_unparse(game_state_t *, move_t *);
 extern int	 alg_is_move(char *);
