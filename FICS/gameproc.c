@@ -631,12 +631,20 @@ process_move(int p, char *command)
 
 			if (!garray[g].moveList) {
 				garray[g].moveList =
-				    rmalloc(sizeof(move_t) *
+				    reallocarray(NULL,
+				    sizeof(move_t),
 				    garray[g].moveListSize);
+				if (garray[g].moveList == NULL)
+					err(1, "%s: reallocarray", __func__);
+				else
+					malloc_count++;
 			} else {
 				garray[g].moveList =
-				    rrealloc(garray[g].moveList,
-				    (sizeof(move_t) * garray[g].moveListSize));
+				    reallocarray(garray[g].moveList,
+				    sizeof(move_t),
+				    garray[g].moveListSize);
+				if (garray[g].moveList == NULL)
+					err(1, "%s: reallocarray", __func__);
 			}
 		}
 
