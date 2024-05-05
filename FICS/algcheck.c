@@ -55,26 +55,27 @@
  * cut that off.
  */
 
-/* f - file
+/*
+ * f - file
  * r - rank
  * p - piece
  * x - x
  * @ - drop character (bughouse)
  */
 char *alg_list[] = {
-  "fxfr", "pxfr",		/* These two get confused in case of bishop */
-  "ffr", "pfr",			/* These two get confused in case of bishop */
-  "pffr",
-  "pfxfr",
-  "prfr",
-  "prxfr",
-  "fr",
-  "ff",
-  "fxf",
-  "p@fr",
-  "#fr",
-  "#pfr",
-  NULL
+	"fxfr", "pxfr",	// These two get confused in case of bishop
+	"ffr", "pfr",	// These two get confused in case of bishop
+	"pffr",
+	"pfxfr",
+	"prfr",
+	"prxfr",
+	"fr",
+	"ff",
+	"fxf",
+	"p@fr",
+	"#fr",
+	"#pfr",
+	NULL
 };
 
 PRIVATE int
