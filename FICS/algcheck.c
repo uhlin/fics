@@ -326,7 +326,7 @@ PUBLIC char *alg_unparse( game_state_t *gs, move_t *mt )
  * in short notation. Used in last move report and in 'moves' command.
  */
 PUBLIC char *
-alg_unparse(game_state_t *gs, move_t * mt)
+alg_unparse(game_state_t *gs, move_t *mt)
 {
 	char		tmp[20] = { '\0' };
 	game_state_t	fakeMove;
