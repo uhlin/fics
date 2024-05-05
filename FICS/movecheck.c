@@ -23,6 +23,8 @@
    Markus Uhlin                 23/12/14	Fixed compiler warnings
    Markus Uhlin                 23/12/17	Fixed compiler warnings
    Markus Uhlin                 23/12/24	Fixed dead assignment
+   Markus Uhlin                 24/05/05	Refactored and reformatted all
+						functions.
 */
 
 #include "stdinclude.h"
