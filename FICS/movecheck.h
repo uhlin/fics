@@ -25,22 +25,22 @@
 #ifndef _MOVECHECK_H
 #define _MOVECHECK_H
 
-#define MOVE_OK 0
-#define MOVE_ILLEGAL 1
-#define MOVE_STALEMATE 2
-#define MOVE_CHECKMATE 3
-#define MOVE_AMBIGUOUS 4
-#define MOVE_NOMATERIAL 5
+#define MOVE_OK          0
+#define MOVE_ILLEGAL     1
+#define MOVE_STALEMATE   2
+#define MOVE_CHECKMATE   3
+#define MOVE_AMBIGUOUS   4
+#define MOVE_NOMATERIAL  5
 
-#define MS_NOTMOVE 0
-#define MS_COMP 1
+#define MS_NOTMOVE  0
+#define MS_COMP     1
 #define MS_COMPDASH 2
-#define MS_ALG 3
-#define MS_KCASTLE 4
-#define MS_QCASTLE 5
+#define MS_ALG      3
+#define MS_KCASTLE  4
+#define MS_QCASTLE  5
 
-#define isrank(c) (((c) <= '8') && ((c) >= '1'))
-#define isfile(c) (((c) >= 'a') && ((c) <= 'h'))
+#define isrank(c)	(((c) <= '8') && ((c) >= '1'))
+#define isfile(c)	(((c) >= 'a') && ((c) <= 'h'))
 
 #if !defined(_BOARD_H)
 #include "board.h"
