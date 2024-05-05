@@ -735,23 +735,30 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 	return MOVE_OK;
 }
 
-PUBLIC int legal_andcheck_move(game_state_t * gs,
-			        int fFile, int fRank,
-			        int tFile, int tRank)
+PUBLIC int
+legal_andcheck_move(game_state_t *gs,
+    int fFile, int fRank,
+    int tFile, int tRank)
 {
-  move_t mt;
-  if (!legal_move(gs, fFile, fRank, tFile, tRank))
-    return 0;
-  mt.color = gs->onMove;
-  mt.fromFile = fFile;
-  mt.fromRank = fRank;
-  mt.toFile = tFile;
-  mt.toRank = tRank;
-  /* This should take into account a pawn promoting to another piece */
-  if (move_calculate(gs, &mt, QUEEN) == MOVE_OK)
-    return 1;
-  else
-    return 0;
+	move_t	mt;
+
+	if (!legal_move(gs, fFile, fRank, tFile, tRank))
+		return 0;
+
+	mt.color = gs->onMove;
+	mt.fromFile = fFile;
+	mt.fromRank = fRank;
+	mt.toFile = tFile;
+	mt.toRank = tRank;
+
+	/*
+	 * This should take into account a pawn promoting to another
+	 * piece.
+	 */
+	if (move_calculate(gs, &mt, QUEEN) == MOVE_OK)
+		return 1;
+	else
+		return 0;
 }
 
 PUBLIC int
