@@ -23,11 +23,12 @@
 */
 
 #include "stdinclude.h"
-
 #include "common.h"
+
 #include "algcheck.h"
-#include "movecheck.h"
 #include "board.h"
+#include "maxxes-utils.h"
+#include "movecheck.h"
 #include "utils.h"
 
 /* Well, lets see if I can list the possibilities
@@ -318,148 +319,183 @@ PUBLIC char *alg_unparse( game_state_t *gs, move_t *mt )
 }
 */
 
-
-/* A assumes the move has yet to be made on the board */
-
-
-/* Soso: rewrote alg_unparse function.
- * Algebraic deparser - sets the mStr variable with move description
+/*
+ * Soso: Rewrote the alg_unparse() function.
+ *
+ * Algebraic deparser - sets the 'mStr' variable with move description
  * in short notation. Used in last move report and in 'moves' command.
  */
-
-PUBLIC char *alg_unparse(game_state_t * gs, move_t * mt)
+PUBLIC char *
+alg_unparse(game_state_t *gs, move_t * mt)
 {
-  static char mStr[20];
-  char tmp[20];
-  int piece, f, r;
-  int ambig, r_ambig, f_ambig;
-  game_state_t fakeMove;
+	char		tmp[20] = { '\0' };
+	game_state_t	fakeMove;
+	int		ambig, r_ambig, f_ambig;
+	int		piece, f, r;
+	static char	mStr[20] = { '\0' };
 
-  if (mt->fromFile == ALG_DROP) {
-    piece = mt->fromRank;
-  } else {
-    piece = piecetype(gs->board[mt->fromFile][mt->fromRank]);
-  }
-
-  if ((piece == KING) && ((mt->fromFile == 4) && (mt->toFile == 6))) {
-    strcpy(mStr, "O-O");
-    goto check;
-  }
-  if ((piece == KING) && ((mt->fromFile == 4) && (mt->toFile == 2))) {
-    strcpy(mStr, "O-O-O");
-    goto check;
-  }
-  strcpy(mStr, "");
-  switch (piece) {
-  case PAWN:
-    if (mt->fromFile == ALG_DROP) {
-      strcpy(mStr,"P");
-    } else if (mt->fromFile != mt->toFile) {
-      sprintf(tmp, "%c", mt->fromFile + 'a');
-      strcpy(mStr, tmp);
-    }
-    break;
-  case KNIGHT:
-    strcpy(mStr, "N");
-    break;
-  case BISHOP:
-    strcpy(mStr, "B");
-    break;
-  case ROOK:
-    strcpy(mStr, "R");
-    break;
-  case QUEEN:
-    strcpy(mStr, "Q");
-    break;
-  case KING:
-    strcpy(mStr, "K");
-    break;
-  default:
-    strcpy(mStr, "");
-    break;
-  }
-
-  if (mt->fromFile == ALG_DROP) {
-    strcat(mStr, DROP_STR);
-  } else {
-  /* Checks for ambiguity in short notation ( Ncb3, R8e8 or so) */
-  if (piece != PAWN) {
-    ambig = r_ambig = f_ambig = 0;
-    for (r = 0; r < 8; r++)
-      for (f = 0; f < 8; f++) {
-	if ((gs->board[f][r] != NOPIECE) && iscolor(gs->board[f][r], gs->onMove)
-	    && (piecetype(gs->board[f][r]) == piece) &&
-	    ((f != mt->fromFile) || (r != mt->fromRank))) {
-	  if (legal_move(gs, f, r, mt->toFile, mt->toRank)) {
-	    fakeMove = *gs;
-	    fakeMove.board[f][r] = NOPIECE;
-	    fakeMove.onMove = CToggle(fakeMove.onMove);
-	    gs->onMove = CToggle(gs->onMove);
-
-            /* New bracketing below to try to fix 'ambiguous move' bug. */
-	    if ((in_check(gs)) || !in_check(&fakeMove)) {
-	      ambig++;
-	    }
-	    if (f == mt->fromFile) {
-	      f_ambig++;
-	      ambig++;
-	    }
-	    if (r == mt->fromRank) {
-	      r_ambig++;
-	      ambig++;
-	    }
-	    gs->onMove = CToggle(gs->onMove);
-	  }
+	if (mt->fromFile == ALG_DROP) {
+		piece = mt->fromRank;
+	} else {
+		piece = piecetype(gs->board[mt->fromFile][mt->fromRank]);
 	}
-      }
-    if (ambig > 0) {
-      /* Ambiguity in short notation, need to add file,rank or _both_ in
-         notation */
-      if (f_ambig == 0) {
-	sprintf(tmp, "%c", mt->fromFile + 'a');
-	strcat(mStr, tmp);
-      } else if (r_ambig == 0) {
-	sprintf(tmp, "%d", mt->fromRank + 1);
-	strcat(mStr, tmp);
-      } else {
-	sprintf(tmp, "%c%d", mt->fromFile + 'a', mt->fromRank + 1);
-	strcat(mStr, tmp);
-      }
-    }
-  }
-  if ((gs->board[mt->toFile][mt->toRank] != NOPIECE) ||
-      ((piece == PAWN) && (mt->fromFile != mt->toFile))) {
-    strcat(mStr, "x");
-  }
-  }
-  sprintf(tmp, "%c%d", mt->toFile + 'a', mt->toRank + 1);
-  strcat(mStr, tmp);
 
-  if ((piece == PAWN) && (mt->piecePromotionTo != NOPIECE)) {
-    strcat(mStr, "=");		/* = before promoting piece */
-    switch (piecetype(mt->piecePromotionTo)) {
-    case KNIGHT:
-      strcat(mStr, "N");
-      break;
-    case BISHOP:
-      strcat(mStr, "B");
-      break;
-    case ROOK:
-      strcat(mStr, "R");
-      break;
-    case QUEEN:
-      strcat(mStr, "Q");
-      break;
-    default:
-      break;
-    }
-  }
-check:;
-  fakeMove = *gs;
-  execute_move(&fakeMove, mt, 0);
-  fakeMove.onMove = CToggle(fakeMove.onMove);
-  if (in_check(&fakeMove)) {
-    strcat(mStr, "+");
-  }
-  return mStr;
+	if ((piece == KING) && ((mt->fromFile == 4) && (mt->toFile == 6))) {
+		mstrlcpy(mStr, "O-O", sizeof mStr);
+		goto check;
+	}
+	if ((piece == KING) && ((mt->fromFile == 4) && (mt->toFile == 2))) {
+		mstrlcpy(mStr, "O-O-O", sizeof mStr);
+		goto check;
+	}
+
+	mstrlcpy(mStr, "", sizeof mStr);
+
+	switch (piece) {
+	case PAWN:
+		if (mt->fromFile == ALG_DROP) {
+			mstrlcpy(mStr, "P", sizeof mStr);
+		} else if (mt->fromFile != mt->toFile) {
+			msnprintf(tmp, sizeof tmp, "%c", mt->fromFile + 'a');
+			mstrlcpy(mStr, tmp, sizeof mStr);
+		}
+		break;
+	case KNIGHT:
+		mstrlcpy(mStr, "N", sizeof mStr);
+		break;
+	case BISHOP:
+		mstrlcpy(mStr, "B", sizeof mStr);
+		break;
+	case ROOK:
+		mstrlcpy(mStr, "R", sizeof mStr);
+		break;
+	case QUEEN:
+		mstrlcpy(mStr, "Q", sizeof mStr);
+		break;
+	case KING:
+		mstrlcpy(mStr, "K", sizeof mStr);
+		break;
+	default:
+		mstrlcpy(mStr, "", sizeof mStr);
+		break;
+	}
+
+	if (mt->fromFile == ALG_DROP) {
+		mstrlcat(mStr, DROP_STR, sizeof mStr);
+	} else {
+		/*
+		 * Checks for ambiguity in short notation (Ncb3, R8e8
+		 * or so).
+		 */
+		if (piece != PAWN) {
+			ambig = r_ambig = f_ambig = 0;
+
+			for (r = 0; r < 8; r++) {
+				for (f = 0; f < 8; f++) {
+					if ((gs->board[f][r] != NOPIECE) &&
+					    iscolor(gs->board[f][r], gs->onMove) &&
+					    (piecetype(gs->board[f][r]) == piece) &&
+					    ((f != mt->fromFile) ||
+					    (r != mt->fromRank))) {
+						if (legal_move(gs, f, r,
+						    mt->toFile, mt->toRank)) {
+							fakeMove = *gs;
+							fakeMove.board[f][r] =
+							    NOPIECE;
+							fakeMove.onMove =
+							    CToggle(fakeMove.onMove);
+							gs->onMove =
+							    CToggle(gs->onMove);
+
+							/*
+							 * New
+							 * bracketing
+							 * below to
+							 * try to fix
+							 * 'ambiguous
+							 * move' bug.
+							 */
+							if ((in_check(gs)) ||
+							    !in_check(&fakeMove))
+								ambig++;
+
+							if (f == mt->fromFile) {
+								f_ambig++;
+								ambig++;
+							}
+							if (r == mt->fromRank) {
+								r_ambig++;
+								ambig++;
+							}
+
+							gs->onMove =
+							    CToggle(gs->onMove);
+						}
+					}
+				} /* for */
+			} /* for */
+
+			if (ambig > 0) {
+				/*
+				 * Ambiguity in short notation, need
+				 * to add file, rank or _both_ in
+				 * notation.
+				 */
+
+				if (f_ambig == 0) {
+					msnprintf(tmp, sizeof tmp, "%c",
+					    mt->fromFile + 'a');
+					mstrlcat(mStr, tmp, sizeof mStr);
+				} else if (r_ambig == 0) {
+					msnprintf(tmp, sizeof tmp, "%d",
+					    mt->fromRank + 1);
+					mstrlcat(mStr, tmp, sizeof mStr);
+				} else {
+					msnprintf(tmp, sizeof tmp, "%c%d",
+					    mt->fromFile + 'a',
+					    mt->fromRank + 1);
+					mstrlcat(mStr, tmp, sizeof mStr);
+				}
+			}
+		}
+
+		if ((gs->board[mt->toFile][mt->toRank] != NOPIECE) ||
+		    ((piece == PAWN) && (mt->fromFile != mt->toFile))) {
+			mstrlcat(mStr, "x", sizeof mStr);
+		}
+	}
+
+	msnprintf(tmp, sizeof tmp, "%c%d", mt->toFile + 'a', mt->toRank + 1);
+	mstrlcat(mStr, tmp, sizeof mStr);
+
+	if ((piece == PAWN) && (mt->piecePromotionTo != NOPIECE)) {
+		mstrlcat(mStr, "=", sizeof mStr); // = before promoting piece
+
+		switch (piecetype(mt->piecePromotionTo)) {
+		case KNIGHT:
+			mstrlcat(mStr, "N", sizeof mStr);
+			break;
+		case BISHOP:
+			mstrlcat(mStr, "B", sizeof mStr);
+			break;
+		case ROOK:
+			mstrlcat(mStr, "R", sizeof mStr);
+			break;
+		case QUEEN:
+			mstrlcat(mStr, "Q", sizeof mStr);
+			break;
+		default:
+			break;
+		}
+	}
+
+  check:;
+
+	fakeMove = *gs;
+	execute_move(&fakeMove, mt, 0);
+	fakeMove.onMove = CToggle(fakeMove.onMove);
+
+	if (in_check(&fakeMove))
+		mstrlcat(mStr, "+", sizeof mStr);
+	return mStr;
 }
