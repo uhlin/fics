@@ -46,16 +46,15 @@
 #include "board.h"
 #endif
 
-extern int is_move(char *);
-extern int parse_move(char *, game_state_t *, move_t *, int);
-extern int execute_move(game_state_t *, move_t *, int);
-extern int backup_move(int, int);
+extern int	InitPieceLoop(board_t, int *, int *, int);
+extern int	NextPieceLoop(board_t, int *, int *, int);
 
-/* Some useful chess utilities */
-extern int NextPieceLoop(board_t, int *, int *, int);
-extern int InitPieceLoop(board_t, int *, int *, int);
-extern int legal_move(game_state_t *, int, int, int, int);
-extern int legal_andcheck_move(game_state_t *, int, int, int, int);
-extern int in_check(game_state_t *);
+extern int	backup_move(int, int);
+extern int	execute_move(game_state_t *, move_t *, int);
+extern int	in_check(game_state_t *);
+extern int	is_move(char *);
+extern int	legal_andcheck_move(game_state_t *, int, int, int, int);
+extern int	legal_move(game_state_t *, int, int, int, int);
+extern int	parse_move(char *, game_state_t *, move_t *, int);
 
 #endif /* _MOVECHECK_H */
