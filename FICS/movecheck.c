@@ -420,76 +420,85 @@ PRIVATE void possible_knight_moves(game_state_t * gs,
   }
 }
 
-PRIVATE void possible_bishop_moves(game_state_t * gs,
-				    int onf, int onr,
-				    int *posf, int *posr, int *numpos)
+PRIVATE void
+possible_bishop_moves(game_state_t *gs,
+    int onf, int onr,
+    int *posf, int *posr,
+    int *numpos)
 {
-  int f, r;
+	int	f, r;
 
-  /* Up Left */
-  f = onf;
-  r = onr;
-  while (1) {
-    f--;
-    r++;
-    if ((f < 0) || (f > 7))
-      break;
-    if ((r < 0) || (r > 7))
-      break;
-    if ((gs->board[f][r] != NOPIECE) && (iscolor(gs->board[f][r], gs->onMove)))
-      break;
-    add_pos(f, r, posf, posr, numpos);
-    if (gs->board[f][r] != NOPIECE)
-      break;
-  }
-  /* Up Right */
-  f = onf;
-  r = onr;
-  while (1) {
-    f++;
-    r++;
-    if ((f < 0) || (f > 7))
-      break;
-    if ((r < 0) || (r > 7))
-      break;
-    if ((gs->board[f][r] != NOPIECE) && (iscolor(gs->board[f][r], gs->onMove)))
-      break;
-    add_pos(f, r, posf, posr, numpos);
-    if (gs->board[f][r] != NOPIECE)
-      break;
-  }
-  /* Down Left */
-  f = onf;
-  r = onr;
-  while (1) {
-    f--;
-    r--;
-    if ((f < 0) || (f > 7))
-      break;
-    if ((r < 0) || (r > 7))
-      break;
-    if ((gs->board[f][r] != NOPIECE) && (iscolor(gs->board[f][r], gs->onMove)))
-      break;
-    add_pos(f, r, posf, posr, numpos);
-    if (gs->board[f][r] != NOPIECE)
-      break;
-  }
-  /* Down Right */
-  f = onf;
-  r = onr;
-  while (1) {
-    f++;
-    r--;
-    if ((f < 0) || (f > 7))
-      break;
-    if ((r < 0) || (r > 7))
-      break;
-    if ((gs->board[f][r] != NOPIECE) && (iscolor(gs->board[f][r], gs->onMove)))
-      break;
-    add_pos(f, r, posf, posr, numpos);
-    if (gs->board[f][r] != NOPIECE)
-      break;
-  }
+	/* Up Left */
+	f = onf;
+	r = onr;
+	while (1) {
+		f--;
+		r++;
+		if ((f < 0) || (f > 7))
+			break;
+		if ((r < 0) || (r > 7))
+			break;
+		if ((gs->board[f][r] != NOPIECE) &&
+		    (iscolor(gs->board[f][r], gs->onMove)))
+			break;
+		add_pos(f, r, posf, posr, numpos);
+		if (gs->board[f][r] != NOPIECE)
+			break;
+	}
+
+	/* Up Right */
+	f = onf;
+	r = onr;
+	while (1) {
+		f++;
+		r++;
+		if ((f < 0) || (f > 7))
+			break;
+		if ((r < 0) || (r > 7))
+			break;
+		if ((gs->board[f][r] != NOPIECE) &&
+		    (iscolor(gs->board[f][r], gs->onMove)))
+			break;
+		add_pos(f, r, posf, posr, numpos);
+		if (gs->board[f][r] != NOPIECE)
+			break;
+	}
+
+	/* Down Left */
+	f = onf;
+	r = onr;
+	while (1) {
+		f--;
+		r--;
+		if ((f < 0) || (f > 7))
+			break;
+		if ((r < 0) || (r > 7))
+			break;
+		if ((gs->board[f][r] != NOPIECE) &&
+		    (iscolor(gs->board[f][r], gs->onMove)))
+			break;
+		add_pos(f, r, posf, posr, numpos);
+		if (gs->board[f][r] != NOPIECE)
+			break;
+	}
+
+	/* Down Right */
+	f = onf;
+	r = onr;
+	while (1) {
+		f++;
+		r--;
+		if ((f < 0) || (f > 7))
+			break;
+		if ((r < 0) || (r > 7))
+			break;
+		if ((gs->board[f][r] != NOPIECE) &&
+		    (iscolor(gs->board[f][r], gs->onMove)))
+			break;
+		add_pos(f, r, posf, posr, numpos);
+		if (gs->board[f][r] != NOPIECE)
+			break;
+	}
 }
 
 PRIVATE void
