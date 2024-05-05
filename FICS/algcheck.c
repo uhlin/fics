@@ -33,26 +33,31 @@
 
 #define ALG_UNKNOWN -1
 
-/* Well, lets see if I can list the possibilities
- * Piece moves
+/*
+ * Well, lets see if I can list the possibilities:
+ *
+ * Piece moves:
  * Ne4
  * Nxe4
  * Nce4
  * Ncxe4
  * R2f3
  * R2xf3
- * Special pawn moves
+ *
+ * Special pawn moves:
  * e4
  * ed
  * exd
  * exd5
  * ed5
- * Drop moves (bughouse, board edit)
+ *
+ * Drop moves (bughouse, board edit):
  * P@f7 P*f7
  * #f7 #Nf7
- * (o-o, o-o-o) Castling is handled earlier, so don't worry about that
- * Of course any of these can have a + or ++ or = string on the end, just
- * cut that off.
+ * (o-o, o-o-o)
+ * Castling is handled earlier, so don't worry about that. Of course
+ * any of these can have a + or ++ or = string on the end, just cut
+ * that off.
  */
 
 /*
