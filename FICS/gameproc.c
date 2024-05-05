@@ -34,6 +34,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "command.h"
 #include "comproc.h"
 #include "config.h"
@@ -451,20 +453,25 @@ process_move(int p, char *command)
 		garray[g].numHalfMoves++;
 
 		if (garray[g].numHalfMoves > garray[g].examMoveListSize) {
-			size_t size;
-
 			garray[g].examMoveListSize += 20;	// Allocate 20
 								// moves at a
 								// time
-			size = (sizeof(move_t) * garray[g].examMoveListSize);
-
 			if (!garray[g].examMoveList) {
-				garray[g].examMoveList = rmalloc(size);
+				garray[g].examMoveList =
+				    reallocarray(NULL,
+				    sizeof(move_t),
+				    garray[g].examMoveListSize);
+				if (garray[g].examMoveList == NULL)
+					err(1, "%s: reallocarray", __func__);
+				else
+					malloc_count++;
 			} else {
 				garray[g].examMoveList =
-				    rrealloc(garray[g].examMoveList,
-				    (sizeof(move_t) *
-				    garray[g].examMoveListSize));
+				    reallocarray(garray[g].examMoveList,
+				    sizeof(move_t),
+				    garray[g].examMoveListSize);
+				if (garray[g].examMoveList == NULL)
+					err(1, "%s: reallocarray", __func__);
 			}
 		}
 
