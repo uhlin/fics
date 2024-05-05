@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/20	Revised
+   Markus Uhlin                 24/05/05	Usage of reallocarray()
 */
 
 #include "stdinclude.h"
