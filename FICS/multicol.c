@@ -26,6 +26,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "multicol.h"
 #include "rmalloc.h"
 #include "utils.h"
@@ -38,7 +40,12 @@ multicol_start(int maxArray)
 	m = rmalloc(sizeof(multicol));
 	m->arraySize	= maxArray;
 	m->num		= 0;
-	m->strArray	= rmalloc(sizeof(char *) * m->arraySize);
+	m->strArray	= reallocarray(NULL, sizeof(char *), m->arraySize);
+
+	if (m->strArray == NULL)
+		err(1, "%s: reallocarray", __func__);
+	else
+		malloc_count++;
 
 	for (int i = 0; i < m->arraySize; i++)
 		m->strArray[i] = NULL;
