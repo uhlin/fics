@@ -289,23 +289,26 @@ PRIVATE int is_square_attacked (game_state_t *gs, int kf, int kr)
     else return 0;
 }
 
-/* old one:
-PRIVATE int is_square_attacked(game_state_t * gs, int kf, int kr)
+#if 0
+PRIVATE int
+is_square_attacked(game_state_t *gs, int kf, int kr)
 {
-  int f, r;
-  gs->onMove = CToggle(gs->onMove);
+	int	f, r;
 
-  for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
-       NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-    if (legal_move(gs, f, r, kf, kr)) {
-      gs->onMove = CToggle(gs->onMove);
-      return 1;
-    }
-  }
-  gs->onMove = CToggle(gs->onMove);
-  return 0;
+	gs->onMove = CToggle(gs->onMove);
+
+	for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
+	     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
+		if (legal_move(gs, f, r, kf, kr)) {
+			gs->onMove = CToggle(gs->onMove);
+			return 1;
+		}
+	}
+
+	gs->onMove = CToggle(gs->onMove);
+	return 0;
 }
-*/
+#endif
 
 PRIVATE int
 legal_king_move(game_state_t *gs, int ff, int fr, int tf, int tr)
