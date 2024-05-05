@@ -29,6 +29,7 @@
    Markus Uhlin			24/03/30	Size-bounded string handling.
    Markus Uhlin			24/04/13	Added usage of msnprintf(),
 						mstrlcpy() and mstrlcat().
+   Markus Uhlin			24/05/05	Added usage of reallocarray().
 */
 
 #include "stdinclude.h"
