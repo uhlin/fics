@@ -788,7 +788,7 @@ in_check(game_state_t *gs)
 
 	for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
 	     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-		if (legal_move(gs, f, r, kf, kr)) // // In Check?
+		if (legal_move(gs, f, r, kf, kr)) // In Check?
 			return 1;
 	}
 
