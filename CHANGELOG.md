@@ -18,6 +18,7 @@ documented in this file.
   - `algcheck.c`
   - `command.c`
   - `gamedb.c`
+  - `movecheck.c`
   - `obsproc.c`
   - `talkproc.c`
   - ...
