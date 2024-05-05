@@ -194,110 +194,132 @@ PUBLIC int alg_is_move(char *mstr)
   return get_move_info(mstr, &piece, &ff, &fr, &tf, &tr, &bc);
 }
 
-/* We already know it is algebraic, get the move squares */
-PUBLIC int alg_parse_move(char *mstr, game_state_t * gs, move_t * mt)
+/*
+ * We already know it is algebraic - get the move squares.
+ */
+PUBLIC int
+alg_parse_move(char *mstr, game_state_t *gs, move_t *mt)
 {
-  int f, r, tmpr, posf, posr, posr2;
-  int piece, ff, fr, tf, tr, bc;
+	int	f, r, tmpr, posf, posr, posr2;
+	int	piece, ff, fr, tf, tr, bc;
 
-  if (get_move_info(mstr, &piece, &ff, &fr, &tf, &tr, &bc) != MS_ALG) {
-    fprintf(stderr, "FICS: Shouldn't try to algebraicly parse non-algabraic move string.\n");
-    return MOVE_ILLEGAL;
-  }
-  /* Resolve ambiguities in to-ness */
-  if (tf == ALG_UNKNOWN)
-    return MOVE_AMBIGUOUS;	/* Must always know to file */
-  if (tr == ALG_UNKNOWN) {
-    posr = posr2 = ALG_UNKNOWN;
-    if (piece != PAWN)
-      return MOVE_AMBIGUOUS;
-    if (ff == ALG_UNKNOWN)
-      return MOVE_AMBIGUOUS;
-    /* Need to find pawn on ff that can take to tf and fill in ranks */
-    for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
-	 NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-      if ((ff != ALG_UNKNOWN) && (ff != f))
-	continue;
-      if (piecetype(gs->board[f][r]) != piece)
-	continue;
-      if (gs->onMove == WHITE) {
-	tmpr = r + 1;
-      } else {
-	tmpr = r - 1;
-      }
-/*      if ((gs->board[tf][tmpr] == NOPIECE) ||
-          (iscolor(gs->board[tf][tmpr], gs->onMove))) continue;*/
-/* patch from Soso, added by Sparky 3/16/95                    */
-      if (gs->board[tf][tmpr] == NOPIECE) {
-	if ((gs->ep_possible[((gs->onMove == WHITE) ? 0 : 1)][ff]) != (tf - ff))
-	  continue;
-      } else {
-	if (iscolor(gs->board[tf][tmpr], gs->onMove))
-	  continue;
-      }
-
-      if (legal_andcheck_move(gs, f, r, tf, tmpr)) {
-	if ((posr != ALG_UNKNOWN) && (posr2 != ALG_UNKNOWN))
-	  return MOVE_AMBIGUOUS;
-	posr = tmpr;
-	posr2 = r;
-      }
-    }
-    tr = posr;
-    fr = posr2;
-  } else if (bc) {		/* Could be bxc4 or Bxc4, tr is known */
-    ff = ALG_UNKNOWN;
-    fr = ALG_UNKNOWN;
-    for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
-	 NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-      if ((piecetype(gs->board[f][r]) != PAWN) && (piecetype(gs->board[f][r]) != BISHOP))
-	continue;
-      if (legal_andcheck_move(gs, f, r, tf, tr)) {
-	if ((piecetype(gs->board[f][r]) == PAWN) && (f != 1))
-	  continue;
-	if ((ff != ALG_UNKNOWN) && (fr != ALG_UNKNOWN))
-	  return (MOVE_AMBIGUOUS);
-	ff = f;
-	fr = r;
-      }
-    }
-  } else {			/* The from position is unknown */
-    posf = ALG_UNKNOWN;
-    posr = ALG_UNKNOWN;
-    if ((ff == ALG_UNKNOWN) || (fr == ALG_UNKNOWN)) {
-      /* Need to find a piece that can go to tf, tr */
-      for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
-	   NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-	if ((ff != ALG_UNKNOWN) && (ff != f))
-	  continue;
-	if ((fr != ALG_UNKNOWN) && (fr != r))
-	  continue;
-	if (piecetype(gs->board[f][r]) != piece)
-	  continue;
-	if (legal_andcheck_move(gs, f, r, tf, tr)) {
-	  if ((posf != ALG_UNKNOWN) && (posr != ALG_UNKNOWN))
-	    return MOVE_AMBIGUOUS;
-	  posf = f;
-	  posr = r;
+	if (get_move_info(mstr, &piece, &ff, &fr, &tf, &tr, &bc) != MS_ALG) {
+		fprintf(stderr, "FICS: Shouldn't try to algebraically parse "
+		    "non-algebraic move string.\n");
+		return MOVE_ILLEGAL;
 	}
-      }
-    } else if (ff == ALG_DROP) {
-      if (legal_andcheck_move(gs, ALG_DROP, piece, tf, tr)) {
-	posf = ALG_DROP;
-	posr = piece;
-      }
-    }
-    ff = posf;
-    fr = posr;
-  }
-  if ((tf == ALG_UNKNOWN) || (tr == ALG_UNKNOWN) ||
-      (ff == ALG_UNKNOWN) || (fr == ALG_UNKNOWN))
-    return MOVE_ILLEGAL;
-  mt->fromFile = ff;
-  mt->fromRank = fr;
-  mt->toFile = tf;
-  mt->toRank = tr;
-  return MOVE_OK;
+
+	// Resolve ambiguities in to-ness
+	if (tf == ALG_UNKNOWN)
+		return MOVE_AMBIGUOUS;	// Must always know to file
+	if (tr == ALG_UNKNOWN) {
+		posr = posr2 = ALG_UNKNOWN;
+
+		if (piece != PAWN)
+			return MOVE_AMBIGUOUS;
+		if (ff == ALG_UNKNOWN)
+			return MOVE_AMBIGUOUS;
+
+		/*
+		 * Need to find pawn on ff that can take to tf and
+		 * fill in ranks.
+		 */
+		for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
+		     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
+			if ((ff != ALG_UNKNOWN) && (ff != f))
+				continue;
+			if (piecetype(gs->board[f][r]) != piece)
+				continue;
+			if (gs->onMove == WHITE) {
+				tmpr = r + 1;
+			} else {
+				tmpr = r - 1;
+			}
+
+			if (gs->board[tf][tmpr] == NOPIECE) {
+				if ((gs->ep_possible[((gs->onMove == WHITE) ?
+				    0 : 1)][ff]) != (tf - ff))
+					continue;
+			} else {
+				if (iscolor(gs->board[tf][tmpr], gs->onMove))
+					continue;
+			}
+
+			if (legal_andcheck_move(gs, f, r, tf, tmpr)) {
+				if ((posr != ALG_UNKNOWN) &&
+				    (posr2 != ALG_UNKNOWN))
+					return MOVE_AMBIGUOUS;
+				posr = tmpr;
+				posr2 = r;
+			}
+		}
+
+		tr = posr;
+		fr = posr2;
+	} else if (bc) {	// Could be bxc4 or Bxc4, tr is known.
+		ff = ALG_UNKNOWN;
+		fr = ALG_UNKNOWN;
+
+		for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
+		     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
+			if ((piecetype(gs->board[f][r]) != PAWN) &&
+			    (piecetype(gs->board[f][r]) != BISHOP))
+				continue;
+			if (legal_andcheck_move(gs, f, r, tf, tr)) {
+				if ((piecetype(gs->board[f][r]) == PAWN) &&
+				    (f != 1))
+					continue;
+				if ((ff != ALG_UNKNOWN) && (fr != ALG_UNKNOWN))
+					return (MOVE_AMBIGUOUS);
+				ff = f;
+				fr = r;
+			}
+		}
+	} else {	// The from position is unknown
+		posf = ALG_UNKNOWN;
+		posr = ALG_UNKNOWN;
+
+		if ((ff == ALG_UNKNOWN) || (fr == ALG_UNKNOWN)) {
+			/*
+			 * Need to find a piece that can go to tf, tr.
+			 */
+			for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
+			     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
+				if ((ff != ALG_UNKNOWN) && (ff != f))
+					continue;
+				if ((fr != ALG_UNKNOWN) && (fr != r))
+					continue;
+				if (piecetype(gs->board[f][r]) != piece)
+					continue;
+				if (legal_andcheck_move(gs, f, r, tf, tr)) {
+					if ((posf != ALG_UNKNOWN) &&
+					    (posr != ALG_UNKNOWN))
+						return MOVE_AMBIGUOUS;
+					posf = f;
+					posr = r;
+				}
+			}
+		} else if (ff == ALG_DROP) {
+			if (legal_andcheck_move(gs, ALG_DROP, piece, tf, tr)) {
+				posf = ALG_DROP;
+				posr = piece;
+			}
+		}
+
+		ff = posf;
+		fr = posr;
+	}
+
+	if ((tf == ALG_UNKNOWN) || (tr == ALG_UNKNOWN) ||
+	    (ff == ALG_UNKNOWN) || (fr == ALG_UNKNOWN))
+		return MOVE_ILLEGAL;
+
+	mt->fromFile = ff;
+	mt->fromRank = fr;
+	mt->toFile = tf;
+	mt->toRank = tr;
+
+	return MOVE_OK;
 }
 
 /*
