@@ -22,6 +22,8 @@
    Richard Nash	              	93/10/22	Created
 */
 
+#include "legal.h"
+
 char legalNotice[] = "\n\
     fics - An internet chess server.\n\
     Copyright (C) 1993  Richard V. Nash\n\
