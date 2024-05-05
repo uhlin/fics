@@ -134,45 +134,70 @@ PUBLIC int InitPieceLoop(board_t b, int *f, int *r, int color)
   return 1;
 }
 
-/* All of the routines assume that the obvious problems have been checked */
-/* See legal_move() */
-PRIVATE int legal_pawn_move( game_state_t *gs, int ff, int fr, int tf, int tr )
+PRIVATE int
+legal_pawn_move(game_state_t *gs, int ff, int fr, int tf, int tr)
 {
-  if (ff == tf) {
-    if (gs->board[tf][tr] != NOPIECE) return 0;
-    if (gs->onMove == WHITE) {
-      if (tr - fr == 1) return 1;
-      if ((fr == 1) && (tr - fr == 2) && gs->board[ff][2]==NOPIECE) return 1;
-    } else {
-      if (fr - tr == 1) return 1;
-      if ((fr == 6) && (fr - tr == 2) && gs->board[ff][5]==NOPIECE) return 1;
-    }
-    return 0;
-  }
-  if (ff != tf) { /* Capture ? */
-    if ((ff - tf != 1) && (tf - ff != 1)) return 0;
-    if ((fr - tr != 1) && (tr - fr != 1)) return 0;
-    if (gs->onMove == WHITE) {
-      if (fr > tr) return 0;
-      if ((gs->board[tf][tr] != NOPIECE) && iscolor(gs->board[tf][tr],BLACK))
-        return 1;
-      if (gs->ep_possible[0][ff] == 1) {
-        if ((tf==ff+1) && (gs->board[ff+1][fr] == B_PAWN)) return 1;
-      } else if (gs->ep_possible[0][ff] == -1) {
-        if ((tf==ff-1) && (gs->board[ff-1][fr] == B_PAWN)) return 1;
-      }
-    } else {
-      if (tr > fr) return 0;
-      if ((gs->board[tf][tr] != NOPIECE) && iscolor(gs->board[tf][tr],WHITE))
-        return 1;
-      if (gs->ep_possible[1][ff] == 1) {
-        if ((tf==ff+1) && (gs->board[ff+1][fr] == W_PAWN)) return 1;
-      } else if (gs->ep_possible[1][ff] == -1) {
-        if ((tf==ff-1) && (gs->board[ff-1][fr] == W_PAWN)) return 1;
-      }
-    }
-  }
-  return 0;
+	if (ff == tf) {
+		if (gs->board[tf][tr] != NOPIECE)
+			return 0;
+
+		if (gs->onMove == WHITE) {
+			if (tr - fr == 1)
+				return 1;
+			if ((fr == 1) && (tr - fr == 2) &&
+			    gs->board[ff][2] == NOPIECE)
+				return 1;
+		} else {
+			if (fr - tr == 1)
+				return 1;
+			if ((fr == 6) && (fr - tr == 2) &&
+			    gs->board[ff][5] == NOPIECE)
+				return 1;
+		}
+
+		return 0;
+	}
+
+	if (ff != tf) { /* Capture ? */
+		if ((ff - tf != 1) && (tf - ff != 1))
+			return 0;
+		if ((fr - tr != 1) && (tr - fr != 1))
+			return 0;
+
+		if (gs->onMove == WHITE) {
+			if (fr > tr)
+				return 0;
+			if ((gs->board[tf][tr] != NOPIECE) &&
+			    iscolor(gs->board[tf][tr], BLACK))
+				return 1;
+			if (gs->ep_possible[0][ff] == 1) {
+				if ((tf == ff + 1) &&
+				    (gs->board[ff + 1][fr] == B_PAWN))
+					return 1;
+			} else if (gs->ep_possible[0][ff] == -1) {
+				if ((tf == ff - 1) &&
+				    (gs->board[ff - 1][fr] == B_PAWN))
+					return 1;
+			}
+		} else {
+			if (tr > fr)
+				return 0;
+			if ((gs->board[tf][tr] != NOPIECE) &&
+			    iscolor(gs->board[tf][tr], WHITE))
+				return 1;
+			if (gs->ep_possible[1][ff] == 1) {
+				if ((tf == ff + 1) &&
+				    (gs->board[ff + 1][fr] == W_PAWN))
+					return 1;
+			} else if (gs->ep_possible[1][ff] == -1) {
+				if ((tf == ff - 1) &&
+				    (gs->board[ff - 1][fr] == W_PAWN))
+					return 1;
+			}
+		}
+	}
+
+	return 0;
 }
 
 PRIVATE int
