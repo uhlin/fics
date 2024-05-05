@@ -15,6 +15,7 @@ documented in this file.
   pointer type in `jsave_history()`.
 - Made functions and variables private where possible.
 - Reformatted code according to OpenBSD's KNF:
+  - `algcheck.c`
   - `command.c`
   - `gamedb.c`
   - `obsproc.c`
