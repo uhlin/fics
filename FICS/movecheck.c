@@ -111,27 +111,33 @@ PUBLIC int is_move(char *mstr)
 }
 
 
-PUBLIC int NextPieceLoop(board_t b, int *f, int *r, int color)
+PUBLIC int
+NextPieceLoop(board_t b, int *f, int *r, int color)
 {
-  while (1) {
-    (*r) = (*r) + 1;
-    if (*r > 7) {
-      *r = 0;
-      *f = *f + 1;
-      if (*f > 7)
-	break;
-    }
-    if ((b[*f][*r] != NOPIECE) && iscolor(b[*f][*r], color))
-      return 1;
-  }
-  return 0;
+	while (1) {
+		(*r) = (*r) + 1;
+
+		if (*r > 7) {
+			*r = 0;
+			*f = *f + 1;
+
+			if (*f > 7)
+				break;
+		}
+
+		if ((b[*f][*r] != NOPIECE) && iscolor(b[*f][*r], color))
+			return 1;
+	}
+
+	return 0;
 }
 
-PUBLIC int InitPieceLoop(board_t b, int *f, int *r, int color)
+PUBLIC int
+InitPieceLoop(board_t b, int *f, int *r, int color)
 {
-  *f = 0;
-  *r = -1;
-  return 1;
+	*f = 0;
+	*r = -1;
+	return 1;
 }
 
 PRIVATE int
