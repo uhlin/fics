@@ -754,38 +754,45 @@ PUBLIC int legal_andcheck_move(game_state_t * gs,
     return 0;
 }
 
-PUBLIC int in_check(game_state_t * gs)
+PUBLIC int
+in_check(game_state_t *gs)
 {
-  int f, r;
-  int kf = -1, kr = -1;
+	int	f, r;
+	int	kf = -1, kr = -1;
 
-  /* Find the king */
-  if (gs->onMove == WHITE) {
-    for (f = 0; f < 8 && kf < 0; f++)
-      for (r = 0; r < 8 && kf < 0; r++)
-	if (gs->board[f][r] == B_KING) {
-	  kf = f;
-	  kr = r;
+	/* Find the king */
+	if (gs->onMove == WHITE) {
+		for (f = 0; f < 8 && kf < 0; f++) {
+			for (r = 0; r < 8 && kf < 0; r++) {
+				if (gs->board[f][r] == B_KING) {
+					kf = f;
+					kr = r;
+				}
+			}
+		}
+	} else {
+		for (f = 0; f < 8 && kf < 0; f++) {
+			for (r = 0; r < 8 && kf < 0; r++) {
+				if (gs->board[f][r] == W_KING) {
+					kf = f;
+					kr = r;
+				}
+			}
+		}
 	}
-  } else {
-    for (f = 0; f < 8 && kf < 0; f++)
-      for (r = 0; r < 8 && kf < 0; r++)
-	if (gs->board[f][r] == W_KING) {
-	  kf = f;
-	  kr = r;
+
+	if (kf < 0) {
+		fprintf(stderr, "FICS: Error game with no king!\n");
+		return 0;
 	}
-  }
-  if (kf < 0) {
-    fprintf(stderr, "FICS: Error game with no king!\n");
-    return 0;
-  }
-  for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
-       NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-    if (legal_move(gs, f, r, kf, kr)) {	/* In Check? */
-      return 1;
-    }
-  }
-  return 0;
+
+	for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
+	     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
+		if (legal_move(gs, f, r, kf, kr)) // // In Check?
+			return 1;
+	}
+
+	return 0;
 }
 
 PRIVATE int
