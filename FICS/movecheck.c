@@ -192,39 +192,42 @@ PRIVATE int legal_knight_move(game_state_t * gs, int ff, int fr, int tf, int tr)
   return 0;
 }
 
-PRIVATE int legal_bishop_move(game_state_t * gs, int ff, int fr, int tf, int tr)
+PRIVATE int
+legal_bishop_move(game_state_t *gs, int ff, int fr, int tf, int tr)
 {
-  int dx, dy, x, y;
-  int startx, starty;
-  int count;
-  int incx, incy;
+	int	count;
+	int	dx, dy, x, y;
+	int	incx, incy;
+	int	startx, starty;
 
-  if (ff > tf) {
-    dx = ff - tf;
-    incx = -1;
-  } else {
-    dx = tf - ff;
-    incx = 1;
-  }
-  startx = ff + incx;
-  if (fr > tr) {
-    dy = fr - tr;
-    incy = -1;
-  } else {
-    dy = tr - fr;
-    incy = 1;
-  }
-  starty = fr + incy;
-  if (dx != dy)
-    return 0;			/* Not diagonal */
-  if (dx == 1)
-    return 1;			/* One square, ok */
-  count = dx - 1;
-  for (x = startx, y = starty; count; x += incx, y += incy, count--) {
-    if (gs->board[x][y] != NOPIECE)
-      return 0;
-  }
-  return 1;
+	if (ff > tf) {
+		dx = ff - tf;
+		incx = -1;
+	} else {
+		dx = tf - ff;
+		incx = 1;
+	}
+	startx = ff + incx;
+	if (fr > tr) {
+		dy = fr - tr;
+		incy = -1;
+	} else {
+		dy = tr - fr;
+		incy = 1;
+	}
+	starty = fr + incy;
+	if (dx != dy)
+		return 0;	// Not diagonal
+	if (dx == 1)
+		return 1;	// One square, ok
+	count = dx - 1;
+	for (x = startx, y = starty;
+	     count;
+	     x += incx, y += incy, count--) {
+		if (gs->board[x][y] != NOPIECE)
+			return 0;
+	}
+	return 1;
 }
 
 PRIVATE int
