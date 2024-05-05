@@ -560,12 +560,14 @@ PRIVATE void possible_rook_moves(game_state_t * gs,
   }
 }
 
-PRIVATE void possible_queen_moves(game_state_t * gs,
-				   int onf, int onr,
-				   int *posf, int *posr, int *numpos)
+PRIVATE void
+possible_queen_moves(game_state_t *gs,
+    int onf, int onr,
+    int *posf, int *posr,
+    int *numpos)
 {
-  possible_rook_moves(gs, onf, onr, posf, posr, numpos);
-  possible_bishop_moves(gs, onf, onr, posf, posr, numpos);
+	possible_rook_moves(gs, onf, onr, posf, posr, numpos);
+	possible_bishop_moves(gs, onf, onr, posf, posr, numpos);
 }
 
 PRIVATE void
