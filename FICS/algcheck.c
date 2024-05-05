@@ -31,6 +31,8 @@
 #include "movecheck.h"
 #include "utils.h"
 
+#define ALG_UNKNOWN -1
+
 /* Well, lets see if I can list the possibilities
  * Piece moves
  * Ne4
@@ -74,9 +76,6 @@ char *alg_list[] = {
   "#pfr",
   NULL
 };
-
-#define ALG_UNKNOWN -1
-/* #define ALG_DROP    -2	IanO: this is in board.h, used in movecheck.c */
 
 PRIVATE int
 get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr,
