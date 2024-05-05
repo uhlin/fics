@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.3] - 2024-05-05 ##
 - **Added** parameter lists to many function declarations.
 - **Added** usage of `ARRAY_SIZE()`.
 - **Added** usage of `reallocarray()`. Multiple occurrences.
