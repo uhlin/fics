@@ -300,24 +300,31 @@ PUBLIC int alg_parse_move(char *mstr, game_state_t * gs, move_t * mt)
   return MOVE_OK;
 }
 
-/* A assumes the move has yet to be made on the board */
-/* this is the old stupid function, we are testing one from soso...
-PUBLIC char *alg_unparse( game_state_t *gs, move_t *mt )
+/*
+ * A assumes the move has yet to be made on the board. (This is the
+ * old stupid function, we are testing one from soso...)
+ */
+#if 0
+PUBLIC char *
+alg_unparse(game_state_t *gs, move_t *mt)
 {
-  static char mStr[20];
+	static char	mStr[20] = { '\0' };
 
-  if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING) &&
-       ((mt->fromFile == 4) && (mt->toFile == 6)) )
-    return "o-o";
-  if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING) &&
-       ((mt->fromFile == 4) && (mt->toFile == 2)) )
-    return "o-o-o";
+	if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING) &&
+	    ((mt->fromFile == 4) && (mt->toFile == 6)))
+		return "o-o";
+	if ((piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING) &&
+	    ((mt->fromFile == 4) && (mt->toFile == 2)))
+		return "o-o-o";
 
-  sprintf( mStr, "%c%d%c%d", mt->fromFile+'a', mt->fromRank+1,
-                                       mt->toFile+'a', mt->toRank+1 );
-  return mStr;
+	msnprintf(mStr, sizeof mStr, "%c%d%c%d",
+	    mt->fromFile + 'a',
+	    mt->fromRank + 1,
+	    mt->toFile + 'a',
+	    mt->toRank + 1);
+	return mStr;
 }
-*/
+#endif
 
 /*
  * Soso: Rewrote the alg_unparse() function.
