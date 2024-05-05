@@ -276,17 +276,23 @@ PRIVATE int legal_queen_move(game_state_t * gs, int ff, int fr, int tf, int tr)
  * Used in castling from/through check testing.
  */
 
-/* new one from soso: */
-PRIVATE int is_square_attacked (game_state_t *gs, int kf, int kr)
+/*
+ * New one from soso
+ */
+PRIVATE int
+is_square_attacked(game_state_t *gs, int kf, int kr)
 {
-  game_state_t fakeMove;
+	game_state_t	fakeMove;
 
-  fakeMove = *gs;
-  fakeMove.board[4][kr] = NOPIECE;
-  fakeMove.board[kf][kr] = KING | fakeMove.onMove;
-  fakeMove.onMove = CToggle (fakeMove.onMove);
-  if (in_check(&fakeMove)) return 1;
-    else return 0;
+	fakeMove = *gs;
+	fakeMove.board[4][kr] = NOPIECE;
+	fakeMove.board[kf][kr] = KING | fakeMove.onMove;
+	fakeMove.onMove = CToggle(fakeMove.onMove);
+
+	if (in_check(&fakeMove))
+		return 1;
+	else
+		return 0;
 }
 
 #if 0
