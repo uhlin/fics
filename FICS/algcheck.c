@@ -187,11 +187,12 @@ nomatch:;
     return MS_NOTMOVE;
 }
 
-PUBLIC int alg_is_move(char *mstr)
+PUBLIC int
+alg_is_move(char *mstr)
 {
-  int piece, ff, fr, tf, tr, bc;
+	int piece, ff, fr, tf, tr, bc;
 
-  return get_move_info(mstr, &piece, &ff, &fr, &tf, &tr, &bc);
+	return get_move_info(mstr, &piece, &ff, &fr, &tf, &tr, &bc);
 }
 
 /*
