@@ -267,14 +267,12 @@ PRIVATE int legal_rook_move(game_state_t * gs, int ff, int fr, int tf, int tr)
   }
 }
 
-PRIVATE int legal_queen_move(game_state_t * gs, int ff, int fr, int tf, int tr)
+PRIVATE int
+legal_queen_move(game_state_t *gs, int ff, int fr, int tf, int tr)
 {
-  return legal_rook_move(gs, ff, fr, tf, tr) || legal_bishop_move(gs, ff, fr, tf, tr);
+	return (legal_rook_move(gs, ff, fr, tf, tr) ||
+		legal_bishop_move(gs, ff, fr, tf, tr));
 }
-
-/* Ckeck, if square (kf,kr) is attacked by enemy piece.
- * Used in castling from/through check testing.
- */
 
 /*
  * New one from soso
