@@ -4,17 +4,17 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Added parameter lists to many function declarations.
-- Added usage of `ARRAY_SIZE()`.
-- Added usage of `reallocarray()`. Multiple occurrences.
-- Added usage of the functions from `err.h`.
-- Changed the make install target to not overwrite the data messages
+- **Added** parameter lists to many function declarations.
+- **Added** usage of `ARRAY_SIZE()`.
+- **Added** usage of `reallocarray()`. Multiple occurrences.
+- **Added** usage of the functions from `err.h`.
+- **Changed** the make install target to not overwrite the data messages
   in case they're already present.
-- Deleted unused includes.
-- Fixed passing argument 2 of `ReadGameAttrs()` from incompatible
+- **Deleted** unused includes.
+- **Fixed** passing argument 2 of `ReadGameAttrs()` from incompatible
   pointer type in `jsave_history()`.
-- Made functions and variables private where possible.
-- Reformatted code according to OpenBSD's KNF:
+- **Made** functions and variables private where possible.
+- **Reformatted code** according to OpenBSD's KNF:
   - `algcheck.c`
   - `command.c`
   - `gamedb.c`
@@ -22,7 +22,7 @@ documented in this file.
   - `obsproc.c`
   - `talkproc.c`
   - ...
-- Replaced unbounded string handling functions. _Multiple_
+- **Replaced** unbounded string handling functions. _Multiple_
   occurrences.
 
 ## [1.2] - 2024-04-14 ##
