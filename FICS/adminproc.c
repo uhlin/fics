@@ -421,19 +421,21 @@ com_anews(int p, param_list param)
 	return COM_OK;
 }
 
-PUBLIC int strcmpwild(char *mainstr, char *searchstr)
+PUBLIC int
+strcmpwild(char *mainstr, char *searchstr)
 {
-  int i;
+	int i;
 
-  if (strlen(mainstr) < strlen(searchstr))
-    return 1;
-  for (i = 0; i < strlen(mainstr); i++) {
-    if (searchstr[i] == '*')
-      return 0;
-    if (mainstr[i] != searchstr[i])
-      return 1;
-  }
-  return 0;
+	if (strlen(mainstr) < strlen(searchstr))
+		return 1;
+	for (i = 0; i < strlen(mainstr); i++) {
+		if (searchstr[i] == '*')
+			return 0;
+		if (mainstr[i] != searchstr[i])
+			return 1;
+	}
+
+	return 0;
 }
 
 /*
