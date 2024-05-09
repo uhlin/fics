@@ -1474,30 +1474,34 @@ PUBLIC int com_asetadmin(int p, param_list param)
   return COM_OK;
 }
 
-PRIVATE void SetRating(int p1, param_list param, statistics *s)
+PRIVATE void
+SetRating(int p1, param_list param, statistics *s)
 {
-  s->rating = param[1].val.integer;
-  if (s->ltime == 0L)
-    s->sterr = 70.0;
+	s->rating = param[1].val.integer;
 
-  if (param[2].type == TYPE_INT) {
-    s->win = param[2].val.integer;
-    if (param[3].type == TYPE_INT) {
-      s->los = param[3].val.integer;
-      if (param[4].type == TYPE_INT) {
-	s->dra = param[4].val.integer;
-	if (param[5].type == TYPE_INT) {
-	  s->sterr = (double) param[5].val.integer;
+	if (s->ltime == 0L)
+		s->sterr = 70.0;
+
+	if (param[2].type == TYPE_INT) {
+		s->win = param[2].val.integer;
+		if (param[3].type == TYPE_INT) {
+			s->los = param[3].val.integer;
+			if (param[4].type == TYPE_INT) {
+				s->dra = param[4].val.integer;
+				if (param[5].type == TYPE_INT) {
+					s->sterr = (double) param[5].val.integer;
+				}
+			}
+		}
 	}
-      }
-    }
-  }
-  s->num = s->win + s->los + s->dra;
-  if (s->num == 0) {
-    s->ltime = 0L;
-  } else {
-    s->ltime = time(0);
-  }
+
+	s->num = s->win + s->los + s->dra;
+
+	if (s->num == 0) {
+		s->ltime = 0L;
+	} else {
+		s->ltime = time(0);
+	}
 }
 
 /*
