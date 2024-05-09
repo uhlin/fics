@@ -1649,20 +1649,24 @@ PUBLIC int com_nuke(int p, param_list param)
  *   want to talk with him/her.  The command is useful for waking someone up,
  *   for example a sleepy admin or an ignorant player.
  */
-PUBLIC int com_summon(int p, param_list param)
+PUBLIC int
+com_summon(int p, param_list param)
 {
-  int p1;
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
-    pprintf(p, "%s isn't logged in.\n", param[0].val.word);
-    return COM_OK;
-  } else {
-    pprintf(p1, "\a\n");
-    pprintf_highlight(p1, "%s", parray[p].name);
-    pprintf_prompt(p1, " needs to talk with you.  Use tell %s <message>  to reply.\a\n", parray[p].name);
-    pprintf(p, "Summoning sent to %s.\n", parray[p1].name);
-    return COM_OK;
-  }
+	int	p1;
+
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
+		pprintf(p, "%s isn't logged in.\n", param[0].val.word);
+		return COM_OK;
+	} else {
+		pprintf(p1, "\a\n");
+		pprintf_highlight(p1, "%s", parray[p].name);
+		pprintf_prompt(p1, " needs to talk with you. Use tell %s "
+		    "<message> to reply.\a\n", parray[p].name);
+		pprintf(p, "Summoning sent to %s.\n", parray[p1].name);
+		return COM_OK;
+	}
 }
 
 /*
