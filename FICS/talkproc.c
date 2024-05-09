@@ -64,8 +64,8 @@ int quota_time;
 PRIVATE int
 CheckShoutQuota(int p)
 {
-	int	timeleft = 0;
-	int	timenow = time(0);
+	time_t	timeleft = 0;
+	time_t	timenow = time(NULL);
 
 	timeleft = timenow - parray[p].lastshout_a;
 
@@ -110,7 +110,7 @@ com_shout(int p, param_list param)
 	}
 
 	parray[p].lastshout_a = parray[p].lastshout_b;
-	parray[p].lastshout_b = time(0);
+	parray[p].lastshout_b = time(NULL);
 
 	if (!printablestring(param[0].val.string)) {
 		pprintf(p, "Your message contains some unprintable "
@@ -226,7 +226,7 @@ com_it(int p, param_list param)
 	}
 
 	parray[p].lastshout_a = parray[p].lastshout_b;
-	parray[p].lastshout_b = time(0);
+	parray[p].lastshout_b = time(NULL);
 
 	if (!printablestring(param[0].val.string)) {
 		pprintf(p, "Your message contains some unprintable "

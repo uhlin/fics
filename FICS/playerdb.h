@@ -59,8 +59,9 @@
 #define SORT_WILD	3
 
 typedef struct _statistics {
-	int	 num, win, los, dra, rating, ltime, best, whenbest;
 	double	 sterr;
+	int	 num, win, los, dra, rating, best, whenbest;
+	time_t	 ltime;
 } statistics;
 
 #define PEND_MATCH	0
@@ -109,12 +110,12 @@ typedef struct _player {
 	int		 kiblevel;
 	int		 lastColor;
 	int		 last_channel;
-	int		 last_command_time;
+	time_t		 last_command_time;
 	int		 last_opponent;
 	int		 last_tell;
-	int		 lastshout_a;
-	int		 lastshout_b;
-	int		 logon_time;
+	time_t		 lastshout_a;
+	time_t		 lastshout_b;
+	time_t		 logon_time;
 	int		 num_comments; // number of lines in comments file
 	int		 num_from;
 	int		 num_observe;
@@ -127,8 +128,8 @@ typedef struct _player {
 	int		 socket;
 	int		 sopen;
 	int		 status;
-	int		 timeOfReg;
-	int		 totalTime;
+	time_t		 timeOfReg;
+	time_t		 totalTime;
 	long		 last_file_byte;
 	pending		 p_from_list[MAX_PENDING];
 	pending		 p_to_list[MAX_PENDING];

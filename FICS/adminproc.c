@@ -1500,7 +1500,7 @@ SetRating(int p1, param_list param, statistics *s)
 	if (s->num == 0) {
 		s->ltime = 0L;
 	} else {
-		s->ltime = time(0);
+		s->ltime = time(NULL);
 	}
 }
 

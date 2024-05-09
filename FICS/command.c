@@ -846,7 +846,7 @@ process_password(int p, char *password)
 
 			player_clear(p);
 			parray[p].logon_time = parray[p].last_command_time =
-			    time(0);
+			    time(NULL);
 			parray[p].status = PLAYER_LOGIN;
 			parray[p].socket = fd;
 			parray[p].thisHost = fromHost;
@@ -947,9 +947,9 @@ process_password(int p, char *password)
 	parray[p].lastHost = parray[p].thisHost;
 
 	if (parray[p].registered && !parray[p].timeOfReg)
-		parray[p].timeOfReg = time(0);
+		parray[p].timeOfReg = time(NULL);
 
-	parray[p].logon_time = parray[p].last_command_time = time(0);
+	parray[p].logon_time = parray[p].last_command_time = time(NULL);
 
 	dummy = check_and_print_shutdown(p);	// Tells the user if we are
 						// going to shutdown
@@ -1054,7 +1054,7 @@ process_input(int fd, char *com_string)
 	}
 
 	commanding_player = p;
-	parray[p].last_command_time = time(0);
+	parray[p].last_command_time = time(NULL);
 
 	switch (parray[p].status) {
 	case PLAYER_EMPTY:
@@ -1101,7 +1101,7 @@ process_new_connection(int fd, unsigned int fromHost)
 	parray[p].status	= PLAYER_LOGIN;
 	parray[p].socket	= fd;
 	parray[p].thisHost	= fromHost;
-	parray[p].logon_time	= time(0);
+	parray[p].logon_time	= time(NULL);
 
 	psend_raw_file(p, mess_dir, MESS_WELCOME);
 	pprintf(p, "Head admin : %s   Complaints to : %s\n",
@@ -1148,7 +1148,8 @@ process_disconnection(int fd)
 		player_write_logout(p);
 
 		if (parray[p].registered) {
-			parray[p].totalTime += time(0) - parray[p].logon_time;
+			parray[p].totalTime += (time(NULL) -
+			    parray[p].logon_time);
 			player_save(p);
 		} else {	// delete unreg history file
 			char fname[MAX_FILENAME_SIZE] = { '\0' };
@@ -1170,7 +1171,7 @@ process_disconnection(int fd)
 PUBLIC int
 process_heartbeat(int *fd)
 {
-	int		 now = time(0);
+	time_t		 now = time(NULL);
 	int		 time_since_last;
 	static int	 last_comfile = 0;
 	static int	 last_space = 0;
@@ -1303,7 +1304,7 @@ TerminateCleanup(void)
 			player_write_logout(p1);
 			if (parray[p1].registered) {
 				parray[p1].totalTime +=
-				    (time(0) - parray[p1].logon_time);
+				    (time(NULL) - parray[p1].logon_time);
 			}
 			player_save(p1);
 		}
