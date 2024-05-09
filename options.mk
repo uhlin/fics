@@ -6,7 +6,9 @@ FICS_HOME ?= /home/chess/config
 PREFIX ?= /home/chess
 
 CC ?= cc
-CFLAGS = -O2 -Wall -pipe -std=c11
+CFLAGS = -O2 -Wall -pipe -std=c11 \
+	-Wsign-compare \
+	-Wstrict-prototypes
 
 CXX ?= c++
 CXXFLAGS = -O2 -Wall -pipe -std=c++17
