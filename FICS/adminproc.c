@@ -1616,28 +1616,34 @@ PUBLIC int com_asetlight(int p, param_list param)
  *   automatically placed in the user's files (if she/he is a registered
  *   user, of course).
  */
-PUBLIC int com_nuke(int p, param_list param)
+PUBLIC int
+com_nuke(int p, param_list param)
 {
-  int p1, fd;
+	int	p1, fd;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
-    pprintf(p, "%s isn't logged in.\n", param[0].val.word);
-  } else {
-    if ((parray[p].adminLevel > parray[p1].adminLevel) || player_ishead(p)) {
-      pprintf(p, "Nuking: %s\n", param[0].val.word);
-      pprintf(p, "Please leave a comment explaining why %s was nuked.\n", parray[p1].name);
-      pprintf(p1, "\n\n**** You have been kicked out by %s! ****\n\n", parray[p].name);
-      pcommand(p, "addcomment %s Nuked\n", parray[p1].name);
-      fd = parray[p1].socket;
-      process_disconnection(fd);
-      net_close_connection(fd);
-      return COM_OK;
-    } else {
-      pprintf(p, "You need a higher adminlevel to nuke %s!\n", param[0].val.word);
-    }
-  }
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
+		pprintf(p, "%s isn't logged in.\n", param[0].val.word);
+	} else {
+		if ((parray[p].adminLevel > parray[p1].adminLevel) ||
+		    player_ishead(p)) {
+			pprintf(p, "Nuking: %s\n", param[0].val.word);
+			pprintf(p, "Please leave a comment explaining why %s "
+			    "was nuked.\n", parray[p1].name);
+			pprintf(p1, "\n\n**** You have been kicked out by %s! "
+			    "****\n\n", parray[p].name);
+			pcommand(p, "addcomment %s Nuked\n", parray[p1].name);
+			fd = parray[p1].socket;
+			process_disconnection(fd);
+			net_close_connection(fd);
+			return COM_OK;
+		} else {
+			pprintf(p, "You need a higher adminlevel to nuke %s!\n",
+			    param[0].val.word);
+		}
+	}
+	return COM_OK;
 }
 
 /*
