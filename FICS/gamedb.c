@@ -60,7 +60,8 @@ PUBLIC char *bstr[] = {
 	"non-standard",
 	"wild",
 	"lightning",
-	"bughouse"};
+	"bughouse"
+};
 PUBLIC char *rstr[] = {
 	"unrated",
 	"rated"
