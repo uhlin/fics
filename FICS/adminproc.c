@@ -1536,22 +1536,25 @@ PUBLIC int com_asetblitz(int p, param_list param)
  *   The parameters are self-explanatory: rating, # of wins, # of losses,
  *   # of draws, and ratings deviation.
  */
-PUBLIC int com_asetwild(int p, param_list param)
+PUBLIC int
+com_asetwild(int p, param_list param)
 {
-  int p1, connected;
+	int	p1, connected;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  SetRating(p1, param, &parray[p1].w_stats);
-  player_save(p1);
-  UpdateRank(TYPE_WILD, parray[p1].name, &parray[p1].w_stats,
-	     parray[p1].name);
-  pprintf(p, "Wild rating for %s modified.\n", parray[p1].name);
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
+
+	SetRating(p1, param, &parray[p1].w_stats);
+	player_save(p1);
+	UpdateRank(TYPE_WILD, parray[p1].name, &parray[p1].w_stats,
+	    parray[p1].name);
+	pprintf(p, "Wild rating for %s modified.\n", parray[p1].name);
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 /*
