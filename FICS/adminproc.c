@@ -1763,26 +1763,31 @@ PUBLIC int com_quota(int p, param_list param)
  *
  *   The command sets the maximum number of players (n) who can connect.
  */
-PUBLIC int com_asetmaxplayer(int p, param_list param)
+PUBLIC int
+com_asetmaxplayer(int p, param_list param)
 {
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (param[0].type != TYPE_NULL) {
-    pprintf(p, "Previously %d total conenctions allowed...\n", max_connections);
-    max_connections = param[0].val.integer;
-    if ((max_connections > MAX_PLAYER) || (max_connections > getdtablesize()-4)) {
-      max_connections = MIN(MAX_PLAYER, getdtablesize()-4);
-      pprintf (p, "Value too high. System OS limits us to %d.\n",
-              max_connections);
-      pprintf (p, "For saftey's sake, it should not be higher than %d.\n",
-              max_connections-2);
-    }
-  }
-  pprintf(p,
-    "There are currently %d regular and %d admin connections available,\n",
-    max_connections-10, 10 );
-  pprintf(p,
-    "with %d maximum logins before unregistered login restrictions begin.\n",
-    MAX(max_connections-50, 200) );
-    pprintf(p, "Total allowed connections: %d.\n", max_connections );
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	if (param[0].type != TYPE_NULL) {
+		pprintf(p, "Previously %d total conenctions allowed...\n",
+		    max_connections);
+		max_connections = param[0].val.integer;
+
+		if ((max_connections > MAX_PLAYER) ||
+		    (max_connections > getdtablesize() - 4)) {
+			max_connections = MIN(MAX_PLAYER, getdtablesize() - 4);
+			pprintf(p, "Value too high. System OS limits us to "
+			    "%d.\n", max_connections);
+			pprintf(p, "For saftey's sake, it should not be "
+			    "higher than %d.\n", max_connections - 2);
+		}
+	}
+
+	pprintf(p, "There are currently %d regular and %d admin connections "
+	    "available,\n", max_connections - 10, 10);
+	pprintf(p, "with %d maximum logins before unregistered login "
+	    "restrictions begin.\n", MAX(max_connections - 50, 200));
+
+	pprintf(p, "Total allowed connections: %d.\n", max_connections);
+	return COM_OK;
 }
