@@ -1674,23 +1674,25 @@ PUBLIC int com_summon(int p, param_list param)
  *   number of comments is indicated to admins using the "finger" command.
  *   The comments themselves are displayed by the "showcomments" command.
  */
-PUBLIC int com_addcomment(int p, param_list param)
+PUBLIC int
+com_addcomment(int p, param_list param)
 {
-  int p1, connected;
+	int	p1, connected;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  if (player_add_comment(p, p1, param[1].val.string)) {
-    pprintf(p, "Error adding comment!\n");
-  } else {
-    pprintf(p, "Comment added for %s.\n", parray[p1].name);
-    player_save(p1);
-  }
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
+	if (player_add_comment(p, p1, param[1].val.string)) {
+		pprintf(p, "Error adding comment!\n");
+	} else {
+		pprintf(p, "Comment added for %s.\n", parray[p1].name);
+		player_save(p1);
+	}
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 /*
@@ -1700,18 +1702,22 @@ PUBLIC int com_addcomment(int p, param_list param)
  *
  *   This command will display all of the comments added to the user's account.
  */
-PUBLIC int com_showcomment(int p, param_list param)
+PUBLIC int
+com_showcomment(int p, param_list param)
 {
-  int p1, connected;
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  ASSERT(param[0].type == TYPE_WORD);
+	int	p1, connected;
 
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
-  player_show_comments(p, p1);
-  if (!connected)
-    player_remove(p1);
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	ASSERT(param[0].type == TYPE_WORD);
+
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
+
+	player_show_comments(p, p1);
+
+	if (!connected)
+		player_remove(p1);
+	return COM_OK;
 }
 
 /*
@@ -1722,16 +1728,20 @@ PUBLIC int com_showcomment(int p, param_list param)
  *   This command toggles your admin symbol (*) on/off.  This symbol appears
  *   in who listings.
  */
-PUBLIC int com_admin(int p, param_list param)
+PUBLIC int
+com_admin(int p, param_list param)
 {
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  parray[p].i_admin = !(parray[p].i_admin);
-  if (parray[p].i_admin) {
-    pprintf(p, "Admin mode (*) is now shown\n");
-  } else {
-    pprintf(p, "Admin mode (*) is now not shown\n");
-  }
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	parray[p].i_admin = !(parray[p].i_admin);
+
+	if (parray[p].i_admin) {
+		pprintf(p, "Admin mode (*) is now shown\n");
+	} else {
+		pprintf(p, "Admin mode (*) is now not shown\n");
+	}
+
+	return COM_OK;
 }
 
 /*
