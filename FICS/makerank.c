@@ -28,11 +28,11 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 	char	 NameWithCase[30];
 	char	 field[20];
 	char	 line[100];
-	int	 i, done = 0;
+	int	 done = 0;
 
 	e->computer = 0;
 
-	for (i = 0; i < ARRAY_SIZE(e->r); i++) {
+	for (size_t i = 0; i < ARRAY_SIZE(e->r); i++) {
 		e->r[i].num	= 0;
 		e->r[i].rating	= 0;
 	}
@@ -187,7 +187,7 @@ SetComputers(int n)
 	int	 i = 0;
 
 	if (snprintf(line, sizeof line, "sort -f %s", COMPUTER_FILE) >=
-	    sizeof line) {
+	    (int)sizeof line) {
 		warnx("%s: snprintf truncated", __func__);
 		return 0;
 	} else if ((fpComp = popen(line, "r")) == NULL)

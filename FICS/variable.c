@@ -881,7 +881,7 @@ set_find(char *var)
 {
 	int	gotIt = -1;
 	int	i = 0;
-	int	len = strlen(var);
+	size_t	len = strlen(var);
 
 	while (variables[i].name) {
 		if (!strncmp(variables[i].name, var, len)) {

@@ -109,7 +109,7 @@ get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr,
 	for (i = 0; alg_list[i]; i++) {
 		lpiece = lff = lfr = ltf = ltr = ALG_UNKNOWN;
 
-		if (strlen(alg_list[i]) != len)
+		if (strlen(alg_list[i]) != (size_t)len)
 			continue;
 
 		for (j = len - 1; j >= 0; j--) {
