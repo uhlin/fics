@@ -1743,18 +1743,23 @@ PUBLIC int com_admin(int p, param_list param)
  *   affects only those persons on the shout quota list.  If no parameter
  *   (n) is given, the current setting is displayed.
  */
-PUBLIC int com_quota(int p, param_list param)
+PUBLIC int
+com_quota(int p, param_list param)
 {
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (param[0].type == TYPE_NULL) {
-    pprintf(p, "The current shout quota is 2 shouts per %d seconds.\n", quota_time);
-    return COM_OK;
-  }
-  quota_time = param[0].val.integer;
-  pprintf(p, "The shout quota is now 2 shouts per %d seconds.\n", quota_time);
-  return COM_OK;
-}
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
+	if (param[0].type == TYPE_NULL) {
+		pprintf(p, "The current shout quota is 2 shouts per %d "
+		    "seconds.\n", quota_time);
+		return COM_OK;
+	}
+
+	quota_time = param[0].val.integer;
+
+	pprintf(p, "The shout quota is now 2 shouts per %d seconds.\n",
+	    quota_time);
+	return COM_OK;
+}
 
 /*
  * asetmaxplayer
