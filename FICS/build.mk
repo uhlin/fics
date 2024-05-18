@@ -11,6 +11,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)comproc.o\
 	$(SRC_DIR)eco.o\
 	$(SRC_DIR)fics_getsalt.o\
+	$(SRC_DIR)ficslim.o\
 	$(SRC_DIR)ficsmain.o\
 	$(SRC_DIR)formula.o\
 	$(SRC_DIR)gamedb.o\
