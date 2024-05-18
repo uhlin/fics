@@ -402,9 +402,9 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		pp->emailAddress = NULL;
 	}
 
-	if (fscanf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
-	    "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
-	    "%u %u %u %u %u %d\n",
+	if (fscanf(fp, "%u %u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u "
+	    "%u %u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u %u %u %u %u "
+	    "%u %u %lu %u %u %d\n",
 	    &pp->s_stats.num, &pp->s_stats.win, &pp->s_stats.los,
 	    &pp->s_stats.dra, &pp->s_stats.rating, &ss,
 	    &pp->s_stats.ltime, &pp->s_stats.best, &pp->s_stats.whenbest,
@@ -444,7 +444,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		pp->prompt = xstrdup(tmp2);
 	}
 
-	if (fscanf(fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
+	if (fscanf(fp, "%d %d %d %ld %ld %d %d %d %d %d %d %d %d %d %d %d %d %d "
 	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	    &pp->open, &pp->rated, &pp->ropen, &pp->timeOfReg, &pp->totalTime,
 	    &pp->bell, &pp->pgn, &pp->notifiedby, &pp->i_login, &pp->i_game,
@@ -980,9 +980,9 @@ WritePlayerFile(FILE *fp, int p)
 	fprintf(fp, "%s\n", (pp->passwd ? pp->passwd : "NONE"));
 	fprintf(fp, "%s\n", (pp->emailAddress ? pp->emailAddress : "NONE"));
 
-	fprintf(fp, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
-	    "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u "
-	    "%u %u %u %u %d\n",
+	fprintf(fp, "%u %u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u %u "
+	    "%u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u %u %u %u %u %u "
+	    "%u %lu %u %u %d\n",
 	    pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
 	    pp->s_stats.dra, pp->s_stats.rating,
 	    (int)(pp->s_stats.sterr * 10.0),
@@ -1012,7 +1012,7 @@ WritePlayerFile(FILE *fp, int p)
 
 	fprintf(fp, "%s\n", pp->prompt);
 
-	fprintf(fp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
+	fprintf(fp, "%d %d %d %ld %ld %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
 	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	    pp->open, pp->rated, pp->ropen, pp->timeOfReg, pp->totalTime,
 	    pp->bell, pp->pgn, pp->notifiedby, pp->i_login, pp->i_game,
