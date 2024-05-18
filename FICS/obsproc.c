@@ -1045,7 +1045,7 @@ ExamineJournal(int p, int p1, char slot)
 
 	if (((slot - 'a' - 1) > MAX_JOURNAL) &&
 	    (parray[p1].adminLevel < ADMIN_ADMIN) &&
-	    (!titled_player(p,parray[p1].login))) {
+	    (!titled_player(p, parray[p1].login))) {
 		pprintf(p, "%s's maximum journal entry is %c\n",
 		    parray[p1].name,
 		    toupper((char)(MAX_JOURNAL + 'A' - 1)));
@@ -1075,7 +1075,7 @@ com_examine(int p, param_list param)
 	if (parray[p].game >= 0 && garray[parray[p].game].status ==
 	    GAME_EXAMINE) {
 		pprintf(p, "You are already examining a game.\n");
-	} else if (parray[p].game >=0) {
+	} else if (parray[p].game >= 0) {
 		pprintf(p, "You are playing a game.\n");
 	} else if (param[0].type == TYPE_NULL) {
 		ExamineScratch(p, param);
@@ -1901,7 +1901,7 @@ com_jsave(int p, param_list param)
 
 	if ((to[0] - 'a' - 1) > MAX_JOURNAL &&
 	    parray[p].adminLevel < ADMIN_ADMIN &&
-	    !titled_player(p,parray[p].login)) {
+	    !titled_player(p, parray[p].login)) {
 		pprintf(p, "Your maximum journal entry is %c\n",
 		    toupper((char)(MAX_JOURNAL + 'A' - 1)));
 		return COM_OK;
