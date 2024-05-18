@@ -1323,40 +1323,54 @@ PUBLIC int com_asetemail(int p, param_list param)
  *   This command sets the user's real name (as displayed to admins on finger
  *   notes) to "newname".
  */
-PUBLIC int com_asetrealname(int p, param_list param)
+PUBLIC int
+com_asetrealname(int p, param_list param)
 {
-  int p1, connected;
+	int	p1, connected;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
-    pprintf(p, "You can only set real names for players below your adminlevel.\n");
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  if (parray[p1].fullName)
-    rfree(parray[p1].fullName);
-  if (param[1].type == TYPE_NULL) {
-    parray[p1].fullName = NULL;
-    pprintf(p, "Real name for %s removed\n", parray[p1].name);
-  } else {
-    parray[p1].fullName = xstrdup(param[1].val.word);
-    pprintf(p, "Real name of %s changed to \"%s\".\n", parray[p1].name, param[1].val.word);
-  }
-  player_save(p1);
-  if (connected) {
-    if (param[1].type == TYPE_NULL) {
-      pprintf_prompt(p1, "\n\n%s has removed your real name.\n\n", parray[p].name);
-    } else {
-      pprintf_prompt(p1, "\n\n%s has changed your real name.\n\n", parray[p].name);
-    }
-  } else {
-    player_remove(p1);
-  }
-  return COM_OK;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
+
+	if ((parray[p].adminLevel <= parray[p1].adminLevel) &&
+	    !player_ishead(p)) {
+		pprintf(p, "You can only set real names for players below your "
+		    "adminlevel.\n");
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	if (parray[p1].fullName)
+		rfree(parray[p1].fullName);
+
+	if (param[1].type == TYPE_NULL) {
+		parray[p1].fullName = NULL;
+		pprintf(p, "Real name for %s removed\n", parray[p1].name);
+	} else {
+		parray[p1].fullName = xstrdup(param[1].val.word);
+		pprintf(p, "Real name of %s changed to \"%s\".\n",
+		    parray[p1].name,
+		    param[1].val.word);
+	}
+
+	player_save(p1);
+
+	if (connected) {
+		if (param[1].type == TYPE_NULL) {
+			pprintf_prompt(p1, "\n\n%s has removed your real name."
+			    "\n\n", parray[p].name);
+		} else {
+			pprintf_prompt(p1, "\n\n%s has changed your real name."
+			    "\n\n", parray[p].name);
+		}
+	} else {
+		player_remove(p1);
+	}
+
+	return COM_OK;
 }
 
 /*
