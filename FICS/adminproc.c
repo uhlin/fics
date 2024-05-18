@@ -1278,41 +1278,54 @@ com_asetpasswd(int p, param_list param)
  *   command, but no other users -- except admins -- will have another
  *   player's email address displayed.
  */
-PUBLIC int com_asetemail(int p, param_list param)
+PUBLIC int
+com_asetemail(int p, param_list param)
 {
-  int p1, connected;
+	int	p1, connected;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  if (!FindPlayer(p, param[0].val.word, &p1, &connected))
-    return COM_OK;
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
+		return COM_OK;
 
-  if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
-    pprintf(p, "You can only set email addr for players below your adminlevel.\n");
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  if (parray[p1].emailAddress)
-    rfree(parray[p1].emailAddress);
-  if (param[1].type == TYPE_NULL) {
-    parray[p1].emailAddress = NULL;
-    pprintf(p, "Email address for %s removed\n", parray[p1].name);
-  } else {
-    parray[p1].emailAddress = xstrdup(param[1].val.word);
-    pprintf(p, "Email address of %s changed to \"%s\".\n", parray[p1].name, param[1].val.word);
-  }
-  player_save(p1);
-  if (connected) {
-    if (param[1].type == TYPE_NULL) {
-      pprintf_prompt(p1, "\n\n%s has removed your email address.\n\n", parray[p].name);
-    } else {
-      pprintf_prompt(p1, "\n\n%s has changed your email address.\n\n", parray[p].name);
-    }
-  } else {
-    player_remove(p1);
-  }
-  return COM_OK;
+	if ((parray[p].adminLevel <= parray[p1].adminLevel) &&
+	    !player_ishead(p)) {
+		pprintf(p, "You can only set email addr for players below "
+		    "your adminlevel.\n");
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	if (parray[p1].emailAddress)
+		rfree(parray[p1].emailAddress);
+
+	if (param[1].type == TYPE_NULL) {
+		parray[p1].emailAddress = NULL;
+		pprintf(p, "Email address for %s removed\n", parray[p1].name);
+	} else {
+		parray[p1].emailAddress = xstrdup(param[1].val.word);
+		pprintf(p, "Email address of %s changed to \"%s\".\n",
+		    parray[p1].name,
+		    param[1].val.word);
+	}
+
+	player_save(p1);
+
+	if (connected) {
+		if (param[1].type == TYPE_NULL) {
+			pprintf_prompt(p1, "\n\n%s has removed your email "
+			    "address.\n\n", parray[p].name);
+		} else {
+			pprintf_prompt(p1, "\n\n%s has changed your email "
+			    "address.\n\n", parray[p].name);
+		}
+	} else {
+		player_remove(p1);
+	}
+
+	return COM_OK;
 }
 
 /*
