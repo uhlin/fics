@@ -1368,64 +1368,85 @@ PUBLIC int com_asetrealname(int p, param_list param)
  *   newname.  The various player information, messages, logins, comments
  *   and games should be automatically transferred to the new account.
  */
-PUBLIC int com_asethandle(int p, param_list param)
+PUBLIC int
+com_asethandle(int p, param_list param)
 {
-  char *player = param[0].val.word;
-  char *newplayer = param[1].val.word;
-  char playerlower[MAX_LOGIN_NAME], newplayerlower[MAX_LOGIN_NAME];
-  int p1;
+	char	*newplayer = param[1].val.word;
+	char	*player = param[0].val.word;
+	char	 newplayerlower[MAX_LOGIN_NAME] = { '\0' };
+	char	 playerlower[MAX_LOGIN_NAME] = { '\0' };
+	int	 p1;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  strcpy(playerlower, player);
-  stolower(playerlower);
-  strcpy(newplayerlower, newplayer);
-  stolower(newplayerlower);
-  if (player_find_bylogin(playerlower) >= 0) {
-    pprintf(p, "A player by that name is logged in.\n");
-    return COM_OK;
-  }
-  if (player_find_bylogin(newplayerlower) >= 0) {
-    pprintf(p, "A player by that new name is logged in.\n");
-    return COM_OK;
-  }
-  p1 = player_new();
-  if (player_read(p1, playerlower)) {
-    pprintf(p, "No player by the name %s is registered.\n", player);
-    player_remove(p1);
-    return COM_OK;
-  } else {
-    if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
-      pprintf(p, "You can't set handles for an admin with a level higher than or equal to yourself.\n");
-      player_remove(p1);
-      return COM_OK;
-    }
-  }
-  player_remove(p1);
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  p1 = player_new();
-  if ((!player_read(p1, newplayerlower)) && (strcmp(playerlower, newplayerlower))) {
-    pprintf(p, "Sorry that handle is already taken.\n");
-    player_remove(p1);
-    return COM_OK;
-  }
-  player_remove(p1);
+	strcpy(playerlower, player);
+	stolower(playerlower);
+	strcpy(newplayerlower, newplayer);
+	stolower(newplayerlower);
 
-  if ((!player_rename(playerlower, newplayerlower)) && (!player_read(p1, newplayerlower))) {
-    pprintf(p, "Player %s renamed to %s.\n", player, newplayer);
-    strfree(parray[p1].name);
-    parray[p1].name = xstrdup(newplayer);
-    player_save(p1);
-    if (parray[p1].s_stats.rating > 0)
-      UpdateRank(TYPE_STAND, newplayer, &parray[p1].s_stats, player);
-    if (parray[p1].b_stats.rating > 0)
-      UpdateRank(TYPE_BLITZ, newplayer, &parray[p1].b_stats, player);
-    if (parray[p1].w_stats.rating > 0)
-      UpdateRank(TYPE_WILD, newplayer, &parray[p1].w_stats, player);
-  } else {
-    pprintf(p, "Asethandle failed.\n");
-  }
-  player_remove(p1);
-  return COM_OK;
+	if (player_find_bylogin(playerlower) >= 0) {
+		pprintf(p, "A player by that name is logged in.\n");
+		return COM_OK;
+	}
+
+	if (player_find_bylogin(newplayerlower) >= 0) {
+		pprintf(p, "A player by that new name is logged in.\n");
+		return COM_OK;
+	}
+
+	p1 = player_new();
+
+	if (player_read(p1, playerlower)) {
+		pprintf(p, "No player by the name %s is registered.\n", player);
+		player_remove(p1);
+		return COM_OK;
+	} else {
+		if ((parray[p].adminLevel <= parray[p1].adminLevel) &&
+		    !player_ishead(p)) {
+			pprintf(p, "You can't set handles for an admin with "
+			    "a level higher than or equal to yourself.\n");
+			player_remove(p1);
+			return COM_OK;
+		}
+	}
+
+	player_remove(p1);
+	p1 = player_new();
+
+	if ((!player_read(p1, newplayerlower)) &&
+	    (strcmp(playerlower, newplayerlower))) {
+		pprintf(p, "Sorry that handle is already taken.\n");
+		player_remove(p1);
+		return COM_OK;
+	}
+
+	player_remove(p1);
+
+	if ((!player_rename(playerlower, newplayerlower)) &&
+	    (!player_read(p1, newplayerlower))) {
+		pprintf(p, "Player %s renamed to %s.\n", player, newplayer);
+		strfree(parray[p1].name);
+		parray[p1].name = xstrdup(newplayer);
+		player_save(p1);
+
+		if (parray[p1].s_stats.rating > 0) {
+			UpdateRank(TYPE_STAND, newplayer, &parray[p1].s_stats,
+			    player);
+		}
+		if (parray[p1].b_stats.rating > 0) {
+			UpdateRank(TYPE_BLITZ, newplayer, &parray[p1].b_stats,
+			    player);
+		}
+		if (parray[p1].w_stats.rating > 0) {
+			UpdateRank(TYPE_WILD, newplayer, &parray[p1].w_stats,
+			    player);
+		}
+	} else {
+		pprintf(p, "Asethandle failed.\n");
+	}
+
+	player_remove(p1);
+	return COM_OK;
 }
 
 /*
