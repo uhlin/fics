@@ -1147,40 +1147,50 @@ PUBLIC int com_announce(int p, param_list param)
  *   too.  Announcements reach all unregistered users and admins and cannot be
  *   censored in any way (such as by "set shout 0").
  */
-PUBLIC int com_annunreg(int p, param_list param)
+PUBLIC int
+com_annunreg(int p, param_list param)
 {
-  int p1;
-  int count = 0;
+	int	count = 0;
+	int	p1;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (!printablestring(param[0].val.string)) {
-    pprintf(p, "Your message contains some unprintable character(s).\n");
-    return COM_OK;
-  }
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (p1 == p)
-      continue;
-    if (parray[p1].status != PLAYER_PROMPT)
-      continue;
-    if ((parray[p1].registered) && (parray[p1].adminLevel < ADMIN_ADMIN))
-      continue;
-    count++;
-    pprintf_prompt(p1, "\n\n    **UNREG ANNOUNCEMENT** from %s: %s\n\n", parray[p].name, param[0].val.string);
-  }
-  pprintf(p, "\n(%d) **UNREG ANNOUNCEMENT** from %s: %s\n\n", count, parray[p].name, param[0].val.string);
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	if (!printablestring(param[0].val.string)) {
+		pprintf(p, "Your message contains some unprintable "
+		    "character(s).\n");
+		return COM_OK;
+	}
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (p1 == p)
+			continue;
+		if (parray[p1].status != PLAYER_PROMPT)
+			continue;
+		if ((parray[p1].registered) &&
+		    (parray[p1].adminLevel < ADMIN_ADMIN))
+			continue;
+		count++;
+		pprintf_prompt(p1, "\n\n    **UNREG ANNOUNCEMENT** from %s: %s"
+		    "\n\n", parray[p].name, param[0].val.string);
+	}
+
+	pprintf(p, "\n(%d) **UNREG ANNOUNCEMENT** from %s: %s\n\n", count,
+	    parray[p].name, param[0].val.string);
+	return COM_OK;
 }
 
-PUBLIC int com_muzzle(int p, param_list param)
+PUBLIC int
+com_muzzle(int p, param_list param)
 {
-  pprintf(p, "Obsolete command: Please use +muzzle and -muzzle.\n");
-  return COM_OK;
+	pprintf(p, "Obsolete command: Please use +muzzle and -muzzle.\n");
+	return COM_OK;
 }
 
-PUBLIC int com_cmuzzle(int p, param_list param)
+PUBLIC int
+com_cmuzzle(int p, param_list param)
 {
-  pprintf(p, "Obsolete command: Please use +cmuzzle and -cmuzzle.\n");
-  return COM_OK;
+	pprintf(p, "Obsolete command: Please use +cmuzzle and -cmuzzle.\n");
+	return COM_OK;
 }
 
 /*
