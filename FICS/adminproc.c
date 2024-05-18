@@ -1063,22 +1063,28 @@ com_addplayer(int p, param_list param)
 	return COM_OK;
 }
 
-PUBLIC int com_pose(int p, param_list param)
+PUBLIC int
+com_pose(int p, param_list param)
 {
-  int p1;
+	int	p1;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
-    pprintf(p, "%s is not logged in.\n", param[0].val.word);
-    return COM_OK;
-  }
-  if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
-    pprintf(p, "You can only pose as players below your adminlevel.\n");
-    return COM_OK;
-  }
-  pprintf(p, "Command issued as %s\n", parray[p1].name);
-  pcommand(p1, "%s\n", param[1].val.string);
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	if ((p1 = player_find_part_login(param[0].val.word)) < 0) {
+		pprintf(p, "%s is not logged in.\n", param[0].val.word);
+		return COM_OK;
+	}
+
+	if ((parray[p].adminLevel <= parray[p1].adminLevel) &&
+	    !player_ishead(p)) {
+		pprintf(p, "You can only pose as players below your adminlevel."
+		    "\n");
+		return COM_OK;
+	}
+
+	pprintf(p, "Command issued as %s\n", parray[p1].name);
+	pcommand(p1, "%s\n", param[1].val.string);
+	return COM_OK;
 }
 
 /*
