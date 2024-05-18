@@ -546,29 +546,31 @@ PUBLIC int com_checkPLAYER(int p, param_list param)
  *
  *   This command displays all current users who are using timeseal.
  */
-PUBLIC int com_checkTIMESEAL(int p, param_list param)
+PUBLIC int
+com_checkTIMESEAL(int p, param_list param)
 {
-  int p1, count = 0;
+	int p1, count = 0;
 
-  /* XXX: maybe unused */
-  (void) p1;
-  (void) count;
+	/* XXX: maybe unused */
+	(void) p1;
+	(void) count;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  pprintf(p, "The following player(s) are using timeseal:\n\n");
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	pprintf(p, "The following player(s) are using timeseal:\n\n");
 
 #ifdef TIMESEAL
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].status != PLAYER_EMPTY
-        && con[parray[p1].socket].timeseal) {
-      pprintf(p, "%s\n", parray[p1].name);
-      count++;
-    }
-  }
-  pprintf(p, "\nNumber of people using timeseal:  %d\n", count);
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].status != PLAYER_EMPTY &&
+		    con[parray[p1].socket].timeseal) {
+			pprintf(p, "%s\n", parray[p1].name);
+			count++;
+		}
+	}
+	pprintf(p, "\nNumber of people using timeseal:  %d\n", count);
 #endif
 
-  return COM_OK;
+	return COM_OK;
 }
 
 PUBLIC int
