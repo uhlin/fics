@@ -1438,40 +1438,56 @@ PUBLIC int com_asethandle(int p, param_list param)
  *   2. You can only set the admin level to a level that is lower than
  *      yourself.
  */
-PUBLIC int com_asetadmin(int p, param_list param)
+PUBLIC int
+com_asetadmin(int p, param_list param)
 {
-  int p1, connected;
+	int	p1, connected;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_GOD);
-  if (!FindPlayer(p, param[0].val.word,&p1, &connected))
-    return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_GOD);
 
-  if ((parray[p].adminLevel <= parray[p1].adminLevel) && !player_ishead(p)) {
-    pprintf(p, "You can only set adminlevel for players below your adminlevel.\n");
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  if ((parray[p1].login) == (parray[p].login)) {
-    pprintf(p, "You can't change your own adminlevel.\n");
-    return COM_OK;
-  }
-  if ((param[1].val.integer >= parray[p].adminLevel) && !player_ishead(p)) {
-    pprintf(p, "You can't promote someone to or above your adminlevel.\n");
-    if (!connected)
-      player_remove(p1);
-    return COM_OK;
-  }
-  //oldlevel = parray[p1].adminLevel; XXX: set but not used
-  parray[p1].adminLevel = param[1].val.integer;
-  pprintf(p, "Admin level of %s set to %d.\n", parray[p1].name, parray[p1].adminLevel);
-  player_save(p1);
-  if (connected) {
-    pprintf_prompt(p1, "\n\n%s has set your admin level to %d.\n\n", parray[p].name, parray[p1].adminLevel);
-  } else {
-    player_remove(p1);
-  }
-  return COM_OK;
+	if (!FindPlayer(p, param[0].val.word,&p1, &connected))
+		return COM_OK;
+
+	if ((parray[p].adminLevel <= parray[p1].adminLevel) &&
+	    !player_ishead(p)) {
+		pprintf(p, "You can only set adminlevel for players below your "
+		    "adminlevel.\n");
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	if ((parray[p1].login) == (parray[p].login)) {
+		pprintf(p, "You can't change your own adminlevel.\n");
+		return COM_OK;
+	}
+
+	if ((param[1].val.integer >= parray[p].adminLevel) &&
+	    !player_ishead(p)) {
+		pprintf(p, "You can't promote someone to or above your "
+		    "adminlevel.\n");
+
+		if (!connected)
+			player_remove(p1);
+		return COM_OK;
+	}
+
+	parray[p1].adminLevel = param[1].val.integer;
+	pprintf(p, "Admin level of %s set to %d.\n",
+	    parray[p1].name,
+	    parray[p1].adminLevel);
+	player_save(p1);
+
+	if (connected) {
+		pprintf_prompt(p1, "\n\n%s has set your admin level to %d.\n\n",
+		    parray[p].name,
+		    parray[p1].adminLevel);
+	} else {
+		player_remove(p1);
+	}
+
+	return COM_OK;
 }
 
 PRIVATE void
