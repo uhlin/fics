@@ -495,7 +495,7 @@ com_checkIP(int p, param_list param)
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-	pprintf(p, "Matches the following player(s): \n\n");
+	pprintf(p, "Matches the following player(s):\n\n");
 
 	for (p1 = 0; p1 < p_num; p1++) {
 		if (!strcmpwild(dotQuad(parray[p1].thisHost), ipstr) &&
@@ -651,7 +651,7 @@ com_checkTIMESEAL(int p, param_list param)
 }
 
 PUBLIC int
-com_checkGAME(int p,param_list param)
+com_checkGAME(int p, param_list param)
 {
 	char		 tmp[10 + 1 + 7];	// enough to store number
 						// 'black: ' and '\0'
@@ -683,12 +683,14 @@ com_checkGAME(int p,param_list param)
 			for (g = 0; g < g_num; g++) {
 				multicol_store(m, tmp);
 
-				if (!strcasecmp(garray[g].white_name,param[0].val.word))  {
+				if (!strcasecmp(garray[g].white_name,
+				    param[0].val.word)) {
 					sprintf(tmp, "White: %d", g);
 					multicol_store(m, tmp);
 					found = 1;
 				}
-				if (!strcasecmp(garray[g].black_name,param[0].val.word))  {
+				if (!strcasecmp(garray[g].black_name,
+				    param[0].val.word)) {
 					sprintf(tmp, "Black: %d", g);
 					multicol_store(m, tmp);
 					found = 1;
@@ -698,7 +700,7 @@ com_checkGAME(int p,param_list param)
 			if (found)
 				multicol_pprint(m, p, parray[p].d_width, 2);
 			else
-				pprintf(p,"No matching games were found.\n");
+				pprintf(p, "No matching games were found.\n");
 			multicol_end(m);
 
 			return COM_OK;
@@ -724,7 +726,7 @@ com_checkGAME(int p,param_list param)
 
 				if (garray[g].black == p1) {
 					sprintf(tmp, "Black: %d", g);
-					multicol_store(m,tmp);
+					multicol_store(m, tmp);
 					found = 1;
 				}
 			}
@@ -1596,7 +1598,7 @@ com_asetadmin(int p, param_list param)
 
 	ASSERT(parray[p].adminLevel >= ADMIN_GOD);
 
-	if (!FindPlayer(p, param[0].val.word,&p1, &connected))
+	if (!FindPlayer(p, param[0].val.word, &p1, &connected))
 		return COM_OK;
 
 	if ((parray[p].adminLevel <= parray[p1].adminLevel) &&
