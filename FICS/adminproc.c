@@ -161,32 +161,37 @@ PRIVATE int create_news_file(int p, param_list param, int admin)
   return COM_OK;
 }
 
-PRIVATE int add_item(char *new_item, char *filename)
+PRIVATE int
+add_item(char *new_item, char *filename)
 {
-  FILE *new_fp, *old_fp;
-  char tmp_file[MAX_FILENAME_SIZE];
-  char junk[MAX_LINE_SIZE];
+	FILE	*new_fp, *old_fp;
+	char	 junk[MAX_LINE_SIZE] = { '\0' };
+	char	 tmp_file[MAX_FILENAME_SIZE] = { '\0' };
 
-  sprintf(tmp_file, "%s/.tmp.idx", news_dir);
-  new_fp = fopen(tmp_file, "w");
-  old_fp = fopen(filename, "r");
+	sprintf(tmp_file, "%s/.tmp.idx", news_dir);
 
-  if (!new_fp || !old_fp)
-    return 0;
+	new_fp = fopen(tmp_file, "w");
+	old_fp = fopen(filename, "r");
 
-  fprintf(new_fp, "%s", new_item);
-  while (1) {
-    fgets(junk, MAX_LINE_SIZE, old_fp);
-    if (feof(old_fp))
-      break;
-    fprintf(new_fp, "%s", junk);
-  }
-  fclose(new_fp);
-  fclose(old_fp);
-  remove(filename);
-  rename(tmp_file, filename);
+	if (!new_fp || !old_fp)
+		return 0;
 
-  return 1;
+	fprintf(new_fp, "%s", new_item);
+
+	while (1) {
+		fgets(junk, MAX_LINE_SIZE, old_fp);
+
+		if (feof(old_fp))
+			break;
+		fprintf(new_fp, "%s", junk);
+	}
+
+	fclose(new_fp);
+	fclose(old_fp);
+	remove(filename);
+	rename(tmp_file, filename);
+
+	return 1;
 }
 
 /*
