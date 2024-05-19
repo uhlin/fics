@@ -14,6 +14,7 @@
 #include "comproc.h"
 #include "gamedb.h"
 #include "lists.h"
+#include "maxxes-utils.h"
 #include "multicol.h"
 #include "playerdb.h"
 #include "ratings.h"
