@@ -201,7 +201,7 @@ VarToToken(game *g, int clause, char *string, int *i, int *tok, int eval)
 	} else if (MoveIndexPastString(string, i, "mymaxtime")) {
 		if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE)
 			return 0;
-		*tok = Maxtime (g, *tok, 1);
+		*tok = Maxtime(g, *tok, 1);
 	}
 #ifdef TIMESEAL
 	else if (MoveIndexPastString(string, i, "timeseal"))
@@ -218,7 +218,7 @@ VarToToken(game *g, int clause, char *string, int *i, int *tok, int eval)
 	else if (MoveIndexPastString(string, i, "maxtime")) {
 		if (GetNumberInsideParens(g, clause, i, tok, eval) != ERR_NONE)
 			return 0;
-		*tok = Maxtime (g, *tok, 2);
+		*tok = Maxtime(g, *tok, 2);
 	} else if (MoveIndexPastString(string, i, "abuser"))
 		*tok = in_list(-1, L_ABUSER, you->name);
 	else if (MoveIndexPastString(string, i, "rating"))
@@ -636,7 +636,7 @@ GameMatchesFormula(int w, int b, int wTime, int wInc, int bTime, int bInc,
 	    ERR_NONE)
 		return 0;
 	if (ret == 0)
-		ExplainFormula (&g, clauseList);
+		ExplainFormula(&g, clauseList);
 	return ret;
 }
 
