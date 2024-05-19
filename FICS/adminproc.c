@@ -266,9 +266,10 @@ create_news_index(int p, param_list param, int admin)
  *   creating the news item, the command reports the news item number along
  *   with a reminder to create a news file if necessary.
  */
-PUBLIC int com_cnewsi(int p, param_list param)
+PUBLIC int
+com_cnewsi(int p, param_list param)
 {
-  return create_news_index(p, param, 0);
+	return create_news_index(p, param, 0);
 }
 
 /* cnewsf
@@ -281,19 +282,22 @@ PUBLIC int com_cnewsi(int p, param_list param)
  *   modify a previous news item description and thus update the news item
  *   easily.
  */
-PUBLIC int com_cnewsf(int p, param_list param)
+PUBLIC int
+com_cnewsf(int p, param_list param)
 {
-  return create_news_file(p, param, 0);
+	return create_news_file(p, param, 0);
 }
 
-PUBLIC int com_canewsi(int p, param_list param)
+PUBLIC int
+com_canewsi(int p, param_list param)
 {
-  return create_news_index(p, param, 1);
+	return create_news_index(p, param, 1);
 }
 
-PUBLIC int com_canewsf(int p, param_list param)
+PUBLIC int
+com_canewsf(int p, param_list param)
 {
-  return create_news_file(p, param, 1);
+	return create_news_file(p, param, 1);
 }
 
 /*
