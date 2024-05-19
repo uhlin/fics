@@ -716,7 +716,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "lasthost:")) {
 		parray[p].lastHost = atoi(value);
 	} else if (!strcmp(attr, "channel:")) {
-		list_addsub(p,"channel",value, 1);
+		list_addsub(p, "channel", value, 1);
 	} else if (!strcmp(attr, "num_comments:")) {
 		parray[p].num_comments = atoi(value);
 	} else if (!strcmp(attr, "num_plan:")) {
@@ -902,7 +902,7 @@ player_read(int p, char *name)
 	if (line[0] == 'v')
 		sscanf(line, "%*c %d", &version);
 	if (version > 0)	// Quick method:
-		ReadV1PlayerFmt(p,&parray[p], fp, fname, version);
+		ReadV1PlayerFmt(p, &parray[p], fp, fname, version);
 	else {			// Do it the old SLOW way
 		do {
 			if (feof(fp))
