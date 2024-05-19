@@ -356,6 +356,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	char	 tmp2[MAX_STRING_LENGTH] = { '\0' };
 	int	 bs, ss, ws, ls, bugs;
 	int	 i, size_cens, size_noplay, size_not, size_gnot, size_chan, len;
+	size_t	 n;
 
 	/* XXX: not referenced */
 	(void) version;
@@ -404,33 +405,51 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		pp->emailAddress = NULL;
 	}
 
-	if (fscanf(fp, "%u %u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u "
-	    "%u %u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u %u %u %u %u "
-	    "%u %u %lu %u %u %d\n",
+	intmax_t ltime_tmp[5];
+
+	if (fscanf(fp, "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u "
+	    "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u %u %u %u %u "
+	    "%u %u %jd %u %u %d\n",
 	    &pp->s_stats.num, &pp->s_stats.win, &pp->s_stats.los,
 	    &pp->s_stats.dra, &pp->s_stats.rating, &ss,
-	    &pp->s_stats.ltime, &pp->s_stats.best, &pp->s_stats.whenbest,
+	    &ltime_tmp[0], &pp->s_stats.best, &pp->s_stats.whenbest,
 
 	    &pp->b_stats.num, &pp->b_stats.win, &pp->b_stats.los,
 	    &pp->b_stats.dra, &pp->b_stats.rating, &bs,
-	    &pp->b_stats.ltime, &pp->b_stats.best, &pp->b_stats.whenbest,
+	    &ltime_tmp[1], &pp->b_stats.best, &pp->b_stats.whenbest,
 
 	    &pp->w_stats.num, &pp->w_stats.win, &pp->w_stats.los,
 	    &pp->w_stats.dra, &pp->w_stats.rating, &ws,
-	    &pp->w_stats.ltime, &pp->w_stats.best, &pp->w_stats.whenbest,
+	    &ltime_tmp[2], &pp->w_stats.best, &pp->w_stats.whenbest,
 
 	    &pp->l_stats.num, &pp->l_stats.win, &pp->l_stats.los,
 	    &pp->l_stats.dra, &pp->l_stats.rating, &ls,
-	    &pp->l_stats.ltime, &pp->l_stats.best, &pp->l_stats.whenbest,
+	    &ltime_tmp[3], &pp->l_stats.best, &pp->l_stats.whenbest,
 
 	    &pp->bug_stats.num, &pp->bug_stats.win, &pp->bug_stats.los,
 	    &pp->bug_stats.dra, &pp->bug_stats.rating, &bugs,
-	    &pp->bug_stats.ltime, &pp->bug_stats.best, &pp->bug_stats.whenbest,
+	    &ltime_tmp[4], &pp->bug_stats.best, &pp->bug_stats.whenbest,
 
 	    &pp->lastHost) != 46) {
 		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
 		return;
 	}
+
+	for (n = 0; n < ARRAY_SIZE(ltime_tmp); n++) {
+		if (ltime_tmp[n] < g_time_min ||
+		    ltime_tmp[n] > g_time_max) {
+			warnx("%s: player %s is corrupt "
+			    "('ltime' out of bounds!)",
+			    __func__, parray[p].name);
+			return;
+		}
+	}
+
+	pp->s_stats.ltime = ltime_tmp[0];
+	pp->b_stats.ltime = ltime_tmp[1];
+	pp->w_stats.ltime = ltime_tmp[2];
+	pp->l_stats.ltime = ltime_tmp[3];
+	pp->bug_stats.ltime = ltime_tmp[4];
 
 	pp->b_stats.sterr	= (bs / 10.0);
 	pp->s_stats.sterr	= (ss / 10.0);
