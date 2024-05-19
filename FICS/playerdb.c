@@ -465,9 +465,11 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		pp->prompt = xstrdup(tmp2);
 	}
 
-	if (fscanf(fp, "%d %d %d %ld %ld %d %d %d %d %d %d %d %d %d %d %d %d %d "
+	intmax_t array[2];
+
+	if (fscanf(fp, "%d %d %d %jd %jd %d %d %d %d %d %d %d %d %d %d %d %d %d "
 	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
-	    &pp->open, &pp->rated, &pp->ropen, &pp->timeOfReg, &pp->totalTime,
+	    &pp->open, &pp->rated, &pp->ropen, &array[0], &array[1],
 	    &pp->bell, &pp->pgn, &pp->notifiedby, &pp->i_login, &pp->i_game,
 	    &pp->i_shout, &pp->i_cshout, &pp->i_tell, &pp->i_kibitz,
 	    &pp->private, &pp->jprivate, &pp->automail, &pp->i_mailmess,
@@ -479,6 +481,19 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
 		return;
 	}
+
+	for (n = 0; n < ARRAY_SIZE(array); n++) {
+		if (array[n] < g_time_min ||
+		    array[n] > g_time_max) {
+			warnx("%s: player %s is corrupt "
+			    "(time not within range)",
+			    __func__, parray[p].name);
+			return;
+		}
+	}
+
+	pp->timeOfReg = array[0];
+	pp->totalTime = array[1];
 
 	if (pp->num_plan > 0) {
 		for (i = 0; i < pp->num_plan; i++) {
