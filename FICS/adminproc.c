@@ -851,7 +851,7 @@ PUBLIC int
 com_remplayer(int p, param_list param)
 {
 	char	*player = param[0].val.word;
-	char	 playerlower[MAX_LOGIN_NAME];
+	char	 playerlower[MAX_LOGIN_NAME] = { '\0' };
 	int	 p1, lookup;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
@@ -913,8 +913,8 @@ PUBLIC int
 com_raisedead(int p, param_list param)
 {
 	char	*player = param[0].val.word;
-	char	 newplayerlower[MAX_LOGIN_NAME];
-	char	 playerlower[MAX_LOGIN_NAME];
+	char	 newplayerlower[MAX_LOGIN_NAME] = { '\0' };
+	char	 playerlower[MAX_LOGIN_NAME] = { '\0' };
 	int	 p1, p2, lookup;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
