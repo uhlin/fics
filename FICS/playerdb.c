@@ -35,10 +35,12 @@
 #include "common.h"
 
 #include <err.h>
+#include <stdint.h>
 
 #include "command.h"
 #include "comproc.h"
 #include "config.h"
+#include "ficslim.h"
 #include "ficsmain.h"
 #include "gamedb.h"
 #include "lists.h"
