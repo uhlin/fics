@@ -439,35 +439,48 @@ strcmpwild(char *mainstr, char *searchstr)
  *   This command returns the names of all users currently logged on
  *   from a given IP address.
  */
-PUBLIC int com_checkIP(int p, param_list param)
+PUBLIC int
+com_checkIP(int p, param_list param)
 {
-  char *ipstr = param[0].val.word;
-  int p1;
+	char	*ipstr = param[0].val.word;
+	int	 p1;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  pprintf(p, "Matches the following player(s): \n\n");
-  for (p1 = 0; p1 < p_num; p1++)
-    if (!strcmpwild(dotQuad(parray[p1].thisHost), ipstr) && (parray[p1].status != PLAYER_EMPTY))
-      pprintf(p, "%16.16s %s\n", parray[p1].name, dotQuad(parray[p1].thisHost));
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	pprintf(p, "Matches the following player(s): \n\n");
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (!strcmpwild(dotQuad(parray[p1].thisHost), ipstr) &&
+		    (parray[p1].status != PLAYER_EMPTY)) {
+			pprintf(p, "%16.16s %s\n", parray[p1].name,
+			    dotQuad(parray[p1].thisHost));
+		}
+	}
+
+	return COM_OK;
 }
 
-PUBLIC int com_checkSOCKET(int p, param_list param)
+PUBLIC int
+com_checkSOCKET(int p, param_list param)
 {
-  int fd = param[0].val.integer;
-  int p1, flag;
+	int	fd = param[0].val.integer;
+	int	p1, flag;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  flag = 0;
-  for (p1 = 0; p1 < p_num; p1++) {
-    if (parray[p1].socket == fd) {
-      flag = 1;
-      pprintf(p, "Socket %d is used by %s\n", fd, parray[p1].name);
-    }
-  }
-  if (!flag)
-    pprintf(p, "Socket %d is unused!\n", fd);
-  return COM_OK;
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+
+	flag = 0;
+
+	for (p1 = 0; p1 < p_num; p1++) {
+		if (parray[p1].socket == fd) {
+			flag = 1;
+			pprintf(p, "Socket %d is used by %s\n", fd,
+			    parray[p1].name);
+		}
+	}
+
+	if (!flag)
+		pprintf(p, "Socket %d is unused!\n", fd);
+	return COM_OK;
 }
 
 /*
