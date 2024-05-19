@@ -131,34 +131,40 @@ PUBLIC int com_adjudicate(int p, param_list param)
  * create_news_file:  Creates either a general or and admin news
  *                    file, depending upon the admin switch.
  */
-PRIVATE int create_news_file(int p, param_list param, int admin)
+PRIVATE int
+create_news_file(int p, param_list param, int admin)
 {
-  FILE *fp;
-  char filename[MAX_FILENAME_SIZE];
+	FILE	*fp;
+	char	 filename[MAX_FILENAME_SIZE] = { '\0' };
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  if (admin) {
-    if (param[0].val.integer > num_anews)
-      pprintf(p, "There must be an admin news index #%d before you can create the file.", param[0].val.integer);
-    else {
-      sprintf(filename, "%s/adminnews.%d", news_dir, param[0].val.integer);
-      fp = fopen(filename, "w");
-      fprintf(fp, "%s\n", param[1].val.string);
-      fclose(fp);
-    }
-  } else {
-    if (param[0].val.integer > num_news)
-      pprintf(p, "There must be a news index #%d before you can create the file.", param[0].val.integer);
-    else {
-      sprintf(filename, "%s/news.%d", news_dir, param[0].val.integer);
-      fp = fopen(filename, "w");
-      fprintf(fp, "%s\n", param[1].val.string);
-      fclose(fp);
-    }
-  }
+	if (admin) {
+		if (param[0].val.integer > num_anews) {
+			pprintf(p, "There must be an admin news index #%d "
+			    "before you can create the file.",
+			    param[0].val.integer);
+		} else {
+			sprintf(filename, "%s/adminnews.%d", news_dir,
+			    param[0].val.integer);
+			fp = fopen(filename, "w");
+			fprintf(fp, "%s\n", param[1].val.string);
+			fclose(fp);
+		}
+	} else {
+		if (param[0].val.integer > num_news) {
+			pprintf(p, "There must be a news index #%d before "
+			    "you can create the file.", param[0].val.integer);
+		} else {
+			sprintf(filename, "%s/news.%d", news_dir,
+			    param[0].val.integer);
+			fp = fopen(filename, "w");
+			fprintf(fp, "%s\n", param[1].val.string);
+			fclose(fp);
+		}
+	}
 
-  return COM_OK;
+	return COM_OK;
 }
 
 PRIVATE int
