@@ -38,6 +38,10 @@
 #include "playerdb.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 /*
  * Simply tests if the input string is a move or not. If it matches
  * patterns below.
@@ -817,11 +821,11 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 		if (piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING &&
 		    mt->fromFile == 4 &&
 		    mt->toFile == 2) {
-			sprintf(mt->moveString, "o-o-o");
+			strlcpy(mt->moveString, "o-o-o", sizeof mt->moveString);
 		} else if (piecetype(gs->board[mt->fromFile][mt->fromRank]) == KING &&
 		    mt->fromFile == 4 &&
 		    mt->toFile == 6) {
-			sprintf(mt->moveString, "o-o");
+			strlcpy(mt->moveString, "o-o", sizeof mt->moveString);
 		} else {
 			ret = snprintf(mt->moveString, sizeof mt->moveString,
 			    "%s/%c%d-%c%d",
