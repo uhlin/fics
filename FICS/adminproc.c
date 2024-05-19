@@ -856,7 +856,7 @@ com_remplayer(int p, param_list param)
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-	strcpy(playerlower, player);
+	mstrlcpy(playerlower, player, sizeof(playerlower));
 	stolower(playerlower);
 	p1 = player_new();
 	lookup = player_read(p1, playerlower);
@@ -919,7 +919,7 @@ com_raisedead(int p, param_list param)
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-	strcpy(playerlower, player);
+	mstrlcpy(playerlower, player, sizeof playerlower);
 	stolower(playerlower);
 
 	if (player_find_bylogin(playerlower) >= 0) {
@@ -970,7 +970,7 @@ com_raisedead(int p, param_list param)
 	} else {
 		char *newplayer = param[1].val.word;
 
-		strcpy(newplayerlower, newplayer);
+		mstrlcpy(newplayerlower, newplayer, sizeof newplayerlower);
 		stolower(newplayerlower);
 
 		if (player_find_bylogin(newplayerlower) >= 0) {
@@ -1067,7 +1067,7 @@ com_addplayer(int p, param_list param)
 		return COM_OK;
 	}
 
-	strcpy(newplayerlower, newplayer);
+	mstrlcpy(newplayerlower, newplayer, sizeof newplayerlower);
 	stolower(newplayerlower);
 
 	p1 = player_new();
@@ -1089,7 +1089,7 @@ com_addplayer(int p, param_list param)
 			password[i] = ('a' + arc4random_uniform(26));
 		password[i] = '\0';
 
-		strcpy(salt, fics_getsalt());
+		mstrlcpy(salt, fics_getsalt(), sizeof salt);
 
 		parray[p1].passwd = xstrdup(crypt(password, salt));
 	} else {
@@ -1354,7 +1354,7 @@ com_asetpasswd(int p, param_list param)
 		    "Your account at our FICS has been locked.\n",
 		    parray[p1].name);
 	} else {
-		strcpy(salt, fics_getsalt());
+		mstrlcpy(salt, fics_getsalt(), sizeof salt);
 
 		parray[p1].passwd = xstrdup(crypt(param[1].val.word, salt));
 
@@ -1523,9 +1523,10 @@ com_asethandle(int p, param_list param)
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-	strcpy(playerlower, player);
+	mstrlcpy(playerlower, player, sizeof playerlower);
 	stolower(playerlower);
-	strcpy(newplayerlower, newplayer);
+
+	mstrlcpy(newplayerlower, newplayer, sizeof newplayerlower);
 	stolower(newplayerlower);
 
 	if (player_find_bylogin(playerlower) >= 0) {
