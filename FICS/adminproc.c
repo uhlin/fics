@@ -178,7 +178,8 @@ create_news_file(int p, param_list param, int admin)
 			    "before you can create the file.",
 			    param[0].val.integer);
 		} else {
-			sprintf(filename, "%s/adminnews.%d", news_dir,
+			msnprintf(filename, sizeof filename, "%s/adminnews.%d",
+			    news_dir,
 			    param[0].val.integer);
 			fp = fopen(filename, "w");
 			fprintf(fp, "%s\n", param[1].val.string);
@@ -189,7 +190,8 @@ create_news_file(int p, param_list param, int admin)
 			pprintf(p, "There must be a news index #%d before "
 			    "you can create the file.", param[0].val.integer);
 		} else {
-			sprintf(filename, "%s/news.%d", news_dir,
+			msnprintf(filename, sizeof filename, "%s/news.%d",
+			    news_dir,
 			    param[0].val.integer);
 			fp = fopen(filename, "w");
 			fprintf(fp, "%s\n", param[1].val.string);
@@ -207,7 +209,7 @@ add_item(char *new_item, char *filename)
 	char	 junk[MAX_LINE_SIZE] = { '\0' };
 	char	 tmp_file[MAX_FILENAME_SIZE] = { '\0' };
 
-	sprintf(tmp_file, "%s/.tmp.idx", news_dir);
+	msnprintf(tmp_file, sizeof tmp_file, "%s/.tmp.idx", news_dir);
 
 	new_fp = fopen(tmp_file, "w");
 	old_fp = fopen(filename, "r");
@@ -367,7 +369,7 @@ com_anews(int p, param_list param)
 	long int	 lval;
 	time_t		 crtime;
 
-	sprintf(filename, "%s/newadminnews.index", news_dir);
+	msnprintf(filename, sizeof filename, "%s/newadminnews.index", news_dir);
 
 	if ((fp = fopen(filename, "r")) == NULL) {
 		fprintf(stderr, "Cant find news index.\n");
@@ -379,7 +381,8 @@ com_anews(int p, param_list param)
 		 * No params - then just display index over news.
 		 */
 
-		sprintf(filename, "%s/newadminnews.index", news_dir);
+		msnprintf(filename, sizeof filename, "%s/newadminnews.index",
+		    news_dir);
 
 		pprintf(p, "Index of recent admin news items:\n");
 		fgets(junk, MAX_LINE_SIZE, fp);
@@ -444,7 +447,8 @@ com_anews(int p, param_list param)
 			return COM_OK;
 		}
 
-		sprintf(filename, "%s/adminnews.%s", news_dir,
+		msnprintf(filename, sizeof filename, "%s/adminnews.%s",
+		    news_dir,
 		    param[0].val.word);
 
 		if ((fp = fopen(filename, "r")) == NULL) {
@@ -453,7 +457,8 @@ com_anews(int p, param_list param)
 		}
 
 		fclose(fp);
-		sprintf(filename, "adminnews.%s", param[0].val.word);
+		msnprintf(filename, sizeof filename, "adminnews.%s",
+		    param[0].val.word);
 
 		if (psend_file(p, news_dir, filename) < 0) {
 			pprintf(p, "Internal error - couldn't send news file!"
@@ -685,13 +690,15 @@ com_checkGAME(int p, param_list param)
 
 				if (!strcasecmp(garray[g].white_name,
 				    param[0].val.word)) {
-					sprintf(tmp, "White: %d", g);
+					msnprintf(tmp, sizeof tmp, "White: %d",
+					    g);
 					multicol_store(m, tmp);
 					found = 1;
 				}
 				if (!strcasecmp(garray[g].black_name,
 				    param[0].val.word)) {
-					sprintf(tmp, "Black: %d", g);
+					msnprintf(tmp, sizeof tmp, "Black: %d",
+					    g);
 					multicol_store(m, tmp);
 					found = 1;
 				}
@@ -719,13 +726,15 @@ com_checkGAME(int p, param_list param)
 
 			for (g = 0; g < g_num; g++) {
 				if (garray[g].white == p1) {
-					sprintf(tmp, "White: %d", g);
+					msnprintf(tmp, sizeof tmp, "White: %d",
+					    g);
 					multicol_store(m, tmp);
 					found = 1;
 				}
 
 				if (garray[g].black == p1) {
-					sprintf(tmp, "Black: %d", g);
+					msnprintf(tmp, sizeof tmp, "Black: %d",
+					    g);
 					multicol_store(m, tmp);
 					found = 1;
 				}
@@ -1099,7 +1108,8 @@ com_addplayer(int p, param_list param)
 	    password);
 
 	if (strcmp(newemail, "none")) {
-		sprintf(text, "\nYour player account has been created.\n\n"
+		msnprintf(text, sizeof text,
+		    "\nYour player account has been created.\n\n"
 		    "Login Name: %s\n"
 		    "Full Name: %s\n"
 		    "Email Address: %s\n"
@@ -1340,26 +1350,28 @@ com_asetpasswd(int p, param_list param)
 	if (param[1].val.word[0] == '*') {
 		parray[p1].passwd = xstrdup(param[1].val.word);
 		pprintf(p, "Account %s locked!\n", parray[p1].name);
-		sprintf(text, "Password of %s is now useless.  Your account at "
-		    "our FICS has been locked.\n", parray[p1].name);
+		msnprintf(text, sizeof text, "Password of %s is now useless. "
+		    "Your account at our FICS has been locked.\n",
+		    parray[p1].name);
 	} else {
 		strcpy(salt, fics_getsalt());
 
 		parray[p1].passwd = xstrdup(crypt(param[1].val.word, salt));
 
-		sprintf(text, "Password of %s changed to \"%s\".\n",
+		msnprintf(text, sizeof text, "Password of %s changed to "
+		    "\"%s\".\n",
 		    parray[p1].name, param[1].val.word);
 		pprintf(p, "%s", text);
 	}
 
 	if (param[1].val.word[0] == '*') {
-		sprintf(subject, "FICS: %s has locked your account.",
-		    parray[p].name);
+		msnprintf(subject, sizeof subject, "FICS: %s has locked your "
+		    "account.", parray[p].name);
 		if (connected)
 			pprintf_prompt(p1, "\n%s\n", subject);
 	} else {
-		sprintf(subject, "FICS: %s has changed your password.",
-		    parray[p].name);
+		msnprintf(subject, sizeof subject, "FICS: %s has changed your "
+		    "password.", parray[p].name);
 		if (connected)
 			pprintf_prompt(p1, "\n%s\n", subject);
 	}
