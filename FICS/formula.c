@@ -593,7 +593,7 @@ ChooseClauses(player *who, char *formula)
 PRIVATE void
 ExplainFormula(game *g, textlist **clauses)
 {
-	char		 txt[20];
+	char		 txt[20] = { '\0' };
 	int		 i, which, dummy_index, value;
 	player		*challenged = &parray[g->black];
 	textlist**	 Cur = clauses;
