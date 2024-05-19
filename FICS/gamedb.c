@@ -44,6 +44,10 @@
 #include "rmalloc.h"
 #include "utils.h"
 
+#if __linux__
+#include <bsd/string.h>
+#endif
+
 /*
  * This should be enough to hold any game up to at least 250 moves. If
  * we overwrite this, the server will crash.
@@ -206,7 +210,7 @@ game_time_str(int wt, int winc, int bt, int binc)
 	static char	tstr[50] = { '\0' };
 
 	if ((!wt) && (!winc)) { // Untimed
-		strcpy(tstr, "");
+		(void) strlcpy(tstr, "", sizeof tstr);
 		return tstr;
 	}
 
@@ -1142,13 +1146,13 @@ ReadOneV1Move(FILE *fp, move_t *m)
 		PieceChar	= PieceToChar(piecetype(piece) | WHITE);
 
 		if (PieceChar == 'K' && m->fromFile == 4 && m->toFile == 6) {
-			strcpy(m->algString, "O-O");
-			strcpy(m->moveString, "o-o");
+			mstrlcpy(m->algString, "O-O", sizeof(m->algString));
+			mstrlcpy(m->moveString, "o-o", sizeof(m->moveString));
 		} else if (PieceChar == 'K' &&
 		    m->fromFile == 4 &&
 		    m->toFile == 2) {
-			strcpy(m->algString, "O-O-O");
-			strcpy(m->moveString, "o-o-o");
+			mstrlcpy(m->algString, "O-O-O", sizeof(m->algString));
+			mstrlcpy(m->moveString, "o-o-o", sizeof(m->moveString));
 		} else {
 			i = 0;
 			m->algString[i++] = PieceChar;
