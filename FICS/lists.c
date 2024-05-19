@@ -79,8 +79,8 @@ list_find(int p, enum ListWhich l)
 		return NULL;
 	if (!personal) { // now we have to load the list
 		FILE	*fp;
-		char	 filename[MAX_FILENAME_SIZE];
-		char	 listmember[100];
+		char	 filename[MAX_FILENAME_SIZE] = { '\0' };
+		char	 listmember[100] = { '\0' };
 
 		sprintf(filename, "%s/%s", lists_dir, ListArray[l].name);
 
@@ -362,7 +362,7 @@ list_addsub(int p, char *list, char *who, int addsub)
 
 	if (!personal) {
 		FILE	*fp;
-		char	 filename[MAX_FILENAME_SIZE];
+		char	 filename[MAX_FILENAME_SIZE] = { '\0' };
 
 		switch (gl->which) {
 		case L_MUZZLE:
