@@ -1743,7 +1743,7 @@ player_remove_request(int p, int p1, int type)
 	}
 
 	if ((type == PEND_ALL || type == PEND_MATCH) && parray[p].partner >= 0)
-		player_remove_request (parray[p].partner, p1, PEND_BUGHOUSE);
+		player_remove_request(parray[p].partner, p1, PEND_BUGHOUSE);
 
 	return 0;
 }
@@ -2469,7 +2469,7 @@ LoadMsgRange(int p, int start, int end, textlist **Head)
 			break;
 		if ((start < 0 && (n < -start || n > -end)) ||
 		    (start >= 0 && n >= start)) {
-			SaveTextListEntry (Cur, line, n);
+			SaveTextListEntry(Cur, line, n);
 			Cur = &(*Cur)->next;
 			nSave++;
 		} else
@@ -2523,7 +2523,7 @@ ClearMsgsBySender(int p, param_list param)
 	} else if (nFound == 0) {
 		pprintf(p, "You have no messages from %s.\n", parray[p1].name);
 	} else {
-		if (WriteMsgFile (p, Head)) {
+		if (WriteMsgFile(p, Head)) {
 			pprintf(p, "Messages from %s cleared.\n",
 			    parray[p1].name);
 		} else {
