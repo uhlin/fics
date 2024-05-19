@@ -4,7 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Added usage of `time_t`.
+- Added usage of `time_t`. Multiple occurrences.
 - Fixed sign compare (`-Wsign-compare`). Multiple occurrences.
 - Reformatted code according to OpenBSD's KNF. Whole tree completed.
 
