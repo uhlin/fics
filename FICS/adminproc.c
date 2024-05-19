@@ -24,6 +24,7 @@
 #include "fics_getsalt.h"
 #include "gamedb.h"
 #include "gameproc.h"
+#include "maxxes-utils.h"
 #include "multicol.h"
 #include "network.h"
 #include "obsproc.h"
