@@ -1015,41 +1015,45 @@ WritePlayerFile(FILE *fp, int p)
 	fprintf(fp, "%s\n", (pp->passwd ? pp->passwd : "NONE"));
 	fprintf(fp, "%s\n", (pp->emailAddress ? pp->emailAddress : "NONE"));
 
-	fprintf(fp, "%u %u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u %u "
-	    "%u %u %u %u %u %lu %u %u %u %u %u %u %u %u %lu %u %u %u %u %u %u %u "
-	    "%u %lu %u %u %d\n",
+	fprintf(fp, "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u %u "
+	    "%u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u %u %u %u %u %u "
+	    "%u %jd %u %u %d\n",
 	    pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
 	    pp->s_stats.dra, pp->s_stats.rating,
 	    (int)(pp->s_stats.sterr * 10.0),
-	    pp->s_stats.ltime, pp->s_stats.best, pp->s_stats.whenbest,
+	    (intmax_t)pp->s_stats.ltime, pp->s_stats.best, pp->s_stats.whenbest,
 
 	    pp->b_stats.num, pp->b_stats.win, pp->b_stats.los,
 	    pp->b_stats.dra, pp->b_stats.rating,
 	    (int)(pp->b_stats.sterr * 10.0),
-	    pp->b_stats.ltime, pp->b_stats.best, pp->b_stats.whenbest,
+	    (intmax_t)pp->b_stats.ltime, pp->b_stats.best, pp->b_stats.whenbest,
 
 	    pp->w_stats.num, pp->w_stats.win, pp->w_stats.los,
 	    pp->w_stats.dra, pp->w_stats.rating,
 	    (int)(pp->w_stats.sterr * 10.0),
-	    pp->w_stats.ltime, pp->w_stats.best, pp->w_stats.whenbest,
+	    (intmax_t)pp->w_stats.ltime, pp->w_stats.best, pp->w_stats.whenbest,
 
 	    pp->l_stats.num, pp->l_stats.win, pp->l_stats.los,
 	    pp->l_stats.dra, pp->l_stats.rating,
 	    (int)(pp->l_stats.sterr * 10.0),
-	    pp->l_stats.ltime, pp->l_stats.best, pp->l_stats.whenbest,
+	    (intmax_t)pp->l_stats.ltime, pp->l_stats.best, pp->l_stats.whenbest,
 
 	    pp->bug_stats.num, pp->bug_stats.win, pp->bug_stats.los,
 	    pp->bug_stats.dra, pp->bug_stats.rating,
 	    (int)(pp->bug_stats.sterr * 10.0),
-	    pp->bug_stats.ltime, pp->bug_stats.best, pp->bug_stats.whenbest,
+	    (intmax_t)pp->bug_stats.ltime,
+	    pp->bug_stats.best,
+	    pp->bug_stats.whenbest,
 
 	    pp->lastHost); /* fprintf() */
 
 	fprintf(fp, "%s\n", pp->prompt);
 
-	fprintf(fp, "%d %d %d %ld %ld %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
+	fprintf(fp, "%d %d %d %jd %jd %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
 	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
-	    pp->open, pp->rated, pp->ropen, pp->timeOfReg, pp->totalTime,
+	    pp->open, pp->rated, pp->ropen,
+	    (intmax_t)pp->timeOfReg,
+	    (intmax_t)pp->totalTime,
 	    pp->bell, pp->pgn, pp->notifiedby, pp->i_login, pp->i_game,
 	    pp->i_shout, pp->i_cshout, pp->i_tell, pp->i_kibitz, pp->private,
 	    pp->jprivate, pp->automail, pp->i_mailmess, pp->style, pp->d_time,
