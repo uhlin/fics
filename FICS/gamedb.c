@@ -1127,14 +1127,19 @@ ReadOneV1Move(FILE *fp, move_t *m)
 		}
 
 		if (m->piecePromotionTo != 0) {
-			if (m->piecePromotionTo == KNIGHT)
-				strcat(m->algString, "=N");
-			else if (m->piecePromotionTo == BISHOP)
-				strcat(m->algString, "=B");
-			else if (m->piecePromotionTo == ROOK)
-				strcat(m->algString, "=R");
-			else if (m->piecePromotionTo == QUEEN)
-				strcat(m->algString, "=Q");
+			if (m->piecePromotionTo == KNIGHT) {
+				mstrlcat(m->algString, "=N",
+				    sizeof(m->algString));
+			} else if (m->piecePromotionTo == BISHOP) {
+				mstrlcat(m->algString, "=B",
+				    sizeof(m->algString));
+			} else if (m->piecePromotionTo == ROOK) {
+				mstrlcat(m->algString, "=R",
+				    sizeof(m->algString));
+			} else if (m->piecePromotionTo == QUEEN) {
+				mstrlcat(m->algString, "=Q",
+				    sizeof(m->algString));
+			}
 
 			m->piecePromotionTo |= m->color;
 		}
@@ -1189,7 +1194,7 @@ ReadOneV1Move(FILE *fp, move_t *m)
 		}
 	}
 	if (check)
-		strcat(m->algString, "+");
+		mstrlcat(m->algString, "+", sizeof m->algString);
 }
 
 PRIVATE int
