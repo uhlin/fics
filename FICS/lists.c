@@ -82,7 +82,8 @@ list_find(int p, enum ListWhich l)
 		char	 filename[MAX_FILENAME_SIZE] = { '\0' };
 		char	 listmember[100] = { '\0' };
 
-		sprintf(filename, "%s/%s", lists_dir, ListArray[l].name);
+		msnprintf(filename, sizeof filename, "%s/%s", lists_dir,
+		    ListArray[l].name);
 
 		if ((fp = fopen(filename, "r")) == NULL) {
 			rfree(tempList);
@@ -415,7 +416,8 @@ list_addsub(int p, char *list, char *who, int addsub)
 			    "by %s.\n", addrem, listname, parray[p].name);
 		}
 
-		sprintf(filename, "%s/%s", lists_dir, listname);
+		msnprintf(filename, sizeof filename, "%s/%s", lists_dir,
+		    listname);
 
 		if ((fp = fopen(filename, "w")) == NULL) {
 			fprintf(stderr, "Couldn't save %s list.\n", listname);
