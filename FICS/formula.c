@@ -605,7 +605,7 @@ ExplainFormula(game *g, textlist **clauses)
 			continue;
 		dummy_index = 0;
 		CheckFormula(g, i, &dummy_index, OPTYPE_NONE, &value, 1);
-		sprintf(txt, "%d", value);
+		snprintf(txt, sizeof txt, "%d", value);
 		SaveTextListEntry(Cur, txt, i);
 		Cur = &(*Cur)->next;
 	}
