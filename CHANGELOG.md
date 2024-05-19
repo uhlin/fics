@@ -7,6 +7,7 @@ documented in this file.
 - Added usage of `time_t`. Multiple occurrences.
 - Fixed sign compare (`-Wsign-compare`). Multiple occurrences.
 - Reformatted code according to OpenBSD's KNF. Whole tree completed.
+- Replaced unbounded string handling functions.
 
 ## [1.3] - 2024-05-05 ##
 - **Added** parameter lists to many function declarations.
