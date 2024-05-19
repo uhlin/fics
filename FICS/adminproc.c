@@ -493,50 +493,66 @@ PUBLIC int com_checkSOCKET(int p, param_list param)
  *    lastHost
  *    num_comments
  */
-PUBLIC int com_checkPLAYER(int p, param_list param)
+PUBLIC int
+com_checkPLAYER(int p, param_list param)
 {
-  char *player = param[0].val.word;
-  int p1;
+	char	*player = param[0].val.word;
+	int	 p1;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  p1 = player_search(p, param[0].val.word);
-  if (!p1)
-    return COM_OK;
-  if (p1 < 0) {
-    p1 = (-p1) - 1;
-    pprintf(p, "%s is not logged in.\n", player);
-    stolower(player);
-    pprintf(p, "name = %s\n", parray[p1].name);
-    pprintf(p, "login = %s\n", parray[p1].login);
-    pprintf(p, "fullName = %s\n", (parray[p1].fullName ? parray[p1].fullName : "(none)"));
-    pprintf(p, "emailAddress = %s\n", (parray[p1].emailAddress ? parray[p1].emailAddress : "(none)"));
-    pprintf(p, "adminLevel = %d\n", parray[p1].adminLevel);
-/*    pprintf(p, "network_player = %d\n", parray[p1].network_player); */
-    pprintf(p, "lastHost = %s\n", dotQuad(parray[p1].lastHost));
-    pprintf(p, "num_comments = %d\n", parray[p1].num_comments);
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-    player_remove(p1);
-    return COM_OK;
-  } else {
-    p1 = p1 - 1;
-    pprintf(p, "%s is number %d in parray of size %d\n", player, p1, p_num + 1);
-    pprintf(p, "name = %s\n", parray[p1].name);
-    pprintf(p, "login = %s\n", parray[p1].login);
-    pprintf(p, "fullName = %s\n", parray[p1].fullName ? parray[p1].fullName : "(none)");
-    pprintf(p, "emailAddress = %s\n", parray[p1].emailAddress ? parray[p1].emailAddress : "(none)");
-    pprintf(p, "socket = %d\n", parray[p1].socket);
-    pprintf(p, "registered = %d\n", parray[p1].registered);
-    pprintf(p, "last_tell = %d\n", parray[p1].last_tell);
-    pprintf(p, "last_channel = %d\n", parray[p1].last_channel);
-    pprintf(p, "logon_time = %s", ctime((time_t *) &parray[p1].logon_time));
-    pprintf(p, "adminLevel = %d\n", parray[p1].adminLevel);
-/*    pprintf(p, "network_player = %d\n", parray[p1].network_player); */
-    pprintf(p, "thisHost = %s\n", dotQuad(parray[p1].thisHost));
-    pprintf(p, "lastHost = %s\n", dotQuad(parray[p1].lastHost));
-    pprintf(p, "num_comments = %d\n", parray[p1].num_comments);
+	p1 = player_search(p, param[0].val.word);
 
-  }
-  return COM_OK;
+	if (!p1)
+		return COM_OK;
+
+	if (p1 < 0) {
+		p1 = (-p1) - 1;
+		pprintf(p, "%s is not logged in.\n", player);
+		stolower(player);
+
+		pprintf(p, "name = %s\n", parray[p1].name);
+		pprintf(p, "login = %s\n", parray[p1].login);
+		pprintf(p, "fullName = %s\n", (parray[p1].fullName ?
+		    parray[p1].fullName : "(none)"));
+		pprintf(p, "emailAddress = %s\n", (parray[p1].emailAddress ?
+		    parray[p1].emailAddress : "(none)"));
+		pprintf(p, "adminLevel = %d\n", parray[p1].adminLevel);
+#if 0
+		pprintf(p, "network_player = %d\n", parray[p1].network_player);
+#endif
+		pprintf(p, "lastHost = %s\n", dotQuad(parray[p1].lastHost));
+		pprintf(p, "num_comments = %d\n", parray[p1].num_comments);
+
+		player_remove(p1);
+		return COM_OK;
+	} else {
+		p1 = p1 - 1;
+
+		pprintf(p, "%s is number %d in parray of size %d\n", player, p1,
+		    (p_num + 1));
+		pprintf(p, "name = %s\n", parray[p1].name);
+		pprintf(p, "login = %s\n", parray[p1].login);
+		pprintf(p, "fullName = %s\n", (parray[p1].fullName ?
+		    parray[p1].fullName : "(none)"));
+		pprintf(p, "emailAddress = %s\n", (parray[p1].emailAddress ?
+		    parray[p1].emailAddress : "(none)"));
+		pprintf(p, "socket = %d\n", parray[p1].socket);
+		pprintf(p, "registered = %d\n", parray[p1].registered);
+		pprintf(p, "last_tell = %d\n", parray[p1].last_tell);
+		pprintf(p, "last_channel = %d\n", parray[p1].last_channel);
+		pprintf(p, "logon_time = %s",
+		    ctime((time_t *) &parray[p1].logon_time));
+		pprintf(p, "adminLevel = %d\n", parray[p1].adminLevel);
+#if 0
+		pprintf(p, "network_player = %d\n", parray[p1].network_player);
+#endif
+		pprintf(p, "thisHost = %s\n", dotQuad(parray[p1].thisHost));
+		pprintf(p, "lastHost = %s\n", dotQuad(parray[p1].lastHost));
+		pprintf(p, "num_comments = %d\n", parray[p1].num_comments);
+	}
+
+	return COM_OK;
 }
 
 /*
