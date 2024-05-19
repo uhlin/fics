@@ -363,8 +363,8 @@ com_anews(int p, param_list param)
 	FILE		*fp;
 	char		*junkp;
 	char		 count[10];
-	char		 filename[MAX_FILENAME_SIZE];
-	char		 junk[MAX_LINE_SIZE];
+	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
+	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	int		 found = 0;
 	long int	 lval;
 	time_t		 crtime;
