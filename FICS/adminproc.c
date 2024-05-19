@@ -47,84 +47,116 @@ PUBLIC int num_anews = -1;
  *   (no win, loss or draw), "white" gives white_player the win, "black" gives
  *   black_player the win, and "draw" gives a draw.
  */
-PUBLIC int com_adjudicate(int p, param_list param)
+PUBLIC int
+com_adjudicate(int p, param_list param)
 {
-  int wp, wconnected, bp, bconnected, g, inprogress, confused = 0;
+	int	wp, wconnected, bp, bconnected, g, inprogress, confused = 0;
 
-  ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
-  if (!FindPlayer(p, param[0].val.word, &wp, &wconnected))
-    return COM_OK;
-  if (!FindPlayer(p, param[1].val.word, &bp, &bconnected)) {
-    if (!wconnected)
-     player_remove(wp);
-    return COM_OK;
-  }
+	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-  inprogress = ((parray[wp].game >=0) &&(parray[wp].opponent == bp));
+	if (!FindPlayer(p, param[0].val.word, &wp, &wconnected))
+		return COM_OK;
+	if (!FindPlayer(p, param[1].val.word, &bp, &bconnected)) {
+		if (!wconnected)
+			player_remove(wp);
+		return COM_OK;
+	}
 
-  if (inprogress) {
-    g = parray[wp].game;
-  } else {
-    g = game_new();
-    if (game_read(g, wp, bp) < 0) {
-      confused = 1;
-      pprintf(p, "There is no stored game %s vs. %s\n", parray[wp].name, parray[bp].name);
-    } else {
-      garray[g].white = wp;
-      garray[g].black = bp;
-    }
-  }
-  if (!confused) {
-    if (strstr("abort", param[2].val.word) != NULL) {
-      game_ended(g, WHITE, END_ADJABORT);
+	inprogress = (parray[wp].game >= 0 && parray[wp].opponent == bp);
 
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been aborted.",
-	       parray[wp].name, parray[wp].name, parray[bp].name);
+	if (inprogress) {
+		g = parray[wp].game;
+	} else {
+		g = game_new();
 
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been aborted.",
-	       parray[bp].name, parray[wp].name, parray[bp].name);
-    } else if (strstr("draw", param[2].val.word) != NULL) {
-      game_ended(g, WHITE, END_ADJDRAW);
+		if (game_read(g, wp, bp) < 0) {
+			confused = 1;
+			pprintf(p, "There is no stored game %s vs. %s\n",
+			    parray[wp].name,
+			    parray[bp].name);
+		} else {
+			garray[g].white = wp;
+			garray[g].black = bp;
+		}
+	}
 
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been adjudicated "
-	       "as a draw", parray[wp].name, parray[wp].name, parray[bp].name);
+	if (!confused) {
+		if (strstr("abort", param[2].val.word) != NULL) {
+			game_ended(g, WHITE, END_ADJABORT);
 
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been adjudicated "
-	       "as a draw", parray[bp].name, parray[wp].name, parray[bp].name);
-    } else if (strstr("white", param[2].val.word) != NULL) {
-      game_ended(g, WHITE, END_ADJWIN);
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been aborted.",
+			    parray[wp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been aborted.",
+			    parray[bp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+		} else if (strstr("draw", param[2].val.word) != NULL) {
+			game_ended(g, WHITE, END_ADJDRAW);
 
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been adjudicated "
-	       "as a win", parray[wp].name, parray[wp].name, parray[bp].name);
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been adjudicated as a draw",
+			    parray[wp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been adjudicated as a draw",
+			    parray[bp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+		} else if (strstr("white", param[2].val.word) != NULL) {
+			game_ended(g, WHITE, END_ADJWIN);
 
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been adjudicated "
-	       "as a loss", parray[bp].name, parray[wp].name, parray[bp].name);
-    } else if (strstr("black", param[2].val.word) != NULL) {
-      game_ended(g, BLACK, END_ADJWIN);
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been adjudicated "
-	       "as a loss", parray[wp].name, parray[wp].name, parray[bp].name);
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been adjudicated as a win",
+			    parray[wp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been adjudicated as a loss",
+			    parray[bp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+		} else if (strstr("black", param[2].val.word) != NULL) {
+			game_ended(g, BLACK, END_ADJWIN);
 
-      pcommand(p, "message %s Your game \"%s vs. %s\" has been adjudicated "
-	       "as a win", parray[bp].name, parray[wp].name, parray[bp].name);
-    } else {
-      confused = 1;
-      pprintf(p, "Result must be one of: abort draw white black\n");
-    }
-  }
-  if (!confused) {
-    pprintf(p, "Game adjudicated.\n");
-    if (!inprogress) {
-      game_delete(wp, bp);
-    } else {
-      return (COM_OK);
-    }
-  }
-  game_remove(g);
-  if (!wconnected)
-    player_remove(wp);
-  if (!bconnected)
-    player_remove(bp);
-  return COM_OK;
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been adjudicated as a loss",
+			    parray[wp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+			pcommand(p, "message %s Your game \"%s vs. %s\" has "
+			    "been adjudicated as a win",
+			    parray[bp].name,
+			    parray[wp].name,
+			    parray[bp].name);
+		} else {
+			confused = 1;
+			pprintf(p, "Result must be one of: abort draw white "
+			    "black\n");
+		}
+	} /* !confused */
+
+	if (!confused) {
+		pprintf(p, "Game adjudicated.\n");
+
+		if (!inprogress) {
+			game_delete(wp, bp);
+		} else {
+			return COM_OK;
+		}
+	}
+
+	game_remove(g);
+
+	if (!wconnected)
+		player_remove(wp);
+	if (!bconnected)
+		player_remove(bp);
+	return COM_OK;
 }
 
 /*
