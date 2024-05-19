@@ -352,11 +352,14 @@ player_remove(int p)
 PRIVATE void
 ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 {
-	char	*tmp;
-	char	 tmp2[MAX_STRING_LENGTH] = { '\0' };
-	int	 bs, ss, ws, ls, bugs;
-	int	 i, size_cens, size_noplay, size_not, size_gnot, size_chan, len;
-	size_t	 n;
+	char		*tmp;
+	char		 tmp2[MAX_STRING_LENGTH] = { '\0' };
+	int		 bs, ss, ws, ls, bugs;
+	int		 i, size_cens, size_noplay, size_not, size_gnot,
+			 size_chan, len;
+	intmax_t	 array[2] = { 0 };
+	intmax_t	 ltime_tmp[5] = { 0 };
+	size_t		 n;
 
 	/* XXX: not referenced */
 	(void) version;
@@ -404,8 +407,6 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	} else {
 		pp->emailAddress = NULL;
 	}
-
-	intmax_t ltime_tmp[5];
 
 	if (fscanf(fp, "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u "
 	    "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u %u %u %u %u "
@@ -464,8 +465,6 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		tmp2[strcspn(tmp2, "\n")] = '\0';
 		pp->prompt = xstrdup(tmp2);
 	}
-
-	intmax_t array[2];
 
 	if (fscanf(fp, "%d %d %d %jd %jd %d %d %d %d %d %d %d %d %d %d %d %d %d "
 	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
