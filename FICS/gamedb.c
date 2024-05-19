@@ -1112,12 +1112,12 @@ ReadOneV1Move(FILE *fp, move_t *m)
 			m->doublePawn = -1;
 
 		if (m->pieceCaptured) {
-			sprintf(m->algString, "%cx%c%d",
+			msnprintf(m->algString, sizeof m->algString, "%cx%c%d",
 			    ('a' + m->fromFile),
 			    ('a' + m->toFile),
 			    (m->toRank + 1));
 		} else {
-			sprintf(m->algString, "%c%d",
+			msnprintf(m->algString, sizeof m->algString, "%c%d",
 			    ('a' + m->toFile),
 			    (m->toRank + 1));
 		}
