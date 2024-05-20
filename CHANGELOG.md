@@ -3,14 +3,14 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
-- Added usage of `time_t`. Multiple occurrences.
-- Changed the program to create news index files even if no old ones
+## [1.4] - 2024-05-20 ##
+- **Added** usage of `time_t`. Multiple occurrences.
+- **Changed** the program to create news index files even if no old ones
   are existent on the disk.
-- Fixed clang warnings.
-- Fixed sign compare (`-Wsign-compare`). Multiple occurrences.
-- Reformatted code according to OpenBSD's KNF. Whole tree completed.
-- Replaced unbounded string handling functions.
+- **Fixed** clang warnings.
+- **Fixed** sign compare (`-Wsign-compare`). Multiple occurrences.
+- **Reformatted code** according to OpenBSD's KNF. Whole tree completed.
+- **Replaced** unbounded string handling functions.
 
 ## [1.3] - 2024-05-05 ##
 - **Added** parameter lists to many function declarations.
