@@ -211,13 +211,12 @@ add_item(char *new_item, char *filename)
 
 	msnprintf(tmp_file, sizeof tmp_file, "%s/.tmp.idx", news_dir);
 
-	new_fp = fopen(tmp_file, "w");
-	old_fp = fopen(filename, "r");
-
-	if (!new_fp || !old_fp)
+	if ((new_fp = fopen(tmp_file, "w")) == NULL)
 		return 0;
-
 	fprintf(new_fp, "%s", new_item);
+
+	if ((old_fp = fopen(filename, "r")) == NULL)
+		goto end;
 
 	while (1) {
 		fgets(junk, MAX_LINE_SIZE, old_fp);
@@ -227,9 +226,12 @@ add_item(char *new_item, char *filename)
 		fprintf(new_fp, "%s", junk);
 	}
 
+  end:
 	fclose(new_fp);
-	fclose(old_fp);
-	remove(filename);
+	if (old_fp) {
+		fclose(old_fp);
+		remove(filename);
+	}
 	rename(tmp_file, filename);
 
 	return 1;
