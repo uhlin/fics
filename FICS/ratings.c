@@ -1531,6 +1531,7 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 	if (fp == NULL)
 		return;
 
+	rating = nGames = is_computer = 0;
 	rewind(fp);
 
 	for (int i = 1; i < count; i++) {
@@ -1559,7 +1560,11 @@ ShowRankEntry(int p, FILE *fp, int count, int comp, char *target,
 	char	newLine[MAX_RANK_LINE] = { '\0' };
 	int	rating, findable, nGames, is_comp;
 
-	findable = (count > 0 && !feof(fp));
+	// XXX
+	rating		= 0;
+	findable	= (count > 0 && !feof(fp));
+	nGames		= 0;
+	is_comp		= 0;
 
 	if (findable) {
 		do {
