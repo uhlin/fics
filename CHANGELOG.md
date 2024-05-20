@@ -5,6 +5,8 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added usage of `time_t`. Multiple occurrences.
+- Changed the program to create news index files even if no old ones
+  are existent on the disk.
 - Fixed sign compare (`-Wsign-compare`). Multiple occurrences.
 - Reformatted code according to OpenBSD's KNF. Whole tree completed.
 - Replaced unbounded string handling functions.
