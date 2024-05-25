@@ -70,6 +70,8 @@ main(int argc, char *argv[])
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
 			switch (argv[i][1]) {
+			case '?':
+			case 'h':
 			default:
 				usage(argv[0]);
 				break;
