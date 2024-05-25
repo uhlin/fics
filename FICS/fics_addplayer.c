@@ -46,9 +46,9 @@
 
 #define PASSLEN 8
 
-PRIVATE char *funame = NULL;
-PRIVATE char *fname = NULL;
-PRIVATE char *email = NULL;
+PRIVATE char	*funame = NULL;
+PRIVATE char	*fname = NULL;
+PRIVATE char	*email = NULL;
 
 PRIVATE int admin = 0;
 
