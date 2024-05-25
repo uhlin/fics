@@ -8,6 +8,7 @@ documented in this file.
   adds a player with admin privileges.
 - Fixed out of bounds array access in `match_command()`.
 - Fixed resource leaks, i.e. missing calls to `fclose()`.
+- Fixed usage of possibly uninitialized variables.
 
 ## [1.4] - 2024-05-20 ##
 - **Added** usage of `time_t`. Multiple occurrences.
