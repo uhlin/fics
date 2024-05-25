@@ -1437,6 +1437,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 
 	if ((fptemp = fopen(TmpRankFile, "w")) == NULL) {
 		warn("%s: unable to open rank file for updating", __func__);
+		fclose(fp);
 		return;
 	}
 

@@ -1823,6 +1823,7 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 				pprintf(p, "Please report this to an admin.\n");
 				fprintf(stderr, "FICS: System command failed "
 				    "in jsave_journalentry\n");
+				fclose(Game);
 				return;
 			}
 
