@@ -73,7 +73,7 @@ add_handle_to_list(const char *handle)
 PRIVATE __dead void
 usage(char *progname)
 {
-	fprintf(stderr, "Usage: %s <UserName> <FullName> <EmailAddress>\n",
+	fprintf(stderr, "Usage: %s [-a] <UserName> <FullName> <EmailAddress>\n",
 	    progname);
 	exit(1);
 }
