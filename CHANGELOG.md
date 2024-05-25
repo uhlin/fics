@@ -3,6 +3,10 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Added command-line option `a` to the addplayer program. If given, it
+  adds a player with admin privileges.
+
 ## [1.4] - 2024-05-20 ##
 - **Added** usage of `time_t`. Multiple occurrences.
 - **Changed** the program to create news index files even if no old ones
