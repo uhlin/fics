@@ -232,7 +232,8 @@ match_command(char *comm, int p)
 		i++;
 	}
 
-	if (in_list(p, L_REMOVEDCOM, command_list[gotIt].comm_name)) {
+	if (gotIt >= 0 &&
+	    in_list(p, L_REMOVEDCOM, command_list[gotIt].comm_name)) {
 		pprintf(p, "Due to a bug - this command has been temporarily "
 		    "removed.\n");
 		return -COM_FAILED;
