@@ -50,12 +50,10 @@ PRIVATE char *funame = NULL;
 PRIVATE char *fname = NULL;
 PRIVATE char *email = NULL;
 
-PRIVATE int local = 1;
-
 PRIVATE __dead void
 usage(char *progname)
 {
-	fprintf(stderr, "Usage: %s [-l] [-n] UserName FullName EmailAddress\n",
+	fprintf(stderr, "Usage: %s <UserName> <FullName> <EmailAddress>\n",
 	    progname);
 	exit(1);
 }
@@ -72,12 +70,6 @@ main(int argc, char *argv[])
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
 			switch (argv[i][1]) {
-			case 'l':
-				local = 1;
-				break;
-			case 'n':
-				local = 0;
-				break;
 			default:
 				usage(argv[0]);
 				break;
