@@ -6,6 +6,7 @@ documented in this file.
 ## [Unreleased] ##
 - Added command-line option `a` to the addplayer program. If given, it
   adds a player with admin privileges.
+- Fixed resource leaks, i.e. missing calls to `fclose()`.
 
 ## [1.4] - 2024-05-20 ##
 - **Added** usage of `time_t`. Multiple occurrences.
