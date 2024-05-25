@@ -26,6 +26,7 @@
    Markus Uhlin			24/01/01	Size-bounded copying
    Markus Uhlin			24/04/01	Fixed empty hostname
    Markus Uhlin			24/04/04	Added usage of explicit_bzero()
+   Markus Uhlin			24/05/25	Added command-line option 'a'
 */
 
 #include "stdinclude.h"
