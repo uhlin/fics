@@ -1170,6 +1170,10 @@ alpha_cmp(const void *pp1, const void *pp2)
 PRIVATE void
 sort_players(int players[PARRAY_SIZE], who_cmp_t cmp_func)
 {
+	if (p_num <= 0) {
+		warnx("%s: p_num <= 0", __func__);
+		return;
+	}
 	for (int i = 0; i < p_num; i++)
 		players[i] = i;
 	qsort(players, p_num, sizeof(int), cmp_func);
