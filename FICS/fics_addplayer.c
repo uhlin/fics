@@ -50,6 +50,25 @@ PRIVATE char *funame = NULL;
 PRIVATE char *fname = NULL;
 PRIVATE char *email = NULL;
 
+PRIVATE int admin = 0;
+
+PRIVATE void
+add_handle_to_list(const char *handle)
+{
+	FILE	*fp;
+	char	 path[1024];
+
+	snprintf(path, sizeof path, "%s/admin", DEFAULT_LISTS);
+
+	if ((fp = fopen(path, "a")) == NULL) {
+		warn("%s: unable to open %s", __func__, path);
+		return;
+	}
+
+	fprintf(fp, "%s\n", handle);
+	fclose(fp);
+}
+
 PRIVATE __dead void
 usage(char *progname)
 {
@@ -70,6 +89,9 @@ main(int argc, char *argv[])
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
 			switch (argv[i][1]) {
+			case 'a':
+				admin = 1;
+				break;
 			case '?':
 			case 'h':
 			default:
@@ -123,10 +145,16 @@ main(int argc, char *argv[])
 	parray[p].registered	= 1;
 	parray[p].rated		= 1;
 
+	if (strcasecmp(parray[p].login, HADMINHANDLE) == 0 || admin) {
+		parray[p].adminLevel = ADMIN_ADMIN;
+		add_handle_to_list(parray[p].login);
+	}
+
 	player_save(p);
 
 	printf("Added player account: >%s< >%s< >%s< >%s<\n",
 	       funame, fname, email, password);
+	printf("Admin: %s\n", (parray[p].adminLevel > 0 ? "Yes" : "No"));
 
 	snprintf(text, sizeof text,
 	    "\nYour player account has been created.\n\n"
