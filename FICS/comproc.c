@@ -40,6 +40,8 @@
 
 #include <sys/resource.h>
 
+#include <err.h>
+
 #include "board.h"
 #include "command.h"
 #include "comproc.h"
