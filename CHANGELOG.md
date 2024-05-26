@@ -3,13 +3,13 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
-- Added command-line option `a` to the addplayer program. If given, it
+## [1.4.1] - 2024-05-26 ##
+- **Added** command-line option `a` to the addplayer program. If given, it
   adds a player with admin privileges.
-- Added usage of `time_t`.
-- Fixed out of bounds array access in `match_command()`.
-- Fixed resource leaks, i.e. missing calls to `fclose()`.
-- Fixed usage of possibly uninitialized variables.
+- **Added** usage of `time_t`.
+- **Fixed** out of bounds array access in `match_command()`.
+- **Fixed** resource leaks, i.e. missing calls to `fclose()`.
+- **Fixed** usage of possibly uninitialized variables.
 
 ## [1.4] - 2024-05-20 ##
 - **Added** usage of `time_t`. Multiple occurrences.
