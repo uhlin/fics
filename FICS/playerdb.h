@@ -60,8 +60,9 @@
 
 typedef struct _statistics {
 	double	 sterr;
-	int	 num, win, los, dra, rating, best, whenbest;
+	int	 num, win, los, dra, rating, best;
 	time_t	 ltime;
+	time_t	 whenbest;
 } statistics;
 
 #define PEND_MATCH	0
