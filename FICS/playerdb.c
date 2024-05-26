@@ -359,6 +359,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 			 size_chan, len;
 	intmax_t	 array[2] = { 0 };
 	intmax_t	 ltime_tmp[5] = { 0 };
+	intmax_t	 wb_tmp[5] = { 0 };
 	size_t		 n;
 
 	/* XXX: not referenced */
@@ -408,28 +409,28 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		pp->emailAddress = NULL;
 	}
 
-	if (fscanf(fp, "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u "
-	    "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u %u %u %u %u "
-	    "%u %u %jd %u %u %d\n",
+	if (fscanf(fp, "%u %u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd "
+	    "%u %u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd %u %u %u %u "
+	    "%u %u %jd %u %jd %d\n",
 	    &pp->s_stats.num, &pp->s_stats.win, &pp->s_stats.los,
 	    &pp->s_stats.dra, &pp->s_stats.rating, &ss,
-	    &ltime_tmp[0], &pp->s_stats.best, &pp->s_stats.whenbest,
+	    &ltime_tmp[0], &pp->s_stats.best, &wb_tmp[0],
 
 	    &pp->b_stats.num, &pp->b_stats.win, &pp->b_stats.los,
 	    &pp->b_stats.dra, &pp->b_stats.rating, &bs,
-	    &ltime_tmp[1], &pp->b_stats.best, &pp->b_stats.whenbest,
+	    &ltime_tmp[1], &pp->b_stats.best, &wb_tmp[1],
 
 	    &pp->w_stats.num, &pp->w_stats.win, &pp->w_stats.los,
 	    &pp->w_stats.dra, &pp->w_stats.rating, &ws,
-	    &ltime_tmp[2], &pp->w_stats.best, &pp->w_stats.whenbest,
+	    &ltime_tmp[2], &pp->w_stats.best, &wb_tmp[2],
 
 	    &pp->l_stats.num, &pp->l_stats.win, &pp->l_stats.los,
 	    &pp->l_stats.dra, &pp->l_stats.rating, &ls,
-	    &ltime_tmp[3], &pp->l_stats.best, &pp->l_stats.whenbest,
+	    &ltime_tmp[3], &pp->l_stats.best, &wb_tmp[3],
 
 	    &pp->bug_stats.num, &pp->bug_stats.win, &pp->bug_stats.los,
 	    &pp->bug_stats.dra, &pp->bug_stats.rating, &bugs,
-	    &ltime_tmp[4], &pp->bug_stats.best, &pp->bug_stats.whenbest,
+	    &ltime_tmp[4], &pp->bug_stats.best, &wb_tmp[4],
 
 	    &pp->lastHost) != 46) {
 		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
@@ -451,6 +452,22 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	pp->w_stats.ltime = ltime_tmp[2];
 	pp->l_stats.ltime = ltime_tmp[3];
 	pp->bug_stats.ltime = ltime_tmp[4];
+
+	for (n = 0; n < ARRAY_SIZE(wb_tmp); n++) {
+		if (wb_tmp[n] < g_time_min ||
+		    wb_tmp[n] > g_time_max) {
+			warnx("%s: player %s is corrupt "
+			    "('whenbest' out of bounds!)",
+			    __func__, parray[p].name);
+			return;
+		}
+	}
+
+	pp->s_stats.whenbest = wb_tmp[0];
+	pp->b_stats.whenbest = wb_tmp[1];
+	pp->w_stats.whenbest = wb_tmp[2];
+	pp->l_stats.whenbest = wb_tmp[3];
+	pp->bug_stats.whenbest = wb_tmp[4];
 
 	pp->b_stats.sterr	= (bs / 10.0);
 	pp->s_stats.sterr	= (ss / 10.0);
@@ -1015,35 +1032,38 @@ WritePlayerFile(FILE *fp, int p)
 	fprintf(fp, "%s\n", (pp->passwd ? pp->passwd : "NONE"));
 	fprintf(fp, "%s\n", (pp->emailAddress ? pp->emailAddress : "NONE"));
 
-	fprintf(fp, "%u %u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u %u "
-	    "%u %u %u %u %u %jd %u %u %u %u %u %u %u %u %jd %u %u %u %u %u %u %u "
-	    "%u %jd %u %u %d\n",
+	fprintf(fp, "%u %u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd %u "
+	    "%u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd %u %u %u %u %u "
+	    "%u %jd %u %jd %d\n",
 	    pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
 	    pp->s_stats.dra, pp->s_stats.rating,
 	    (int)(pp->s_stats.sterr * 10.0),
-	    (intmax_t)pp->s_stats.ltime, pp->s_stats.best, pp->s_stats.whenbest,
+	    (intmax_t)pp->s_stats.ltime, pp->s_stats.best,
+	    (intmax_t)pp->s_stats.whenbest,
 
 	    pp->b_stats.num, pp->b_stats.win, pp->b_stats.los,
 	    pp->b_stats.dra, pp->b_stats.rating,
 	    (int)(pp->b_stats.sterr * 10.0),
-	    (intmax_t)pp->b_stats.ltime, pp->b_stats.best, pp->b_stats.whenbest,
+	    (intmax_t)pp->b_stats.ltime, pp->b_stats.best,
+	    (intmax_t)pp->b_stats.whenbest,
 
 	    pp->w_stats.num, pp->w_stats.win, pp->w_stats.los,
 	    pp->w_stats.dra, pp->w_stats.rating,
 	    (int)(pp->w_stats.sterr * 10.0),
-	    (intmax_t)pp->w_stats.ltime, pp->w_stats.best, pp->w_stats.whenbest,
+	    (intmax_t)pp->w_stats.ltime, pp->w_stats.best,
+	    (intmax_t)pp->w_stats.whenbest,
 
 	    pp->l_stats.num, pp->l_stats.win, pp->l_stats.los,
 	    pp->l_stats.dra, pp->l_stats.rating,
 	    (int)(pp->l_stats.sterr * 10.0),
-	    (intmax_t)pp->l_stats.ltime, pp->l_stats.best, pp->l_stats.whenbest,
+	    (intmax_t)pp->l_stats.ltime, pp->l_stats.best,
+	    (intmax_t)pp->l_stats.whenbest,
 
 	    pp->bug_stats.num, pp->bug_stats.win, pp->bug_stats.los,
 	    pp->bug_stats.dra, pp->bug_stats.rating,
 	    (int)(pp->bug_stats.sterr * 10.0),
-	    (intmax_t)pp->bug_stats.ltime,
-	    pp->bug_stats.best,
-	    pp->bug_stats.whenbest,
+	    (intmax_t)pp->bug_stats.ltime, pp->bug_stats.best,
+	    (intmax_t)pp->bug_stats.whenbest,
 
 	    pp->lastHost); /* fprintf() */
 
