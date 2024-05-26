@@ -6,6 +6,7 @@ documented in this file.
 ## [Unreleased] ##
 - Added command-line option `a` to the addplayer program. If given, it
   adds a player with admin privileges.
+- Added usage of `time_t`.
 - Fixed out of bounds array access in `match_command()`.
 - Fixed resource leaks, i.e. missing calls to `fclose()`.
 - Fixed usage of possibly uninitialized variables.
