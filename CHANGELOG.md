@@ -3,6 +3,9 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Added command-line option `l` (Display the legal notice and exit.)
+
 ## [1.4.1] - 2024-05-26 ##
 - **Added** command-line option `a` to the addplayer program. If given, it
   adds a player with admin privileges.
