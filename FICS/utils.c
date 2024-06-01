@@ -605,8 +605,11 @@ xstrdup(const char *str)
 
 	if (str == NULL)
 		return NULL;
-	out = rmalloc(strlen(str) + 1);
-	return strcpy(out, str);
+
+	const size_t size = strlen(str) + 1;
+
+	out = rmalloc(size);
+	return memcpy(out, str, size);
 }
 
 PUBLIC char *
