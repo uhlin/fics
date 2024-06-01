@@ -3,7 +3,7 @@
 .\" SPDX-FileCopyrightText: Copyright 2024 Markus Uhlin
 .\" SPDX-License-Identifier: ISC
 .\"
-.Dd March 12, 2024
+.Dd June 1, 2024
 .Dt FICS 1
 .Os
 .Sh NAME
@@ -13,6 +13,7 @@
 .Nm fics
 .Bk -words
 .Op Fl h
+.Op Fl l
 .Op Fl p Ar port
 .Ek
 .Sh DESCRIPTION
@@ -28,6 +29,8 @@ computing network.
 .Bl -tag -width Ds
 .It Fl h
 Outputs the program usage.
+.It Fl l
+Display the legal notice and exit.
 .It Fl p Ar port
 Which port shall the chess server listen on?
 (The default is 5000.)
