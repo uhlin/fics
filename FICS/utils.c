@@ -26,6 +26,8 @@
    Markus Uhlin			23/12/25	Revised
    Markus Uhlin			24/03/16	Replaced unbounded string
 						handling functions.
+   Markus Uhlin			24/07/05	Fixed unusual struct allocations
+						and replaced strcpy() with strlcpy().
 */
 
 #include "stdinclude.h"
