@@ -5,8 +5,10 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added command-line option `l` (Display the legal notice and exit.)
+- Fixed unusual struct allocations.
 - Replaced calls to `rand()` with `brand()` which uses
   `arc4random_uniform()`.
+- Replaced unbounded string handling functions.
 
 ## [1.4.1] - 2024-05-26 ##
 - **Added** command-line option `a` to the addplayer program. If given, it
