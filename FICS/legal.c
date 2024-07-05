@@ -25,7 +25,7 @@
 #include "legal.h"
 
 char legalNotice[] =
-  "\nfics - An internet chess server.\n"
+  "fics - An internet chess server.\n"
   "Copyright (C) 1993  Richard V. Nash\n"
   "\n"
   "This program is free software; you can redistribute it and/or modify\n"
