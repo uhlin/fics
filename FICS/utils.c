@@ -31,6 +31,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
+
 #include "config.h"
 #include "network.h"
 #include "playerdb.h"
@@ -43,14 +45,14 @@
 
 struct t_tree {
 	struct t_tree	*left, *right;
-	char		 name;
+	char		*name;
 };
 
 struct t_dirs {
 	struct t_dirs	*left, *right;
 	time_t		 mtime;
 	struct t_tree	*files;
-	char		 name;
+	char		*name;
 };
 
 PRIVATE char**	t_buffer = NULL;
@@ -951,14 +953,14 @@ PRIVATE void
 t_sft(char *want, struct t_tree *t)
 {
 	if (t) {
-		int cmp = strncmp(want, &t->name, strlen(want));
+		int cmp = strncmp(want, t->name, strlen(want));
 
 		if (cmp <= 0) // If 'want' <= this one, look left
 			t_sft(want, t->left);
 
 		if (t_buffersize && cmp == 0) { // If a match, add it to buffer
 			t_buffersize--;
-			*t_buffer++ = &(t->name);
+			*t_buffer++ = t->name;
 		}
 
 		if (cmp >= 0) // If 'want' >= this one, look right
@@ -975,6 +977,7 @@ t_cft(struct t_tree **t)
 	if (t != NULL && *t != NULL) {
 		t_cft(&(*t)->left);
 		t_cft(&(*t)->right);
+		rfree((*t)->name);
 		rfree(*t);
 		*t = NULL;
 	}
@@ -994,7 +997,7 @@ t_mft(struct t_dirs *d)
 #endif
 	struct t_tree **t;
 
-	if ((dirp = opendir(&(d->name))) == NULL) {
+	if ((dirp = opendir(d->name)) == NULL) {
 		fprintf(stderr, "FICS: %s: couldn't opendir\n", __func__);
 		return;
 	}
@@ -1002,17 +1005,22 @@ t_mft(struct t_dirs *d)
 		t = &d->files;
 
 		if (dp->d_name[0] != '.') { // skip anything starting with '.'
+			size_t size;
+
 			while (*t) {
-				if (strcmp(dp->d_name, &(*t)->name) < 0)
+				if (strcmp(dp->d_name, (*t)->name) < 0)
 					t = &(*t)->left;
 				else
 					t = &(*t)->right;
 			}
 
-			*t = rmalloc(sizeof(struct t_tree) +
-			    strlen(dp->d_name));
+			size = strlen(dp->d_name) + 1;
+			*t = rmalloc(sizeof(struct t_tree));
 			(*t)->right = (*t)->left = NULL;
-			strcpy(&(*t)->name, dp->d_name);
+			(*t)->name = rmalloc(size);
+
+			if (strlcpy((*t)->name, dp->d_name, size) >= size)
+				errx(1, "%s: name too long", __func__);
 		}
 	}
 	closedir(dirp);
@@ -1043,7 +1051,7 @@ search_directory(char *dir, char *filter, char **buffer, int buffersize)
 		i = &ramdirs;
 
 		while (*i) {		// Find dir in dir tree
-			if ((cmp = strcmp(dir, &(*i)->name)) == 0)
+			if ((cmp = strcmp(dir, (*i)->name)) == 0)
 				break;
 			else if (cmp < 0)
 				i = &(*i)->left;
@@ -1052,11 +1060,16 @@ search_directory(char *dir, char *filter, char **buffer, int buffersize)
 		}
 
 		if (!*i) {			// If dir isn't in dir tree,
-						// add him.
-			*i = rmalloc(sizeof(struct t_dirs) + strlen(dir));
+			size_t size;		// add him.
+
+			size = strlen(dir) + 1;
+			*i = rmalloc(sizeof(struct t_dirs));
 			(*i)->left = (*i)->right = NULL;
 			(*i)->files = NULL;
-			strcpy(&(*i)->name, dir);
+			(*i)->name = rmalloc(size);
+
+			if (strlcpy((*i)->name, dir, size) >= size)
+				errx(1, "%s: dir too long", __func__);
 		}
 
 		if ((*i)->files) {		// Delete any obsolete file
