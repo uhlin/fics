@@ -199,9 +199,9 @@ game_finish(int g)
 }
 
 PUBLIC void
-MakeFENpos(int g, char *FEN)
+MakeFENpos(int g, char *FEN, size_t size)
 {
-	strcpy(FEN, boardToFEN(g));
+	mstrlcpy(FEN, boardToFEN(g), size);
 }
 
 PUBLIC char *

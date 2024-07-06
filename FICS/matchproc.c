@@ -288,7 +288,8 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 	parray[black_player].side	= BLACK;
 	parray[black_player].promote	= QUEEN;
 	send_boards(g);
-	MakeFENpos(g, (char *)garray[g].FENstartPos);
+	MakeFENpos(g, (char *)garray[g].FENstartPos,
+	    ARRAY_SIZE(garray[g].FENstartPos));
 	return COM_OK;
 }
 

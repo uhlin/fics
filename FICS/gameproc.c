@@ -481,7 +481,7 @@ process_move(int p, char *command)
 		result		= execute_move(&garray[g].game_state, &move, 1);
 		move.atTime	= now; // XXX
 		move.tookTime	= 0;
-		MakeFENpos(g, (char *)move.FENpos);
+		MakeFENpos(g, (char *)move.FENpos, ARRAY_SIZE(move.FENpos));
 		garray[g].examMoveList[garray[g].numHalfMoves - 1] = move;
 
 		/*
@@ -693,7 +693,7 @@ process_move(int p, char *command)
 		}
 #endif
 
-		MakeFENpos(g, (char *)move.FENpos);
+		MakeFENpos(g, (char *)move.FENpos, ARRAY_SIZE(move.FENpos));
 		garray[g].moveList[garray[g].numHalfMoves - 1] = move;
 	}
 

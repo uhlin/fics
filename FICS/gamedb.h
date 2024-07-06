@@ -170,7 +170,7 @@ extern int	 journal_get_info(int, char, char *, int *, char *, int *,
 		     char *, int *, int *, char *, char *, char *, char *);
 extern int	 pgames(int, int, char *);
 extern int	 pjournal(int, int, char *);
-extern void	 MakeFENpos(int, char *);
+extern void	 MakeFENpos(int, char *, size_t);
 extern void	 RemHist(char *);
 extern void	 addjournalitem(int, char, char *, int, char *, int, char *,
 		     int, int, char *, char *, char *, char *);

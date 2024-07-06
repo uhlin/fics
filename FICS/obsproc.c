@@ -826,7 +826,8 @@ ExamineScratch(int p, param_list param)
 	garray[g].white_rating = garray[g].black_rating =
 	    parray[p].s_stats.rating;
 	send_boards(g);
-	MakeFENpos(g, (char *)garray[g].FENstartPos);
+	MakeFENpos(g, (char *)garray[g].FENstartPos,
+	    ARRAY_SIZE(garray[g].FENstartPos));
 }
 
 PRIVATE int
@@ -879,7 +880,8 @@ ExamineStored(FILE *fp, int p, char *filename)
 	parray[p].side = WHITE;
 
 	send_boards(g);
-	MakeFENpos(g, (char *)garray[g].FENstartPos);
+	MakeFENpos(g, (char *)garray[g].FENstartPos,
+	    ARRAY_SIZE(garray[g].FENstartPos));
 
 	return g;
 }
