@@ -382,7 +382,7 @@ readline2(comstr_t *cs, int who)
 				msnprintf(cs->com, ARRAY_SIZE(cs->com), "%s",
 				    start);
 				if (howmany)
-					bcopy(s + 1, start, howmany);
+					memmove(start, s + 1, howmany);
 				con[who].state		= 0;
 				con[who].numPending	= howmany;
 				con[who].processed	= 0;
