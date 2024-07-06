@@ -280,7 +280,7 @@ pprintf(int p, char *format, ...)
 	return retval;
 }
 
-PUBLIC void
+PRIVATE void
 pprintf_dohightlight(int p)
 {
 	if (parray[p].highlight & 0x01)
@@ -313,7 +313,7 @@ pprintf_highlight(int p, char *format, ...)
 	return retval;
 }
 
-PUBLIC void
+PRIVATE void
 sprintf_dohightlight(int p, char *s)
 {
 	if (parray[p].highlight & 0x01)
