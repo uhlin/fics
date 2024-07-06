@@ -6,6 +6,7 @@ documented in this file.
 ## [Unreleased] ##
 - Added command-line option `l` (Display the legal notice and exit.)
 - Fixed unusual struct allocations.
+- Replaced `bcopy()` with `memmove()`.
 - Replaced calls to `rand()` with `brand()` which uses
   `arc4random_uniform()`.
 - Replaced unbounded string handling functions. Multiple occurrences.
