@@ -111,11 +111,11 @@ TerminateServer(int sig)
 PRIVATE void
 main_event_loop(void)
 {
-	char	 command_string[MAX_STRING_LENGTH];
-	int	 sockfd = -1;
+	comstr_t str;
+	int sockfd = -1;
 
 	while (1) {
-		ngc2(command_string, HEARTBEATTIME);
+		ngc2(&str, HEARTBEATTIME);
 
 		if (process_heartbeat(&sockfd) == COM_LOGOUT && sockfd != -1) {
 			process_disconnection(sockfd);

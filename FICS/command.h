@@ -95,6 +95,10 @@ typedef struct s_alias_type {
 	char	*alias;
 } alias_type;
 
+typedef struct {
+	char com[MAX_STRING_LENGTH];
+} comstr_t;
+
 extern char	*adhelp_dir;
 extern char	*adj_dir;
 extern char	*board_dir;

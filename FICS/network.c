@@ -15,6 +15,7 @@
 #include "common.h"
 #include "config.h"
 #include "ficsmain.h"
+#include "maxxes-utils.h"
 #include "network.h"
 #include "playerdb.h"
 #include "rmalloc.h"
@@ -328,7 +329,7 @@ net_send_string(int fd, char *str, int format)
  * C) if some error, return -1.
  */
 PUBLIC int
-readline2(char *com, int who)
+readline2(comstr_t *cs, int who)
 {
 	int		 howmany, state, fd, pending;
 	unsigned char	*start, *s, *d;
@@ -378,7 +379,8 @@ readline2(char *com, int who)
 				state = 1;
 			} else if (*s == '\n') {
 				*s = '\0';
-				sprintf(com, "%s", start);
+				msnprintf(cs->com, ARRAY_SIZE(cs->com), "%s",
+				    start);
 				if (howmany)
 					bcopy(s + 1, start, howmany);
 				con[who].state		= 0;
@@ -416,7 +418,8 @@ readline2(char *com, int who)
 				state = 1;
 			else if (*s == '\n') {
 				*d = '\0';
-				sprintf(com, "%s", start);
+				msnprintf(cs->com, ARRAY_SIZE(cs->com), "%s",
+				    start);
 				if (howmany)
 					memmove(start, s + 1, howmany);
 				con[who].state		= 0;
@@ -454,7 +457,7 @@ readline2(char *com, int who)
 
 	if (con[who].numPending == MAX_STRING_LENGTH - 1) { // buffer full
 		*d = '\0';
-		sprintf(com, "%s", start);
+		msnprintf(cs->com, ARRAY_SIZE(cs->com), "%s", start);
 		con[who].state		= 0;
 		con[who].numPending	= 0;
 		con[who].processed	= 0;
@@ -574,7 +577,7 @@ net_connected_host(int fd)
 }
 
 PUBLIC void
-ngc2(char *com, int timeout)
+ngc2(comstr_t *cs, int timeout)
 {
 	fd_set			 readfds;
 	int			 fd, loop, nfound, lineComplete;
@@ -617,17 +620,17 @@ ngc2(char *com, int timeout)
 		if (con[loop].status != NETSTAT_EMPTY) {
 			fd = con[loop].fd;
 
-			if ((lineComplete = readline2(com, fd)) == 0) {
+			if ((lineComplete = readline2(cs, fd)) == 0) {
 				// partial line: do nothing
 				continue;
 			}
 
 			if (lineComplete > 0) { // complete line: process it
 #ifdef TIMESEAL
-				if (!parseInput(com, &con[loop]))
+				if (!parseInput(cs->com, &con[loop]))
 					continue;
 #endif
-				if (process_input(fd, com) != COM_LOGOUT) {
+				if (process_input(fd, cs->com) != COM_LOGOUT) {
 					net_flush_connection(fd);
 					continue;
 				}
