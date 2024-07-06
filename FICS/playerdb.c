@@ -2723,7 +2723,7 @@ player_search(int p, char *name)
 
 	// Exact match with registered player?
 	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, name[0]);
-	count = search_directory(pdir, name, buffer, 1000);
+	count = search_directory(pdir, name, buffer, ARRAY_SIZE(buffer));
 
 	if (count > 0 && !strcmp(name, *buffer))
 		goto ReadPlayerFromFile;	// Found an unconnected

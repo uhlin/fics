@@ -887,7 +887,7 @@ com_mailmess(int p, param_list param)
 	snprintf(mdir, sizeof mdir, "%s/player_data/%c/", stats_dir,
 	    parray[p].login[0]);
 
-	if (search_directory(mdir, filename, buffer, 1000)) {
+	if (search_directory(mdir, filename, buffer, ARRAY_SIZE(buffer))) {
 		snprintf(subj, sizeof subj, "Your FICS messages from server %s",
 		    fics_hostname);
 
