@@ -28,6 +28,7 @@
 						handling functions.
    Markus Uhlin			24/07/05	Fixed unusual struct allocations
 						and replaced strcpy() with strlcpy().
+   Markus Uhlin			24/07/07	Made certain functions private
 */
 
 #include "stdinclude.h"
