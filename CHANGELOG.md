@@ -8,7 +8,7 @@ documented in this file.
 - Fixed unusual struct allocations.
 - Replaced calls to `rand()` with `brand()` which uses
   `arc4random_uniform()`.
-- Replaced unbounded string handling functions.
+- Replaced unbounded string handling functions. Multiple occurrences.
 
 ## [1.4.1] - 2024-05-26 ##
 - **Added** command-line option `a` to the addplayer program. If given, it
