@@ -961,8 +961,12 @@ FindHistory(int p, int p1, int game)
 	}
 
 	do {
-		fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d "
-		    "%*s %*s %ld", &index, &when);
+		int ret;
+
+		ret = fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d "
+		    "%*d %*s %*s %ld", &index, &when);
+		if (ret != 2)
+			warn("%s: %s: corrupt", __func__, &fileName[0]);
 	} while (!feof(fpHist) && index != game);
 
 	if (feof(fpHist)) {
@@ -996,8 +1000,12 @@ FindHistory2(int p, int p1, int game, char *End)
 	}
 
 	do {
-		fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d "
-		    "%*s %s %ld", &index, End, &when);
+		int ret;
+
+		ret = fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d "
+		    "%*d %*s %s %ld", &index, End, &when);
+		if (ret != 3)
+			warn("%s: %s: corrupt", __func__, &fileName[0]);
 	} while (!feof(fpHist) && index != game);
 
 	if (feof(fpHist)) {
