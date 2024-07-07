@@ -345,6 +345,8 @@ load_ratings(void)
 	for (int i = 0; i < MAXHIST; i++) {
 		int ret, errno_save;
 
+		sHist[i] = bHist[i] = wHist[i] = lHist[i] = 0;
+
 		errno = 0;
 		ret = fscanf(fp, "%d %d %d %d", &sHist[i], &bHist[i], &wHist[i],
 		    &lHist[i]);
