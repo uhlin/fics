@@ -98,9 +98,9 @@ get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr,
 	*bishconfusion = 0;
 	mstrlcpy(tmp, str, sizeof tmp);
 
-	if ((s = index(tmp, '+'))) // Cut off any check marks
+	if ((s = strchr(tmp, '+'))) // Cut off any check marks
 		*s = '\0';
-	if ((s = index(tmp, '='))) // Cut off any promotion marks
+	if ((s = strchr(tmp, '='))) // Cut off any promotion marks
 		*s = '\0';
 
 	*piece = *ff = *fr = *tf = *tr = ALG_UNKNOWN;
