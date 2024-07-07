@@ -863,7 +863,7 @@ file_wplayer(char *fname)
 
 	strlcpy(tmp, fname, sizeof tmp);
 
-	if ((ptr = rindex(tmp, '-')) == NULL)
+	if ((ptr = strrchr(tmp, '-')) == NULL)
 		return "";
 	*ptr = '\0';
 	return tmp;
@@ -874,7 +874,7 @@ file_bplayer(char *fname)
 {
 	char *ptr;
 
-	if ((ptr = rindex(fname, '-')) == NULL)
+	if ((ptr = strrchr(fname, '-')) == NULL)
 		return "";
 	return ptr + 1;
 }
