@@ -11,7 +11,8 @@ documented in this file.
 - Replaced `bcopy()` with `memmove()`.
 - Replaced calls to `rand()` with `brand()` which uses
   `arc4random_uniform()`.
-- Replaced unbounded string handling functions. Multiple occurrences.
+- Replaced unbounded string handling functions. Multiple
+  occurrences. Whole tree completed.
 
 ## [1.4.1] - 2024-05-26 ##
 - **Added** command-line option `a` to the addplayer program. If given, it
