@@ -326,12 +326,18 @@ load_ratings(void)
 	if ((fp = fopen(fname, "r")) == NULL) {
 		warn("%s: can't read ratings data", __func__);
 		return;
+	} else if (fscanf(fp, "%lf %lf %lf %d", &Rb_M, &Rb_S, &Rb_total,
+	    &Rb_count) != 4 ||
+	    fscanf(fp, "%lf %lf %lf %d", &Rs_M, &Rs_S, &Rs_total,
+	    &Rs_count) != 4 ||
+	    fscanf(fp, "%lf %lf %lf %d", &Rw_M, &Rw_S, &Rw_total,
+	    &Rw_count) != 4 ||
+	    fscanf(fp, "%lf %lf %lf %d", &Rl_M, &Rl_S, &Rl_total,
+	    &Rl_count) != 4) {
+		warn("%s: fscanf", __func__);
+		fclose(fp);
+		return;
 	}
-
-	fscanf(fp, "%lf %lf %lf %d", &Rb_M, &Rb_S, &Rb_total, &Rb_count);
-	fscanf(fp, "%lf %lf %lf %d", &Rs_M, &Rs_S, &Rs_total, &Rs_count);
-	fscanf(fp, "%lf %lf %lf %d", &Rw_M, &Rw_S, &Rw_total, &Rw_count);
-	fscanf(fp, "%lf %lf %lf %d", &Rl_M, &Rl_S, &Rl_total, &Rl_count);
 
 	for (int i = 0; i < MAXHIST; i++) {
 		fscanf(fp, "%d %d %d %d", &sHist[i], &bHist[i], &wHist[i],
