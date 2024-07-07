@@ -96,10 +96,10 @@ PRIVATE int		numB = 0;
 PRIVATE rateStruct	bestW[MAX_BEST];
 PRIVATE int		numW = 0;
 
-PRIVATE int	sHist[MAXHIST];
-PRIVATE int	bHist[MAXHIST];
-PRIVATE int	wHist[MAXHIST];
-PRIVATE int	lHist[MAXHIST];
+PRIVATE int	sHist[MAXHIST] = { 0 };
+PRIVATE int	bHist[MAXHIST] = { 0 };
+PRIVATE int	wHist[MAXHIST] = { 0 };
+PRIVATE int	lHist[MAXHIST] = { 0 };
 
 PRIVATE char sdir[] = DEFAULT_STATS;
 
