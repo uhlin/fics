@@ -315,35 +315,37 @@ pprintf_highlight(int p, char *format, ...)
 }
 
 PRIVATE void
-sprintf_dohightlight(int p, char *s)
+sprintf_dohightlight(int p, char *s, size_t size)
 {
 	if (parray[p].highlight & 0x01)
-		strcat(s, "\033[7m");
+		strlcat(s, "\033[7m", size);
 	if (parray[p].highlight & 0x02)
-		strcat(s, "\033[1m");
+		strlcat(s, "\033[1m", size);
 	if (parray[p].highlight & 0x04)
-		strcat(s, "\033[4m");
+		strlcat(s, "\033[4m", size);
 	if (parray[p].highlight & 0x08)
-		strcat(s, "\033[2m");
+		strlcat(s, "\033[2m", size);
 }
 
 PUBLIC int
-psprintf_highlight(int p, char *s, char *format, ...)
+psprintf_highlight(int p, char *s, size_t size, char *format, ...)
 {
 	int retval;
 	va_list ap;
 
 	if (parray[p].highlight) {
-		sprintf_dohightlight(p, s);
+		char tmp[1000] = { '\0' };
 
 		va_start(ap, format);
-		retval = vsprintf(s + strlen(s), format, ap);
+		retval = vsnprintf(tmp, sizeof tmp, format, ap);
 		va_end(ap);
 
-		strcat(s, "\033[0m");
+		sprintf_dohightlight(p, s, size);
+		strlcat(s, tmp, size);
+		strlcat(s, "\033[0m", size);
 	} else {
 		va_start(ap, format);
-		retval = vsprintf(s, format, ap);
+		retval = vsnprintf(s, size, format, ap);
 		va_end(ap);
 	}
 

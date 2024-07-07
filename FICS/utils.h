@@ -96,8 +96,8 @@ extern int		 psend_command(int, char *, char *);
 extern int		 psend_file(int, char *, char *);
 extern int		 psend_logoutfile(int, char *, char *);
 extern int		 psend_raw_file(int, char *, char *);
-extern int		 psprintf_highlight(int, char *, char *, ...)
-			     PRINTFLIKE(3);
+extern int		 psprintf_highlight(int, char *, size_t, char *, ...)
+			     PRINTFLIKE(4);
 extern int		 safechar(int);
 extern int		 safestring(char *);
 extern int		 search_directory(char *, char *, char **, int);

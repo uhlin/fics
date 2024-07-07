@@ -845,8 +845,8 @@ who_terse(int p, int num, int *plist, int type)
 		}
 
 		if (p == p1) {
-			psprintf_highlight(p, ptmp + strlen(ptmp), "%s",
-			    parray[p1].name);
+			psprintf_highlight(p, ptmp + strlen(ptmp),
+			    sizeof ptmp - strlen(ptmp), "%s", parray[p1].name);
 		} else {
 			strlcat(ptmp, parray[p1].name, sizeof ptmp);
 		}
@@ -909,8 +909,8 @@ who_verbose(int p, int num, int plist[])
 
 		if (p == p1) {
 			strlcpy(tmp, " ", sizeof tmp);
-			psprintf_highlight(p, tmp + strlen(tmp), "%-17s",
-			    p1WithAttrs);
+			psprintf_highlight(p, tmp + strlen(tmp),
+			    sizeof tmp - strlen(tmp), "%-17s", p1WithAttrs);
 		} else {
 			ret = snprintf(tmp, sizeof tmp, " %-17s", p1WithAttrs);
 
@@ -968,7 +968,8 @@ who_winloss(int p, int num, int plist[])
 		p1WithAttrs[17] = '\0';
 
 		if (p1 == p) {
-			psprintf_highlight(p, playerLine, "%-17s", p1WithAttrs);
+			psprintf_highlight(p, playerLine, sizeof playerLine,
+			    "%-17s", p1WithAttrs);
 		} else {
 			snprintf(playerLine, sizeof playerLine, "%-17s",
 			    p1WithAttrs);
