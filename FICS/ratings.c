@@ -340,8 +340,19 @@ load_ratings(void)
 	}
 
 	for (int i = 0; i < MAXHIST; i++) {
-		fscanf(fp, "%d %d %d %d", &sHist[i], &bHist[i], &wHist[i],
+		int ret, errno_save;
+
+		errno = 0;
+		ret = fscanf(fp, "%d %d %d %d", &sHist[i], &bHist[i], &wHist[i],
 		    &lHist[i]);
+		errno_save = errno;
+		if (ret != 4) {
+			if (feof(fp) || ferror(fp))
+				break;
+			errno = errno_save;
+			warn("%s: too few items assigned (iteration: %d)",
+			    __func__, i);
+		}
 	}
 
 	fclose(fp);
