@@ -106,7 +106,6 @@ PUBLIC command_type command_list[] = {
   {"kibitz",		"S",	com_kibitz,	ADMIN_USER },
   {"limits",            "",     com_limits,     ADMIN_USER },
   {"llogons",           "",     com_llogons,    ADMIN_USER },
-/*  {"load",		"ww",	com_load,	ADMIN_USER },  */
   {"logons",		"o",	com_logons,	ADMIN_USER },
   {"mailhelp",          "o",    com_mailhelp,   ADMIN_USER },
   {"mailmess",          "",     com_mailmess,   ADMIN_USER },
