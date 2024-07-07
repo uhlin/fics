@@ -26,6 +26,8 @@
    Markus Uhlin                 24/04/05	Replaced unbounded string
 						handling functions.
    Markus Uhlin                 24/05/20	Fixed clang warnings
+   Markus Uhlin                 24/07/07	Return value checking of the
+						fscanf() calls.
 */
 
 #include "stdinclude.h"
