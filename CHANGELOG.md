@@ -5,6 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added command-line option `l` (Display the legal notice and exit.)
+- Added return value checking of multiple `fscanf()` calls.
 - Added usage of `ARRAY_SIZE()`.
 - Fixed unusual struct allocations.
 - Made functions and variables private where possible.
