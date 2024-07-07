@@ -948,8 +948,8 @@ PRIVATE char *
 FindHistory(int p, int p1, int game)
 {
 	FILE		*fpHist;
-	int		 index;
-	long int	 when;
+	int		 index = 0;
+	long int	 when = 0;
 	static char	 fileName[MAX_FILENAME_SIZE];
 
 	msnprintf(fileName, sizeof fileName, "%s/player_data/%c/%s.%s",
@@ -983,8 +983,8 @@ PRIVATE char *
 FindHistory2(int p, int p1, int game, char *End)
 {
 	FILE		*fpHist;
-	int		 index;
-	long int	 when;
+	int		 index = 0;
+	long int	 when = 0;
 	static char	 fileName[MAX_FILENAME_SIZE];
 
 	msnprintf(fileName, sizeof fileName, "%s/player_data/%c/%s.%s",
