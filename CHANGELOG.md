@@ -9,6 +9,8 @@ documented in this file.
 - Fixed unusual struct allocations.
 - Made functions and variables private where possible.
 - Replaced `bcopy()` with `memmove()`.
+- Replaced `index()` with `strchr()`.
+- Replaced `rindex()` with `strrchr()`.
 - Replaced calls to `rand()` with `brand()` which uses
   `arc4random_uniform()`.
 - Replaced unbounded string handling functions. Multiple
