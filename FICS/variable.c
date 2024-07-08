@@ -401,6 +401,19 @@ set_inc(int p, char *var, char *val)
 }
 
 PRIVATE int
+set_interface(int p, char *var, char *val)
+{
+//	int v = -1;
+
+	if (!val)
+		return VAR_BADVAL;
+
+//	parray[p].xxx = v;
+	pprintf(p, "Interface set to %s.\n", val);
+	return VAR_OK;
+}
+
+PRIVATE int
 set_height(int p, char *var, char *val)
 {
 	int v = -1;
@@ -831,6 +844,7 @@ PUBLIC var_list variables[] = {
 	{"i_game",       set_ginform},
 	{"i_login",      set_pinform},
 	{"inc",          set_inc},
+	{"interface",    set_interface},
 	{"jprivate",     set_jprivate},
 	{"kibitz",       set_kibitz},
 	{"kiblevel",     set_kiblevel},
