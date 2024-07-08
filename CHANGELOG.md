@@ -7,6 +7,7 @@ documented in this file.
 - Added command-line option `l` (Display the legal notice and exit.)
 - Added return value checking of multiple `fscanf()` calls.
 - Added usage of `ARRAY_SIZE()`.
+- Added variable 'interface' (for compatibility with XBoard).
 - Fixed unusual struct allocations.
 - Made functions and variables private where possible.
 - Replaced `bcopy()` with `memmove()`.
