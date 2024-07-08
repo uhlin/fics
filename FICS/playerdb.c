@@ -260,6 +260,11 @@ player_zero(int p)
 	parray[p].w_stats.whenbest	= 0;
 	parray[p].w_stats.win		= 0;
 
+	// Used to store the player's interface.
+	// For example: xboard 4.9.1
+	(void) memset(&(parray[p].interface[0]), 0,
+	    ARRAY_SIZE(parray[p].interface));
+
 	return 0;
 }
 

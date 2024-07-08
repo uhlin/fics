@@ -102,6 +102,7 @@ typedef struct _player {
 	 */
 	List		*lists;
 	char		 busy[100];
+	char		 interface[45]; // For example: 'xboard 4.9.1'
 	char		*identptr;
 	char		*last_file;
 	char		*login;
