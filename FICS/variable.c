@@ -33,6 +33,8 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <stdbool.h>
+
 #include "board.h"
 #include "command.h"
 #include "comproc.h"
@@ -404,13 +406,23 @@ set_inc(int p, char *var, char *val)
 PRIVATE int
 set_interface(int p, char *var, char *val)
 {
-//	int v = -1;
+	bool	 truncated = false;
+	char	*cp;
+	size_t	 size;
 
-	if (!val)
+	if (val == NULL || strcmp(val, "") == 0)
 		return VAR_BADVAL;
 
-//	parray[p].xxx = v;
-	pprintf(p, "Interface set to %s.\n", val);
+	cp = &(parray[p].interface[0]);
+	size = ARRAY_SIZE(parray[p].interface);
+
+	if (strlcpy(cp, val, size) >= size)
+		truncated = true;
+
+	pprintf(p, "Interface set to %s.\n", cp);
+
+	if (truncated)
+		pprintf(p, "Interface was truncated!\n");
 	return VAR_OK;
 }
 
