@@ -62,6 +62,7 @@ extern alias_type	g_alias_list[];
  */
  /* Name	Options	Functions	Security */
 PUBLIC command_type command_list[] = {
+
   {"abort",              "",       com_abort,          ADMIN_USER},
   {"accept",             "n",      com_accept,         ADMIN_USER},
   {"addlist",            "ww",     com_addlist,        ADMIN_USER},
@@ -133,16 +134,16 @@ PUBLIC command_type command_list[] = {
   {"quit",               "",       com_quit,           ADMIN_USER},
   {"rank",               "oo",     com_rank,           ADMIN_USER},
   {"refresh",            "n",      com_refresh,        ADMIN_USER},
-  {"revert",             "",       com_revert,         ADMIN_USER},
   {"resign",             "o",      com_resign,         ADMIN_USER},
+  {"revert",             "",       com_revert,         ADMIN_USER},
   {"say",                "S",      com_say,            ADMIN_USER},
   {"servers",            "",       com_servers,        ADMIN_USER},
   {"set",                "wT",     com_set,            ADMIN_USER},
   {"shout",              "T",      com_shout,          ADMIN_USER},
   {"showlist",           "o",      com_showlist,       ADMIN_USER},
   {"simabort",           "",       com_simabort,       ADMIN_USER},
-  {"simallabort",        "",       com_simallabort,    ADMIN_USER},
   {"simadjourn",         "",       com_simadjourn,     ADMIN_USER},
+  {"simallabort",        "",       com_simallabort,    ADMIN_USER},
   {"simalladjourn",      "",       com_simalladjourn,  ADMIN_USER},
   {"simgames",           "o",      com_simgames,       ADMIN_USER},
   {"simmatch",           "w",      com_simmatch,       ADMIN_USER},
