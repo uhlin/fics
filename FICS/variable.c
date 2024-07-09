@@ -412,6 +412,10 @@ set_interface(int p, char *var, char *val)
 
 	if (val == NULL || strcmp(val, "") == 0)
 		return VAR_BADVAL;
+	else if (!printablestring(val)) {
+		pprintf(p, "%s: val not printable\n", __func__);
+		return VAR_BADVAL;
+	}
 
 	cp = &(parray[p].interface[0]);
 	size = ARRAY_SIZE(parray[p].interface);
