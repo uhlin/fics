@@ -55,6 +55,10 @@
 #define ClearFlag(VAR, FLAG)	(VAR &= ~(FLAG))
 #define CheckFlag(VAR, FLAG)	(VAR & (FLAG))
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char		*dotQuad(unsigned int);
 extern char		*eattailwhite(char *);
 extern char		*eatwhite(char *);
@@ -106,5 +110,9 @@ extern int		 untenths(unsigned int);
 extern unsigned int	 tenth_secs(void);
 //extern void		 pprintf_dohightlight(int);
 //extern void		 sprintf_dohightlight(int, char *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _UTILS_H */
