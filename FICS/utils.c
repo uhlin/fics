@@ -269,7 +269,7 @@ pcommand(int p, char *comstr, ...)
 }
 
 PUBLIC int
-pprintf(int p, char *format, ...)
+pprintf(int p, const char *format, ...)
 {
 	char tmp[10 * MAX_LINE_SIZE];
 	int retval;
