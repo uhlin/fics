@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.4.2] - 2024-07-13 ##
 - Added command `iset` for compatibility with XBoard, which currently
   behaves as a no-op.
 - Added command-line option `l` (Display the legal notice and exit.)
