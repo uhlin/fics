@@ -4,6 +4,8 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added command `iset` for compatibility with XBoard, which currently
+  is a no-op.
 - Added command-line option `l` (Display the legal notice and exit.)
 - Added return value checking of multiple `fscanf()` calls.
 - Added usage of `ARRAY_SIZE()`.
