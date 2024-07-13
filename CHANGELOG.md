@@ -5,7 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added command `iset` for compatibility with XBoard, which currently
-  is a no-op.
+  behaves as a no-op.
 - Added command-line option `l` (Display the legal notice and exit.)
 - Added return value checking of multiple `fscanf()` calls.
 - Added usage of `ARRAY_SIZE()`.
