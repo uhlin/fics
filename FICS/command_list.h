@@ -31,6 +31,7 @@
 #include "comproc.h"
 #include "eco.h"
 #include "gameproc.h"
+#include "iset.h"
 #include "lists.h"
 #include "matchproc.h"
 #include "obsproc.h"
@@ -101,6 +102,7 @@ PUBLIC command_type command_list[] = {
   {"inchannel",          "n",      com_inchannel,      ADMIN_USER},
   {"index",              "o",      com_index,          ADMIN_USER},
   {"info",               "",       com_info,           ADMIN_USER},
+  {"iset",               "ww",     com_iset,           ADMIN_USER},
   {"it",                 "T",      com_it,             ADMIN_USER},
   {"journal",            "o",      com_journal,        ADMIN_USER},
   {"jsave",              "wwi",    com_jsave,          ADMIN_USER},
