@@ -35,6 +35,7 @@
 
 #include <sys/resource.h>
 
+#include <err.h>
 #include <string.h>
 
 #include "board.h"
@@ -499,6 +500,17 @@ accept_match(int p, int p1)
 		}
 	} else {	// resume adjourned game
 		game_delete(p, p1);
+
+		// XXX: must be either
+		if (garray[g].rated != TYPE_UNRATED &&
+		    garray[g].rated != TYPE_RATED) {
+			warnx("%s: adjourned game neither rated/unrated",
+			    __func__);
+			warnx("%s: %s vs %s", __func__,
+			    parray[p].name,
+			    parray[p1].name);
+			garray[g].rated = TYPE_UNRATED;
+		}
 
 		snprintf(tmp, sizeof tmp, "{Game %d (%s vs. %s) Continuing "
 		    "%s %s match.}\n",
