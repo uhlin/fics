@@ -25,6 +25,9 @@
    Markus Uhlin                 23/12/23	Fixed clang warnings
    Markus Uhlin                 24/05/04	Refactored and reformatted all
 						functions plus more...
+   Markus Uhlin                 24/07/17	Fixed out of bounds array access
+						in game_str() which resulted in
+						a crash.
 */
 
 #include "stdinclude.h"
