@@ -47,6 +47,11 @@ extern char	*rstr[];
 #define GAME_ACTIVE      2
 #define GAME_EXAMINE     3
 
+enum {
+	TYPE_UNRATED = 0,
+	TYPE_RATED
+};
+
 #define TYPE_UNTIMED     0
 #define TYPE_BLITZ       1
 #define TYPE_STAND       2
