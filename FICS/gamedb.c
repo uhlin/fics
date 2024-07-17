@@ -230,6 +230,10 @@ game_str(int rated, int wt, int winc, int bt, int binc, char *cat, char *board)
 {
 	static char	tstr[200] = { '\0' };
 
+	if (rated != TYPE_UNRATED &&
+	    rated != TYPE_RATED)
+		rated = TYPE_UNRATED;
+
 	if (cat && cat[0] && board && board[0] && (strcmp(cat, "standard") ||
 	    strcmp(board, "standard"))) {
 		msnprintf(tstr, sizeof(tstr), "%s %s%s Loaded from %s/%s",
