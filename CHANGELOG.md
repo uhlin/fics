@@ -3,6 +3,10 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Changed the makefiles to compile with debugging symbols enabled.
+- Fixed a crash due to out of bounds array access.
+
 ## [1.4.2] - 2024-07-13 ##
 - Added command `iset` for compatibility with XBoard, which currently
   behaves as a no-op.
