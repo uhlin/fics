@@ -1271,10 +1271,15 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 	int	 len;
 	int	 version = 0;
 
-	fgets(line, sizeof line, fp);
+	if (fgets(line, sizeof line, fp) == NULL) {
+		warnx("%s: fgets error", __func__);
+		return -1;
+	}
 
-	if (line[0] == 'v')
-		sscanf(line, "%*c %d", &version);
+	if (line[0] == 'v') {
+		if (sscanf(line, "%*c %d", &version) != 1)
+			warn("%s: failed to get version", __func__);
+	}
 
 	if (version > 0)
 		ReadV1GameFmt(&garray[g], fp, fname, version);
