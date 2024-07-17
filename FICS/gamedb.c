@@ -899,7 +899,8 @@ ReadMove(FILE *fp, move_t *m)
 {
 	char	line[MAX_GLINE_SIZE] = { '\0' };
 
-	fgets(line, sizeof line, fp);
+	if (fgets(line, sizeof line, fp) == NULL)
+		return -1;
 
 	if (sscanf(line, "%d %d %d %d %d %d %d %d %d \"%[^\"]\" \"%[^\"]\" "
 	    "%u %u\n",
