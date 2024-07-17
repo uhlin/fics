@@ -67,8 +67,8 @@ PUBLIC const char *bstr[] = {
 	[TYPE_BUGHOUSE]    = "bughouse"
 };
 PUBLIC char *rstr[] = {
-	"unrated",
-	"rated"
+	[TYPE_UNRATED] = "unrated",
+	[TYPE_RATED] = "rated"
 };
 
 PRIVATE char gameString[GAME_STRING_LEN];
