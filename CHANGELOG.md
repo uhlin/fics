@@ -5,6 +5,8 @@ documented in this file.
 
 ## [Unreleased] ##
 - Changed the makefiles to compile with debugging symbols enabled.
+- Changed the program to handle the return value of `fgets()`,
+  `fscanf()` and `sscanf()`. Multiple occurrences.
 - Fixed a crash due to out of bounds array access.
 
 ## [1.4.2] - 2024-07-13 ##
