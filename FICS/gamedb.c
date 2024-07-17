@@ -1543,17 +1543,26 @@ RemoveHistGame(char *file, int maxlines)
 {
 	FILE		*fp;
 	char		 GameFile[MAX_FILENAME_SIZE] = { '\0' };
-	char		 Opponent[MAX_LOGIN_NAME] = { '\0' };
+	char		 Opponent[MAX_LOGIN_NAME + 1] = { '\0' };
 	char		 line[MAX_LINE_SIZE] = { '\0' };
 	int		 count = 0;
 	long int	 When, oppWhen;
 
-	if ((fp = fopen(file, "r")) == NULL)
-		return;
+	_Static_assert(20 < ARRAY_SIZE(Opponent));
 
-	fgets(line, ARRAY_SIZE(line), fp);
-	sscanf(line, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d %*d %*s %*s %ld",
-	    Opponent, &When);
+	if ((fp = fopen(file, "r")) == NULL) {
+		return;
+	} else if (fgets(line, ARRAY_SIZE(line), fp) == NULL) {
+		warnx("%s: fgets error (file: %s)", __func__, file);
+		fclose(fp);
+		return;
+	} else if (sscanf(line, "%*d %*c %*d %*c %*d %20s %*s %*d %*d %*d "
+	    "%*d %*s %*s %ld", Opponent, &When) != 2) {
+		warnx("%s: unexpected initial line (file: %s)", __func__, file);
+		fclose(fp);
+		return;
+	}
+
 	count++;
 
 	while (!feof(fp)) {
