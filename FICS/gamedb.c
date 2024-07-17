@@ -58,13 +58,13 @@ PUBLIC game	*garray = NULL;
 PUBLIC int	 g_num = 0;
 
 PUBLIC char *bstr[] = {
-	"untimed",
-	"blitz",
-	"standard",
-	"non-standard",
-	"wild",
-	"lightning",
-	"bughouse"
+	[TYPE_UNTIMED]     = "untimed",
+	[TYPE_BLITZ]       = "blitz",
+	[TYPE_STAND]       = "standard",
+	[TYPE_NONSTANDARD] = "non-standard",
+	[TYPE_WILD]        = "wild",
+	[TYPE_LIGHT]       = "lightning",
+	[TYPE_BUGHOUSE]    = "bughouse"
 };
 PUBLIC char *rstr[] = {
 	"unrated",
