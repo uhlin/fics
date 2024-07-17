@@ -31,7 +31,7 @@
 
 #include "board.h"
 
-extern char	*bstr[];
+extern const char *bstr[];
 extern char	*rstr[];
 
 #define GAMEFILE_VERSION	3

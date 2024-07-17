@@ -57,7 +57,7 @@
 PUBLIC game	*garray = NULL;
 PUBLIC int	 g_num = 0;
 
-PUBLIC char *bstr[] = {
+PUBLIC const char *bstr[] = {
 	[TYPE_UNTIMED]     = "untimed",
 	[TYPE_BLITZ]       = "blitz",
 	[TYPE_STAND]       = "standard",
