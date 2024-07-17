@@ -66,7 +66,7 @@ PUBLIC const char *bstr[] = {
 	[TYPE_LIGHT]       = "lightning",
 	[TYPE_BUGHOUSE]    = "bughouse"
 };
-PUBLIC char *rstr[] = {
+PUBLIC const char *rstr[] = {
 	[TYPE_UNRATED] = "unrated",
 	[TYPE_RATED] = "rated"
 };
