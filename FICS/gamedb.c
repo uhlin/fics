@@ -60,7 +60,7 @@
 PUBLIC game	*garray = NULL;
 PUBLIC int	 g_num = 0;
 
-PUBLIC const char *bstr[] = {
+PUBLIC const char *bstr[7] = {
 	[TYPE_UNTIMED]     = "untimed",
 	[TYPE_BLITZ]       = "blitz",
 	[TYPE_STAND]       = "standard",
@@ -69,7 +69,7 @@ PUBLIC const char *bstr[] = {
 	[TYPE_LIGHT]       = "lightning",
 	[TYPE_BUGHOUSE]    = "bughouse"
 };
-PUBLIC const char *rstr[] = {
+PUBLIC const char *rstr[2] = {
 	[TYPE_UNRATED] = "unrated",
 	[TYPE_RATED] = "rated"
 };

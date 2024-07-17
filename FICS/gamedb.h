@@ -31,8 +31,8 @@
 
 #include "board.h"
 
-extern const char *bstr[];
-extern const char *rstr[];
+extern const char *bstr[7];
+extern const char *rstr[2];
 
 #define GAMEFILE_VERSION	3
 #define MAX_GLINE_SIZE		1024
