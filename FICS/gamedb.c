@@ -1068,7 +1068,7 @@ got_attr_value(int g, char *attr, char *value, FILE *fp, char *file)
 	return 0;
 }
 
-PRIVATE void
+PRIVATE int
 ReadOneV1Move(FILE *fp, move_t *m)
 {
 	char		 PieceChar;
@@ -1076,7 +1076,8 @@ ReadOneV1Move(FILE *fp, move_t *m)
 	int		 useFile, useRank, check, piece;
 	unsigned long	 MoveInfo;
 
-	fscanf(fp, "%lx %x %x", &MoveInfo, &m->tookTime, &m->atTime);
+	if (fscanf(fp, "%lx %x %x", &MoveInfo, &m->tookTime, &m->atTime) != 3)
+		return -1;
 
 	check = MoveInfo & 1;
 	useRank = MoveInfo & 2;
@@ -1204,6 +1205,7 @@ ReadOneV1Move(FILE *fp, move_t *m)
 	}
 	if (check)
 		mstrlcat(m->algString, "+", sizeof m->algString);
+	return 0;
 }
 
 PRIVATE int
@@ -1217,8 +1219,13 @@ ReadV1Moves(game *g, FILE *fp)
 	else
 		malloc_count++;
 
-	for (int i = 0; i < g->numHalfMoves; i++)
-		ReadOneV1Move(fp, &g->moveList[i]);
+	for (int i = 0; i < g->numHalfMoves; i++) {
+		if (ReadOneV1Move(fp, &g->moveList[i]) == -1) {
+			warnx("%s: failed to read move %d/%d", __func__, i,
+			    g->numHalfMoves);
+			return -1;
+		}
+	}
 
 	return 0;
 }
@@ -1253,7 +1260,10 @@ ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
 	    &g->clockStopped);
 	fscanf(fp, "%d", &g->numHalfMoves);
 
-	ReadV1Moves(g, fp);
+	if (ReadV1Moves(g, fp) != 0) {
+		warnx("%s: failed to read moves: %s", __func__, file);
+		return -1;
+	}
 
 	if (g->status != GAME_EXAMINE &&
 	    ReadGameState(fp, &g->game_state, version)) {
