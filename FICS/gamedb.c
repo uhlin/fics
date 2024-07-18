@@ -28,6 +28,7 @@
    Markus Uhlin                 24/07/17	Fixed out of bounds array access
 						in game_str() which resulted in
 						a crash.
+   Markus Uhlin                 24/07/18	Return value checking
 */
 
 #include "stdinclude.h"
