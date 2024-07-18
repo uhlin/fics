@@ -1690,7 +1690,8 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 	if (fp) {
 		while (!feof(fp))
 			fgets(tmp, 1024, fp);
-		sscanf(ptmp, "%d", &count);
+		if (sscanf(ptmp, "%d", &count) != 1)
+			warnx("%s: failed to read 'count'", __func__);
 		fclose(fp);
 	}
 
