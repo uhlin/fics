@@ -1559,7 +1559,7 @@ RemoveHistGame(char *file, int maxlines)
 	int		 count = 0;
 	long int	 When, oppWhen;
 
-	_Static_assert(20 < ARRAY_SIZE(Opponent));
+	_Static_assert(20 < ARRAY_SIZE(Opponent), "Not within bounds");
 	When = oppWhen = 0;
 
 	if ((fp = fopen(file, "r")) == NULL) {
