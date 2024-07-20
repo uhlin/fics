@@ -1542,8 +1542,13 @@ OldestHistGame(char *login)
 	}
 
 	if (fp != NULL) {
-		fscanf(fp, "%*d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d %*s "
-		    "%*s %ld", &when);
+		if (fscanf(fp, "%*d %*c %*d %*c %*d %*s %*s %*d %*d %*d %*d "
+		    "%*s %*s %ld", &when) != 1) {
+			warnx("%s: %s: failed to read 'when'", __func__,
+			    &pFile[0]);
+			fclose(fp);
+			return 0L;
+		}
 		fclose(fp);
 		return when;
 	} else
