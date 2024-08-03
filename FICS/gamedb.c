@@ -1262,7 +1262,11 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 	} else
 		g->timeOfStart = lval;
 
-	fscanf(fp, "%d %d", &g->wTime, &g->bTime);
+	if (fscanf(fp, "%d %d", &g->wTime, &g->bTime) != 2) {
+		warnx("%s: %s: failed to get 'wTime' and 'bTime'", __func__,
+		    file);
+		return -1;
+	}
 
 	if (version > 1)
 		fscanf(fp, "%d %d", &g->result, &g->winner);
