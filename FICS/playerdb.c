@@ -1512,8 +1512,13 @@ player_lastconnect(int p)
 		if (inout == P_LOGIN)
 			last = lval;
 
-		if (fscanf(fp, "%d %s %ld %d %s\n", &inout, loginName, &lval,
-		    &registered, ipstr) != 5) {
+		_Static_assert(19 < ARRAY_SIZE(loginName),
+		    "'loginName' too small");
+		_Static_assert(19 < ARRAY_SIZE(ipstr),
+		    "'ipstr' too small");
+
+		if (fscanf(fp, "%d %19s %ld %d %19s\n", &inout, loginName,
+		    &lval, &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. %s"
 			    "\n", fname);
 			fclose(fp);
