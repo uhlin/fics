@@ -29,6 +29,8 @@
    Markus Uhlin                 24/03/16	Replaced unbounded string
 						handling functions and added
 						truncation checks.
+   Markus Uhlin                 24/08/04	Fixed multiple possible buffer
+						overflows.
 */
 
 #include "stdinclude.h"
