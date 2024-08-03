@@ -2428,7 +2428,7 @@ ClearTextList(textlist *head)
 PRIVATE int
 SaveThisMsg(int which, char *line)
 {
-	char	Sender[MAX_LOGIN_NAME];
+	char	Sender[MAX_LOGIN_NAME] = { '\0' };
 	int	p1;
 
 	if (which == 0)
