@@ -71,6 +71,49 @@ BrokenPipe(int sig)
 }
 
 PRIVATE void
+daemonize(void)
+{
+	int	fd[2];
+	mode_t	mode[2];
+
+	mode[0] = (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	mode[1] = (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+
+	if (file_exists(DAEMON_LOCKFILE)) {
+		errx(1, "%s: %s: already exists\ndelete the file manually and "
+		    "try again after making sure that no copy of the program "
+		    "is already running in the background",
+		    __func__,
+		    DAEMON_LOCKFILE);
+	} else if ((fd[0] = open(DAEMON_LOCKFILE, (O_CREAT | O_RDWR),
+	    mode[0])) == -1)
+		err(1, "%s: open(%s, ...)", __func__, DAEMON_LOCKFILE);
+
+	dprintf(fd[0], "%jd\n", (intmax_t)getpid());
+	close(fd[0]);
+
+	if ((fd[1] = open(DAEMON_LOGFILE, (O_APPEND | O_CREAT | O_RDWR),
+	    mode[1])) == -1)
+		err(1, "%s: open(%s, ...)", __func__, DAEMON_LOGFILE);
+	else if (daemon(1, 1) == -1) {
+		int i;
+
+		i = errno;
+		close(fd[1]);
+		errno = i;
+
+		err(1, "%s: failed to run in the background", __func__);
+	}
+
+	(void) dup2(fd[1], STDIN_FILENO);
+	(void) dup2(fd[1], STDOUT_FILENO);
+	(void) dup2(fd[1], STDERR_FILENO);
+
+	if (fd[1] > 2)
+		close(fd[1]);
+}
+
+PRIVATE void
 GetArgs(int argc, char *argv[])
 {
 	port = DEFAULT_PORT;
@@ -90,6 +133,9 @@ GetArgs(int argc, char *argv[])
 				fprintf(stderr, "-C Not implemented!\n");
 				exit(1);
 				withConsole = 1;
+				break;
+			case 'd':
+				daemonize();
 				break;
 			case 'h':
 				usage(argv[0]);
