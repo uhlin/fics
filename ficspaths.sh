@@ -47,6 +47,9 @@ cat <<EOF >${HDRPATH}
 #define USAGE_FRENCH     "${PREFIX}/data/usage_french"
 #define USAGE_SPANISH    "${PREFIX}/data/usage_spanish"
 
+#define DAEMON_LOCKFILE "${PREFIX}/fics.pid"
+#define DAEMON_LOGFILE "${PREFIX}/fics.log"
+
 #endif
 EOF
 
