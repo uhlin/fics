@@ -1236,6 +1236,9 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 	int		ret[3];
 	long int	lval;
 
+	_Static_assert(17 < ARRAY_SIZE(g->white_name), "Unexpected array size");
+	_Static_assert(17 < ARRAY_SIZE(g->black_name), "Unexpected array size");
+
 	ret[0] = fscanf(fp, "%s %s", g->white_name, g->black_name);
 	ret[1] = fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
 	ret[2] = fscanf(fp, "%d %d %d %d",
