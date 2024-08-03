@@ -1268,14 +1268,27 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 		return -1;
 	}
 
-	if (version > 1)
-		fscanf(fp, "%d %d", &g->result, &g->winner);
-	else
-		fscanf(fp, "%d", &g->result);
+	if (version > 1) {
+		if (fscanf(fp, "%d %d", &g->result, &g->winner) != 2) {
+			warnx("%s: %s: failed to get 'result' nor 'winner'",
+			    __func__, file);
+			return -1;
+		}
+	} else {
+		if (fscanf(fp, "%d", &g->result) != 1) {
+			warnx("%s: %s: failed to get 'result'",
+			    __func__, file);
+			return -1;
+		}
+	}
 
-	fscanf(fp, "%d %d %d %d", &g->private, &g->type, &g->rated,
+	ret[0] = fscanf(fp, "%d %d %d %d", &g->private, &g->type, &g->rated,
 	    &g->clockStopped);
-	fscanf(fp, "%d", &g->numHalfMoves);
+	ret[1] = fscanf(fp, "%d", &g->numHalfMoves);
+	if (ret[0] != 4 || ret[1] != 1) {
+		warnx("%s: fscanf error: %s", __func__, file);
+		return -1;
+	}
 
 	if (ReadV1Moves(g, fp) != 0) {
 		warnx("%s: failed to read moves: %s", __func__, file);
