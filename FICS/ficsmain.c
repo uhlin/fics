@@ -182,11 +182,12 @@ main_event_loop(void)
 PRIVATE __dead void
 usage(char *progname)
 {
-	fprintf(stderr, "Usage: %s [-p port] [-C] [-h] [-l]\n", progname);
+	fprintf(stderr, "Usage: %s [-p port] [-C] [-dhl]\n", progname);
 	fprintf(stderr, "\t\t-p port\t\tSpecify port.  (Default=%d)\n",
 	    DEFAULT_PORT);
 	fprintf(stderr, "\t\t-C\t\tStart with console player connected "
 	    "to stdin.\n");
+	fprintf(stderr, "\t\t-d\t\tRun in the background.\n");
 	fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
 	fprintf(stderr, "\t\t-l\t\tDisplay the legal notice and exit.\n");
 	exit(EXIT_FAILURE);
