@@ -25,6 +25,7 @@
    Markus Uhlin                 24/03/16	Fixed unbounded string copying
 						and marked usage() '__dead'.
    Markus Uhlin                 24/06/01	Added command-line option 'l'
+   Markus Uhlin                 24/08/03	Added command-line option 'd'
 */
 
 #include "stdinclude.h"
