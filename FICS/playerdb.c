@@ -583,24 +583,28 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		}
 	}
 
+	_Static_assert(1023 < ARRAY_SIZE(tmp2), "Array too small");
+
+#define SCAN_STR "%1023s"
+
 	while (size_cens--) {
-		fscanf(fp, "%s", tmp2);
+		fscanf(fp, SCAN_STR, tmp2);
 		list_add(p, L_CENSOR, tmp2);
 	}
 	while (size_not--) {
-		fscanf(fp, "%s", tmp2);
+		fscanf(fp, SCAN_STR, tmp2);
 		list_add(p, L_NOTIFY, tmp2);
 	}
 	while (size_noplay--) {
-		fscanf(fp, "%s", tmp2);
+		fscanf(fp, SCAN_STR, tmp2);
 		list_add(p, L_NOPLAY, tmp2);
 	}
 	while (size_gnot--) {
-		fscanf(fp, "%s", tmp2);
+		fscanf(fp, SCAN_STR, tmp2);
 		list_add(p, L_GNOTIFY, tmp2);
 	}
 	while (size_chan--) {
-		fscanf(fp, "%s", tmp2);
+		fscanf(fp, SCAN_STR, tmp2);
 		list_add(p, L_CHANNEL, tmp2);
 	}
 }
