@@ -62,8 +62,8 @@ The destination will always be prefixed to `/usr/local`, i.e. system wide,
 therefore extra privileges are required.
 
 Perhaps you don't want to add the dedicated chess user to the sudoers
-list. Instead login as root, change directory and install the manual
-pages.
+list. In fact YOU SHOULDN'T if you care about security. Instead login
+as root, change directory and install the manual pages.
 
 ## Running the server ##
 
