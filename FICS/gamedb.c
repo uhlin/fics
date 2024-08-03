@@ -1231,7 +1231,7 @@ ReadV1Moves(game *g, FILE *fp)
 }
 
 PRIVATE int
-ReadV1GameFmt(game *g, FILE *fp, char *file, int version)
+ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 {
 	long int lval;
 
