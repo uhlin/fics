@@ -9,6 +9,7 @@ documented in this file.
 - Changed the program to handle the return value of `fgets()`,
   `fscanf()` and `sscanf()`. Multiple occurrences.
 - Fixed a crash due to out of bounds array access.
+- Fixed multiple possible buffer overflows.
 
 ## [1.4.2] - 2024-07-13 ##
 - Added command `iset` for compatibility with XBoard, which currently
