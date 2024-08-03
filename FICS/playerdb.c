@@ -2437,7 +2437,7 @@ SaveThisMsg(int which, char *line)
 		return 1;
 
 	if (sscanf(line, "%19s", Sender) != 1) {
-		warnx("%s: failed to read sender");
+		warnx("%s: failed to read sender", __func__);
 		return 0;
 	}
 
