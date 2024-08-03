@@ -2436,8 +2436,10 @@ SaveThisMsg(int which, char *line)
 	if (which == 0)
 		return 1;
 
-	if (sscanf(line, "%19s", Sender) != 1)
+	if (sscanf(line, "%19s", Sender) != 1) {
 		warnx("%s: failed to read sender");
+		return 0;
+	}
 
 	if (which < 0) {
 		p1 = (-which) - 1;
