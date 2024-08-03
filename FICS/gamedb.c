@@ -29,6 +29,7 @@
 						in game_str() which resulted in
 						a crash.
    Markus Uhlin                 24/07/18	Return value checking
+   Markus Uhlin                 24/08/03	See previous change
 */
 
 #include "stdinclude.h"
