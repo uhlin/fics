@@ -2431,10 +2431,13 @@ SaveThisMsg(int which, char *line)
 	char	Sender[MAX_LOGIN_NAME] = { '\0' };
 	int	p1;
 
+	_Static_assert(19 < ARRAY_SIZE(Sender), "Array too small");
+
 	if (which == 0)
 		return 1;
 
-	sscanf(line, "%s", Sender);
+	if (sscanf(line, "%19s", Sender) != 1)
+		warnx("%s: failed to read sender");
 
 	if (which < 0) {
 		p1 = (-which) - 1;
