@@ -3,7 +3,7 @@
 .\" SPDX-FileCopyrightText: Copyright 2024 Markus Uhlin
 .\" SPDX-License-Identifier: ISC
 .\"
-.Dd June 1, 2024
+.Dd August 3, 2024
 .Dt FICS 1
 .Os
 .Sh NAME
@@ -12,6 +12,7 @@
 .Sh SYNOPSIS
 .Nm fics
 .Bk -words
+.Op Fl d
 .Op Fl h
 .Op Fl l
 .Op Fl p Ar port
@@ -27,6 +28,8 @@ developed by the
 computing network.
 .Sh OPTIONS
 .Bl -tag -width Ds
+.It Fl d
+Run in the background and act as a daemon.
 .It Fl h
 Outputs the program usage.
 .It Fl l
