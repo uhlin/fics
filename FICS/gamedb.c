@@ -1233,21 +1233,31 @@ ReadV1Moves(game *g, FILE *fp)
 PRIVATE int
 ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 {
-	long int lval;
+	int		ret[3];
+	long int	lval;
 
-	fscanf(fp, "%s %s", g->white_name, g->black_name);
-	fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
-	fscanf(fp, "%d %d %d %d",
+	ret[0] = fscanf(fp, "%s %s", g->white_name, g->black_name);
+	ret[1] = fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
+	ret[2] = fscanf(fp, "%d %d %d %d",
 	    &g->wInitTime,
 	    &g->wIncrement,
 	    &g->bInitTime,
 	    &g->bIncrement);
+	if (ret[0] != 2 ||
+	    ret[1] != 2 ||
+	    ret[2] != 4) {
+		warnx("%s: fscanf error: %s", __func__, file);
+		return -1;
+	}
 
 	if (version < 3 && !g->bInitTime)
 		g->bInitTime = g->wInitTime;
 
-	fscanf(fp, "%ld", &lval);
-	g->timeOfStart = lval;
+	if (fscanf(fp, "%ld", &lval) != 1) {
+		warnx("%s: %s: failed to get time of start", __func__, file);
+		return -1;
+	} else
+		g->timeOfStart = lval;
 
 	fscanf(fp, "%d %d", &g->wTime, &g->bTime);
 
