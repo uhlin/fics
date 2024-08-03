@@ -4,6 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added command-line option `d` (Run in the background.)
 - Changed the makefiles to compile with debugging symbols enabled.
 - Changed the program to handle the return value of `fgets()`,
   `fscanf()` and `sscanf()`. Multiple occurrences.
