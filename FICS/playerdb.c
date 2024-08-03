@@ -915,8 +915,8 @@ player_read(int p, char *name)
 {
 	FILE	*fp;
 	char	*attr, *value;
-	char	 fname[MAX_FILENAME_SIZE];
-	char	 line[MAX_LINE_SIZE];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	 line[MAX_LINE_SIZE] = { '\0' };
 	int	 len;
 	int	 version = 0;
 
