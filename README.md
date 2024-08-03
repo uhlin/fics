@@ -97,6 +97,13 @@ on
 
     # pkg_add -i screen
 
+### Run in the background ###
+
+Starting from version `rpblc-1.4.3` you can run the server in the
+background by typing:
+
+    $ fics -d
+
 ## Creating registered players ##
 
 As root, do the following:
