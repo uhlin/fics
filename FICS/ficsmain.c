@@ -82,7 +82,7 @@ daemonize(void)
 
 	if (file_exists(DAEMON_LOCKFILE)) {
 		errx(1, "%s: %s: already exists\ndelete the file manually and "
-		    "try again after making sure that no copy of the program "
+		    "try again after making sure that\nno copy of the program "
 		    "is already running in the background",
 		    __func__,
 		    DAEMON_LOCKFILE);
