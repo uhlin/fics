@@ -3,6 +3,9 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Added an autorun script suitable to be run as a cron job.
+
 ## [1.4.3] - 2024-08-04 ##
 - **Added** command-line option `d` (Run in the background.)
 - **Changed** the makefiles to compile with debugging symbols enabled.
