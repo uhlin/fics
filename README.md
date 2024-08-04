@@ -104,6 +104,25 @@ background by typing:
 
     $ fics -d
 
+### Run as a cron job ###
+
+FICS comes with an autorun script (`fics_autorun.sh`) that is suitable
+to be run as a cron job for the dedicated chess user.
+
+Edit the crontab by typing:
+
+    $ crontab -e
+
+And add the following line:
+
+    */5 * * * * /home/chess/bin/fics_autorun.sh
+
+Save the file and exit.
+
+To display the current crontab, type:
+
+    $ crontab -l
+
 ## Creating registered players ##
 
 As root, do the following:
