@@ -2,8 +2,8 @@
 # SPDX-FileCopyrightText: 2024 Markus Uhlin <maxxe@rpblc.net>
 # SPDX-License-Identifier: ISC
 #
-# This script is suitable to run as a cron job for the dedicated chess
-# user.
+# This script is suitable to be run as a cron job for the dedicated
+# chess user.
 
 # You need to change these variables if FICS was built with a
 # non-standard home location.
