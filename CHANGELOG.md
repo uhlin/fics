@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.4.3] - 2024-08-04 ##
 - **Added** command-line option `d` (Run in the background.)
 - **Changed** the makefiles to compile with debugging symbols enabled.
 - **Changed** the program to handle the return value of `fgets()`,
