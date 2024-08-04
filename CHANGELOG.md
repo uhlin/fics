@@ -4,12 +4,12 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Added command-line option `d` (Run in the background.)
-- Changed the makefiles to compile with debugging symbols enabled.
-- Changed the program to handle the return value of `fgets()`,
+- **Added** command-line option `d` (Run in the background.)
+- **Changed** the makefiles to compile with debugging symbols enabled.
+- **Changed** the program to handle the return value of `fgets()`,
   `fscanf()` and `sscanf()`. Multiple occurrences.
-- Fixed a crash due to out of bounds array access.
-- Fixed multiple possible buffer overflows.
+- **Fixed** a crash due to out of bounds array access.
+- **Fixed** multiple possible buffer overflows.
 
 ## [1.4.2] - 2024-07-13 ##
 - Added command `iset` for compatibility with XBoard, which currently
