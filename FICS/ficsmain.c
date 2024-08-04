@@ -87,24 +87,24 @@ daemonize(void)
 		    __func__,
 		    DAEMON_LOCKFILE);
 	} else if ((fd[0] = open(DAEMON_LOCKFILE, (O_CREAT | O_RDWR),
-	    mode[0])) == -1)
+	    mode[0])) == -1) {
 		err(1, "%s: open(%s, ...)", __func__, DAEMON_LOCKFILE);
-
-	dprintf(fd[0], "%jd\n", (intmax_t)getpid());
-	close(fd[0]);
-
-	if ((fd[1] = open(DAEMON_LOGFILE, (O_APPEND | O_CREAT | O_RDWR),
-	    mode[1])) == -1)
+	} else if ((fd[1] = open(DAEMON_LOGFILE, (O_APPEND | O_CREAT | O_RDWR),
+	    mode[1])) == -1) {
 		err(1, "%s: open(%s, ...)", __func__, DAEMON_LOGFILE);
-	else if (daemon(1, 1) == -1) {
+	} else if (daemon(1, 1) == -1) {
 		int i;
 
 		i = errno;
+		close(fd[0]);
 		close(fd[1]);
 		errno = i;
 
 		err(1, "%s: failed to run in the background", __func__);
 	}
+
+	dprintf(fd[0], "%jd\n", (intmax_t)getpid());
+	close(fd[0]);
 
 	(void) dup2(fd[1], STDIN_FILENO);
 	(void) dup2(fd[1], STDOUT_FILENO);
