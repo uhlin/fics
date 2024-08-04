@@ -11,6 +11,7 @@ install-init:
 	install -d $(BINDIR)
 	install -m 0755 fics $(BINDIR)
 	install -m 0755 fics_addplayer $(BINDIR)
+	install -m 0755 fics_autorun.sh $(BINDIR)
 	install -m 0755 makerank $(BINDIR)
 	install -d $(DESTDIR)$(FICS_HOME)/data
 	install -d $(DESTDIR)$(FICS_HOME)/data/admin
