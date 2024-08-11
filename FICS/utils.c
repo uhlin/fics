@@ -31,6 +31,7 @@
    Markus Uhlin			24/07/07	Made certain functions private
    Markus Uhlin			24/07/07	Added parameter 'size' to
 						psprintf_highlight().
+   Markus Uhlin			24/08/11	Improved fix_time().
 */
 
 #include "stdinclude.h"
