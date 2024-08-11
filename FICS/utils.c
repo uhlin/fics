@@ -700,13 +700,18 @@ strtime(struct tm * stm)
 PUBLIC char *
 fix_time(char *old_time)
 {
-	char		 date[5];
-	char		 day[5];
+	char		 date[5] = { '\0' };
+	char		 day[5] = { '\0' };
 	char		 i;
-	char		 month[5];
+	char		 month[5] = { '\0' };
 	static char	 new_time[20];
 
-	sscanf(old_time, "%s %s %s", day, month, date);
+	_Static_assert(4 < ARRAY_SIZE(day), "Array too small");
+	_Static_assert(4 < ARRAY_SIZE(month), "Array too small");
+	_Static_assert(4 < ARRAY_SIZE(date), "Array too small");
+
+	if (sscanf(old_time, "%4s %4s %4s", day, month, date) != 3)
+		warnx("%s: sscanf: too few items (%s)", __func__, old_time);
 
 	if (date[2] != ',') {
 		i = date[0];
