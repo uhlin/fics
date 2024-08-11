@@ -5,6 +5,8 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added an autorun script suitable to be run as a cron job.
+- Added width specifications to multiple `fscanf()` and `sscanf()`
+  calls, thus eliminated the risk of overflow.
 
 ## [1.4.3] - 2024-08-04 ##
 - **Added** command-line option `d` (Run in the background.)
