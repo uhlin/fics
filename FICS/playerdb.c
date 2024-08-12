@@ -356,6 +356,22 @@ player_remove(int p)
 	return 0;
 }
 
+PRIVATE int
+add_to_list(FILE *fp, enum ListWhich lw, int *size, int p)
+{
+	char buf[MAX_STRING_LENGTH] = { '\0' };
+
+	_Static_assert(1023 < ARRAY_SIZE(buf), "Buffer too small");
+
+#define SCAN_STR "%1023s"
+
+	if (*size <= 0)
+		return -2;
+	while ((*size)-- > 0 && fscanf(fp, SCAN_STR, buf) == 1)
+		list_add(p, lw, buf);
+	return (*size <= 0 ? 0 : -1);
+}
+
 PRIVATE void
 ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 {
@@ -585,29 +601,21 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		}
 	}
 
-	_Static_assert(1023 < ARRAY_SIZE(tmp2), "Array too small");
-
-#define SCAN_STR "%1023s"
-
-	while (size_cens--) {
-		fscanf(fp, SCAN_STR, tmp2);
-		list_add(p, L_CENSOR, tmp2);
-	}
-	while (size_not--) {
-		fscanf(fp, SCAN_STR, tmp2);
-		list_add(p, L_NOTIFY, tmp2);
-	}
-	while (size_noplay--) {
-		fscanf(fp, SCAN_STR, tmp2);
-		list_add(p, L_NOPLAY, tmp2);
-	}
-	while (size_gnot--) {
-		fscanf(fp, SCAN_STR, tmp2);
-		list_add(p, L_GNOTIFY, tmp2);
-	}
-	while (size_chan--) {
-		fscanf(fp, SCAN_STR, tmp2);
-		list_add(p, L_CHANNEL, tmp2);
+	if (add_to_list(fp, L_CENSOR, &size_cens, p) == -1) {
+		warnx("%s: add to list error (L_CENSOR): player: %s",
+		    __func__, parray[p].name);
+	} else if (add_to_list(fp, L_NOTIFY, &size_not, p) == -1) {
+		warnx("%s: add to list error (L_NOTIFY): player: %s",
+		    __func__, parray[p].name);
+	} else if (add_to_list(fp, L_NOPLAY, &size_noplay, p) == -1) {
+		warnx("%s: add to list error (L_NOPLAY): player: %s",
+		    __func__, parray[p].name);
+	} else if (add_to_list(fp, L_GNOTIFY, &size_gnot, p) == -1) {
+		warnx("%s: add to list error (L_GNOTIFY): player: %s",
+		    __func__, parray[p].name);
+	} else if (add_to_list(fp, L_CHANNEL, &size_chan, p) == -1) {
+		warnx("%s: add to list error (L_CHANNEL): player: %s",
+		    __func__, parray[p].name);
 	}
 }
 
