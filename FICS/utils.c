@@ -707,9 +707,9 @@ fix_time(char *old_time)
 	char		 month[5] = { '\0' };
 	static char	 new_time[20];
 
-	_Static_assert(4 < ARRAY_SIZE(day), "Array too small");
-	_Static_assert(4 < ARRAY_SIZE(month), "Array too small");
-	_Static_assert(4 < ARRAY_SIZE(date), "Array too small");
+	_Static_assert(4 < ARRAY_SIZE(day), "'day' too small");
+	_Static_assert(4 < ARRAY_SIZE(month), "'month' too small");
+	_Static_assert(4 < ARRAY_SIZE(date), "'date' too small");
 
 	if (sscanf(old_time, "%4s %4s %4s", day, month, date) != 3)
 		warnx("%s: sscanf: too few items (%s)", __func__, old_time);
