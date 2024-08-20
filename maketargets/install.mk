@@ -25,6 +25,8 @@ install-init:
 	install -m 0644 $(ROOT)data/boards/std.board \
 	    $(DESTDIR)$(FICS_HOME)/data/boards
 	install -d $(DESTDIR)$(FICS_HOME)/data/boards/wild
+	install -m 0644 $(ROOT)data/boards/standard/standard \
+	    $(DESTDIR)$(FICS_HOME)/data/boards/wild/bughouse
 	install -d $(DESTDIR)$(FICS_HOME)/data/book
 	install -d $(DESTDIR)$(FICS_HOME)/data/com_help
 	install -m 0755 $(ROOT)data/com_help/makelinks.sh \
