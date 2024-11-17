@@ -18,6 +18,8 @@
 
 #include <sys/param.h>
 
+#include <err.h>
+
 #include "adminproc.h"
 #include "command.h"
 #include "comproc.h"
@@ -378,6 +380,9 @@ com_anews(int p, param_list param)
 		return COM_OK;
 	}
 
+#define SCAN_JUNK "%ld %9s"
+	_Static_assert(9 < ARRAY_SIZE(count), "Array too small");
+
 	if (param[0].type == 0) {
 		/*
 		 * No params - then just display index over news.
@@ -387,8 +392,18 @@ com_anews(int p, param_list param)
 		    news_dir);
 
 		pprintf(p, "Index of recent admin news items:\n");
-		fgets(junk, MAX_LINE_SIZE, fp);
-		sscanf(junk, "%ld %s", &lval, count);
+
+		if (fgets(junk, sizeof junk, fp) == NULL) {
+			warnx("%s: fgets() error", __func__);
+			fclose(fp);
+			return COM_FAILED;
+		}
+		if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+			warnx("%s: sscanf() error: too few items", __func__);
+			fclose(fp);
+			return COM_FAILED;
+		}
+
 		rscan_news2(fp, p, 9);
 
 		junkp = junk;
@@ -406,8 +421,18 @@ com_anews(int p, param_list param)
 		 */
 
 		pprintf(p, "Index of all admin news items:\n");
-		fgets(junk, MAX_LINE_SIZE, fp);
-		sscanf(junk, "%ld %s", &lval, count);
+
+		if (fgets(junk, sizeof junk, fp) == NULL) {
+			warnx("%s: fgets() error", __func__);
+			fclose(fp);
+			return COM_FAILED;
+		}
+		if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+			warnx("%s: sscanf() error: too few items", __func__);
+			fclose(fp);
+			return COM_FAILED;
+		}
+
 		rscan_news(fp, p, 0);
 
 		junkp = junk;
@@ -421,13 +446,14 @@ com_anews(int p, param_list param)
 	} else {
 		while (!feof(fp) && !found) {
 			junkp = junk;
-			fgets(junk, MAX_LINE_SIZE, fp);
 
-			if (feof(fp))
+			if (fgets(junk, sizeof junk, fp) == NULL)
 				break;
 
 			if (strlen(junk) > 1) {
-				sscanf(junkp, "%ld %s", &lval, count);
+				if (sscanf(junkp, SCAN_JUNK, &lval, count) != 2)
+					warnx("%s: sscanf() error...", __func__);
+
 				crtime = lval;
 
 				if (!strcmp(count, param[0].val.word)) {
