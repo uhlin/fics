@@ -27,6 +27,8 @@
 						functions.
    Markus Uhlin                 24/05/01	Replaced unbounded string
 						handling functions.
+   Markus Uhlin                 24/11/17	process_prompt:
+						handle 'COM_FAILED' differently
 */
 
 #include "stdinclude.h"
