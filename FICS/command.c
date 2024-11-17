@@ -1029,6 +1029,10 @@ process_prompt(int p, char *command)
 		retval = COM_OK;
 		break;
 	case COM_FAILED:
+		pprintf(p, "%s: Command has failed.\n", cmd);
+		retval = COM_OK;
+		pprintf(p, "%s", parray[p].prompt);
+		break;
 	case COM_BADCOMMAND:
 		pprintf(p, "%s: Command not found.\n", cmd);
 		retval = COM_OK;
