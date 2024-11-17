@@ -362,14 +362,14 @@ com_canewsf(int p, param_list param)
 PUBLIC int
 com_anews(int p, param_list param)
 {
-	FILE		*fp;
-	char		*junkp;
-	char		 count[10];
+	FILE		*fp = NULL;
+	char		*junkp = NULL;
+	char		 count[10] = { '\0' };
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	int		 found = 0;
-	long int	 lval;
-	time_t		 crtime;
+	long int	 lval = 0;
+	time_t		 crtime = 0;
 
 	msnprintf(filename, sizeof filename, "%s/newadminnews.index", news_dir);
 
