@@ -8,6 +8,8 @@ documented in this file.
 - Added width specifications to multiple `fscanf()` and `sscanf()`
   calls, thus eliminated the risk of overflow.
 - Fixed bughouse. (A board was missing.)
+- Fixed ignored return values.
+- Fixed uninitialized variables.
 
 ## [1.4.3] - 2024-08-04 ##
 - **Added** command-line option `d` (Run in the background.)
