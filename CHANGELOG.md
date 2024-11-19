@@ -5,7 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added an autorun script suitable to be run as a cron job.
-- Added usage of macros
+- Added usage of macros.
 - Added width specifications to multiple `fscanf()` and `sscanf()`
   calls, thus eliminated the risk of overflow. Multiple occurrences.
 - Fixed bughouse. (A board was missing.)
