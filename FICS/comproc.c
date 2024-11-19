@@ -732,12 +732,12 @@ com_date(int p, param_list param)
 PRIVATE int
 plogins(int p, char *fname)
 {
-	FILE		*fp;
-	char		 ipstr[20];
-	char		 loginName[MAX_LOGIN_NAME + 1];
+	FILE		*fp = NULL;
+	char		 ipstr[20] = { '\0' };
+	char		 loginName[MAX_LOGIN_NAME + 1] = { '\0' };
 	int		 inout, registered;
-	long int	 lval;
-	time_t		 tval;
+	long int	 lval = 0;
+	time_t		 tval = 0;
 
 	if ((fp = fopen(fname, "r")) == NULL) {
 		pprintf(p, "Sorry, no login information available.\n");
