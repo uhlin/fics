@@ -476,6 +476,8 @@ Language(unsigned int i)
 		"Danish"
 	};
 
+	_Static_assert(ARRAY_SIZE(Lang) == 4, "Unexpected array size");
+
 	if (i >= ARRAY_SIZE(Lang)) {
 		warnx("%s: invalid arg %u (too large)", __func__, i);
 		return Lang[0];
