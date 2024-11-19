@@ -465,7 +465,7 @@ set_width(int p, char *var, char *val)
 }
 
 PUBLIC char *
-Language(int i)
+Language(unsigned int i)
 { // XXX
 	static char *Lang[NUM_LANGS] = {
 		"English",
