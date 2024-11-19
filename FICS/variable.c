@@ -28,6 +28,7 @@
    Markus Uhlin                 23/12/27	Fixed the includes
    Markus Uhlin                 24/04/01	Reformatted all functions
    Markus Uhlin                 24/07/08	Added var 'interface'
+   Markus Uhlin                 24/11/19	Improved Language()
 */
 
 #include "stdinclude.h"
