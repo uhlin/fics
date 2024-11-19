@@ -2413,7 +2413,7 @@ player_add_message(int top, int fromp, char *message)
 		pprintf(fromp, "(and emailed) ");
 	}
 
-	pprintf(fromp, "to %s: \n   %s\n", parray[top].name, message);
+	pprintf(fromp, "to %s:\n   %s\n", parray[top].name, message);
 	return 0;
 }
 
