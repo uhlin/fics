@@ -33,7 +33,9 @@
 						format strings.
    Markus Uhlin			24/03/23	Size-bounded string handling
 						plus truncation checks.
-   Markus Uhlin			24/11/19	Improved com_news()
+   Markus Uhlin			24/11/19	Improved com_news().
+						plogins: fscanf:
+						added width specification
 */
 
 #include "stdinclude.h"
