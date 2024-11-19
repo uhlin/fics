@@ -6,10 +6,10 @@ documented in this file.
 ## [Unreleased] ##
 - Added an autorun script suitable to be run as a cron job.
 - Added width specifications to multiple `fscanf()` and `sscanf()`
-  calls, thus eliminated the risk of overflow.
+  calls, thus eliminated the risk of overflow. Multiple occurrences.
 - Fixed bughouse. (A board was missing.)
 - Fixed ignored return values of important functions such as
-  `fgets()`, `fscanf()` and `sscanf()`.
+  `fgets()`, `fscanf()` and `sscanf()`. Multiple occurrences.
 - Fixed uninitialized variables.
 
 ## [1.4.3] - 2024-08-04 ##
