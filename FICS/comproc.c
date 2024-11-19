@@ -141,14 +141,14 @@ rscan_news2(FILE *fp, int p, int num)
 PUBLIC int
 com_news(int p, param_list param)
 {
-	FILE		*fp;
-	char		*junkp;
+	FILE		*fp = NULL;
+	char		*junkp = NULL;
 	char		 count[10] = { '\0' };
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	int		 found = 0;
-	long int	 lval;
-	time_t		 crtime;
+	long int	 lval = 0;
+	time_t		 crtime = 0;
 
 	snprintf(filename, sizeof filename, "%s/newnews.index", news_dir);
 
