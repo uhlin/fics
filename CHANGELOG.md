@@ -8,6 +8,7 @@ documented in this file.
 - Added width specifications to multiple `fscanf()` and `sscanf()`
   calls, thus eliminated the risk of overflow. Multiple occurrences.
 - Fixed bughouse. (A board was missing.)
+- Fixed cases of possible out-of-bounds array accessing.
 - Fixed ignored return values of important functions such as
   `fgets()`, `fscanf()` and `sscanf()`. Multiple occurrences.
 - Fixed uninitialized variables.
