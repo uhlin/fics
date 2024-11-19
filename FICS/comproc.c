@@ -33,6 +33,7 @@
 						format strings.
    Markus Uhlin			24/03/23	Size-bounded string handling
 						plus truncation checks.
+   Markus Uhlin			24/11/19	Improved com_news()
 */
 
 #include "stdinclude.h"
