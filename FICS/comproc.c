@@ -1009,7 +1009,7 @@ who_winloss(int p, int num, int plist[])
 			snprintf(tmp, sizeof tmp, "%5s\n", hms(player_idle(p1),
 			    0, 0, 0));
 		} else {
-			strlcpy(tmp, "     \n", sizeof tmp);
+			strlcpy(tmp, "\n", sizeof tmp);
 		}
 
 		strlcat(playerLine, tmp, sizeof playerLine);
