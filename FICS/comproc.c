@@ -744,9 +744,12 @@ plogins(int p, char *fname)
 		return COM_OK;
 	}
 
+	_Static_assert(19 < ARRAY_SIZE(ipstr), "'ipstr' too small");
+	_Static_assert(19 < ARRAY_SIZE(loginName), "'loginName' too small");
+
 	while (!feof(fp)) {
-		if (fscanf(fp, "%d %s %ld %d %s\n", &inout, loginName, &lval,
-		    &registered, ipstr) != 5) {
+		if (fscanf(fp, "%d %19s %ld %d %19s\n", &inout, loginName,
+		    &lval, &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. "
 			    "%s\n", fname);
 			fclose(fp);
