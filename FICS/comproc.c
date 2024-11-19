@@ -157,15 +157,24 @@ com_news(int p, param_list param)
 		return COM_OK;
 	}
 
+#define SCAN_JUNK "%ld %9s"
+	_Static_assert(9 < ARRAY_SIZE(count), "'count' too small");
+
 	if (param[0].type == 0) {
 		/*
 		 * No params - then just display index of last ten
 		 * news items.
 		 */
 
-		pprintf(p,"Index of recent news items:\n");
-		fgets(junk, MAX_LINE_SIZE, fp);
-		sscanf(junk, "%ld %s", &lval, count);
+		pprintf(p, "Index of recent news items:\n");
+
+		if (fgets(junk, sizeof junk, fp) == NULL ||
+		    sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+			warnx("%s: error: fgets() or sscanf()", __func__);
+			fclose(fp);
+			return COM_FAILED;
+		}
+
 		rscan_news2(fp, p, 9);
 
 		junkp = junk;
@@ -183,8 +192,14 @@ com_news(int p, param_list param)
 		 */
 
 		pprintf(p, "Index of all news items:\n");
-		fgets(junk, MAX_LINE_SIZE, fp);
-		sscanf(junk, "%ld %s", &lval, count);
+
+		if (fgets(junk, sizeof junk, fp) == NULL ||
+		    sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+			warnx("%s: error: fgets() or sscanf()", __func__);
+			fclose(fp);
+			return COM_FAILED;
+		}
+
 		rscan_news(fp, p, 0);
 
 		junkp = junk;
@@ -205,8 +220,8 @@ com_news(int p, param_list param)
 
 			if (fgets(junk, sizeof junk, fp) == NULL || feof(fp))
 				break;
-
-			sscanf(junkp, "%ld %s", &lval, count);
+			if (sscanf(junkp, SCAN_JUNK, &lval, count) != 2)
+				warnx("%s: sscanf() error...", __func__);
 			crtime = lval;
 
 			if (!strcmp(count, param[0].val.word)) {
