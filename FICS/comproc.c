@@ -579,7 +579,7 @@ com_stats(int p, param_list param)
 		onTime = ((time(NULL) - parray[p1].logon_time) +
 		    parray[p1].totalTime);
 
-		pprintf(p, "Total time on-line: %s\n", hms_desc(onTime) );
+		pprintf(p, "Total time on-line: %s\n", hms_desc(onTime));
 		pprintf(p, "%% of life on-line:  %3.1f  (since %s)\n", // XXX
 		    (double) ((onTime * 100) / (double) (time(NULL) -
 		    parray[p1].timeOfReg)),
