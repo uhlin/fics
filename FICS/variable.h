@@ -44,7 +44,7 @@ typedef struct _var_list {
 
 extern var_list variables[];
 
-extern char	*Language(unsigned int);
-extern int	 var_set(int, char *, char *, int *);
+extern const char	*Language(unsigned int);
+extern int		 var_set(int, char *, char *, int *);
 
 #endif /* _VARIABLE_H */

@@ -466,7 +466,7 @@ set_width(int p, char *var, char *val)
 	return VAR_OK;
 }
 
-PUBLIC char *
+PUBLIC const char *
 Language(unsigned int i)
 {
 	static char *Lang[NUM_LANGS] = {
