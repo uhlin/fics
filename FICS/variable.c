@@ -33,6 +33,7 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
 #include <stdbool.h>
 
 #include "board.h"
@@ -466,13 +467,18 @@ set_width(int p, char *var, char *val)
 
 PUBLIC char *
 Language(unsigned int i)
-{ // XXX
+{
 	static char *Lang[NUM_LANGS] = {
 		"English",
 		"Spanish",
 		"French",
 		"Danish"
 	};
+
+	if (i >= ARRAY_SIZE(Lang)) {
+		warnx("%s: invalid arg %u (too large)", __func__, i);
+		return Lang[0];
+	}
 	return Lang[i];
 }
 
