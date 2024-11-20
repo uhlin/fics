@@ -24,6 +24,9 @@
 #define FENPOS_SIZE 73
 #define ONMOVE_SIZE 2
 
+#define ECO_MAXFILENAME 1024
+#define ECO_MAXTMP 1024
+
 PRIVATE char *book_dir = DEFAULT_BOOK;
 
 PRIVATE ECO_entry	*ECO_book[1096];
@@ -125,9 +128,9 @@ ECO_init(void)
 	FILE	*fp;
 	char	 ECO[4] = {0,0,0,0};
 	char	 FENpos[FENPOS_SIZE] = { '\0' };
-	char	 filename[1024] = { '\0' };
+	char	 filename[ECO_MAXFILENAME] = { '\0' };
 	char	 onMove[ONMOVE_SIZE] = {0,0};
-	char	 tmp[1024] = { '\0' };
+	char	 tmp[ECO_MAXTMP] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
 
@@ -138,7 +141,7 @@ ECO_init(void)
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, 1024, fp);
+		fgets(ptmp, sizeof tmp, fp);
 
 		if (feof(fp))
 			continue;
@@ -149,7 +152,7 @@ ECO_init(void)
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, 1024, fp);
+		fgets(ptmp, sizeof tmp, fp);
 		if (feof(fp))
 			continue;
 		sscanf(ptmp, "%[0-z]", ECO);
@@ -185,9 +188,9 @@ NIC_init(void)
 	FILE	*fp;
 	char	 FENpos[FENPOS_SIZE] = { '\0' };
 	char	 NIC[6] = {0,0,0,0,0,0};
-	char	 filename[1024] = { '\0' };
+	char	 filename[ECO_MAXFILENAME] = { '\0' };
 	char	 onMove[ONMOVE_SIZE] = {0,0};
-	char	 tmp[1024] = { '\0' };
+	char	 tmp[ECO_MAXTMP] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
 
@@ -198,7 +201,7 @@ NIC_init(void)
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, 1024, fp);
+		fgets(ptmp, sizeof tmp, fp);
 
 		if (feof(fp))
 			continue;
@@ -208,7 +211,7 @@ NIC_init(void)
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, 1024, fp);
+		fgets(ptmp, sizeof tmp, fp);
 		if (feof(fp))
 			continue;
 		sscanf(ptmp, "%[.-z]", NIC);
@@ -237,9 +240,9 @@ LONG_init(void)
 	FILE	*fp;
 	char	 FENpos[FENPOS_SIZE] = { '\0' };
 	char	 LONG[256] = { '\0' };
-	char	 filename[1024] = { '\0' };
+	char	 filename[ECO_MAXFILENAME] = { '\0' };
 	char	 onMove[ONMOVE_SIZE] = {0,0};
-	char	 tmp[1024] = { '\0' };
+	char	 tmp[ECO_MAXTMP] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
 
@@ -250,7 +253,7 @@ LONG_init(void)
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, 1024, fp);
+		fgets(ptmp, sizeof tmp, fp);
 
 		if (feof(fp))
 			continue;
@@ -261,7 +264,7 @@ LONG_init(void)
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, 1024, fp);
+		fgets(ptmp, sizeof tmp, fp);
 		if (feof(fp))
 			continue;
 		sscanf(ptmp, "%[^*\n]", LONG);
