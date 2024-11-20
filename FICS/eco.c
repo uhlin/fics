@@ -167,7 +167,11 @@ ECO_init(void)
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
-		sscanf(ptmp, SCAN_ECO, ECO);
+		else if (sscanf(ptmp, SCAN_ECO, ECO) != 1) {
+			warnx("%s: scan eco error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		}
 
 		if ((ECO_book[i] = malloc(sizeof(ECO_entry))) == NULL)
 			err(1, "Cound not alloc mem for ECO entry %d", i);
@@ -233,7 +237,11 @@ NIC_init(void)
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
-		sscanf(ptmp, SCAN_NIC, NIC);
+		else if (sscanf(ptmp, SCAN_NIC, NIC) != 1) {
+			warnx("%s: scan nic error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		}
 
 		if ((NIC_book[i] = malloc(sizeof(NIC_entry))) == NULL)
 			err(1, "Cound not alloc mem for NIC entry %d", i);
@@ -292,7 +300,11 @@ LONG_init(void)
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
-		sscanf(ptmp, SCAN_LONG, LONG);
+		else if (sscanf(ptmp, SCAN_LONG, LONG) != 1) {
+			warnx("%s: scan long error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		}
 
 		if ((LONG_book[i] = malloc(sizeof(LONG_entry))) == NULL)
 			err(1, "Cound not alloc mem for LONG entry %d", i);
