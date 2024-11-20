@@ -13,6 +13,7 @@ documented in this file.
 - Fixed ignored return values of important functions such as
   `fgets()`, `fscanf()` and `sscanf()`. Multiple occurrences.
 - Fixed uninitialized variables.
+- Usage of begin/end decls in headers.
 
 ## [1.4.3] - 2024-08-04 ##
 - **Added** command-line option `d` (Run in the background.)
