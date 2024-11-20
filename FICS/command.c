@@ -702,11 +702,11 @@ boot_out(int p, int p1)
 PUBLIC void
 rscan_news(FILE *fp, int p, int lc)
 {
-	char		*junkp;
-	char		 count[10];
-	char		 junk[MAX_LINE_SIZE];
-	long int	 lval;
-	time_t		 crtime;
+	char		*junkp = NULL;
+	char		 count[10] = { '\0' };
+	char		 junk[MAX_LINE_SIZE] = { '\0' };
+	long int	 lval = 0;
+	time_t		 crtime = 0;
 
 	fgets(junk, MAX_LINE_SIZE, fp);
 
