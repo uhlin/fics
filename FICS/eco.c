@@ -141,10 +141,10 @@ ECO_init(void)
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, sizeof tmp, fp);
 
-		if (feof(fp))
-			continue;
+		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
+		    feof(fp))
+			break;
 
 		/* XXX */
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
@@ -201,10 +201,10 @@ NIC_init(void)
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, sizeof tmp, fp);
 
-		if (feof(fp))
-			continue;
+		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
+		    feof(fp))
+			break;
 
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
 		(void) strlcat(FENpos, " ", sizeof FENpos);
@@ -253,10 +253,10 @@ LONG_init(void)
 
 	while (!feof(fp)) {
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, sizeof tmp, fp);
 
-		if (feof(fp))
-			continue;
+		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
+		    feof(fp))
+			break;
 
 		/* XXX */
 		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
