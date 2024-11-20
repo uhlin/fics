@@ -25,6 +25,7 @@
    Markus Uhlin			23/12/17	Added argument lists
    Markus Uhlin			23/12/28	Completed adding argument lists
    Markus Uhlin			24/01/04	Added usage of PRINTFLIKE()
+   Markus Uhlin			24/11/20	Usage of begin/end decls
 */
 
 #ifndef _UTILS_H
