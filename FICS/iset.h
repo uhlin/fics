@@ -2,15 +2,10 @@
 #define GUARD_ISET_H
 
 #include "command.h" /* param_list */
+#include "common.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+__FICS_BEGIN_DECLS
 int com_iset(int, param_list);
-
-#ifdef __cplusplus
-}
-#endif
+__FICS_END_DECLS
 
 #endif
