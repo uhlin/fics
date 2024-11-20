@@ -164,6 +164,7 @@ ECO_init(void)
 		}
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
+
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
@@ -234,6 +235,7 @@ NIC_init(void)
 		}
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
+
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
@@ -297,6 +299,7 @@ LONG_init(void)
 		}
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
+
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
