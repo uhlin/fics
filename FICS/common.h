@@ -27,6 +27,7 @@
    Markus Uhlin                 24/04/02	Defined:
 						UNUSED_PARAM() and
 						UNUSED_VAR().
+   Markus Uhlin			24/11/20	Added FICS begin/end macros.
 */
 
 #ifndef _COMMON_H
