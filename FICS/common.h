@@ -61,4 +61,12 @@
 #define ASSERT(expression) ((void) 0)
 #endif
 
+#ifdef __cplusplus
+#define __FICS_BEGIN_DECLS	extern "C" {
+#define __FICS_END_DECLS	}
+#else
+#define __FICS_BEGIN_DECLS
+#define __FICS_END_DECLS
+#endif
+
 #endif /* _COMMON_H */
