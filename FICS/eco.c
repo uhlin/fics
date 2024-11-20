@@ -29,6 +29,10 @@
 
 #define SCAN_FP_AND_ONMOVE "%72[\x21-z] %1s"
 
+#define SCAN_ECO	"%3[0-z]"
+#define SCAN_NIC	"%5[.-z]"
+#define SCAN_LONG	"%255[^*\n]"
+
 PRIVATE char *book_dir = DEFAULT_BOOK;
 
 PRIVATE ECO_entry	*ECO_book[1096];
@@ -163,7 +167,7 @@ ECO_init(void)
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
-		sscanf(ptmp, "%[0-z]", ECO);
+		sscanf(ptmp, SCAN_ECO, ECO);
 
 		if ((ECO_book[i] = malloc(sizeof(ECO_entry))) == NULL)
 			err(1, "Cound not alloc mem for ECO entry %d", i);
@@ -229,7 +233,7 @@ NIC_init(void)
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
-		sscanf(ptmp, "%[.-z]", NIC);
+		sscanf(ptmp, SCAN_NIC, NIC);
 
 		if ((NIC_book[i] = malloc(sizeof(NIC_entry))) == NULL)
 			err(1, "Cound not alloc mem for NIC entry %d", i);
@@ -288,7 +292,7 @@ LONG_init(void)
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
 		    feof(fp))
 			break;
-		sscanf(ptmp, "%[^*\n]", LONG);
+		sscanf(ptmp, SCAN_LONG, LONG);
 
 		if ((LONG_book[i] = malloc(sizeof(LONG_entry))) == NULL)
 			err(1, "Cound not alloc mem for LONG entry %d", i);
