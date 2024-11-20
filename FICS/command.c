@@ -733,13 +733,13 @@ rscan_news(FILE *fp, int p, int lc)
 PRIVATE void
 check_news(int p, int admin)
 {
-	FILE		*fp;
-	char		 count[10];
-	char		 filename[MAX_FILENAME_SIZE];
-	char		 junk[MAX_LINE_SIZE];
-	char		*junkp;
-	long int	 lval;
-	time_t		 crtime;
+	FILE		*fp = NULL;
+	char		 count[10] = { '\0' };
+	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
+	char		 junk[MAX_LINE_SIZE] = { '\0' };
+	char		*junkp = NULL;
+	long int	 lval = 0;
+	time_t		 crtime = 0;
 	time_t		 lc = player_lastconnect(p);
 
 	if (admin) {
