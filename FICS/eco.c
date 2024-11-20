@@ -154,9 +154,9 @@ ECO_init(void)
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, sizeof tmp, fp);
-		if (feof(fp))
-			continue;
+		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
+		    feof(fp))
+			break;
 		sscanf(ptmp, "%[0-z]", ECO);
 
 		if ((ECO_book[i] = malloc(sizeof(ECO_entry))) == NULL)
@@ -213,9 +213,9 @@ NIC_init(void)
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, sizeof tmp, fp);
-		if (feof(fp))
-			continue;
+		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
+		    feof(fp))
+			break;
 		sscanf(ptmp, "%[.-z]", NIC);
 
 		if ((NIC_book[i] = malloc(sizeof(NIC_entry))) == NULL)
@@ -266,9 +266,9 @@ LONG_init(void)
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
-		fgets(ptmp, sizeof tmp, fp);
-		if (feof(fp))
-			continue;
+		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
+		    feof(fp))
+			break;
 		sscanf(ptmp, "%[^*\n]", LONG);
 
 		if ((LONG_book[i] = malloc(sizeof(LONG_entry))) == NULL)
