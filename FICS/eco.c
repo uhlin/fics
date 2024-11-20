@@ -148,10 +148,16 @@ ECO_init(void)
 		    feof(fp))
 			break;
 
-		/* XXX */
-		sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove);
-		(void) strlcat(FENpos, " ", sizeof FENpos);
-		(void) strlcat(FENpos, onMove, sizeof FENpos);
+		if (sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove) != 2) {
+			warnx("%s: sscanf() error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		} else if (strlcat(FENpos, " ", sizeof FENpos) >= sizeof FENpos ||
+			   strlcat(FENpos, onMove, sizeof FENpos) >= sizeof FENpos) {
+			warnx("%s: strlcat() error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		}
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
@@ -208,9 +214,16 @@ NIC_init(void)
 		    feof(fp))
 			break;
 
-		sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove);
-		(void) strlcat(FENpos, " ", sizeof FENpos);
-		(void) strlcat(FENpos, onMove, sizeof FENpos);
+		if (sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove) != 2) {
+			warnx("%s: sscanf() error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		} else if (strlcat(FENpos, " ", sizeof FENpos) >= sizeof FENpos ||
+			   strlcat(FENpos, onMove, sizeof FENpos) >= sizeof FENpos) {
+			warnx("%s: strlcat() error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		}
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
@@ -260,10 +273,16 @@ LONG_init(void)
 		    feof(fp))
 			break;
 
-		/* XXX */
-		sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove);
-		(void) strlcat(FENpos, " ", sizeof FENpos);
-		(void) strlcat(FENpos, onMove, sizeof FENpos);
+		if (sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove) != 2) {
+			warnx("%s: sscanf() error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		} else if (strlcat(FENpos, " ", sizeof FENpos) >= sizeof FENpos ||
+			   strlcat(FENpos, onMove, sizeof FENpos) >= sizeof FENpos) {
+			warnx("%s: strlcat() error (%s:%d)", __func__,
+			    filename, i);
+			break;
+		}
 
 		(void) strlcpy(ptmp, "", sizeof tmp);
 		if (fgets(ptmp, sizeof tmp, fp) == NULL ||
