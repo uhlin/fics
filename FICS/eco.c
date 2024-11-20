@@ -27,6 +27,8 @@
 #define ECO_MAXFILENAME 1024
 #define ECO_MAXTMP 1024
 
+#define SCAN_FP_AND_ONMOVE "%72[\x21-z] %1s"
+
 PRIVATE char *book_dir = DEFAULT_BOOK;
 
 PRIVATE ECO_entry	*ECO_book[1096];
@@ -147,7 +149,7 @@ ECO_init(void)
 			break;
 
 		/* XXX */
-		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
+		sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove);
 		(void) strlcat(FENpos, " ", sizeof FENpos);
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
@@ -206,7 +208,7 @@ NIC_init(void)
 		    feof(fp))
 			break;
 
-		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
+		sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove);
 		(void) strlcat(FENpos, " ", sizeof FENpos);
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
@@ -259,7 +261,7 @@ LONG_init(void)
 			break;
 
 		/* XXX */
-		sscanf(ptmp, "%[\x21-z] %s", FENpos, onMove);
+		sscanf(ptmp, SCAN_FP_AND_ONMOVE, FENpos, onMove);
 		(void) strlcat(FENpos, " ", sizeof FENpos);
 		(void) strlcat(FENpos, onMove, sizeof FENpos);
 
