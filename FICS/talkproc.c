@@ -830,7 +830,7 @@ com_messages(int p, param_list param)
 	}
 
 	if (param[0].type == TYPE_NULL) {
-		player_show_messages (p);
+		player_show_messages(p);
 	} else if (param[0].type == TYPE_WORD) {
 		if (param[1].type != TYPE_NULL)
 			return com_sendmessage(p, param);
