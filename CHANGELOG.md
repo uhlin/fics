@@ -6,6 +6,7 @@ documented in this file.
 ## [Unreleased] ##
 - Added an autorun script suitable to be run as a cron job.
 - Added missing calls to `fclose()`.
+- Added usage of `time_t`.
 - Added usage of macros.
 - Added width specifications to multiple `fscanf()` and `sscanf()`
   calls, thus eliminated the risk of overflow. Multiple occurrences.
