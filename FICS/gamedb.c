@@ -1651,15 +1651,15 @@ RemHist(char *who)
 	    who[0], who, STATS_GAMES);
 
 	if ((fp = fopen(fName, "r")) != NULL) {
-		long int line_no = 0;
+		long int iter_no = 0;
 
 		while (!feof(fp)) {
 			const int ret = fscanf(fp, "%*d %*c %*d %*c %*d %19s "
 			    "%*s %*d %*d %*d %*d %*s %*s %ld", Opp, &When);
 			if (ret != 2) {
 				warnx("%s: fscanf() error (%s:%ld)", __func__,
-				    fName, line_no);
-				line_no++;
+				    fName, iter_no);
+				iter_no++;
 				continue;
 			}
 
@@ -1677,7 +1677,7 @@ RemHist(char *who)
 				}
 			}
 
-			line_no++;
+			iter_no++;
 		}
 
 		fclose(fp);
