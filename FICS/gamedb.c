@@ -627,6 +627,10 @@ movesToString(int g, int pgn)
 
 		mstrlcat(gameString, "\n", sizeof gameString);
 	} else {
+		/*
+		 * !pgn
+		 */
+
 		msnprintf(gameString, sizeof gameString, "\n%s ",
 		    garray[g].white_name);
 
