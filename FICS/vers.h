@@ -19,6 +19,7 @@
 /* Revision history:
    name		email		yy/mm/dd	Change
    Richard Nash	              	93/10/22	Created
+   Markus Uhlin                 24/11/23	Made vars const
 */
 
 #ifndef _VERS_H
