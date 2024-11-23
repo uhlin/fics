@@ -572,7 +572,7 @@ movesToString(int g, int pgn)
 		strftime(tmp, sizeof(tmp),
 		    "[Date \"%Y.%m.%d\"]\n"
 		    "[Time \"%H:%M:%S\"]\n",
-		    localtime((time_t *) &curTime));
+		    localtime(&curTime)); // XXX
 		mstrlcat(gameString, tmp, sizeof gameString);
 
 		msnprintf(tmp, sizeof tmp,
@@ -643,8 +643,8 @@ movesToString(int g, int pgn)
 
 		mstrlcat(gameString, tmp, sizeof gameString);
 		mstrlcat(gameString, "--- ", sizeof gameString);
-		mstrlcat(gameString, (char *) (localtime((time_t *) &curTime)),
-		    sizeof gameString);
+		mstrlcat(gameString, (char *) (localtime(&curTime)),
+		    sizeof gameString); // XXX
 
 		if (garray[g].rated) {
 			mstrlcat(gameString, "\nRated ", sizeof gameString);
