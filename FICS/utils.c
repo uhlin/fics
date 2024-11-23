@@ -762,7 +762,10 @@ tenth_secs(void)
  * seconds, because vek didn't read utils.c when he programmed new
  * ratings. 1 sec since 1970 fits into a 32 bit int OK.
  */
-PUBLIC int
+/*
+ * 2024-11-23 maxxe: changed the return type to 'time_t'
+ */
+PUBLIC time_t
 untenths(unsigned int tenths)
 {
 	return (tenths / 10 + 331939277 + 0xffffffff / 10 + 1);
