@@ -738,6 +738,7 @@ rscan_news(FILE *fp, int p, int lc)
 PRIVATE void
 check_news(int p, int admin)
 {
+#define SCAN_JUNK "%ld %9s"
 	FILE		*fp = NULL;
 	char		 count[10] = { '\0' };
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
@@ -746,6 +747,8 @@ check_news(int p, int admin)
 	long int	 lval = 0;
 	time_t		 crtime = 0;
 	time_t		 lc = player_lastconnect(p);
+
+	_Static_assert(ARRAY_SIZE(count) > 9, "Unexpected array size");
 
 	if (admin) {
 		msnprintf(filename, sizeof filename, "%s/newadminnews.index",
@@ -760,11 +763,23 @@ check_news(int p, int admin)
 		if (num_anews == -1) {
 			num_anews = count_lines(fp);
 			fclose(fp);
-			fp = fopen(filename, "r");
+			if ((fp = fopen(filename, "r")) == NULL) {
+				warn("%s: can't find admin news index (%s)",
+				    __func__, filename);
+				return;
+			}
 		}
 
-		fgets(junk, MAX_LINE_SIZE, fp);
-		sscanf(junk, "%ld %s", &lval, count);
+		if (fgets(junk, sizeof junk, fp) == NULL) {
+			warnx("%s: fgets() error", __func__);
+			fclose(fp);
+			return;
+		} else if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+			warnx("%s: sscanf() error", __func__);
+			fclose(fp);
+			return;
+		}
+
 		crtime = lval;
 
 		if ((crtime - lc) < 0) {
@@ -805,8 +820,16 @@ check_news(int p, int admin)
 			}
 		}
 
-		fgets(junk, MAX_LINE_SIZE, fp);
-		sscanf(junk, "%ld %s", &lval, count);
+		if (fgets(junk, sizeof junk, fp) == NULL) {
+			warnx("%s: fgets() error", __func__);
+			fclose(fp);
+			return;
+		} else if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+			warnx("%s: sscanf() error", __func__);
+			fclose(fp);
+			return;
+		}
+
 		crtime = lval;
 
 		if ((crtime - lc) < 0) {
