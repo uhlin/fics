@@ -553,6 +553,7 @@ movesToString(int g, int pgn)
 	char		 tmp[160] = { '\0' };
 	int		 i, col;
 	int		 wr, br;
+	struct tm	*tm_ptr = NULL;
 	time_t		 curTime;
 
 	wr = garray[g].white_rating;
@@ -569,11 +570,15 @@ movesToString(int g, int pgn)
 		    bstr[garray[g].type],
 		    serv_name,
 		    serv_loc);
-		strftime(tmp, sizeof(tmp),
-		    "[Date \"%Y.%m.%d\"]\n"
-		    "[Time \"%H:%M:%S\"]\n",
-		    localtime(&curTime)); // XXX
-		mstrlcat(gameString, tmp, sizeof gameString);
+
+		if ((tm_ptr = localtime(&curTime)) != NULL) {
+			strftime(tmp, sizeof(tmp),
+			    "[Date \"%Y.%m.%d\"]\n"
+			    "[Time \"%H:%M:%S\"]\n",
+			    tm_ptr);
+			mstrlcat(gameString, tmp, sizeof gameString);
+		} else
+			warn("%s: localtime", __func__);
 
 		msnprintf(tmp, sizeof tmp,
 		    "[Round \"-\"]\n"
