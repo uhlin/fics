@@ -24,8 +24,8 @@
 #ifndef _VERS_H
 #define _VERS_H
 
-extern const char SGS_VERS[];
-extern const char VERS_NUM[];
-extern const char COMP_DATE[];
+extern const char	SGS_VERS[];
+extern const char	VERS_NUM[];
+extern const char	COMP_DATE[];
 
 #endif /* _VERS_H */
