@@ -904,7 +904,10 @@ ReadMove(FILE *fp, move_t *m)
 	if (fgets(line, sizeof line, fp) == NULL)
 		return -1;
 
-	if (sscanf(line, "%d %d %d %d %d %d %d %d %d \"%[^\"]\" \"%[^\"]\" "
+	_Static_assert(ARRAY_SIZE(m->moveString) > 7, "'moveString' too small");
+	_Static_assert(ARRAY_SIZE(m->algString) > 7, "'algString' too small");
+
+	if (sscanf(line, "%d %d %d %d %d %d %d %d %d \"%7[^\"]\" \"%7[^\"]\" "
 	    "%u %u\n",
 	    &m->color,
 	    &m->fromFile, &m->fromRank,
