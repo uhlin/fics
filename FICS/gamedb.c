@@ -652,8 +652,12 @@ movesToString(int g, int pgn)
 
 		mstrlcat(gameString, tmp, sizeof gameString);
 		mstrlcat(gameString, "--- ", sizeof gameString);
-		mstrlcat(gameString, (char *) (localtime(&curTime)),
-		    sizeof gameString); // XXX
+
+		if ((tm_ptr = localtime(&curTime)) != NULL) {
+			strftime(tmp, sizeof tmp, "%Y.%m.%d %H:%M:%S", tm_ptr);
+			mstrlcat(gameString, tmp, sizeof gameString);
+		} else
+			warn("%s: localtime", __func__);
 
 		if (garray[g].rated) {
 			mstrlcat(gameString, "\nRated ", sizeof gameString);
