@@ -1903,8 +1903,19 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		rename(fname2, fname);
 		return;
 	} else {
+		_Static_assert(ARRAY_SIZE(WhiteName) > 19,
+		    "'WhiteName' too small");
+		_Static_assert(ARRAY_SIZE(BlackName) > 19,
+		    "'BlackName' too small");
+
+		_Static_assert(ARRAY_SIZE(type) > 99, "'type' too small");
+		_Static_assert(ARRAY_SIZE(eco) > 99, "'eco' too small");
+		_Static_assert(ARRAY_SIZE(ending) > 99, "'ending' too small");
+		_Static_assert(ARRAY_SIZE(result) > 99, "'result' too small");
+
 		while (!feof(fp)) {
-			if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+			if (fscanf(fp, "%c %19s %d %19s %d %99s %d %d %99s "
+			    "%99s %99s\n",
 			    &count,
 			    WhiteName, &WhiteRating,
 			    BlackName, &BlackRating,
