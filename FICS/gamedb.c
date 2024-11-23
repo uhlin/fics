@@ -905,7 +905,7 @@ ReadMove(FILE *fp, move_t *m)
 		return -1;
 
 	_Static_assert(ARRAY_SIZE(m->moveString) > 7, "'moveString' too small");
-	_Static_assert(ARRAY_SIZE(m->algString) > 7, "'algString' too small");
+	_Static_assert(ARRAY_SIZE(m->algString) > 7,  "'algString' too small");
 
 	if (sscanf(line, "%d %d %d %d %d %d %d %d %d \"%7[^\"]\" \"%7[^\"]\" "
 	    "%u %u\n",
@@ -1908,8 +1908,8 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		_Static_assert(ARRAY_SIZE(BlackName) > 19,
 		    "'BlackName' too small");
 
-		_Static_assert(ARRAY_SIZE(type) > 99, "'type' too small");
-		_Static_assert(ARRAY_SIZE(eco) > 99, "'eco' too small");
+		_Static_assert(ARRAY_SIZE(type) > 99,   "'type' too small");
+		_Static_assert(ARRAY_SIZE(eco) > 99,    "'eco' too small");
 		_Static_assert(ARRAY_SIZE(ending) > 99, "'ending' too small");
 		_Static_assert(ARRAY_SIZE(result) > 99, "'result' too small");
 
@@ -2003,8 +2003,8 @@ pjournal(int p, int p1, char *fname)
 	_Static_assert(ARRAY_SIZE(WhiteName) > 19, "'WhiteName' too small");
 	_Static_assert(ARRAY_SIZE(BlackName) > 19, "'BlackName' too small");
 
-	_Static_assert(ARRAY_SIZE(type) > 99, "'type' too small");
-	_Static_assert(ARRAY_SIZE(eco) > 99, "'eco' too small");
+	_Static_assert(ARRAY_SIZE(type) > 99,   "'type' too small");
+	_Static_assert(ARRAY_SIZE(eco) > 99,    "'eco' too small");
 	_Static_assert(ARRAY_SIZE(ending) > 99, "'ending' too small");
 	_Static_assert(ARRAY_SIZE(result) > 99, "'result' too small");
 
