@@ -2047,7 +2047,7 @@ pgames(int p, int p1, char *fname)
 	char	 OppName[MAX_LOGIN_NAME + 1] = { '\0' };
 	char	 eco[100] = { '\0' };
 	char	 ending[100] = { '\0' };
-	char	 result[2] = { 0,0 };
+	char	 result[2] = { 0,0 }; // XXX: right size?
 	char	 type[100] = { '\0' };
 	int	 MyRating, OppRating;
 	int	 count;
@@ -2063,8 +2063,16 @@ pgames(int p, int p1, char *fname)
 	pprintf(p, "                  Opponent      Type         "
 	    "ECO End Date\n");
 
+	_Static_assert(ARRAY_SIZE(result) > 1,   "'result' too small");
+	_Static_assert(ARRAY_SIZE(MyColor) > 1,  "'MyColor' too small");
+	_Static_assert(ARRAY_SIZE(OppName) > 19, "'OppName' too small");
+	_Static_assert(ARRAY_SIZE(type) > 99,    "'type' too small");
+	_Static_assert(ARRAY_SIZE(eco) > 99,     "'eco' too small");
+	_Static_assert(ARRAY_SIZE(ending) > 99,  "'ending' too small");
+
 	while (!feof(fp)) {
-		if (fscanf(fp, "%d %s %d %s %d %s %s %d %d %d %d %s %s %ld\n",
+		if (fscanf(fp, "%d %1s %d %1s %d %19s %99s %d %d %d %d %99s "
+		    "%99s %ld\n",
 		    &count, result, &MyRating, MyColor,
 		    &OppRating, OppName,
 		    type,
