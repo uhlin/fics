@@ -553,7 +553,7 @@ movesToString(int g, int pgn)
 	char		 tmp[160] = { '\0' };
 	int		 i, col;
 	int		 wr, br;
-	unsigned int	 curTime;
+	time_t		 curTime;
 
 	wr = garray[g].white_rating;
 	br = garray[g].black_rating;
