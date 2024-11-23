@@ -708,12 +708,17 @@ rscan_news(FILE *fp, int p, int lc)
 	long int	 lval = 0;
 	time_t		 crtime = 0;
 
-	fgets(junk, MAX_LINE_SIZE, fp);
-
-	if (feof(fp))
+	if (fgets(junk, sizeof junk, fp) == NULL ||
+	    feof(fp))
 		return;
 
-	sscanf(junk, "%ld %s", &lval, count);
+	_Static_assert(ARRAY_SIZE(count) > 9, "Unexpected array size");
+
+	if (sscanf(junk, "%ld %9s", &lval, count) != 2) {
+		warnx("%s: sscanf() error: too few items", __func__);
+		return;
+	}
+
 	crtime = lval;
 
 	if ((crtime - lc) < 0)
