@@ -1654,6 +1654,7 @@ RemHist(char *who)
 		long int iter_no = 0;
 
 		while (!feof(fp)) {
+			// XXX: end the format string with a newline?
 			const int ret = fscanf(fp, "%*d %*c %*d %*c %*d %19s "
 			    "%*s %*d %*d %*d %*d %*s %*s %ld", Opp, &When);
 			if (ret != 2) {
