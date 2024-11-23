@@ -1650,22 +1650,37 @@ RemHist(char *who)
 	msnprintf(fName, sizeof fName, "%s/player_data/%c/%s.%s", stats_dir,
 	    who[0], who, STATS_GAMES);
 
-	fp = fopen(fName, "r");
+	if ((fp = fopen(fName, "r")) != NULL) {
+		long int line_no = 0;
 
-	if (fp != NULL) {
 		while (!feof(fp)) {
-			fscanf(fp, "%*d %*c %*d %*c %*d %s %*s %*d %*d %*d "
-			    "%*d %*s %*s %ld", Opp, &When);
+			const int ret = fscanf(fp, "%*d %*c %*d %*c %*d %19s "
+			    "%*s %*d %*d %*d %*d %*s %*s %ld", Opp, &When);
+			if (ret != 2) {
+				warnx("%s: fscanf() error (%s:%ld)", __func__,
+				    fName, line_no);
+				line_no++;
+				continue;
+			}
 
 			stolower(Opp);
 			oppWhen = OldestHistGame(Opp);
 
 			if (oppWhen > When || oppWhen <= 0L) {
-				msnprintf(fName, sizeof fName, "%s/%ld/%ld",
-				    hist_dir, When % 100, When);
-				unlink(fName);
+				char histfile[MAX_FILENAME_SIZE] = { '\0' };
+
+				msnprintf(histfile, sizeof histfile,
+				    "%s/%ld/%ld", hist_dir, (When % 100), When);
+				if (unlink(histfile) != 0) {
+					warn("%s: unlink(%s)", __func__,
+					    histfile);
+				}
 			}
+
+			line_no++;
 		}
+
+		fclose(fp);
 	}
 }
 
