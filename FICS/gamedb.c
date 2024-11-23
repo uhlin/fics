@@ -32,6 +32,7 @@
    Markus Uhlin                 24/08/03	See previous change
    Markus Uhlin                 24/11/23	Added width specifications to
 						multiple fscanf() calls.
+   Markus Uhlin                 24/11/23	Fixed bugs in movesToString()
 */
 
 #include "stdinclude.h"
