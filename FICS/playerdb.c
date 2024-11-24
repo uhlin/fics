@@ -1052,9 +1052,9 @@ WritePlayerFile(FILE *fp, int p)
 	fprintf(fp, "%s\n", (pp->passwd ? pp->passwd : "NONE"));
 	fprintf(fp, "%s\n", (pp->emailAddress ? pp->emailAddress : "NONE"));
 
-	fprintf(fp, "%u %u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd %u "
-	    "%u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd %u %u %u %u %u "
-	    "%u %jd %u %jd %d\n",
+	fprintf(fp, "%d %d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd %d %jd %d "
+	    "%d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd %d %jd %d %d %d %d %d "
+	    "%d %jd %d %jd %u\n",
 	    pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
 	    pp->s_stats.dra, pp->s_stats.rating,
 	    (int)(pp->s_stats.sterr * 10.0),
