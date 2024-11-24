@@ -26,6 +26,8 @@
 #ifndef _VARIABLE_H
 #define _VARIABLE_H
 
+#include "common.h"
+
 #define VAR_OK           0
 #define VAR_NOSUCH       1
 #define VAR_BADVAL       2
@@ -42,9 +44,11 @@ typedef struct _var_list {
 	int (*var_func)(int, char *, char *);
 } var_list;
 
+__FICS_BEGIN_DECLS
 extern var_list variables[];
 
 extern const char	*Language(unsigned int);
 extern int		 var_set(int, char *, char *, int *);
+__FICS_END_DECLS
 
 #endif /* _VARIABLE_H */
