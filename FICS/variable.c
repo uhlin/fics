@@ -124,6 +124,22 @@ set_ropen(int p, char *var, char *val)
 	return VAR_OK;
 }
 
+/*
+ * If your 'seek' variable is non-zero (whether a number, 'true' or
+ * 'on'), you will be informed of "seek" ads when they are made. zero
+ * ('false' or 'off'), you will not receive these announcements. For
+ * example, to receive ads, type "set seek 1". To stop receiving ads,
+ * type "set seek 0".
+ */
+PRIVATE int
+set_seek(int p, char *var, char *val)
+{
+	UNUSED_PARAM(p);
+	UNUSED_PARAM(var);
+	UNUSED_PARAM(val);
+	return VAR_OK;
+}
+
 PRIVATE int
 set_rated(int p, char *var, char *val)
 {
@@ -886,6 +902,7 @@ PUBLIC var_list variables[] = {
 	{"prompt",       set_prompt},
 	{"rated",        set_rated},
 	{"ropen",        set_ropen},
+	{"seek",         set_seek},
 	{"shout",        set_shout},
 	{"simopen",      set_sopen},
 	{"style",        set_style},
