@@ -40,6 +40,7 @@
 #include "rating_conv.h"
 #include "ratings.h"
 #include "shutdown.h"
+#include "sought.h"
 #include "talkproc.h"
 
 extern command_type	command_list[];
@@ -156,6 +157,7 @@ PUBLIC command_type command_list[] = {
   {"simpass",            "",       com_simpass,        ADMIN_USER},
   {"simprev",            "",       com_simprev,        ADMIN_USER},
   {"smoves",             "wi",     com_smoves,         ADMIN_USER},
+  {"sought",             "o",      com_sought,         ADMIN_USER},
   {"sposition",          "ww",     com_sposition,      ADMIN_USER},
   {"statistics",         "",       com_statistics,     ADMIN_USER},
   {"stored",             "o",      com_stored,         ADMIN_USER},

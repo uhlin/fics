@@ -30,6 +30,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)ratings.o\
 	$(SRC_DIR)rmalloc.o\
 	$(SRC_DIR)shutdown.o\
+	$(SRC_DIR)sought.o\
 	$(SRC_DIR)talkproc.o\
 	$(SRC_DIR)utils.o\
 	$(SRC_DIR)variable.o\
