@@ -23,6 +23,7 @@
    Markus Uhlin			23/12/10	Cleaned up the file a bit
    Markus Uhlin			24/07/08	Reformatted and sorted the lists
    Markus Uhlin			24/07/13	Added 'iset' to the command list
+   Markus Uhlin			24/11/24	Added 'sought' to the command list
 */
 
 #ifndef _COMMAND_LIST_H
