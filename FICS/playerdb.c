@@ -433,9 +433,9 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		pp->emailAddress = NULL;
 	}
 
-	if (fscanf(fp, "%u %u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd "
-	    "%u %u %u %u %u %u %jd %u %jd %u %u %u %u %u %u %jd %u %jd %u %u %u %u "
-	    "%u %u %jd %u %jd %d\n",
+	if (fscanf(fp, "%d %d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd %d %jd "
+	    "%d %d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd %d %jd %d %d %d %d "
+	    "%d %d %jd %d %jd %u\n",
 	    &pp->s_stats.num, &pp->s_stats.win, &pp->s_stats.los,
 	    &pp->s_stats.dra, &pp->s_stats.rating, &ss,
 	    &ltime_tmp[0], &pp->s_stats.best, &wb_tmp[0],
