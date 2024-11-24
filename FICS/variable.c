@@ -29,6 +29,7 @@
    Markus Uhlin                 24/04/01	Reformatted all functions
    Markus Uhlin                 24/07/08	Added var 'interface'
    Markus Uhlin                 24/11/19	Improved Language()
+   Markus Uhlin                 24/11/24	Added var 'seek'.
 */
 
 #include "stdinclude.h"
