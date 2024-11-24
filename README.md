@@ -12,6 +12,10 @@ The main goal of the fork is to modernize the codebase, improve the
 security and fix bugs. New features, for example, other chess variants
 will be added in a later stage.
 
+### IPv6 ###
+
+IPv6 connections are at the moment not supported.
+
 ## SAST Tools ##
 
 [PVS-Studio](https://pvs-studio.com/en/pvs-studio/?utm_source=website&utm_medium=github&utm_campaign=open_source) - static analyzer for C, C++, C#, and Java code.
