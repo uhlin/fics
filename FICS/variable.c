@@ -135,9 +135,20 @@ set_ropen(int p, char *var, char *val)
 PRIVATE int
 set_seek(int p, char *var, char *val)
 {
-	UNUSED_PARAM(p);
-	UNUSED_PARAM(var);
-	UNUSED_PARAM(val);
+	int v = set_boolean_var(&parray[p].seek, val);
+
+	if (v < 0)
+		return VAR_BADVAL;
+
+	pprintf(p, "seek set to %d.\n", parray[p].seek);
+
+	if (v > 0) {
+		pprintf(p, "You will be informed of seek ads when they are "
+		    "made.\n");
+	} else {
+		pprintf(p, "You are no longer receiving seek ads.\n");
+	}
+
 	return VAR_OK;
 }
 
