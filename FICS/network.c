@@ -302,7 +302,7 @@ net_send_string(int fd, char *str, int format)
 				sendme(which, "        ",
 				    8 - (con[which].outPos & 7));
 				con[which].outPos &= ~7;
-				if (con[which].outPos += 8 >= LINE_WIDTH)
+				if ((con[which].outPos += 8) >= LINE_WIDTH)
 					con[which].outPos = 0;
 				break;
 			case '\n':
