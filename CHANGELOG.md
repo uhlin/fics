@@ -16,6 +16,7 @@ documented in this file.
 - Fixed cases of possible out-of-bounds array access.
 - Fixed ignored return values of important functions such as
   `fgets()`, `fscanf()` and `sscanf()`. Multiple occurrences.
+- Fixed incorrect format strings.
 - Fixed uninitialized variables.
 - Usage of begin/end decls in headers.
 
