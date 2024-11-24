@@ -9,6 +9,7 @@ documented in this file.
   to be added in a later version. We also want the seek/unseek
   commands.
 - Added missing calls to `fclose()`.
+- Added null checks.
 - Added usage of `time_t`.
 - Added usage of macros.
 - Added variable `seek`.
