@@ -8,6 +8,7 @@ documented in this file.
 - Added missing calls to `fclose()`.
 - Added usage of `time_t`.
 - Added usage of macros.
+- Added variable `seek`.
 - Added width specifications to multiple `fscanf()` and `sscanf()`
   calls, thus eliminated the risk of overflow. Multiple occurrences.
 - Fixed bughouse. (A board was missing.)
