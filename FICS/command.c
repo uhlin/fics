@@ -1089,6 +1089,9 @@ process_input(int fd, char *com_string)
 	if (p < 0) {
 		fprintf(stderr, "FICS: Input from a player not in array!\n");
 		return -1;
+	} else if (com_string == NULL) {
+		fprintf(stderr, "FICS: Command string is NULL!\n");
+		return -1;
 	}
 
 	commanding_player = p;
@@ -1107,7 +1110,7 @@ process_input(int fd, char *com_string)
 	case PLAYER_LOGIN:
 		retval = process_login(p, com_string);
 
-		if (retval == COM_LOGOUT && com_string != NULL) {
+		if (retval == COM_LOGOUT) { // && com_string != NULL
 			fprintf(stderr, "%s tried to log in and failed.\n",
 			    com_string);
 		}
