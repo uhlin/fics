@@ -32,6 +32,7 @@
    Markus Uhlin                 24/11/23	Improved:
 						check_news() and
 						rscan_news().
+   Markus Uhlin                 24/11/25	Null checks
 */
 
 #include "stdinclude.h"
