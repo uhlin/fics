@@ -250,7 +250,7 @@ mail_file_to_user(int p, char *subj, char *fname)
 PUBLIC int
 pcommand(int p, char *comstr, ...)
 {
-	char tmp[MAX_LINE_SIZE];
+	char tmp[MAX_LINE_SIZE] = { '\0' };
 	int current_socket = parray[p].socket;
 	int retval;
 	va_list ap;
