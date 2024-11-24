@@ -5,6 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added an autorun script suitable to be run as a cron job.
+- Added command `sought`.
 - Added missing calls to `fclose()`.
 - Added usage of `time_t`.
 - Added usage of macros.
