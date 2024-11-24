@@ -51,9 +51,9 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 		fgets(line, 99, fp);
 		fgets(line, 99, fp);
 
-		if (fscanf(fp, "%u %*u %*u %*u %u %*u %*u %*u %*u %u %*u %*u "
-		    "%*u %u %*u %*u %*u %*u %u %*u %*u %*u %u %*u %*u %*u %*u "
-		    "%u %*u %*u %*u %u %*u %*u %*u %*u",
+		if (fscanf(fp, "%d %*u %*u %*u %d %*u %*u %*u %*u %d %*u %*u "
+		    "%*u %d %*u %*u %*u %*u %d %*u %*u %*u %d %*u %*u %*u %*u "
+		    "%d %*u %*u %*u %d %*u %*u %*u %*u",
 		    &(e->r[0].num),
 		    &(e->r[0].rating),
 		    &(e->r[1].num),
