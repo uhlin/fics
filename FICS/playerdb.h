@@ -127,6 +127,7 @@ typedef struct _player {
 	int		 side; // Only valid if game is >= 0
 	int		 partner;
 	int		 registered;
+	int		 seek; // new
 	int		 socket;
 	int		 sopen;
 	int		 status;

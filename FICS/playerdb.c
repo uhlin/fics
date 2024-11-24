@@ -205,6 +205,7 @@ player_zero(int p)
 	parray[p].rated			= 0;
 	parray[p].registered		= 0;
 	parray[p].ropen			= 1;
+	parray[p].seek			= 0;
 	parray[p].simul_info.numBoards	= 0;
 	parray[p].socket		= -1;
 	parray[p].sopen			= 0;
