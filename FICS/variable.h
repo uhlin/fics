@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash	                93/10/22	Created
    Markus Uhlin                 24/04/01	Revised
+   Markus Uhlin                 24/11/24	Added begin/end decls
 */
 
 #ifndef _VARIABLE_H
