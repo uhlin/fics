@@ -1669,15 +1669,14 @@ RemHist(char *who)
 	if ((fp = fopen(fName, "r")) != NULL) {
 		long int iter_no = 0;
 
-		while (!feof(fp)) {
-			// XXX: end the format string with a newline?
+		while (!feof(fp) && !ferror(fp)) {
 			const int ret = fscanf(fp, "%*d %*c %*d %*c %*d %19s "
-			    "%*s %*d %*d %*d %*d %*s %*s %ld", Opp, &When);
+			    "%*s %*d %*d %*d %*d %*s %*s %ld\n", Opp, &When);
 			if (ret != 2) {
 				warnx("%s: fscanf() error (%s:%ld)", __func__,
 				    fName, iter_no);
-				iter_no++;
-				continue;
+//				iter_no++;
+				break;
 			}
 
 			stolower(Opp);
