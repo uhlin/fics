@@ -32,6 +32,7 @@
    Markus Uhlin                 24/08/04	Fixed multiple possible buffer
 						overflows.
    Markus Uhlin                 24/08/13	Handled function return values
+   Markus Uhlin                 24/11/24	Fixed incorrect format strings
 */
 
 #include "stdinclude.h"
