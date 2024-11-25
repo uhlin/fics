@@ -88,9 +88,11 @@ PRIVATE char gameString[GAME_STRING_LEN];
 PRIVATE int
 get_empty_slot(void)
 {
-	for (int i = 0; i < g_num; i++) {
-		if (garray[i].status == GAME_EMPTY)
-			return i;
+	if (garray != NULL) {
+		for (int i = 0; i < g_num; i++) {
+			if (garray[i].status == GAME_EMPTY)
+				return i;
+		}
 	}
 
 	g_num++;
