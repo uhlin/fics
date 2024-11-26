@@ -1567,9 +1567,9 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 
 	for (int i = 1; i < count; i++) {
 		do {
-			fgets(line, sizeof line, fp);
-
-			if (feof(fp))
+			if (fgets(line, sizeof line, fp) == NULL ||
+			    feof(fp) ||
+			    ferror(fp))
 				break;
 			sscanf(line, "%s %d %d %d", login, &rating, &nGames,
 			    &is_computer);
@@ -1599,9 +1599,9 @@ ShowRankEntry(int p, FILE *fp, int count, int comp, char *target,
 
 	if (findable) {
 		do {
-			fgets(newLine, sizeof newLine, fp);
-
-			if (feof(fp)) {
+			if (fgets(newLine, sizeof newLine, fp) == NULL ||
+			    feof(fp) ||
+			    ferror(fp)) {
 				findable = 0;
 			} else if (newLine[0] != '\0') {
 				sscanf(newLine, "%s %d %d %d", login, &rating,
