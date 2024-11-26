@@ -1339,8 +1339,15 @@ DisplayRank(int p, param_list param, int showComputers)
 		DisplayTargetRank(p, parray[p].name, show, showComputers);
 		return COM_OK;
 	} else if (isdigit(param[0].val.word[0])) {
+		int ret;
+
 		end = -1;
-		sscanf(param[0].val.word, "%d-%d", &start, &end);
+		ret = sscanf(param[0].val.word, "%d-%d", &start, &end);
+
+		if (ret != 2) {
+			warnx("%s: sscanf() == %d", __func__, ret);
+			return COM_FAILED;
+		}
 
 		if (end > 0 && (param[1].type != TYPE_NULL))
 			show = ShowFromString(param[1].val.word);
