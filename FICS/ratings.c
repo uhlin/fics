@@ -1471,7 +1471,9 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	}
 
 	while (fgets(line, sizeof line, fp) != NULL) {
-		sscanf(line, "%s %d %d %d", login, &sCur.rating, &sCur.num,
+		_Static_assert(ARRAY_SIZE(login) > 19, "'login' too small");
+
+		sscanf(line, "%19s %d %d %d", login, &sCur.rating, &sCur.num,
 		    &comp);
 
 		if (delName != NULL &&
@@ -1542,7 +1544,9 @@ GetRank(FILE *fp, char *target, int countComp)
 
 	while (fgets(line, sizeof line, fp) != NULL &&
 	    !playerFound) {
-		sscanf(line, "%s %*d %d %d", login, &nGames, &is_computer);
+		_Static_assert(ARRAY_SIZE(login) > 19, "'login' too small");
+
+		sscanf(line, "%19s %*d %d %d", login, &nGames, &is_computer);
 
 		if ((playerFound = !strcasecmp(login, target)) ||
 		    CountRankLine(countComp, login, nGames, is_computer))
@@ -1571,7 +1575,10 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 			    feof(fp) ||
 			    ferror(fp))
 				break;
-			sscanf(line, "%s %d %d %d", login, &rating, &nGames,
+
+			_Static_assert(ARRAY_SIZE(login) > 19, "'login' too small");
+
+			sscanf(line, "%19s %d %d %d", login, &rating, &nGames,
 			    &is_computer);
 		} while (!CountRankLine(showComp, login, nGames, is_computer));
 
@@ -1604,7 +1611,10 @@ ShowRankEntry(int p, FILE *fp, int count, int comp, char *target,
 			    ferror(fp)) {
 				findable = 0;
 			} else if (newLine[0] != '\0') {
-				sscanf(newLine, "%s %d %d %d", login, &rating,
+				_Static_assert(ARRAY_SIZE(login) > 19,
+				    "Assertion has failed");
+
+				sscanf(newLine, "%19s %d %d %d", login, &rating,
 				    &nGames, &is_comp);
 			} else {
 				login[0] = '\0';
