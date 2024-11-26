@@ -1475,8 +1475,12 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	while (fgets(line, sizeof line, fp) != NULL) {
 		_Static_assert(ARRAY_SIZE(login) > 19, "'login' too small");
 
-		sscanf(line, "%19s %d %d %d", login, &sCur.rating, &sCur.num,
-		    &comp);
+		if (sscanf(line, "%19s %d %d %d", login,
+		    &sCur.rating, &sCur.num, &comp) != 4) {
+			warnx("%s: %s: sscanf() error  --  too few items",
+			    __func__, RankFile);
+			continue;
+		}
 
 		if (delName != NULL &&
 		    !strcasecmp(delName, login)) {	// Kill name.
@@ -1548,7 +1552,11 @@ GetRank(FILE *fp, char *target, int countComp)
 	    !playerFound) {
 		_Static_assert(ARRAY_SIZE(login) > 19, "'login' too small");
 
-		sscanf(line, "%19s %*d %d %d", login, &nGames, &is_computer);
+		if (sscanf(line, "%19s %*d %d %d", login, &nGames, &is_computer)
+		    != 1) {
+			warnx("%s: sscanf() error", __func__);
+			continue;
+		}
 
 		if ((playerFound = !strcasecmp(login, target)) ||
 		    CountRankLine(countComp, login, nGames, is_computer))
@@ -1573,15 +1581,18 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 
 	for (int i = 1; i < count; i++) {
 		do {
+			_Static_assert(ARRAY_SIZE(login) > 19,
+			    "'login' too small");
+
 			if (fgets(line, sizeof line, fp) == NULL ||
 			    feof(fp) ||
 			    ferror(fp))
 				break;
-
-			_Static_assert(ARRAY_SIZE(login) > 19, "'login' too small");
-
-			sscanf(line, "%19s %d %d %d", login, &rating, &nGames,
-			    &is_computer);
+			else if (sscanf(line, "%19s %d %d %d", login, &rating,
+			    &nGames, &is_computer) != 4) {
+				warnx("%s: sscanf() error", __func__);
+				break;
+			}
 		} while (!CountRankLine(showComp, login, nGames, is_computer));
 
 		if (rating != *last) {
@@ -1616,8 +1627,12 @@ ShowRankEntry(int p, FILE *fp, int count, int comp, char *target,
 				_Static_assert(ARRAY_SIZE(login) > 19,
 				    "Assertion has failed");
 
-				sscanf(newLine, "%19s %d %d %d", login, &rating,
-				    &nGames, &is_comp);
+				if (sscanf(newLine, "%19s %d %d %d", login,
+				    &rating, &nGames, &is_comp) != 4) {
+					warnx("%s: sscanf() error", __func__);
+					findable = 0;
+					break;
+				}
 			} else {
 				login[0] = '\0';
 			}
