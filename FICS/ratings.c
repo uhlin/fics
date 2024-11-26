@@ -28,6 +28,8 @@
    Markus Uhlin                 24/05/20	Fixed clang warnings
    Markus Uhlin                 24/07/07	Return value checking of the
 						fscanf() calls.
+   Markus Uhlin                 24/11/27	Added sscanf() width spec and
+						fixed ignored retvals.
 */
 
 #include "stdinclude.h"
