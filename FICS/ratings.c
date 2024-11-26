@@ -1470,7 +1470,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 		return;
 	}
 
-	while (fgets(line, MAX_RANK_LINE - 1, fp)) {
+	while (fgets(line, sizeof line, fp) != NULL) {
 		sscanf(line, "%s %d %d %d", login, &sCur.rating, &sCur.num,
 		    &comp);
 
@@ -1540,7 +1540,7 @@ GetRank(FILE *fp, char *target, int countComp)
 	int	nGames, is_computer;
 	int	playerFound = 0;
 
-	while (fgets(line, MAX_RANK_LINE - 1, fp) &&
+	while (fgets(line, sizeof line, fp) != NULL &&
 	    !playerFound) {
 		sscanf(line, "%s %*d %d %d", login, &nGames, &is_computer);
 
@@ -1567,7 +1567,7 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 
 	for (int i = 1; i < count; i++) {
 		do {
-			fgets(line, MAX_RANK_LINE - 1, fp);
+			fgets(line, sizeof line, fp);
 
 			if (feof(fp))
 				break;
@@ -1599,7 +1599,7 @@ ShowRankEntry(int p, FILE *fp, int count, int comp, char *target,
 
 	if (findable) {
 		do {
-			fgets(newLine, MAX_RANK_LINE - 1, fp);
+			fgets(newLine, sizeof newLine, fp);
 
 			if (feof(fp)) {
 				findable = 0;
