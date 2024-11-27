@@ -1769,11 +1769,10 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 
 	type[3] = '\0';
 
-	fp = fopen(file, "r");
-
-	if (fp) {
-		while (!feof(fp))
-			fgets(tmp, 1024, fp);
+	if ((fp = fopen(file, "r")) != NULL) {
+		while (fgets(tmp, sizeof tmp, fp) != NULL) {
+			/* null */;
+		}
 		if (sscanf(ptmp, "%d", &count) != 1)
 			warnx("%s: failed to read 'count'", __func__);
 		fclose(fp);
