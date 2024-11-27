@@ -15,6 +15,7 @@ documented in this file.
 - Added variable `seek`.
 - Added width specifications to multiple `fscanf()` and `sscanf()`
   calls, thus eliminated the risk of overflow. Multiple occurrences.
+- Compile using `-D_FORTIFY_SOURCE=3`.
 - Fixed a bug in `net_send_string()`, where the expression was
   calculated as `A = (B >= C)`.
 - Fixed bughouse. (A board was missing.)
