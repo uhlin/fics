@@ -48,6 +48,7 @@
 #endif
 #include "ficsmain.h"
 #include "legal.h"
+#include "legal2.h"
 #include "network.h"
 #include "playerdb.h"
 #include "ratings.h"
