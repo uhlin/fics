@@ -24,10 +24,10 @@ static int	 rtype;
 static int
 GetPlayerInfo(char *fileName, ENTRY *e)
 {
-	FILE	*fp;
-	char	 NameWithCase[30];
-	char	 field[20];
-	char	 line[100];
+	FILE	*fp = NULL;
+	char	 NameWithCase[30] = { '\0' };
+	char	 field[20] = { '\0' };
+	char	 line[100] = { '\0' };
 	int	 done = 0;
 
 	e->computer = 0;
