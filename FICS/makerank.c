@@ -38,18 +38,18 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 	}
 
 	if ((fp = fopen(fileName, "r")) == NULL ||
-	    fgets(line, sizeof line - 1, fp) == NULL ||
+	    fgets(line, sizeof line, fp) == NULL ||
 	    feof(fp))
 		return 0;
 
 	if (!strcmp(line, "v 1\n")) {
-		fgets(line, 99, fp);
+		fgets(line, sizeof line, fp);
 
 		sscanf(line, "%s", e->name);
 
-		fgets(line, 99, fp);
-		fgets(line, 99, fp);
-		fgets(line, 99, fp);
+		fgets(line, sizeof line, fp);
+		fgets(line, sizeof line, fp);
+		fgets(line, sizeof line, fp);
 
 		if (fscanf(fp, "%d %*u %*u %*u %d %*u %*u %*u %*u %d %*u %*u "
 		    "%*u %d %*u %*u %*u %*u %d %*u %*u %*u %d %*u %*u %*u %*u "
@@ -101,7 +101,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 				done = 1;
 			}
 
-			fgets(line, 99, fp);
+			fgets(line, sizeof line, fp);
 		} while (!done && !feof(fp));
 	}
 
@@ -137,7 +137,7 @@ LoadEntries(void)
 			continue;
 
 		while (1) {
-			fgets(e.name, MAX_LOGIN_NAME, fpPlayerList);
+			fgets(e.name, sizeof(e.name), fpPlayerList);
 
 			if (feof(fpPlayerList))
 				break;
@@ -194,7 +194,7 @@ SetComputers(int n)
 		return 0;
 
 	while (i < n) {
-		fgets(comp, 29, fpComp);
+		fgets(comp, sizeof comp, fpComp);
 
 		if (feof(fpComp))
 			break;
