@@ -221,9 +221,8 @@ add_item(char *new_item, char *filename)
 		goto end;
 
 	while (1) {
-		fgets(junk, MAX_LINE_SIZE, old_fp);
-
-		if (feof(old_fp))
+		if (fgets(junk, sizeof junk, old_fp) == NULL ||
+		    feof(old_fp))
 			break;
 		fprintf(new_fp, "%s", junk);
 	}
