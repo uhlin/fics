@@ -18,6 +18,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)gameproc.o\
 	$(SRC_DIR)iset.o\
 	$(SRC_DIR)legal.o\
+	$(SRC_DIR)legal2.o\
 	$(SRC_DIR)lists.o\
 	$(SRC_DIR)matchproc.o\
 	$(SRC_DIR)maxxes-utils.o\
