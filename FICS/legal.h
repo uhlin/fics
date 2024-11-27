@@ -26,6 +26,6 @@
 #ifndef _LEGAL_H
 #define _LEGAL_H
 
-extern char legalNotice[];
+extern const char	legalNotice[];
 
 #endif /* _LEGAL_H */

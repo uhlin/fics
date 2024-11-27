@@ -24,7 +24,7 @@
 
 #include "legal.h"
 
-char legalNotice[] =
+const char legalNotice[] =
   "fics - An internet chess server.\n"
   "Copyright (C) 1993  Richard V. Nash\n"
   "\n"
