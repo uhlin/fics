@@ -32,7 +32,7 @@
 /*
  * Must be a dns recognisable host name
  */
-#define SERVER_HOSTNAME   "jujube.rpblc.net"
+#define SERVER_HOSTNAME   "rpblc.net"
 
 /*
  * At AFICS we just use 'fics'. But for your server you might want to
