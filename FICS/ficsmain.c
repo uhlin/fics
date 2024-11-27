@@ -144,6 +144,7 @@ GetArgs(int argc, char *argv[])
 				break;
 			case 'l':
 				puts(legalNotice);
+				puts(legalNotice2);
 				exit(0);
 			}
 		} else {
