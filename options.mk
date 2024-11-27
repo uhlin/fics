@@ -14,7 +14,7 @@ CXX ?= c++
 CXXFLAGS = -O2 -Wall -g -pipe -std=c++17
 
 # C preprocessor flags
-CPPFLAGS = -D_DEFAULT_SOURCE=1
+CPPFLAGS = -D_DEFAULT_SOURCE=1 -D_FORTIFY_SOURCE=3
 
 LDFLAGS =
 LDLIBS = -lbsd -lcrypt
