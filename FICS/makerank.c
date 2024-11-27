@@ -137,9 +137,8 @@ LoadEntries(void)
 			continue;
 
 		while (1) {
-			fgets(e.name, sizeof(e.name), fpPlayerList);
-
-			if (feof(fpPlayerList))
+			if (fgets(e.name, sizeof(e.name), fpPlayerList) == NULL ||
+			    feof(fpPlayerList))
 				break;
 
 			len = strlen(e.name);
@@ -194,9 +193,8 @@ SetComputers(int n)
 		return 0;
 
 	while (i < n) {
-		fgets(comp, sizeof comp, fpComp);
-
-		if (feof(fpComp))
+		if (fgets(comp, sizeof comp, fpComp) == NULL ||
+		    feof(fpComp))
 			break;
 
 		comp[strlen(comp) - 1] = '\0';
