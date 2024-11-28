@@ -46,13 +46,18 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 	}
 
 	if (!strcmp(line, "v 1\n")) {
-		fgets(line, sizeof line, fp);
-
-		sscanf(line, "%s", e->name);
-
-		fgets(line, sizeof line, fp);
-		fgets(line, sizeof line, fp);
-		fgets(line, sizeof line, fp);
+		if (fgets(line, sizeof line, fp) == NULL ||
+		    sscanf(line, "%s", e->name) != 1) {
+			warnx("%s: fgets() or sscanf() error", __func__);
+			fclose(fp);
+			return 0;
+		} else if (fgets(line, sizeof line, fp) == NULL ||
+			   fgets(line, sizeof line, fp) == NULL ||
+			   fgets(line, sizeof line, fp) == NULL) {
+			warnx("%s: fgets() error", __func__);
+//			fclose(fp);
+//			return 0;
+		}
 
 		if (fscanf(fp, "%d %*u %*u %*u %d %*u %*u %*u %*u %d %*u %*u "
 		    "%*u %d %*u %*u %*u %*u %d %*u %*u %*u %d %*u %*u %*u %*u "
@@ -67,6 +72,8 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 		    &(e->r[3].rating)) != 8) {
 			fprintf(stderr, "OOPS: couldn't parse player file %s."
 			    "\n", fileName);
+			fclose(fp);
+			return 0;
 		}
 	} else {
 		do {
