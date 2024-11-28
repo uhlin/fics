@@ -75,6 +75,8 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 			fclose(fp);
 			return 0;
 		}
+
+		done = 1;
 	} else {
 		do {
 			sscanf(line, "%s", field);
@@ -111,12 +113,13 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 				done = 1;
 			}
 
-			fgets(line, sizeof line, fp);
+			if (fgets(line, sizeof line, fp) == NULL)
+				break;
 		} while (!done && !feof(fp));
 	}
 
 	fclose(fp);
-	return 1;
+	return (done ? 1 : 0);
 }
 
 static int
