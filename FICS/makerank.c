@@ -47,7 +47,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 
 	if (!strcmp(line, "v 1\n")) {
 		if (fgets(line, sizeof line, fp) == NULL ||
-		    sscanf(line, "%s", e->name) != 1) {
+		    sscanf(line, "%19s", e->name) != 1) {
 			warnx("%s: fgets() or sscanf() error", __func__);
 			fclose(fp);
 			return 0;
