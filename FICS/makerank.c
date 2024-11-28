@@ -209,9 +209,9 @@ LoadEntries(void)
 static int
 SetComputers(int n)
 {
-	FILE	*fpComp;
-	char	 comp[30];
-	char	 line[100];
+	FILE	*fpComp = NULL;
+	char	 comp[30] = { '\0' };
+	char	 line[100] = { '\0' };
 	int	 i = 0;
 
 	if (snprintf(line, sizeof line, "sort -f %s", COMPUTER_FILE) >=
