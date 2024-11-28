@@ -1736,15 +1736,15 @@ ShowRankLines(int p, FILE *fb, FILE *fs, FILE *fw, int bCount, int sCount,
 	DisplayRankHead(p, show);
 
 	for (int i = 0; i < n && show; i++) {
-		if (CheckFlag(show, SHOW_BLITZ)) {
+		if (fb != NULL && CheckFlag(show, SHOW_BLITZ)) {
 			bCount += ShowRankEntry(p, fb, bCount, showComp, target,
 			    &lastBlitz, &nTiedBlitz);
 		}
-		if (CheckFlag(show, SHOW_STANDARD)) {
+		if (fs != NULL && CheckFlag(show, SHOW_STANDARD)) {
 			sCount += ShowRankEntry(p, fs, sCount, showComp, target,
 			    &lastStd, &nTiedStd);
 		}
-		if (CheckFlag(show, SHOW_WILD)) {
+		if (fw != NULL && CheckFlag(show, SHOW_WILD)) {
 			wCount += ShowRankEntry(p, fw, wCount, showComp, target,
 			    &lastWild, &nTiedWild);
 		}
