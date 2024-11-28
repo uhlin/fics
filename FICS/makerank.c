@@ -39,8 +39,11 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 
 	if ((fp = fopen(fileName, "r")) == NULL ||
 	    fgets(line, sizeof line, fp) == NULL ||
-	    feof(fp))
+	    feof(fp)) {
+		if (fp)
+			fclose(fp);
 		return 0;
+	}
 
 	if (!strcmp(line, "v 1\n")) {
 		fgets(line, sizeof line, fp);
