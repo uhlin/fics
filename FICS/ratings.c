@@ -1709,21 +1709,21 @@ ShowRankLines(int p, FILE *fb, FILE *fs, FILE *fw, int bCount, int sCount,
 	if (n <= 0)
 		return 0;
 
-	if (CheckFlag(show, SHOW_BLITZ)) {
+	if (fb != NULL && CheckFlag(show, SHOW_BLITZ)) {
 		PositionFilePtr(fb, bCount, &lastBlitz, &nTiedBlitz, showComp);
 
 		if (feof(fb))
 			ClearFlag(show, SHOW_BLITZ);
 	}
 
-	if (CheckFlag(show, SHOW_STANDARD)) {
+	if (fs != NULL && CheckFlag(show, SHOW_STANDARD)) {
 		PositionFilePtr(fs, sCount, &lastStd, &nTiedStd, showComp);
 
 		if (feof(fs))
 			ClearFlag(show, SHOW_STANDARD);
 	}
 
-	if (CheckFlag(show, SHOW_WILD)) {
+	if (fw != NULL && CheckFlag(show, SHOW_WILD)) {
 		PositionFilePtr(fw, wCount, &lastWild, &nTiedWild, showComp);
 
 		if (feof(fw))
