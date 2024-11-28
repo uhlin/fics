@@ -30,6 +30,7 @@
 						fscanf() calls.
    Markus Uhlin                 24/11/27	Added sscanf() width spec and
 						fixed ignored retvals.
+   Markus Uhlin                 24/11/28	Added null checks
 */
 
 #include "stdinclude.h"
