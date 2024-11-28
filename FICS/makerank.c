@@ -46,6 +46,8 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 	}
 
 	if (!strcmp(line, "v 1\n")) {
+		_Static_assert(ARRAY_SIZE(e->name) > 19, "Array too little");
+
 		if (fgets(line, sizeof line, fp) == NULL ||
 		    sscanf(line, "%19s", e->name) != 1) {
 			warnx("%s: fgets() or sscanf() error", __func__);
@@ -79,10 +81,24 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 		done = 1;
 	} else {
 		do {
-			sscanf(line, "%s", field);
+			_Static_assert(ARRAY_SIZE(field) > 19,
+			    "Unexpected array length");
+			_Static_assert(ARRAY_SIZE(NameWithCase) > 29,
+			    "Unexpected array length");
+
+			if (sscanf(line, "%19s", field) != 1) {
+				warnx("%s: sscanf() error", __func__);
+				fclose(fp);
+				return 0;
+			}
 
 			if (!strcmp(field, "Name:")) {
-				sscanf(line, "%*s %s", NameWithCase);
+				if (sscanf(line, "%*s %29s", NameWithCase) != 1) {
+					warnx("%s: expected name with case",
+					    __func__);
+					fclose(fp);
+					return 0;
+				}
 
 				if (strcasecmp(e->name, NameWithCase)) {
 					printf("TROUBLE: %s's handle is "
