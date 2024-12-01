@@ -217,14 +217,10 @@ mail_file_to_address(char *addr, char *subj, char *fname)
 		return -1;
 #ifdef SENDMAILPROG
 	fprintf(fp1, "To: %s\nSubject: %s\n", addr, subj);
-	if ((fp2 = fopen(fname, "r")) == NULL)
+	if ((fp2 = fopen(fname, "r")) == NULL) // XXX
 		return -1;
-	while (!feof(fp2)) {
-		fgets(tmp, sizeof tmp, fp2);
-		if (!feof(fp2)) {
-			fputs(tmp, fp1);
-		}
-	}
+	while (fgets(tmp, sizeof tmp, fp2) != NULL && !feof(fp2))
+		fputs(tmp, fp1);
 	fclose(fp2);
 #endif
 	pclose(fp1);
@@ -433,9 +429,7 @@ psend_file(int p, char *dir, char *file)
 		return -1;
 
 	while (!feof(fp) && --lcount > 0) {
-		fgets(tmp, sizeof tmp, fp);
-
-		if (!feof(fp))
+		if (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
 			net_send_string(parray[p].socket, tmp, 1);
 	}
 
@@ -473,12 +467,8 @@ psend_logoutfile(int p, char *dir, char *file)
 	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
 
-	while (!feof(fp)) {
-		fgets(tmp, sizeof tmp, fp);
-
-		if (!feof(fp))
-			net_send_string(parray[p].socket, tmp, 1);
-	}
+	while (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
+		net_send_string(parray[p].socket, tmp, 1);
 
 	fclose(fp);
 	return 0;
