@@ -220,7 +220,7 @@ mail_file_to_address(char *addr, char *subj, char *fname)
 	if ((fp2 = fopen(fname, "r")) == NULL)
 		return -1;
 	while (!feof(fp2)) {
-		fgets(tmp, MAX_LINE_SIZE - 1, fp2);
+		fgets(tmp, sizeof tmp, fp2);
 		if (!feof(fp2)) {
 			fputs(tmp, fp1);
 		}
@@ -433,7 +433,7 @@ psend_file(int p, char *dir, char *file)
 		return -1;
 
 	while (!feof(fp) && --lcount > 0) {
-		fgets(tmp, MAX_LINE_SIZE - 1, fp);
+		fgets(tmp, sizeof tmp, fp);
 
 		if (!feof(fp))
 			net_send_string(parray[p].socket, tmp, 1);
@@ -474,7 +474,7 @@ psend_logoutfile(int p, char *dir, char *file)
 		return -1;
 
 	while (!feof(fp)) {
-		fgets(tmp, MAX_LINE_SIZE - 1, fp);
+		fgets(tmp, sizeof tmp, fp);
 
 		if (!feof(fp))
 			net_send_string(parray[p].socket, tmp, 1);
@@ -504,7 +504,7 @@ pmore_file(int p)
 	fseek(fp, parray[p].last_file_byte, SEEK_SET);
 
 	while (!feof(fp) && --lcount > 0) {
-		fgets(tmp, MAX_LINE_SIZE, fp);
+		fgets(tmp, sizeof tmp, fp);
 
 		if (!feof(fp))
 			net_send_string(parray[p].socket, tmp, 1);
@@ -846,7 +846,7 @@ lines_file(char *file)
 		return 0;
 
 	while (!feof(fp)) {
-		if (fgets(tmp, MAX_LINE_SIZE, fp))
+		if (fgets(tmp, sizeof tmp, fp))
 			lcount++;
 	}
 
