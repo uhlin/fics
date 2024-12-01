@@ -32,6 +32,8 @@
    Markus Uhlin			24/07/07	Added parameter 'size' to
 						psprintf_highlight().
    Markus Uhlin			24/08/11	Improved fix_time().
+   Markus Uhlin			24/12/01	Usage of sizeof and fixed
+						ignored fgets() retvals.
 */
 
 #include "stdinclude.h"
