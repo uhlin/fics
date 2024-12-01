@@ -218,9 +218,13 @@ mail_file_to_address(char *addr, char *subj, char *fname)
 	if ((fp1 = popen(com, "w")) == NULL)
 		return -1;
 #ifdef SENDMAILPROG
-	fprintf(fp1, "To: %s\nSubject: %s\n", addr, subj);
-	if ((fp2 = fopen(fname, "r")) == NULL) // XXX
+	if ((fp2 = fopen(fname, "r")) == NULL) {
+		pclose(fp1);
 		return -1;
+	}
+
+	fprintf(fp1, "To: %s\nSubject: %s\n", addr, subj);
+
 	while (fgets(tmp, sizeof tmp, fp2) != NULL && !feof(fp2))
 		fputs(tmp, fp1);
 	fclose(fp2);
