@@ -478,7 +478,7 @@ PUBLIC int
 pmore_file(int p)
 {
 	FILE	*fp;
-	char	 tmp[MAX_LINE_SIZE];
+	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 	int	 lcount = (parray[p].d_height - 1);
 
 	if (!parray[p].last_file) {
