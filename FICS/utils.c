@@ -494,9 +494,7 @@ pmore_file(int p)
 	fseek(fp, parray[p].last_file_byte, SEEK_SET);
 
 	while (!feof(fp) && --lcount > 0) {
-		fgets(tmp, sizeof tmp, fp);
-
-		if (!feof(fp))
+		if (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
 			net_send_string(parray[p].socket, tmp, 1);
 	}
 
@@ -786,9 +784,7 @@ truncate_file(char *file, int lines)
 		return 1;
 
 	while (!feof(fp)) {
-		fgets(tBuf[bptr], MAX_LINE_SIZE, fp);
-
-		if (feof(fp))
+		if (fgets(tBuf[bptr], MAX_LINE_SIZE, fp) == NULL || feof(fp))
 			break;
 
 		if (tBuf[bptr][strlen(tBuf[bptr]) - 1] != '\n') {
@@ -835,10 +831,8 @@ lines_file(char *file)
 	if ((fp = fopen(file, "r")) == NULL)
 		return 0;
 
-	while (!feof(fp)) {
-		if (fgets(tmp, sizeof tmp, fp))
-			lcount++;
-	}
+	while (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
+		lcount++;
 
 	fclose(fp);
 	return lcount;
