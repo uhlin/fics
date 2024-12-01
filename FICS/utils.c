@@ -200,8 +200,8 @@ PUBLIC int
 mail_file_to_address(char *addr, char *subj, char *fname)
 {
 	FILE	*fp1, *fp2;
-	char	 com[1000];
-	char	 tmp[MAX_LINE_SIZE];
+	char	 com[1000] = { '\0' };
+	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 
 	/* maybe unused */
 	(void) fp2;
