@@ -27,6 +27,7 @@ documented in this file.
   `fgets()`, `fscanf()` and `sscanf()`. Multiple occurrences.
 - Fixed incorrect format strings.
 - Fixed uninitialized variables.
+- Trimmed newlines after `fgets()` calls with `strcspn()`.
 - Usage of begin/end decls in headers.
 
 ## [1.4.3] - 2024-08-04 ##
