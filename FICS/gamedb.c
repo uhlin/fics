@@ -34,6 +34,8 @@
 						multiple fscanf() calls.
    Markus Uhlin                 24/11/23	Fixed bugs in movesToString()
    Markus Uhlin                 24/11/25	Null checks
+   Markus Uhlin			24/12/02	Fixed bugs and ignored function
+						return values.
 */
 
 #include "stdinclude.h"
