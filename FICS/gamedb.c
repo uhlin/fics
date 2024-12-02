@@ -42,6 +42,7 @@
 #include "common.h"
 
 #include <err.h>
+#include <errno.h>
 
 #include "command.h"
 #include "config.h"
