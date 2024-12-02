@@ -2582,9 +2582,7 @@ LoadMsgRange(int p, int start, int end, textlist **Head)
 	}
 
 	for (n = 1; n <= end || end <= 0; n++) {
-		fgets(line, sizeof line, fp);
-
-		if (feof(fp))
+		if (fgets(line, sizeof line, fp) == NULL)
 			break;
 		if ((start < 0 && (n < -start || n > -end)) ||
 		    (start >= 0 && n >= start)) {
