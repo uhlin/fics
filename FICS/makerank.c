@@ -146,7 +146,7 @@ LoadEntries(void)
 	char	 command[90];
 	char	 letter1;
 	char	 pathInput[80];
-	int	 len, n = 0;
+	int	 n = 0;
 	int	 listsize;
 
 	listsize	= 100;
@@ -170,7 +170,6 @@ LoadEntries(void)
 			    feof(fpPlayerList))
 				break;
 
-			len = strlen(e.name);
 			e.name[strcspn(e.name, "\n")] = '\0';
 
 			if (e.name[0] != letter1) {
