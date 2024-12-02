@@ -930,11 +930,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 PUBLIC int
 player_read(int p, char *name)
 {
-	FILE	*fp;
+	FILE	*fp = NULL;
 	char	*attr, *value;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char	 line[MAX_LINE_SIZE] = { '\0' };
-	int	 len;
+	int	 len = 0;
 	int	 version = 0;
 
 	parray[p].login = stolower(xstrdup(name));
