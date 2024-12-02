@@ -2546,12 +2546,7 @@ LoadMsgs(int p, int which, textlist **Head)
 	if ((fp = fopen(fName, "r")) == NULL)
 		return -1;
 
-	while (!feof(fp)) {
-		fgets(line, sizeof line, fp);
-
-		if (feof(fp))
-			break;
-
+	while (fgets(line, sizeof line, fp) != NULL) {
 		if (SaveThisMsg(which, line)) {
 			SaveTextListEntry(Cur, line, ++n);
 			Cur = &(*Cur)->next;
