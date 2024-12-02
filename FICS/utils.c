@@ -34,6 +34,8 @@
    Markus Uhlin			24/08/11	Improved fix_time().
    Markus Uhlin			24/12/01	Usage of sizeof and fixed
 						ignored fgets() retvals.
+   Markus Uhlin			24/12/02	Fixed a possible array overrun
+						in truncate_file().
 */
 
 #include "stdinclude.h"
