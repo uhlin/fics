@@ -539,7 +539,10 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 
 	if (pp->num_plan > 0) {
 		for (i = 0; i < pp->num_plan; i++) {
-			fgets(tmp2, sizeof tmp2, fp);
+			if (fgets(tmp2, sizeof tmp2, fp) == NULL) {
+				warnx("%s: bad plan: feof %s", __func__, file);
+				return;
+			}
 
 			if (!(len = strlen(tmp2))) {
 				fprintf(stderr, "FICS: Error bad plan in "
@@ -557,7 +560,11 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 
 	if (pp->num_formula > 0) {
 		for (i = 0; i < pp->num_formula; i++) {
-			fgets(tmp2, sizeof tmp2, fp);
+			if (fgets(tmp2, sizeof tmp2, fp) == NULL) {
+				warnx("%s: bad formula: feof %s", __func__,
+				    file);
+				return;
+			}
 
 			if (!(len = strlen(tmp2))) {
 				fprintf(stderr, "FICS: Error bad formula in "
@@ -573,8 +580,12 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		}
 	}
 
-	fgets(tmp2, sizeof tmp2, fp);
-	tmp2[strlen(tmp2) - 1] = '\0';
+	if (fgets(tmp2, sizeof tmp2, fp) == NULL) {
+		warnx("%s: fgets() error", __func__);
+		return;
+	}
+
+	tmp2[strcspn(tmp2, "\n")] = '\0';
 
 	if (!strcmp(tmp2, "NONE"))
 		pp->formula = NULL;
@@ -583,7 +594,10 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 
 	if (pp->numAlias > 0) {
 		for (i = 0; i < pp->numAlias; i++) {
-			fgets(tmp2, sizeof tmp2, fp);
+			if (fgets(tmp2, sizeof tmp2, fp) == NULL) {
+				warnx("%s: bad alias: feof %s", __func__, file);
+				return;
+			}
 
 			if (!(len = strlen(tmp2))) {
 				fprintf(stderr, "FICS: Error bad alias in "
