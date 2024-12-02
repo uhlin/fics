@@ -795,7 +795,12 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 		if (parray[p].num_plan > 0) {
 			for (i = 0; i < parray[p].num_plan; i++) {
-				fgets(tmp, sizeof tmp, fp);
+
+				if (fgets(tmp, sizeof tmp, fp) == NULL) {
+					warnx("%s: bad plan: feof %s",
+					    __func__, file);
+					return -1;
+				}
 
 				if (!(len = strlen(tmp))) {
 					fprintf(stderr, "FICS: Error bad plan "
@@ -818,7 +823,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 		if (parray[p].num_formula > 0) {
 			for (i = 0; i < parray[p].num_formula; i++) {
-				fgets(tmp, sizeof tmp, fp);
+				if (fgets(tmp, sizeof tmp, fp) == NULL) {
+					warnx("%s: bad formula: feof %s",
+					    __func__, file);
+					return -1;
+				}
 
 				if (!(len = strlen(tmp))) {
 					fprintf(stderr, "FICS: Error bad "
@@ -847,7 +856,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 		if (parray[p].numAlias > 0) {
 			for (i = 0; i < parray[p].numAlias; i++) {
-				fgets(tmp, sizeof tmp, fp);
+				if (fgets(tmp, sizeof tmp, fp) == NULL) {
+					warnx("%s: bad alias: feof %s",
+					    __func__, file);
+					return -1;
+				}
 
 				if (!(len = strlen(tmp))) {
 					fprintf(stderr, "FICS: Error bad alias "
@@ -877,7 +890,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, sizeof tmp, fp);
+			if (fgets(tmp, sizeof tmp, fp) == NULL) {
+				warnx("%s: bad censor: feof %s",
+				    __func__, file);
+				return -1;
+			}
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
@@ -892,7 +909,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, sizeof tmp, fp);
+			if (fgets(tmp, sizeof tmp, fp) == NULL) {
+				warnx("%s: bad notify: feof %s",
+				    __func__, file);
+				return -1;
+			}
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
@@ -907,7 +928,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, sizeof tmp, fp);
+			if (fgets(tmp, sizeof tmp, fp) == NULL) {
+				warnx("%s: bad noplay: feof %s",
+				    __func__, file);
+				return -1;
+			}
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
@@ -922,7 +947,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		i = atoi(value);
 
 		while (i--) {
-			fgets(tmp, sizeof tmp, fp);
+			if (fgets(tmp, sizeof tmp, fp) == NULL) {
+				warnx("%s: bad gnotify: feof %s",
+				    __func__, file);
+				return -1;
+			}
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
