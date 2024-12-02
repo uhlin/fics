@@ -1575,8 +1575,9 @@ game_save(int g)
 	/*
 	 * Create link for easier stored game finding
 	 */
-	if (bp->login[0] != wp->login[0])
-		link(fname, lname);
+	if (bp->login[0] != wp->login[0] &&
+	    link(fname, lname) != 0)
+		warn("%s: link() error", __func__);
 	return 0;
 }
 
