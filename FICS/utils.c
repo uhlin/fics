@@ -789,11 +789,8 @@ truncate_file(char *file, int lines)
 	if ((fp = fopen(file, "r")) == NULL)
 		return 1;
 
-	while (!feof(fp)) {
-		if (fgets(tBuf[bptr], MAX_LINE_SIZE, fp) == NULL || feof(fp))
-			break;
-
-		if (tBuf[bptr][strlen(tBuf[bptr]) - 1] != '\n') {
+	while (fgets(tBuf[bptr], MAX_LINE_SIZE, fp) != NULL) {
+		if (strchr(tBuf[bptr], '\n') == NULL) {
 			// Line too long
 			fclose(fp);
 			return -1;
