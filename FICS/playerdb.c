@@ -63,6 +63,9 @@
 PUBLIC player	 parray[PARRAY_SIZE];
 PUBLIC int	 p_num = 0;
 
+/*
+ * Checks if a player number is within bounds.
+ */
 PUBLIC bool
 player_num_ok_chk(const int num)
 {
