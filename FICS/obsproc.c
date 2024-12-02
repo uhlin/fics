@@ -672,11 +672,11 @@ com_mailmoves(int p, param_list param)
 PRIVATE int
 old_mail_moves(int p, int mail, param_list param)
 {
-	FILE	*fp;
+	FILE	*fp = NULL;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char	 tmp[2048] = { '\0' };
 	char	*ptmp = tmp;
-	int	 count;
+	int	 count = 0;
 	int	 p1, connected;
 
 	if (mail && (!parray[p].registered)) {
@@ -705,10 +705,16 @@ old_mail_moves(int p, int mail, param_list param)
 		return COM_OK;
 	}
 
-	while (!feof(fp))
-		fgets(tmp, 1024, fp);
+	while (fgets(tmp, sizeof tmp, fp) != NULL) {
+		/* null */;
+	}
 
-	sscanf(ptmp, "%d", &count);
+	if (sscanf(ptmp, "%d", &count) != 1) {
+		warnx("%s: sscanf() error", __func__);
+		fclose(fp);
+		return COM_FAILED;
+	}
+
 	fclose(fp);
 	pprintf(p, "Last game for %s was history game %d.\n", parray[p1].name,
 	    count);
