@@ -1333,7 +1333,7 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 {
 	char	*attr, *value;
 	char	 line[MAX_GLINE_SIZE] = { '\0' };
-	int	 len;
+	int	 len = 0;
 	int	 version = 0;
 
 	if (fgets(line, sizeof line, fp) == NULL) {
@@ -1352,7 +1352,8 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 	} else {
 		do {
 			if ((len = strlen(line)) <= 1) {
-				fgets(line, sizeof line, fp);
+				if (fgets(line, sizeof line, fp) == NULL)
+					break;
 				continue;
 			}
 
@@ -1367,7 +1368,8 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 			if (!*value) {
 				fprintf(stderr, "FICS: Error reading file %s\n",
 				    fname);
-				fgets(line, sizeof line, fp);
+				if (fgets(line, sizeof line, fp) == NULL)
+					break;
 				continue;
 			}
 
@@ -1378,7 +1380,8 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 			if (!*value) {
 				fprintf(stderr, "FICS: Error reading file %s\n",
 				    fname);
-				fgets(line, sizeof line, fp);
+				if (fgets(line, sizeof line, fp) == NULL)
+					break;
 				continue;
 			}
 
@@ -1387,7 +1390,8 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 			if (got_attr_value(g, attr, value, fp, fname))
 				return -1;
 
-			fgets(line, sizeof line, fp);
+			if (fgets(line, sizeof line, fp) == NULL)
+				break;
 		} while (!feof(fp));
 	}
 
