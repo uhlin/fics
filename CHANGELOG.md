@@ -20,6 +20,7 @@ documented in this file.
 - Fixed a bug in `net_send_string()`, where the expression was
   calculated as `A = (B >= C)`. (Found by PVS-Studio.)
 - Fixed bughouse. (A board was missing.)
+- Fixed bugs in `game_write_complete()`.
 - Fixed bugs in `movesToString()`.
 - Fixed cases of possible out-of-bounds array access.
 - Fixed ignored return values of important functions such as
