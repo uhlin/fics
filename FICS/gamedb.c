@@ -1641,12 +1641,8 @@ RemoveHistGame(char *file, int maxlines)
 
 	count++;
 
-	while (!feof(fp)) {
-		fgets(line, ARRAY_SIZE(line), fp);
-
-		if (!feof(fp))
-			count++;
-	}
+	while (fgets(line, ARRAY_SIZE(line), fp) != NULL)
+		count++;
 
 	fclose(fp);
 	stolower(Opponent);
