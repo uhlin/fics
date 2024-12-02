@@ -4,29 +4,29 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Added an autorun script suitable to be run as a cron job.
-- Added command `sought`, which currently behaves as a no-op. Code is
+- **Added** an autorun script suitable to be run as a cron job.
+- **Added** command `sought`, which currently behaves as a no-op. Code is
   to be added in a later version. We also want the seek/unseek
   commands.
-- Added missing calls to `fclose()`.
-- Added null checks.
-- Added usage of `time_t`.
-- Added usage of macros.
-- Added variable `seek`.
-- Added width specifications to multiple `fscanf()` and `sscanf()`
+- **Added** missing calls to `fclose()`.
+- **Added** null checks.
+- **Added** usage of `time_t`.
+- **Added** usage of macros.
+- **Added** variable `seek`.
+- **Added** width specifications to multiple `fscanf()` and `sscanf()`
   calls, thus eliminated the risk of overflow. Multiple occurrences.
   (Found by PVS-Studio.)
 - Compile using `-D_FORTIFY_SOURCE=3`.
-- Fixed a bug in `net_send_string()`, where the expression was
+- **Fixed** a bug in `net_send_string()`, where the expression was
   calculated as `A = (B >= C)`. (Found by PVS-Studio.)
-- Fixed bughouse. (A board was missing.)
-- Fixed bugs in `game_write_complete()`.
-- Fixed bugs in `movesToString()`.
-- Fixed cases of possible out-of-bounds array access.
-- Fixed ignored return values of important functions such as
+- **Fixed** bughouse. (A board was missing.)
+- **Fixed** bugs in `game_write_complete()`.
+- **Fixed** bugs in `movesToString()`.
+- **Fixed** cases of possible out-of-bounds array access.
+- **Fixed** ignored return values of important functions such as
   `fgets()`, `fscanf()` and `sscanf()`. Multiple occurrences.
-- Fixed incorrect format strings.
-- Fixed uninitialized variables.
+- **Fixed** incorrect format strings.
+- **Fixed** uninitialized variables.
 - Trimmed newlines after `fgets()` calls with `strcspn()`.
 - Usage of begin/end decls in headers.
 
