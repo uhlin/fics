@@ -63,6 +63,13 @@
 PUBLIC player	 parray[PARRAY_SIZE];
 PUBLIC int	 p_num = 0;
 
+PUBLIC bool
+player_num_ok_chk(const int num)
+{
+	return (num >= 0 && num <= p_num &&
+	    num < (int)ARRAY_SIZE(parray));
+}
+
 PRIVATE int
 get_empty_slot(void)
 {

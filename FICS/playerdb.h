@@ -29,6 +29,8 @@
 #ifndef _PLAYERDB_H
 #define _PLAYERDB_H
 
+#include <stdbool.h>
+
 #define PLAYER_VERSION 1
 
 #define MAX_ALIASES	30
@@ -200,6 +202,8 @@ typedef struct _textlist {
 
 extern player	 parray[PARRAY_SIZE];
 extern int	 p_num;
+
+extern bool	 player_num_ok_chk(const int);
 
 extern int	 ClearMsgsBySender(int, param_list);
 extern int	 ClrMsgRange(int, int, int);
