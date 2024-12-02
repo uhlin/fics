@@ -28,6 +28,7 @@
    Markus Uhlin			24/04/29	Fixed compiler warnings
    Markus Uhlin			24/07/07	Fixed unhandled return values of
 						fscanf().
+   Markus Uhlin			24/12/02	Improved old_mail_moves()
 */
 
 #include "stdinclude.h"
