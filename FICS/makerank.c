@@ -171,7 +171,7 @@ LoadEntries(void)
 				break;
 
 			len = strlen(e.name);
-			e.name[len - 1] = '\0';
+			e.name[strcspn(e.name, "\n")] = '\0';
 
 			if (e.name[0] != letter1) {
 				printf("File %c/%s: wrong directory.\n",
@@ -226,7 +226,7 @@ SetComputers(int n)
 		    feof(fpComp))
 			break;
 
-		comp[strlen(comp) - 1] = '\0';
+		comp[strcspn(comp, "\n")] = '\0';
 
 		while (i < n && strcasecmp(list[i]->name, comp) < 0)
 			i++;
