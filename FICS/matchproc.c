@@ -1209,7 +1209,8 @@ com_accept(int p, param_list param)
 		}
 	}
 
-	if (acceptNum < 0 || acceptNum >= ARRAY_SIZE(parray[0].p_from_list)) {
+	if (acceptNum < 0 ||
+	    acceptNum >= (int)ARRAY_SIZE(parray[0].p_from_list)) {
 		pprintf(p, "Accept number out-of-bounds!\n");
 		return COM_FAILED;
 	}
