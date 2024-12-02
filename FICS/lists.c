@@ -89,11 +89,9 @@ list_find(int p, enum ListWhich l)
 			rfree(tempList);
 			return NULL;
 		}
-		while (!feof(fp)) {
-			if (fgets(listmember, 100, fp) != NULL) {
-				listmember[strlen(listmember) - 1] = '\0';
-				tempList->member[count++] = xstrdup(listmember);
-			}
+		while (fgets(listmember, ARRAY_SIZE(listmember), fp) != NULL) {
+			listmember[strcspn(listmember, "\n")] = '\0';
+			tempList->member[count++] = xstrdup(listmember);
 		}
 
 		fclose(fp);
