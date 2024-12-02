@@ -2121,9 +2121,9 @@ pgames(int p, int p1, char *fname)
 PUBLIC void
 game_write_complete(int g, int isDraw, char *EndSymbol)
 {
-	FILE	*fp;
+	FILE	*fp = NULL;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
-	int	 fd;
+	int	 fd = -1;
 	int	 wp = garray[g].white, bp = garray[g].black;
 	time_t	 now = time(NULL);
 
@@ -2132,20 +2132,21 @@ game_write_complete(int g, int isDraw, char *EndSymbol)
 		    hist_dir,
 		    (long int)(now % 100),
 		    (long int)now);
+		errno = 0;
 		fd = open(fname, (O_WRONLY | O_CREAT | O_EXCL), 0644);
-		if (fd == EEXIST)
+		if (fd == -1 && errno == EEXIST)
 			now++;
-	} while (fd == EEXIST);
+	} while (fd == -1 && errno == EEXIST);
 
 	if (fd >= 0) {
-		fp = fdopen(fd, "w");
-		if (fp != NULL)
+		if ((fp = fdopen(fd, "w")) != NULL) {
 			WriteGameFile(fp, g);
-		else {
+			fclose(fp);
+		} else {
 			fprintf(stderr, "Trouble writing history file %s",
 			    fname);
 		}
-		fclose(fp);
+
 		close(fd);
 	}
 
