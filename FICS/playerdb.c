@@ -551,7 +551,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 				i--;
 				pp->num_plan--;
 			} else {
-				tmp2[len - 1] = '\0'; // Get rid of '\n'.
+				// Get rid of '\n'.
+				tmp2[strcspn(tmp2, "\n")] = '\0';
 
 				pp->planLines[i] = (len > 1 ? xstrdup(tmp2) :
 				    NULL);
@@ -573,7 +574,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 				i--;
 				pp->num_formula--;
 			} else {
-				tmp2[len - 1] = '\0'; // Get rid of '\n'.
+				// Get rid of '\n'.
+				tmp2[strcspn(tmp2, "\n")] = '\0';
 
 				pp->formulaLines[i] = (len > 1 ? xstrdup(tmp2) :
 				    NULL);
@@ -606,7 +608,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 				i--;
 				pp->numAlias--;
 			} else {
-				tmp2[len - 1] = '\0'; // Get rid of '\n'.
+				tmp2[strcspn(tmp2, "\n")] = '\0';
 				tmp = tmp2;
 				tmp = eatword(tmp2);
 				*tmp = '\0';
@@ -809,7 +811,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 					i--;
 					parray[p].num_plan--;
 				} else {
-					tmp[len - 1] = '\0'; // Get rid of '\n'.
+					// Get rid of '\n'.
+					tmp[strcspn(tmp, "\n")] = '\0';
+
 					parray[p].planLines[i] = (len > 1 ?
 					    xstrdup(tmp) : NULL);
 				}
@@ -836,7 +840,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 					i--;
 					parray[p].num_formula--;
 				} else {
-					tmp[len - 1] = '\0'; // Get rid of '\n'.
+					// Get rid of '\n'.
+					tmp[strcspn(tmp, "\n")] = '\0';
+
 					parray[p].formulaLines[i] = (len > 1 ?
 					    xstrdup(tmp) : NULL);
 				}
@@ -869,7 +875,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 					i--;
 					parray[p].numAlias--;
 				} else {
-					tmp[len - 1] = '\0'; // Get rid of '\n'.
+					tmp[strcspn(tmp, "\n")] = '\0';
 					tmp1 = tmp;
 					tmp1 = eatword(tmp1);
 					*tmp1 = '\0';
@@ -902,7 +908,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 				fprintf(stderr, "FICS: Error bad censor in "
 				    "file %s\n", file);
 			} else {
-				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_CENSOR, tmp);
 			}
 		}
@@ -921,7 +927,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 				fprintf(stderr, "FICS: Error bad notify in "
 				    "file %s\n", file);
 			} else {
-				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_NOTIFY, tmp);
 			}
 		}
@@ -940,7 +946,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 				fprintf(stderr, "FICS: Error bad noplay in "
 				    "file %s\n", file);
 			} else {
-				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_NOPLAY, tmp);
 			}
 		}
@@ -959,7 +965,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 				fprintf(stderr, "FICS: Error bad gnotify in "
 				    "file %s\n", file);
 			} else {
-				tmp[len - 1] = '\0';   // Get rid of '\n'.
+				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_GNOTIFY, tmp);
 			}
 		}
