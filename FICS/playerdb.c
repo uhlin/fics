@@ -964,7 +964,11 @@ player_read(int p, char *name)
 
 	parray[p].registered = 1; // Lets load the file
 
-	fgets(line, sizeof line, fp); // Ok, so which version file?
+	if (fgets(line, sizeof line, fp) == NULL) {	// Ok, so which version
+		warnx("%s: fgets() error", __func__);	// file?
+		fclose(fp);
+		return -1;
+	}
 
 	if (line[0] == 'v')
 		sscanf(line, "%*c %d", &version);
@@ -996,7 +1000,9 @@ player_read(int p, char *name)
 			value = eatwhite(value);
 			stolower(attr);
 			got_attr_value_player(p, attr, value, fp, fname);
-			fgets(line, sizeof line, fp);
+
+			if (fgets(line, sizeof line, fp) == NULL)
+				break;
 		} while (!feof(fp));
 	}
 
