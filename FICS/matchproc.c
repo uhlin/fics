@@ -28,6 +28,9 @@
 							handling.
    Markus Uhlin                         24/03/29	Fixed potentially
 							insecure format strings.
+   Markus Uhlin                         24/12/02	com_accept: check that
+							the accept number is
+							within bounds.
 */
 
 #include "stdinclude.h"
