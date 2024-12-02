@@ -886,7 +886,8 @@ WriteMoves(FILE *fp, move_t *m)
 
 	/* Are we using from-file or from-rank in 'algString'? */
 
-	i = strlen(m->algString) - 1;
+	if ((i = strlen(m->algString)) > 0)
+		i -= 1;
 
 	if (m->algString[i] == '+') {
 		check = 1;
