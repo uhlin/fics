@@ -1211,6 +1211,11 @@ player_save(int p)
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE];
 
+	if (!player_num_ok_chk(p)) {
+		warnx("%s: invalid player number %d", __func__, p);
+		return -1;
+	}
+
 	if (!parray[p].registered)	// Player must not be registered
 		return -1;
 
