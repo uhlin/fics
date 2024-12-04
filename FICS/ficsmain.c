@@ -146,6 +146,9 @@ GetArgs(int argc, char *argv[])
 				puts(legalNotice);
 				puts(legalNotice2);
 				exit(0);
+			case 'v':
+				printf("%s %s\n", VERS_NUM, COMP_DATE);
+				exit(0);
 			}
 		} else {
 			usage(argv[0]);
