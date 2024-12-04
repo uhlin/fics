@@ -8,6 +8,7 @@ documented in this file.
 - **Added** command `sought`, which currently behaves as a no-op. Code is
   to be added in a later version. We also want the seek/unseek
   commands.
+- **Added** command-line option `v` (Display version.)
 - **Added** missing calls to `fclose()`.
 - **Added** null checks.
 - **Added** player number checks, i.e. validate that the player number is
