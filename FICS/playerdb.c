@@ -327,6 +327,11 @@ player_remove(int p)
 {
 	int i;
 
+	if (!player_num_ok_chk(p)) {
+		warnx("%s: invalid player number %d", __func__, p);
+		return -1;
+	}
+
 	player_decline_offers(p, -1, -1);
 	player_withdraw_offers(p, -1, -1);
 
