@@ -1344,6 +1344,7 @@ DisplayRank(int p, param_list param, int showComputers)
 	} else if (isdigit(param[0].val.word[0])) {
 		int ret;
 
+		start = 0;
 		end = -1;
 		ret = sscanf(param[0].val.word, "%d-%d", &start, &end);
 
