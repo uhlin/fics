@@ -8,6 +8,7 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <err.h>
 #include <string.h>
 
 #include "command.h"
