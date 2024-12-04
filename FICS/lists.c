@@ -278,7 +278,7 @@ list_addsub(int p, char *list, char *who, int addsub)
 	List	*gl;
 	char	*listname, *member;
 	char	*yourthe, *addrem;
-	int	 p1, connected, loadme, personal, ch;
+	int	 p1 = -1, connected, loadme, personal, ch;
 
 	if ((gl = list_findpartial(p, list, addsub)) == NULL)
 		return COM_OK;
@@ -374,6 +374,10 @@ list_addsub(int p, char *list, char *who, int addsub)
 			    addrem, listname);
 			break;
 		case L_COMPUTER:
+			if (p1 < 0) {
+				warnx("%s: negative player number", __func__);
+				break;
+			}
 			if (parray[p1].b_stats.rating > 0) {
 				UpdateRank(TYPE_BLITZ, member,
 				    &parray[p1].b_stats, member);
@@ -388,6 +392,10 @@ list_addsub(int p, char *list, char *who, int addsub)
 			}
 			break;
 		case L_ADMIN:
+			if (p1 < 0) {
+				warnx("%s: negative player number", __func__);
+				break;
+			}
 			if (addsub == 1) { // adding to list
 				parray[p1].adminLevel = 10;
 				pprintf(p, "%s has been given an admin level "
