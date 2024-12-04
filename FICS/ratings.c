@@ -1349,7 +1349,7 @@ DisplayRank(int p, param_list param, int showComputers)
 		ret = sscanf(param[0].val.word, "%d-%d", &start, &end);
 
 		if (ret != 2) {
-			warnx("%s: sscanf() == %d", __func__, ret);
+//			warnx("%s: sscanf() == %d", __func__, ret);
 			return COM_FAILED;
 		}
 
