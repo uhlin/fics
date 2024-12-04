@@ -1555,7 +1555,7 @@ GetRank(FILE *fp, char *target, int countComp)
 
 		if (sscanf(line, "%19s %*d %d %d", login, &nGames, &is_computer)
 		    != 1) {
-			warnx("%s: sscanf() error", __func__);
+//			warnx("%s: sscanf() error", __func__);
 			continue;
 		}
 
