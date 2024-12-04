@@ -10,6 +10,8 @@ documented in this file.
   commands.
 - **Added** missing calls to `fclose()`.
 - **Added** null checks.
+- **Added** player number checks, i.e. validate that the player number is
+  OK and within bounds.
 - **Added** usage of `time_t`.
 - **Added** usage of macros.
 - **Added** variable `seek`.
