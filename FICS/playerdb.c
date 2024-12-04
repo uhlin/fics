@@ -34,6 +34,7 @@
    Markus Uhlin                 24/08/13	Handled function return values
    Markus Uhlin                 24/11/24	Fixed incorrect format strings
    Markus Uhlin                 24/12/02	Made many improvements
+   Markus Uhlin                 24/12/04	Added player number checks
 */
 
 #include "stdinclude.h"
