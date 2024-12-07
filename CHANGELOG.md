@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.4.4] - 2024-12-07 ##
 - **Added** an autorun script suitable to be run as a cron job.
 - **Added** command `sought`, which currently behaves as a no-op. Code is
   to be added in a later version. We also want the seek/unseek
