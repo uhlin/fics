@@ -954,7 +954,7 @@ ExamineAdjourned(int p, int p1, int p2)
 }
 
 PRIVATE char *
-FindHistory(int p, int p1, int game)
+FindHistory(int p, int p1, int p_game)
 {
 	FILE		*fpHist;
 	int		 index = 0;
@@ -976,10 +976,10 @@ FindHistory(int p, int p1, int game)
 		    "%*d %*s %*s %ld", &index, &when);
 		if (ret != 2)
 			warn("%s: %s: corrupt", __func__, &fileName[0]);
-	} while (!feof(fpHist) && index != game);
+	} while (!feof(fpHist) && index != p_game);
 
 	if (feof(fpHist)) {
-		pprintf(p, "There is no history game %d for %s.\n", game,
+		pprintf(p, "There is no history game %d for %s.\n", p_game,
 		    parray[p1].name);
 		fclose(fpHist);
 		return NULL;
@@ -993,7 +993,7 @@ FindHistory(int p, int p1, int game)
 }
 
 PRIVATE char *
-FindHistory2(int p, int p1, int game, char *End)
+FindHistory2(int p, int p1, int p_game, char *End)
 {
 	FILE		*fpHist;
 	int		 index = 0;
@@ -1015,10 +1015,10 @@ FindHistory2(int p, int p1, int game, char *End)
 		    "%*d %*s %s %ld", &index, End, &when);
 		if (ret != 3)
 			warn("%s: %s: corrupt", __func__, &fileName[0]);
-	} while (!feof(fpHist) && index != game);
+	} while (!feof(fpHist) && index != p_game);
 
 	if (feof(fpHist)) {
-		pprintf(p, "There is no history game %d for %s.\n", game,
+		pprintf(p, "There is no history game %d for %s.\n", p_game,
 		    parray[p1].name);
 		fclose(fpHist);
 		return NULL;
@@ -1032,15 +1032,15 @@ FindHistory2(int p, int p1, int game, char *End)
 }
 
 PRIVATE void
-ExamineHistory(int p, int p1, int game)
+ExamineHistory(int p, int p1, int p_game)
 {
 	FILE	*fpGame;
 	char	*fileName;
 
-	if ((fileName = FindHistory(p, p1, game)) != NULL) {
+	if ((fileName = FindHistory(p, p1, p_game)) != NULL) {
 		if ((fpGame = fopen(fileName, "r")) == NULL) {
 			pprintf(p, "History game %d not available for %s.\n",
-			    game, parray[p1].name);
+			    p_game, parray[p1].name);
 		} else {
 			ExamineStored(fpGame, p, fileName);
 			fclose(fpGame);
