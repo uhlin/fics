@@ -7,6 +7,8 @@ PREFIX ?= /home/chess
 
 CC ?= cc
 CFLAGS = -O2 -Wall -g -pipe -std=c11 \
+	-Wformat-security \
+	-Wshadow \
 	-Wsign-compare \
 	-Wstrict-prototypes
 
