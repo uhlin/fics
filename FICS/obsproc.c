@@ -29,6 +29,7 @@
    Markus Uhlin			24/07/07	Fixed unhandled return values of
 						fscanf().
    Markus Uhlin			24/12/02	Improved old_mail_moves()
+   Markus Uhlin			25/01/18	Fixed -Wshadow
 */
 
 #include "stdinclude.h"
