@@ -969,10 +969,10 @@ com_qtell(int p, param_list param)
 		return COM_OK;
 	}
 
-	mstrlcpy(buffer1, ":\0", sizeof buffer1);
-	mstrlcpy(buffer2, ":\0", sizeof buffer2);
-	mstrlcpy(buffer3, ":\0", sizeof buffer3);
-	mstrlcpy(buffer4, ":\0", sizeof buffer4);
+	mstrlcpy(buffer1, ":", sizeof buffer1);
+	mstrlcpy(buffer2, ":", sizeof buffer2);
+	mstrlcpy(buffer3, ":", sizeof buffer3);
+	mstrlcpy(buffer4, ":", sizeof buffer4);
 
 	msnprintf(tmp, sizeof tmp, "%s", param[1].val.string);
 
