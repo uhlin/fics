@@ -33,6 +33,7 @@
    Markus Uhlin                 24/01/04	Fixed pprintf() calls
    Markus Uhlin                 24/04/14	Refactored and reformatted ALL
 						functions.
+   Markus Uhlin                 25/01/18	Fixed -Wshadow
 */
 
 #include "stdinclude.h"
