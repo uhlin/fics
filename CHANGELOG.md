@@ -3,6 +3,9 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Fixed `-Wshadow` warnings. Multiple occurrences.
+
 ## [1.4.4] - 2024-12-07 ##
 - **Added** an autorun script suitable to be run as a cron job.
 - **Added** command `sought`, which currently behaves as a no-op. Code is
