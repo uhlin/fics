@@ -1034,7 +1034,6 @@ com_qtell(int p, param_list param)
 		pprintf(p, "*qtell %s 0*\n", parray[p1].name);
 	} else {
 		int	ch = param[0].val.integer;
-		int	p1;
 
 		if (ch == 0) {
 			pprintf(p, "*qtell %d 1*\n", param[0].val.integer);
