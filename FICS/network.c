@@ -331,7 +331,7 @@ net_send_string(int fd, char *str, int format)
 PUBLIC int
 readline2(comstr_t *cs, int who)
 {
-	int		 howmany, state, fd, pending;
+	int		 howmany, state, fd, v_pending;
 	unsigned char	*start, *s, *d;
 
 	static unsigned char	ayt[] = "[Responding to AYT: Yes, I'm here.]\n";
@@ -347,11 +347,11 @@ readline2(comstr_t *cs, int who)
 	}
 
 	s = start = con[who].inBuf;
-	pending = con[who].numPending;
+	v_pending = con[who].numPending;
 	fd = con[who].fd;
 
-	if ((howmany = recv(fd, start + pending, MAX_STRING_LENGTH - 1 -
-	    pending, 0)) == 0) { // error: they've disconnected
+	if ((howmany = recv(fd, start + v_pending, MAX_STRING_LENGTH - 1 -
+	    v_pending, 0)) == 0) { // error: they've disconnected
 		return -1;
 	} else if (howmany == -1) {
 		if (errno != EWOULDBLOCK) { // some other error
@@ -365,9 +365,9 @@ readline2(comstr_t *cs, int who)
 	}
 
 	if (con[who].processed)
-		s += pending;
+		s += v_pending;
 	else
-		howmany += pending;
+		howmany += v_pending;
 	d = s;
 
 	for (; howmany-- > 0; s++) {
@@ -467,7 +467,7 @@ readline2(comstr_t *cs, int who)
 }
 
 PUBLIC int
-net_init(int port)
+net_init(int p_port)
 {
 	int			 opt;
 	struct linger		 lingeropt;
@@ -501,7 +501,7 @@ net_init(int port)
 	memset(&serv_addr, 0, sizeof serv_addr);
 	serv_addr.sin_family		= AF_INET;
 	serv_addr.sin_addr.s_addr	= htonl(INADDR_ANY);
-	serv_addr.sin_port		= htons(port);
+	serv_addr.sin_port		= htons(p_port);
 
 	/*
 	 * Attempt to allow rebinding to the port...
