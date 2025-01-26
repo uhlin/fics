@@ -589,7 +589,7 @@ com_checkSOCKET(int p, param_list param)
 PUBLIC int
 com_checkPLAYER(int p, param_list param)
 {
-	char	*player = param[0].val.word;
+	char	*v_player = param[0].val.word;
 	int	 p1;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
@@ -601,8 +601,8 @@ com_checkPLAYER(int p, param_list param)
 
 	if (p1 < 0) {
 		p1 = (-p1) - 1;
-		pprintf(p, "%s is not logged in.\n", player);
-		stolower(player);
+		pprintf(p, "%s is not logged in.\n", v_player);
+		stolower(v_player);
 
 		pprintf(p, "name = %s\n", parray[p1].name);
 		pprintf(p, "login = %s\n", parray[p1].login);
@@ -622,7 +622,7 @@ com_checkPLAYER(int p, param_list param)
 	} else {
 		p1 = p1 - 1;
 
-		pprintf(p, "%s is number %d in parray of size %d\n", player, p1,
+		pprintf(p, "%s is number %d in parray of size %d\n", v_player, p1,
 		    (p_num + 1));
 		pprintf(p, "name = %s\n", parray[p1].name);
 		pprintf(p, "login = %s\n", parray[p1].login);
@@ -877,13 +877,13 @@ com_checkGAME(int p, param_list param)
 PUBLIC int
 com_remplayer(int p, param_list param)
 {
-	char	*player = param[0].val.word;
+	char	*v_player = param[0].val.word;
 	char	 playerlower[MAX_LOGIN_NAME] = { '\0' };
 	int	 p1, lookup;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-	mstrlcpy(playerlower, player, sizeof(playerlower));
+	mstrlcpy(playerlower, v_player, sizeof(playerlower));
 	stolower(playerlower);
 	p1 = player_new();
 	lookup = player_read(p1, playerlower);
@@ -901,7 +901,7 @@ com_remplayer(int p, param_list param)
 	player_remove(p1);
 
 	if (lookup) {
-		pprintf(p, "No player by the name %s is registered.\n", player);
+		pprintf(p, "No player by the name %s is registered.\n", v_player);
 		return COM_OK;
 	}
 
@@ -911,10 +911,10 @@ com_remplayer(int p, param_list param)
 	}
 
 	if (!player_kill(playerlower)) {
-		pprintf(p, "Player %s removed.\n", player);
-		UpdateRank(TYPE_BLITZ, NULL, NULL, player);
-		UpdateRank(TYPE_STAND, NULL, NULL, player);
-		UpdateRank(TYPE_WILD, NULL, NULL, player);
+		pprintf(p, "Player %s removed.\n", v_player);
+		UpdateRank(TYPE_BLITZ, NULL, NULL, v_player);
+		UpdateRank(TYPE_STAND, NULL, NULL, v_player);
+		UpdateRank(TYPE_WILD, NULL, NULL, v_player);
 	} else {
 		pprintf(p, "Remplayer failed.\n");
 	}
@@ -939,14 +939,14 @@ com_remplayer(int p, param_list param)
 PUBLIC int
 com_raisedead(int p, param_list param)
 {
-	char	*player = param[0].val.word;
+	char	*v_player = param[0].val.word;
 	char	 newplayerlower[MAX_LOGIN_NAME] = { '\0' };
 	char	 playerlower[MAX_LOGIN_NAME] = { '\0' };
 	int	 p1, p2, lookup;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-	mstrlcpy(playerlower, player, sizeof playerlower);
+	mstrlcpy(playerlower, v_player, sizeof playerlower);
 	stolower(playerlower);
 
 	if (player_find_bylogin(playerlower) >= 0) {
@@ -961,7 +961,7 @@ com_raisedead(int p, param_list param)
 
 	if (!lookup) {
 		pprintf(p, "A player by the name %s is already registered.\n",
-		    player);
+		    v_player);
 		pprintf(p, "Obtain a new handle for the dead person.\n");
 		pprintf(p, "Then use raisedead [oldname] [newname].\n");
 		return COM_OK;
@@ -969,22 +969,22 @@ com_raisedead(int p, param_list param)
 
 	if (param[1].type == TYPE_NULL) {
 		if (!player_raise(playerlower)) {
-			pprintf(p, "Player %s raised from dead.\n", player);
+			pprintf(p, "Player %s raised from dead.\n", v_player);
 
 			p1 = player_new();
 
 			if (!player_read(p1, playerlower)) {
 				if (parray[p1].s_stats.rating > 0) {
-					UpdateRank(TYPE_STAND, player,
-					    &parray[p1].s_stats, player);
+					UpdateRank(TYPE_STAND, v_player,
+					    &parray[p1].s_stats, v_player);
 				}
 				if (parray[p1].b_stats.rating > 0) {
-					UpdateRank(TYPE_BLITZ, player,
-					    &parray[p1].b_stats, player);
+					UpdateRank(TYPE_BLITZ, v_player,
+					    &parray[p1].b_stats, v_player);
 				}
 				if (parray[p1].w_stats.rating > 0) {
-					UpdateRank(TYPE_WILD, player,
-					    &parray[p1].w_stats, player);
+					UpdateRank(TYPE_WILD, v_player,
+					    &parray[p1].w_stats, v_player);
 				}
 			}
 
@@ -1013,14 +1013,14 @@ com_raisedead(int p, param_list param)
 
 		if (!lookup) {
 			pprintf(p, "A player by the name %s is already "
-			    "registered.\n", player);
+			    "registered.\n", v_player);
 			pprintf(p, "Obtain another new handle for the dead "
 			    "person.\n");
 			return COM_OK;
 		}
 
 		if (!player_reincarn(playerlower, newplayerlower)) {
-			pprintf(p, "Player %s reincarnated to %s.\n", player,
+			pprintf(p, "Player %s reincarnated to %s.\n", v_player,
 			    newplayer);
 
 			p2 = player_new();
@@ -1543,14 +1543,14 @@ PUBLIC int
 com_asethandle(int p, param_list param)
 {
 	char	*newplayer = param[1].val.word;
-	char	*player = param[0].val.word;
+	char	*v_player = param[0].val.word;
 	char	 newplayerlower[MAX_LOGIN_NAME] = { '\0' };
 	char	 playerlower[MAX_LOGIN_NAME] = { '\0' };
 	int	 p1;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
-	mstrlcpy(playerlower, player, sizeof playerlower);
+	mstrlcpy(playerlower, v_player, sizeof playerlower);
 	stolower(playerlower);
 
 	mstrlcpy(newplayerlower, newplayer, sizeof newplayerlower);
@@ -1569,7 +1569,7 @@ com_asethandle(int p, param_list param)
 	p1 = player_new();
 
 	if (player_read(p1, playerlower)) {
-		pprintf(p, "No player by the name %s is registered.\n", player);
+		pprintf(p, "No player by the name %s is registered.\n", v_player);
 		player_remove(p1);
 		return COM_OK;
 	} else {
@@ -1596,22 +1596,22 @@ com_asethandle(int p, param_list param)
 
 	if ((!player_rename(playerlower, newplayerlower)) &&
 	    (!player_read(p1, newplayerlower))) {
-		pprintf(p, "Player %s renamed to %s.\n", player, newplayer);
+		pprintf(p, "Player %s renamed to %s.\n", v_player, newplayer);
 		strfree(parray[p1].name);
 		parray[p1].name = xstrdup(newplayer);
 		player_save(p1);
 
 		if (parray[p1].s_stats.rating > 0) {
 			UpdateRank(TYPE_STAND, newplayer, &parray[p1].s_stats,
-			    player);
+			    v_player);
 		}
 		if (parray[p1].b_stats.rating > 0) {
 			UpdateRank(TYPE_BLITZ, newplayer, &parray[p1].b_stats,
-			    player);
+			    v_player);
 		}
 		if (parray[p1].w_stats.rating > 0) {
 			UpdateRank(TYPE_WILD, newplayer, &parray[p1].w_stats,
-			    player);
+			    v_player);
 		}
 	} else {
 		pprintf(p, "Asethandle failed.\n");
