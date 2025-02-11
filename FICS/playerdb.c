@@ -35,6 +35,7 @@
    Markus Uhlin                 24/11/24	Fixed incorrect format strings
    Markus Uhlin                 24/12/02	Made many improvements
    Markus Uhlin                 24/12/04	Added player number checks
+   Markus Uhlin                 25/02/11	Calc string length once
 */
 
 #include "stdinclude.h"
