@@ -1282,9 +1282,12 @@ player_find_part_login(char *name)
 {
 	int	found = -1;
 	int	i;
+	size_t	namelen;
 
 	if ((i = player_find_bylogin(name)) >= 0)
 		return i;
+
+	namelen = strlen(name);
 
 	for (i = 0; i < p_num; i++) {
 		if (parray[i].status == PLAYER_EMPTY ||
@@ -1295,7 +1298,7 @@ player_find_part_login(char *name)
 		if (!parray[i].login)
 			continue;
 
-		if (!strncmp(parray[i].login, name, strlen(name))) {
+		if (!strncmp(parray[i].login, name, namelen)) {
 			if (found >= 0) /* Ambiguous */
 				return -2;
 			found = i;
