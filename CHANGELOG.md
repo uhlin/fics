@@ -4,6 +4,8 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Changed the program to avoid calculating the same string multiple
+  times. Multiple occurrences, found by PVS-Studio.
 - Fixed `-Wshadow` warnings. Multiple occurrences.
 
 ## [1.4.4] - 2024-12-07 ##
