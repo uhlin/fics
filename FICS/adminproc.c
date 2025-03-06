@@ -499,9 +499,15 @@ com_anews(int p, param_list param)
 PUBLIC int
 strcmpwild(char *mainstr, char *searchstr)
 {
-	if (strlen(mainstr) < strlen(searchstr))
+	size_t len[2];
+
+	len[0] = strlen(mainstr);
+	len[1] = strlen(searchstr);
+
+	if (len[0] < len[1])
 		return 1;
-	for (size_t i = 0; i < strlen(mainstr); i++) {
+
+	for (size_t i = 0; i < len[0]; i++) {
 		if (searchstr[i] == '*')
 			return 0;
 		if (mainstr[i] != searchstr[i])
