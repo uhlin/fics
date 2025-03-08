@@ -855,11 +855,16 @@ CheckRepetition(int p, int g)
 	for (move_num = garray[g].game_state.lastIrreversable;
 	    move_num < garray[g].numHalfMoves - 1;
 	    move_num++) {
-		pos = GetFENpos(g, move_num);
+		size_t len[3];
 
-		if (strlen(pos1) == strlen(pos) && !strcmp(pos1, pos))
+		pos = GetFENpos(g, move_num);
+		len[0] = strlen(pos1);
+		len[1] = strlen(pos2);
+		len[2] = strlen(pos);
+
+		if (len[0] == len[2] && !strcmp(pos1, pos))
 			flag1++;
-		if (strlen(pos2) == strlen(pos) && !strcmp(pos2, pos))
+		if (len[1] == len[2] && !strcmp(pos2, pos))
 			flag2++;
 	}
 
