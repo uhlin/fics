@@ -36,6 +36,7 @@
    Markus Uhlin			24/11/19	Improved com_news().
 						plogins: fscanf:
 						added width specification
+   Markus Uhlin			25/03/08	Calc string length once
 */
 
 #include "stdinclude.h"
