@@ -849,18 +849,18 @@ CheckRepetition(int p, int g)
 	char	*pos;
 	int	 flag1 = 1, flag2 = 1;
 	int	 move_num;
+	size_t	 len[3];
 
 	if (garray[g].numHalfMoves < 8) // Can't have three repeats any quicker.
 		return 0;
 
+	len[0] = strlen(pos1);
+	len[1] = strlen(pos2);
+
 	for (move_num = garray[g].game_state.lastIrreversable;
 	    move_num < garray[g].numHalfMoves - 1;
 	    move_num++) {
-		size_t len[3];
-
 		pos = GetFENpos(g, move_num);
-		len[0] = strlen(pos1);
-		len[1] = strlen(pos2);
 		len[2] = strlen(pos);
 
 		if (len[0] == len[2] && !strcmp(pos1, pos))
