@@ -30,6 +30,7 @@
    Markus Uhlin			24/04/13	Added usage of msnprintf(),
 						mstrlcpy() and mstrlcat().
    Markus Uhlin			24/05/05	Added usage of reallocarray().
+   Markus Uhlin			25/03/09	Calc string length once
 */
 
 #include "stdinclude.h"
