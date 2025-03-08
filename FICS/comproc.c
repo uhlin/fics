@@ -866,8 +866,10 @@ who_terse(int p, int num, int *plist, int type)
 		}
 
 		if (p == p1) {
-			psprintf_highlight(p, ptmp + strlen(ptmp),
-			    sizeof ptmp - strlen(ptmp), "%s", parray[p1].name);
+			const size_t len = strlen(ptmp);
+
+			psprintf_highlight(p, ptmp + len,
+			    sizeof ptmp - len, "%s", parray[p1].name);
 		} else {
 			strlcat(ptmp, parray[p1].name, sizeof ptmp);
 		}
@@ -929,9 +931,12 @@ who_verbose(int p, int num, int plist[])
 		p1WithAttrs[17] = '\0';
 
 		if (p == p1) {
+			size_t len;
+
 			strlcpy(tmp, " ", sizeof tmp);
-			psprintf_highlight(p, tmp + strlen(tmp),
-			    sizeof tmp - strlen(tmp), "%-17s", p1WithAttrs);
+			len = strlen(tmp);
+			psprintf_highlight(p, tmp + len, sizeof tmp - len,
+			    "%-17s", p1WithAttrs);
 		} else {
 			ret = snprintf(tmp, sizeof tmp, " %-17s", p1WithAttrs);
 
