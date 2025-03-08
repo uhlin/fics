@@ -331,12 +331,11 @@ net_send_string(int fd, char *str, int format)
 PUBLIC int
 readline2(comstr_t *cs, int who)
 {
-	int		 howmany, state, fd, v_pending;
-	unsigned char	*start, *s, *d;
-
-	static unsigned char	ayt[] = "[Responding to AYT: Yes, I'm here.]\n";
-	static unsigned char	will_sga[] = { IAC, WILL, TELOPT_SGA, '\0' };
-	static unsigned char	will_tm[] = { IAC, WILL, TELOPT_TM, '\0' };
+	int			 howmany, state, fd, v_pending;
+	static const uint8_t	 ayt[] = "[Responding to AYT: Yes, I'm here.]\n";
+	static const uint8_t	 will_sga[] = { IAC, WILL, TELOPT_SGA, '\0' };
+	static const uint8_t	 will_tm[] = { IAC, WILL, TELOPT_TM, '\0' };
+	unsigned char		*start, *s, *d;
 
 	state = con[who].state;
 
