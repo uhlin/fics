@@ -7,6 +7,7 @@ documented in this file.
 - Changed the program to avoid calculating the same string multiple
   times. Multiple occurrences, found by PVS-Studio.
 - Fixed `-Wshadow` warnings. Multiple occurrences.
+- Fixed ignored function return values.
 
 ## [1.4.4] - 2024-12-07 ##
 - **Added** an autorun script suitable to be run as a cron job.
