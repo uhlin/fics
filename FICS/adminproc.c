@@ -183,9 +183,10 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/adminnews.%d",
 			    news_dir,
 			    param[0].val.integer);
-			fp = fopen(filename, "w");
-			fprintf(fp, "%s\n", param[1].val.string);
-			fclose(fp);
+			if ((fp = fopen(filename, "w")) != NULL) {
+				fprintf(fp, "%s\n", param[1].val.string);
+				fclose(fp);
+			}
 		}
 	} else {
 		if (param[0].val.integer > num_news) {
@@ -195,9 +196,10 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/news.%d",
 			    news_dir,
 			    param[0].val.integer);
-			fp = fopen(filename, "w");
-			fprintf(fp, "%s\n", param[1].val.string);
-			fclose(fp);
+			if ((fp = fopen(filename, "w")) != NULL) {
+				fprintf(fp, "%s\n", param[1].val.string);
+				fclose(fp);
+			}
 		}
 	}
 
