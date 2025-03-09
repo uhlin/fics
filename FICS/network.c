@@ -401,7 +401,7 @@ readline2(comstr_t *cs, int who)
 				state = 3;	// this is cheesy
 						// but we aren't using em
 			} else if (*s == AYT) {
-				send(fd, (char *)ayt, strlen((char *)ayt), 0);
+				send(fd, (char *)ayt, sizeof ayt - 1, 0);
 				state = 2;
 			} else if (*s == EL) {	// erase line
 				d = start;
@@ -435,10 +435,10 @@ readline2(comstr_t *cs, int who)
 		case 4: // got IAC DO
 			if (*s == TELOPT_TM) {
 				send(fd, (char *)will_tm,
-				    strlen((char *)will_tm), 0);
+				    sizeof will_tm - 1, 0);
 			} else if (*s == TELOPT_SGA) {
 				send(fd, (char *)will_sga,
-				    strlen((char *)will_sga), 0);
+				    sizeof will_sga - 1, 0);
 			}
 			state = 2;
 			break;
