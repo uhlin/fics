@@ -36,6 +36,8 @@
 						ignored fgets() retvals.
    Markus Uhlin			24/12/02	Fixed a possible array overrun
 						in truncate_file().
+   Markus Uhlin			25/03/09	truncate_file:
+						fixed null ptr dereference.
 */
 
 #include "stdinclude.h"
@@ -807,7 +809,10 @@ truncate_file(char *file, int lines)
 	fclose(fp);
 
 	if (trunc) {
-		fp = fopen(file, "w");
+		if ((fp = fopen(file, "w")) == NULL) {
+			warn("%s: fopen", __func__);
+			return 1;
+		}
 
 		for (i = 0; i < lines; i++) {
 			fputs(tBuf[bptr], fp);
