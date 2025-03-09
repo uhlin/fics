@@ -33,6 +33,7 @@
 						check_news() and
 						rscan_news().
    Markus Uhlin                 24/11/25	Null checks
+   Markus Uhlin                 25/03/09	Fixed double free()
 */
 
 #include "stdinclude.h"
@@ -636,12 +637,12 @@ process_login(int p, char *loginname)
 			parray[p].status = PLAYER_PASSWORD;
 			turn_echo_off(parray[p].socket);
 			rfree(loginnameii);
+			loginnameii = NULL; // XXX
 
 			if (strcasecmp(loginname, parray[p].name)) {
 				pprintf(p, "\nYou've got a bad name field in "
 				    "your playerfile -- please report this to "
 				    "an admin!\n");
-				rfree(loginnameii);
 				return COM_LOGOUT;
 			}
 
@@ -652,7 +653,6 @@ process_login(int p, char *loginname)
 				pprintf(p, "Your handle is missing!");
 				pprintf(p, "Please log on as an unreg until "
 				    "an admin can correct this.\n");
-				rfree(loginnameii);
 				return COM_LOGOUT;
 			}
 
@@ -663,7 +663,6 @@ process_login(int p, char *loginname)
 				pprintf(p, "Your FullName is missing!");
 				pprintf(p, "Please log on as an unreg until "
 				    "an admin can correct this.\n");
-				rfree(loginnameii);
 				return COM_LOGOUT;
 			}
 
@@ -674,7 +673,6 @@ process_login(int p, char *loginname)
 				pprintf(p, "Your Email address is missing\n");
 				pprintf(p, "Please log on as an unreg until "
 				    "an admin can correct this.\n");
-				rfree(loginnameii);
 				return COM_LOGOUT;
 			}
 		}
