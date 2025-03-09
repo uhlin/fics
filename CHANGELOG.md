@@ -8,6 +8,7 @@ documented in this file.
   times. Multiple occurrences, found by PVS-Studio.
 - Fixed `-Wshadow` warnings. Multiple occurrences.
 - Fixed double free() in process_login().
+- Fixed null pointer dereferences.
 - Fixed unchecked function return values. Multiple occurrences.
 
 ## [1.4.4] - 2024-12-07 ##
