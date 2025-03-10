@@ -7,7 +7,8 @@ documented in this file.
 - Changed the program to avoid calculating the same string multiple
   times. Multiple occurrences, found by PVS-Studio.
 - Fixed `-Wshadow` warnings. Multiple occurrences.
-- Fixed double free() in process_login().
+- Fixed double `free()` in `process_login()`.
+- Fixed memory leak in `process_login()`.
 - Fixed null pointer dereferences.
 - Fixed unchecked function return values. Multiple occurrences.
 
