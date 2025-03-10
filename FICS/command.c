@@ -34,6 +34,7 @@
 						rscan_news().
    Markus Uhlin                 24/11/25	Null checks
    Markus Uhlin                 25/03/09	Fixed double free()
+   Markus Uhlin                 25/03/11	Fixed memleak
 */
 
 #include "stdinclude.h"
@@ -572,12 +573,18 @@ process_login(int p, char *loginname)
 		if (!alphastring(loginname)) {
 			pprintf(p, "\nSorry, names can only consist of lower "
 			    "and upper case letters. Try again.\n");
+			rfree(loginnameii);
+			loginnameii = NULL;
 		} else if (strlen(loginname) < 3) {
 			pprintf(p, "\nA name should be at least three "
 			    "characters long! Try again.\n");
+			rfree(loginnameii);
+			loginnameii = NULL;
 		} else if (strlen(loginname) > 17) {
 			pprintf(p, "\nSorry, names may be at most 17 "
 			    "characters long. Try again.\n");
+			rfree(loginnameii);
+			loginnameii = NULL;
 		} else if (in_list(p, L_BAN, loginnameii)) {
 			pprintf(p, "\nPlayer \"%s\" is banned.\n", loginname);
 			rfree(loginnameii);
