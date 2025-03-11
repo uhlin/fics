@@ -11,6 +11,7 @@ documented in this file.
 - Fixed memory leak in `process_login()`.
 - Fixed null pointer dereferences.
 - Fixed unchecked function return values. Multiple occurrences.
+- Fixed uninitialized variables.
 
 ## [1.4.4] - 2024-12-07 ##
 - **Added** an autorun script suitable to be run as a cron job.
