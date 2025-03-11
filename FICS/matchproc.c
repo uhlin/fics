@@ -31,6 +31,9 @@
    Markus Uhlin                         24/12/02	com_accept: check that
 							the accept number is
 							within bounds.
+   Markus Uhlin                         25/03/12	Fixed negative array
+							index read in
+							accept_match().
 */
 
 #include "stdinclude.h"
@@ -312,7 +315,13 @@ accept_match(int p, int p1)
 	unobserveAll(p);
 	unobserveAll(p1);
 
-	which	= player_find_pendfrom(p, p1, PEND_MATCH);
+	if ((which = player_find_pendfrom(p, p1, PEND_MATCH)) < 0) {
+		pprintf(p, "%s: player_find_pendfrom: error\n", __func__);
+		pprintf(p1, "%s accepted your challenge but a fatal error "
+		    "occurred\n", parray[p].name);
+		return COM_FAILED;
+	}
+
 	pend	= &parray[p].p_from_list[which];
 	wt	= pend->param1;
 	winc	= pend->param2;
