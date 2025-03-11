@@ -37,6 +37,8 @@
 						plogins: fscanf:
 						added width specification
    Markus Uhlin			25/03/08	Calc string length once
+   Markus Uhlin			25/03/11	Fixed possibly uninitialized
+						value 'rat' in who_terse().
 */
 
 #include "stdinclude.h"
@@ -843,6 +845,8 @@ who_terse(int p, int num, int *plist, int type)
 			rat = parray[p1].s_stats.rating;
 		else if (type == light_rat)
 			rat = parray[p1].l_stats.rating;
+		else	// Fallback to std...
+			rat = parray[p1].s_stats.rating;
 
 		if (type == none) {
 			strlcpy(ptmp, "     ", sizeof ptmp);
