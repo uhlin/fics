@@ -9,6 +9,7 @@ documented in this file.
 - Fixed `-Wshadow` warnings. Multiple occurrences.
 - Fixed double `free()` in `process_login()`.
 - Fixed memory leak in `process_login()`.
+- Fixed negative array index read in `accept_match()`.
 - Fixed null pointer dereferences.
 - Fixed unchecked function return values. Multiple occurrences.
 - Fixed uninitialized variables.
