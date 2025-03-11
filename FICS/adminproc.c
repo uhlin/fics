@@ -721,7 +721,8 @@ com_checkGAME(int p, param_list param)
 							// than that
 
 			for (g = 0; g < g_num; g++) {
-				multicol_store(m, tmp);
+				memset(tmp, 0, sizeof tmp); // XXX
+				multicol_store(m, tmp); // is this call right?
 
 				if (!strcasecmp(garray[g].white_name,
 				    param[0].val.word)) {
