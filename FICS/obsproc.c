@@ -994,9 +994,10 @@ FindHistory(int p, int p1, int p_game)
 }
 
 PRIVATE char *
-FindHistory2(int p, int p1, int p_game, char *End)
-{
+FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
+{ // XXX
 	FILE		*fpHist;
+	char		 fmt[80] = { '\0' };
 	int		 index = 0;
 	long int	 when = 0;
 	static char	 fileName[MAX_FILENAME_SIZE];
@@ -1009,12 +1010,11 @@ FindHistory2(int p, int p1, int p_game, char *End)
 		return NULL;
 	}
 
-	do {
-		int ret;
+	msnprintf(fmt, sizeof fmt, "%%d %%*c %%*d %%*c %%*d %%*s %%*s %%*d "
+	    "%%*d %%*d %%*d %%*s %%%zus %%ld", (End_size - 1));
 
-		ret = fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d "
-		    "%*d %*s %s %ld", &index, End, &when);
-		if (ret != 3)
+	do {
+		if (fscanf(fpHist, fmt, &index, End, &when) != 3)
 			warn("%s: %s: corrupt", __func__, &fileName[0]);
 	} while (!feof(fpHist) && index != p_game);
 
@@ -1822,7 +1822,8 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 	char	 type[4];
 	int	 g;
 
-	if ((HistoryFname = FindHistory2(p, p1, from, End)) != NULL) {
+	if ((HistoryFname = FindHistory2(p, p1, from, End, sizeof End)) !=
+	    NULL) {
 		if ((Game = fopen(HistoryFname, "r")) == NULL) {
 			pprintf(p, "History game %d not available for %s.\n",
 			    from,
