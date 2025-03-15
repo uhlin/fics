@@ -997,7 +997,7 @@ FindHistory(int p, int p1, int p_game)
 
 PRIVATE char *
 FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
-{ // XXX
+{
 	FILE		*fpHist;
 	char		 fmt[80] = { '\0' };
 	int		 index = 0;
@@ -1013,7 +1013,7 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 	}
 
 	msnprintf(fmt, sizeof fmt, "%%d %%*c %%*d %%*c %%*d %%*s %%*s %%*d "
-	    "%%*d %%*d %%*d %%*s %%%zus %%ld", (End_size - 1));
+	    "%%*d %%*d %%*d %%*s %%%zus %%ld\n", (End_size - 1));
 
 	do {
 		if (fscanf(fpHist, fmt, &index, End, &when) != 3)
