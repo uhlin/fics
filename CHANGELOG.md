@@ -11,6 +11,7 @@ documented in this file.
 - Fixed memory leak in `process_login()`.
 - Fixed negative array index read in `accept_match()`.
 - Fixed null pointer dereferences.
+- Fixed possible buffer overflow in `FindHistory2()`.
 - Fixed unchecked function return values. Multiple occurrences.
 - Fixed uninitialized variables.
 
