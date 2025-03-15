@@ -1119,7 +1119,7 @@ player_markdeleted(int p)
 	    parray[p].login[0], parray[p].login);
 	snprintf(fname2, sizeof fname2, "%s/%c/%s.delete", player_dir,
 	    parray[p].login[0], parray[p].login);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	if ((fp = fopen(fname2, "a")) != NULL) { // Touch the file
 		fprintf(fp, "\n");
@@ -2901,7 +2901,7 @@ player_kill(char *name)
 	    name);
 	snprintf(fname2, sizeof fname2, "%s/%c/.rem.%s", player_dir, name[0],
 	    name);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	RemHist(name);
 
@@ -2909,25 +2909,25 @@ player_kill(char *name)
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.games",
 	    stats_dir, name[0], name);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.comments",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.comments",
 	    stats_dir, name[0], name);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.logons",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.logons",
 	    stats_dir, name[0], name);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.messages",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.messages",
 	    stats_dir, name[0], name);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	return 0;
 }
@@ -2942,31 +2942,31 @@ player_rename(char *name, char *newname)
 	    name);
 	snprintf(fname2, sizeof fname2, "%s/%c/%s", player_dir, newname[0],
 	    newname);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.games",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.games",
 	    stats_dir, newname[0], newname);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.comments",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.comments",
 	    stats_dir, newname[0], newname);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.logons",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.logons",
 	    stats_dir, newname[0], newname);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.messages",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/%s.messages",
 	    stats_dir, newname[0], newname);
-	rename(fname, fname2);
+	xrename(__func__, fname, fname2);
 
 	return 0;
 }
@@ -2981,31 +2981,31 @@ player_raise(char *name)
 	    name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/%c/.rem.%s", player_dir,
 	    name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.games",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.games",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.comments",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.comments",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.logons",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.logons",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.messages",
 	    stats_dir, name[0], name);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.messages",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	return 0;
 }
@@ -3020,31 +3020,31 @@ player_reincarn(char *name, char *newname)
 	    newname[0], newname);
 	snprintf(fname2, sizeof fname2, "%s/%c/.rem.%s", player_dir,
 	    name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.games",
 	    stats_dir, newname[0], newname);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.games",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.comments",
 	    stats_dir, newname[0], newname);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.comments",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.logons",
 	    stats_dir, newname[0], newname);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.logons",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.messages",
 	    stats_dir, newname[0], newname);
 	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.messages",
 	    stats_dir, name[0], name);
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 
 	return 0;
 }
