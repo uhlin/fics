@@ -75,6 +75,21 @@ player_num_ok_chk(const int num)
 	    num < (int)ARRAY_SIZE(parray));
 }
 
+PUBLIC void
+xrename(const char *fn, const char *name1, const char *name2)
+{
+	if (fn == NULL || name1 == NULL || name2 == NULL) {
+		errno = EINVAL;
+		warn("%s", __func__);
+		return;
+	}
+
+	errno = 0;
+
+	if (rename(name1, name2) != 0)
+		warn("%s: '%s' -> '%s'", fn, name1, name2);
+}
+
 PRIVATE int
 get_empty_slot(void)
 {

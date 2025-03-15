@@ -204,6 +204,7 @@ extern player	 parray[PARRAY_SIZE];
 extern int	 p_num;
 
 extern bool	 player_num_ok_chk(const int);
+extern void	 xrename(const char *, const char *, const char *);
 
 extern int	 ClearMsgsBySender(int, param_list);
 extern int	 ClrMsgRange(int, int, int);
