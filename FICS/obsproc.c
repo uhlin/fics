@@ -30,6 +30,8 @@
 						fscanf().
    Markus Uhlin			24/12/02	Improved old_mail_moves()
    Markus Uhlin			25/01/18	Fixed -Wshadow
+   Markus Uhlin			25/03/15	Fixed possible buffer overflow
+						in FindHistory2().
 */
 
 #include "stdinclude.h"
