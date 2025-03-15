@@ -1815,10 +1815,10 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 	char	*EndSymbol;
 	char	*HistoryFname;
 	char	*name_to = parray[p].login;
-	char	 End[100];
-	char	 command[MAX_FILENAME_SIZE * 2 + 3];
+	char	 End[100] = { '\0' };
+	char	 command[MAX_FILENAME_SIZE * 2 + 3] = { '\0' };
 	char	 filename[MAX_FILENAME_SIZE + 1] = { '\0' }; // XXX
-	char	 jfname[MAX_FILENAME_SIZE];
+	char	 jfname[MAX_FILENAME_SIZE] = { '\0' };
 	char	 type[4];
 	int	 g;
 
