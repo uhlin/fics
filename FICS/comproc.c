@@ -40,6 +40,7 @@
    Markus Uhlin			25/03/11	Fixed possibly uninitialized
 						value 'rat' in who_terse().
    Markus Uhlin			25/03/16	Fixed use of 32-bit 'time_t'.
+   Markus Uhlin			25/03/16	Fixed untrusted array index.
 */
 
 #include "stdinclude.h"
