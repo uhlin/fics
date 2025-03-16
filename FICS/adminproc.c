@@ -230,13 +230,14 @@ add_item(char *new_item, char *filename)
 	}
 
   end:
-	fclose(new_fp);
-	if (old_fp) {
-		fclose(old_fp);
-		remove(filename);
-	}
-	rename(tmp_file, filename);
+	(void) fclose(new_fp);
 
+	if (old_fp) {
+		(void) fclose(old_fp);
+		(void) remove(filename);
+	}
+
+	(void) rename(tmp_file, filename);
 	return 1;
 }
 
