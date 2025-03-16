@@ -35,6 +35,7 @@
    Markus Uhlin                 24/11/25	Null checks
    Markus Uhlin                 25/03/09	Fixed double free()
    Markus Uhlin                 25/03/11	Fixed memleak
+   Markus Uhlin                 25/03/16	Fixed use of 32-bit 'time_t'
 */
 
 #include "stdinclude.h"
