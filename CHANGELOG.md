@@ -14,6 +14,7 @@ documented in this file.
 - Fixed possible buffer overflow in `FindHistory2()`.
 - Fixed unchecked function return values. Multiple occurrences.
 - Fixed uninitialized variables.
+- Fixed use of 32-bit `time_t`. Y2K38 safety. Multiple occurrences.
 
 ## [1.4.4] - 2024-12-07 ##
 - **Added** an autorun script suitable to be run as a cron job.
