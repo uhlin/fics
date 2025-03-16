@@ -39,6 +39,7 @@
    Markus Uhlin			25/03/08	Calc string length once
    Markus Uhlin			25/03/11	Fixed possibly uninitialized
 						value 'rat' in who_terse().
+   Markus Uhlin			25/03/16	Fixed use of 32-bit 'time_t'.
 */
 
 #include "stdinclude.h"
