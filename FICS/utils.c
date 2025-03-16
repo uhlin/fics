@@ -506,9 +506,10 @@ pmore_file(int p)
 		return -1;
 	}
 
-	while (!feof(fp) && --lcount > 0) {
-		if (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
-			net_send_string(parray[p].socket, tmp, 1);
+	while (--lcount > 0) {
+		if (fgets(tmp, sizeof tmp, fp) == NULL)
+			break;
+		net_send_string(parray[p].socket, tmp, 1);
 	}
 
 	if (!feof(fp)) {
