@@ -499,9 +499,11 @@ pmore_file(int p)
 	if ((fp = fopen(parray[p].last_file, "r")) == NULL) {
 		pprintf(p, "File not found!\n");
 		return -1;
+	} else if (fseek(fp, parray[p].last_file_byte, SEEK_SET) == -1) {
+		pprintf(p, "Unable to set the file position indicator.\n");
+		fclose(fp);
+		return -1;
 	}
-
-	fseek(fp, parray[p].last_file_byte, SEEK_SET);
 
 	while (!feof(fp) && --lcount > 0) {
 		if (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
