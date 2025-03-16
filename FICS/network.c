@@ -10,6 +10,7 @@
 #include <arpa/telnet.h>
 #include <netinet/in.h>
 
+#include <err.h>
 #include <errno.h>
 
 #include "common.h"
@@ -434,11 +435,13 @@ readline2(comstr_t *cs, int who)
 			break;
 		case 4: // got IAC DO
 			if (*s == TELOPT_TM) {
-				send(fd, (char *)will_tm,
-				    sizeof will_tm - 1, 0);
+				if (send(fd, (char *)will_tm,
+				    sizeof will_tm - 1, 0) == -1)
+					warn("%s: cannot send", __func__);
 			} else if (*s == TELOPT_SGA) {
-				send(fd, (char *)will_sga,
-				    sizeof will_sga - 1, 0);
+				if (send(fd, (char *)will_sga,
+				    sizeof will_sga - 1, 0) == -1)
+					warn("%s: cannot send", __func__);
 			}
 			state = 2;
 			break;
