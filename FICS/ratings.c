@@ -866,12 +866,12 @@ PUBLIC int
 rating_update(int g)
 {
 	double		 wSigma, bSigma;
-	int		 gtime;
 	int		 inprogress = (g == parray[garray[g].black].game);
 	int		 wDelta, bDelta;
 	int		 wRes, bRes;
 	statistics	*b_stats;
 	statistics	*w_stats;
+	time_t		 gtime;
 
 	/*
 	 * If this is adjudication of stored game - be quiet about
