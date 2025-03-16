@@ -742,9 +742,10 @@ plogins(int p, char *fname)
 	FILE		*fp = NULL;
 	char		 ipstr[20] = { '\0' };
 	char		 loginName[MAX_LOGIN_NAME + 1] = { '\0' };
-	int		 inout, registered;
+	int		 registered = 0;
 	long int	 lval = 0;
 	time_t		 tval = 0;
+	uint16_t	 inout = 0;
 
 	if ((fp = fopen(fname, "r")) == NULL) {
 		pprintf(p, "Sorry, no login information available.\n");
@@ -755,7 +756,7 @@ plogins(int p, char *fname)
 	_Static_assert(19 < ARRAY_SIZE(loginName), "'loginName' too small");
 
 	while (!feof(fp)) {
-		if (fscanf(fp, "%d %19s %ld %d %19s\n", &inout, loginName,
+		if (fscanf(fp, "%hu %19s %ld %d %19s\n", &inout, loginName,
 		    &lval, &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. "
 			    "%s\n", fname);
@@ -765,8 +766,13 @@ plogins(int p, char *fname)
 
 		tval = lval;
 
-		pprintf(p, "%s: %-17s %-6s", strltime(&tval), loginName,
-		    inout_string[inout]);
+		if (inout >= ARRAY_SIZE(inout_string)) {
+			warnx("%s: %s: 'inout' too large (%u)", __func__, fname,
+			    inout);
+		} else {
+			pprintf(p, "%s: %-17s %-6s", strltime(&tval), loginName,
+			    inout_string[inout]);
+		}
 
 		if (parray[p].adminLevel > 0)
 			pprintf(p, " from %s\n", ipstr);
