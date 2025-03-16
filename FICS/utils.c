@@ -764,7 +764,7 @@ tenth_secs(void)
  * 2024-11-23 maxxe: changed the return type to 'time_t'
  */
 PUBLIC time_t
-untenths(unsigned int tenths)
+untenths(uint64_t tenths)
 {
 	return (tenths / 10 + 331939277 + 0xffffffff / 10 + 1);
 }
