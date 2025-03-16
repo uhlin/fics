@@ -403,11 +403,10 @@ com_stats(int p, param_list param)
 	(MAX_OBSERVE > MAX_SIMUL ? MAX_OBSERVE : MAX_SIMUL)
 	char		 line[255] = { '\0' };
 	char		 tmp[255] = { '\0' };
-	int		 g, i;
+	int		 g, i, t;
 	int		 numbers[NUMBERS_SIZE];
 	int		 onTime;
 	int		 p1, connected;
-	time_t		 t;
 
 	if (param[0].type == TYPE_WORD) {
 		if (!FindPlayer(p, param[0].val.word, &p1, &connected))
@@ -426,9 +425,11 @@ com_stats(int p, param_list param)
 		snprintf(tmp, sizeof tmp, "   Idle: %s\n",
 		    hms_desc(player_idle(p1)));
 	} else {
-		if ((t = player_lastdisconnect(p1))) {
+		time_t last;
+
+		if ((last = player_lastdisconnect(p1)) != 0) {
 			snprintf(tmp, sizeof tmp, "(Last disconnected %s):\n",
-			    strltime(&t));
+			    strltime(&last));
 		} else
 			strlcpy(tmp, "(Never connected.)\n", sizeof tmp);
 	}
