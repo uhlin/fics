@@ -769,7 +769,7 @@ current_sterr(double s, int t)
  * ics.onenet.net, if not elsewhere.
  */
 PUBLIC void
-rating_sterr_delta(int p1, int p2, int type, int gtime, int result,
+rating_sterr_delta(int p1, int p2, int type, time_t gtime, int result,
     int *deltarating, double *newsterr)
 {
 	double		 E, fs2, denominator, GK, w; // Parts of fancy formulas

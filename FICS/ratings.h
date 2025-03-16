@@ -70,7 +70,7 @@ extern void	rating_add(int, int);
 extern void	rating_init(void);
 extern void	rating_recalc(void);
 extern void	rating_remove(int, int);
-extern void	rating_sterr_delta(int, int, int, int, int, int *, double *);
+extern void	rating_sterr_delta(int, int, int, time_t, int, int *, double *);
 extern void	save_ratings(void);
 
 #endif /* _RATINGS_H */
