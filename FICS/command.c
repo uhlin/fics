@@ -710,7 +710,7 @@ boot_out(int p, int p1)
 }
 
 PUBLIC void
-rscan_news(FILE *fp, int p, int lc)
+rscan_news(FILE *fp, int p, time_t lc)
 {
 	char		*junkp = NULL;
 	char		 count[10] = { '\0' };

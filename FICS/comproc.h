@@ -79,7 +79,7 @@ extern int	com_uptime(int, param_list);
 extern int	com_uscf(int, param_list);
 extern int	com_who(int, param_list);
 
-extern void	rscan_news(FILE *, int, int);
+extern void	rscan_news(FILE *, int, time_t);
 extern void	rscan_news2(FILE *, int, int);
 
 #endif /* _COMPROC_H */
