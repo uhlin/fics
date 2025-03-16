@@ -1219,10 +1219,10 @@ PUBLIC int
 process_heartbeat(int *fd)
 {
 	time_t		 now = time(NULL);
-	int		 time_since_last;
-	static int	 last_comfile = 0;
-	static int	 last_space = 0;
-	static int	 lastcalled = 0;
+	time_t		 time_since_last;
+	static time_t	 last_comfile = 0;
+	static time_t	 last_space = 0;
+	static time_t	 lastcalled = 0;
 
 	if (lastcalled == 0)
 		time_since_last = 0;
