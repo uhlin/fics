@@ -1040,7 +1040,7 @@ player_read(int p, char *name)
 	}
 
 	if (line[0] == 'v')
-		sscanf(line, "%*c %d", &version);
+		(void)sscanf(line, "%*c %d", &version);
 	if (version > 0)	// Quick method:
 		ReadV1PlayerFmt(p, &parray[p], fp, fname, version);
 	else {			// Do it the old SLOW way
