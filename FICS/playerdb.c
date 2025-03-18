@@ -3087,11 +3087,13 @@ player_add_comment(int p_by, int p_to, char *comment)
 PUBLIC int
 player_show_comments(int p, int p1)
 {
-	char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE] = { '\0' };
 
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    parray[p1].login[0], parray[p1].login, "comments");
-	psend_file(p, NULL, fname);
+
+	if (psend_file(p, NULL, fname) == -1)
+		warnx("%s: psend_file() error", __func__);
 	return 0;
 }
 
