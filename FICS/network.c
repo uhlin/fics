@@ -471,7 +471,7 @@ readline2(comstr_t *cs, int who)
 PUBLIC int
 net_init(int p_port)
 {
-	int			 opt;
+	int			 opt, ret;
 	struct linger		 lingeropt;
 	struct sockaddr_in	 serv_addr;
 
@@ -510,15 +510,23 @@ net_init(int p_port)
 	 */
 
 	opt = 1;
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof opt);
+	ret = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt,
+	    sizeof opt);
+	if (ret == -1)
+		warn("%s: SO_REUSEADDR", __func__);
 
 	opt = 1;
-	setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, (char *) &opt, sizeof opt);
+	ret = setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, (char *) &opt,
+	    sizeof opt);
+	if (ret == -1)
+		warn("%s: SO_KEEPALIVE", __func__);
 
 	lingeropt.l_onoff	= 0;
 	lingeropt.l_linger	= 0;
-	setsockopt(sockfd, SOL_SOCKET, SO_LINGER, (char *) &lingeropt,
+	ret = setsockopt(sockfd, SOL_SOCKET, SO_LINGER, (char *) &lingeropt,
 	    sizeof(lingeropt));
+	if (ret == -1)
+		warn("%s: SO_LINGER", __func__);
 
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof serv_addr) < 0) {
 		fprintf(stderr, "FICS: can't bind local address.  errno=%d\n",
