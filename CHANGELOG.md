@@ -15,6 +15,7 @@ documented in this file.
 - Fixed unchecked function return values. Multiple occurrences.
 - Fixed uninitialized variables.
 - Fixed untrusted array indices.
+- Fixed untrusted loop bounds.
 - Fixed use of 32-bit `time_t`. Y2K38 safety. Multiple occurrences.
 
 ## [1.4.4] - 2024-12-07 ##
