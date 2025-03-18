@@ -986,11 +986,12 @@ ReadGameState(FILE *fp, game_state_t *gs, int version)
 			}
 		}
 	} else {
-		getc(fp);	/* Skip past a newline. */
+		(void) getc(fp);	/* Skip past a newline. */
 
 		for (i = 0; i < 8; i++) {
 			for (j = 0; j < 8; j++) {
-				pieceChar = getc(fp);
+				if ((pieceChar = getc(fp)) == EOF)
+					return -1;
 				gs->board[i][j] = CharToPiece(pieceChar);
 			}
 		}
@@ -1922,7 +1923,7 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		    ending2,
 		    result2);
 		fclose(fp2);
-		rename(fname2, fname);
+		xrename(__func__, fname2, fname);
 		return;
 	} else {
 		_Static_assert(ARRAY_SIZE(WhiteName) > 19,
