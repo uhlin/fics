@@ -1998,7 +1998,7 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 	fclose(fp);
 	fclose(fp2);
 
-	rename(fname2, fname);
+	xrename(__func__, fname2, fname);
 }
 
 PUBLIC int
