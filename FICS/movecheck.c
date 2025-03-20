@@ -25,6 +25,8 @@
    Markus Uhlin                 23/12/24	Fixed dead assignment
    Markus Uhlin                 24/05/05	Refactored and reformatted all
 						functions.
+   Markus Uhlin                 25/03/21	Fixed out-of-bounds array access
+						in has_legal_move().
 */
 
 #include "stdinclude.h"
