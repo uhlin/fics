@@ -967,8 +967,10 @@ has_legal_move(game_state_t *gs)
 			    &numpossible);
 			break;
 		}
-		if (numpossible >= 500)
+		if (numpossible >= 500) {
 			fprintf(stderr, "FICS: Possible move overrun\n");
+			return 0;
+		}
 		for (i = 0; i < numpossible; i++) {
 			if (legal_andcheck_move(gs, f, r, possiblef[i],
 			    possibler[i]))
