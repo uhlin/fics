@@ -12,6 +12,7 @@ documented in this file.
 - Fixed negative array index read in `accept_match()`.
 - Fixed null pointer dereferences.
 - Fixed out-of-bounds array access in `has_legal_move()`.
+- Fixed overflowed return value in `player_search()`.
 - Fixed possible buffer overflow in `FindHistory2()`.
 - Fixed unchecked function return values. Multiple occurrences.
 - Fixed uninitialized variables.
