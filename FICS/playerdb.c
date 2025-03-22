@@ -36,6 +36,8 @@
    Markus Uhlin                 24/12/02	Made many improvements
    Markus Uhlin                 24/12/04	Added player number checks
    Markus Uhlin                 25/02/11	Calc string length once
+   Markus Uhlin                 25/03/22	Fixed overflowed return value in
+						player_search().
 */
 
 #include "stdinclude.h"
