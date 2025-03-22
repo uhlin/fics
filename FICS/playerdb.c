@@ -2845,8 +2845,11 @@ player_search(int p, char *name)
 	int	 p1, count;
 
 	// Exact match with connected player?
-	if ((p1 = player_find_bylogin(name)) >= 0)
+	if ((p1 = player_find_bylogin(name)) >= 0) {
+		if (p1 + 1 >= (int)ARRAY_SIZE(parray))
+			return 0;
 		return (p1 + 1);
+	}
 
 	// Exact match with registered player?
 	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, name[0]);
