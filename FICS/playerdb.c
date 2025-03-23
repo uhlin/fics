@@ -38,6 +38,8 @@
    Markus Uhlin                 25/02/11	Calc string length once
    Markus Uhlin                 25/03/22	Fixed overflowed return value in
 						player_search().
+   Markus Uhlin                 25/03/23	Fixed overflowed array index
+						read/write.
 */
 
 #include "stdinclude.h"
