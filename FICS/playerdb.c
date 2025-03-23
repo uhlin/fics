@@ -1788,17 +1788,26 @@ player_new_pendto(int p)
 PUBLIC int
 player_remove_pendto(int p, int p1, int type)
 {
-	int w;
+	bool	removed = false;
+	int	w;
 
 	if ((w = player_find_pendto(p, p1, type)) < 0)
 		return -1;
 
-	for (; w < (parray[p].num_to - 1); w++)
+	for (; w < (parray[p].num_to - 1); w++) {
+		if (w + 1 >= (int)ARRAY_SIZE(parray[0].p_to_list)) {
+			warnx("%s: overflowed array index write", __func__);
+			break;
+		}
+
 		parray[p].p_to_list[w] = parray[p].p_to_list[w + 1];
+		removed = true;
+	}
 
-	parray[p].num_to = (parray[p].num_to - 1);
+	if (removed)
+		parray[p].num_to -= 1;
 
-	return 0;
+	return (removed ? 0 : -1);
 }
 
 PUBLIC int
@@ -1842,17 +1851,26 @@ player_new_pendfrom(int p)
 PUBLIC int
 player_remove_pendfrom(int p, int p1, int type)
 {
-	int w;
+	bool	removed = false;
+	int	w;
 
 	if ((w = player_find_pendfrom(p, p1, type)) < 0)
 		return -1;
 
-	for (; w < (parray[p].num_from - 1); w++)
+	for (; w < (parray[p].num_from - 1); w++) {
+		if (w + 1 >= (int)ARRAY_SIZE(parray[0].p_from_list)) {
+			warnx("%s: overflowed array index write", __func__);
+			break;
+		}
+
 		parray[p].p_from_list[w] = parray[p].p_from_list[w + 1];
+		removed = true;
+	}
 
-	parray[p].num_from = (parray[p].num_from - 1);
+	if (removed)
+		parray[p].num_from -= 1;
 
-	return 0;
+	return (removed ? 0 : -1);
 }
 
 PUBLIC int
