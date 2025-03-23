@@ -27,6 +27,8 @@
    Markus Uhlin			24/04/01	Fixed empty hostname
    Markus Uhlin			24/04/04	Added usage of explicit_bzero()
    Markus Uhlin			24/05/25	Added command-line option 'a'
+   Markus Uhlin			25/03/23	Output restart notice if the
+						player is admin.
 */
 
 #include "stdinclude.h"
