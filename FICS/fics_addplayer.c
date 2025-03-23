@@ -157,6 +157,11 @@ main(int argc, char *argv[])
 	       funame, fname, email, password);
 	printf("Admin: %s\n", (parray[p].adminLevel > 0 ? "Yes" : "No"));
 
+	if (parray[p].adminLevel > 0) {
+		printf("Player is admin. Please restart FICS in order for "
+		    "the changes to take effect.\n");
+	}
+
 	snprintf(text, sizeof text,
 	    "\nYour player account has been created.\n\n"
 	    "Login Name: %s\n"
