@@ -1639,14 +1639,32 @@ com_unalias(int p, param_list param)
 		pprintf(p, "You have no alias named '%s'.\n",
 		    param[0].val.word);
 	} else {
+		bool		removed = false;
+		const int	sz = (int) ARRAY_SIZE(parray[0].alias_list);
+
 		rfree(parray[p].alias_list[al].comm_name);
 		rfree(parray[p].alias_list[al].alias);
 
+		parray[p].alias_list[al].comm_name = NULL;
+		parray[p].alias_list[al].alias = NULL;
+
 		for (int i = al; i < parray[p].numAlias; i++) {
+			if (i >= sz || i + 1 >= sz) {
+				warnx("%s: overflowed array index read/write",
+				    __func__);
+				break;
+			}
+
 			parray[p].alias_list[i].comm_name =
 			    parray[p].alias_list[i + 1].comm_name;
 			parray[p].alias_list[i].alias =
 			    parray[p].alias_list[i + 1].alias;
+			removed = true;
+		}
+
+		if (!removed) {
+			pprintf(p, "Remove error.\n");
+			return COM_FAILED;
 		}
 
 		parray[p].numAlias--;
