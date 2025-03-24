@@ -41,6 +41,8 @@
 						value 'rat' in who_terse().
    Markus Uhlin			25/03/16	Fixed use of 32-bit 'time_t'.
    Markus Uhlin			25/03/16	Fixed untrusted array index.
+   Markus Uhlin			25/03/25	com_unalias: fixed overflowed
+						array index read/write.
 */
 
 #include "stdinclude.h"
