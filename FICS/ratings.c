@@ -39,6 +39,7 @@
 
 #include <err.h>
 #include <errno.h>
+#include <stdint.h>
 
 #include "command.h"
 #include "comproc.h"
@@ -755,7 +756,7 @@ GE(int r, int rr, double ss, double *fss)
 }
 
 PRIVATE double
-current_sterr(double s, int t)
+current_sterr(double s, int64_t t)
 {
 	if (t < 0)
 		t = 0; // this shouldn't happen
@@ -776,9 +777,10 @@ rating_sterr_delta(int p1, int p2, int type, time_t gtime, int result,
 	double		 E, fs2, denominator, GK, w; // Parts of fancy formulas
 	double		 delta, sigma; // Results to return
 	double		 s1, s2;
-	int		 t1, r1, t2, r2; // Initial sterrs and ratings
+	int		 r1, r2; // Initial sterrs and ratings
 	statistics	*p1_stats;
 	statistics	*p2_stats;
+	time_t		 t1, t2;
 
 	if (type == TYPE_BLITZ) {
 		p1_stats = &parray[p1].b_stats;
