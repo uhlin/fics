@@ -37,6 +37,16 @@ repository:
     $ git clone https://github.com/uhlin/fics.git
     $ cd fics
 
+### Checkout ###
+
+If you want you can checkout a specific version. For example:
+
+    $ git checkout 1.4.4
+
+To see all tags, type:
+
+    $ git tag
+
 Edit `FICS/config.h` with a text editor and save the file.
 
     $ emacs FICS/config.h
@@ -52,6 +62,10 @@ running `make install`.
     $ make install
 
 Done!
+
+**NOTE**:
+Running `make install` multiple times is totally fine and does no harm
+when a new version of FICS is available.
 
 ### Make variables ###
 
