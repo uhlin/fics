@@ -975,8 +975,8 @@ WriteGameState(FILE *fp, game_state_t *gs)
 PRIVATE int
 ReadGameState(FILE *fp, game_state_t *gs, int version)
 {
-	char	pieceChar;
 	int	i, j;
+	int	pieceChar;
 	int	wkmoved, wqrmoved, wkrmoved, bkmoved, bqrmoved, bkrmoved;
 
 	if (version == 0) {
