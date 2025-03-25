@@ -110,21 +110,33 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 					    "strlcpy() truncated\n", __func__);
 				}
 			} else if (!strcmp(field, "S_NUM:")) {
-				sscanf(line, "%*s %d", &(e->r[0].num));
+				if (sscanf(line, "%*s %d", &(e->r[0].num)) != 1)
+					warnx("%s: S_NUM error", __func__);
 			} else if (!strcmp(field, "B_NUM:")) {
-				sscanf(line, "%*s %d", &(e->r[1].num));
+				if (sscanf(line, "%*s %d", &(e->r[1].num)) != 1)
+					warnx("%s: B_NUM error", __func__);
 			} else if (!strcmp(field, "W_NUM:")) {
-				sscanf(line, "%*s %d", &(e->r[2].num));
+				if (sscanf(line, "%*s %d", &(e->r[2].num)) != 1)
+					warnx("%s: W_NUM error", __func__);
 			} else if (!strcmp(field, "L_NUM:")) {
-				sscanf(line, "%*s %d", &(e->r[3].num));
+				if (sscanf(line, "%*s %d", &(e->r[3].num)) != 1)
+					warnx("%s: L_NUM error", __func__);
 			} else if (!strcmp(field, "S_RATING:")) {
-				sscanf(line, "%*s %d", &(e->r[0].rating));
+				if (sscanf(line, "%*s %d",
+				   &(e->r[0].rating)) != 1)
+					warnx("%s: S_RATING error", __func__);
 			} else if (!strcmp(field, "B_RATING:")) {
-				sscanf(line, "%*s %d", &(e->r[1].rating));
+				if (sscanf(line, "%*s %d",
+				    &(e->r[1].rating)) != 1)
+					warnx("%s: B_RATING error", __func__);
 			} else if (!strcmp(field, "W_RATING:")) {
-				sscanf(line, "%*s %d", &(e->r[2].rating));
+				if (sscanf(line, "%*s %d",
+				    &(e->r[2].rating)) != 1)
+					warnx("%s: W_RATING error", __func__);
 			} else if (!strcmp(field, "L_RATING:")) {
-				sscanf(line, "%*s %d", &(e->r[3].rating));
+				if (sscanf(line, "%*s %d",
+				    &(e->r[3].rating)) != 1)
+					warnx("%s: L_RATING error", __func__);
 			} else if (!strcmp(field, "Network:")) {
 				done = 1;
 			}
