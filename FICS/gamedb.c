@@ -37,6 +37,8 @@
    Markus Uhlin			24/12/02	Fixed bugs and ignored function
 						return values.
    Markus Uhlin			25/03/18	Fixed unchecked return values
+   Markus Uhlin			25/03/25	ReadGameState: fixed truncated
+						stdio return value.
 */
 
 #include "stdinclude.h"
