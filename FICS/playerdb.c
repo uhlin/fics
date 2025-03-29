@@ -40,6 +40,9 @@
 						player_search().
    Markus Uhlin                 25/03/23	Fixed overflowed array index
 						read/write.
+   Markus Uhlin                 25/03/29	player_remove_request:
+						fixed overflowed array index
+						read/write.
 */
 
 #include "stdinclude.h"
