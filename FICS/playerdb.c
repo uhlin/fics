@@ -1809,10 +1809,10 @@ player_remove_pendto(int p, int p1, int type)
 		removed = true;
 	}
 
-	if (removed)
-		parray[p].num_to -= 1;
+	UNUSED_VAR(removed);
+	parray[p].num_to -= 1;
 
-	return (removed ? 0 : -1);
+	return (0);
 }
 
 PUBLIC int
@@ -1872,10 +1872,10 @@ player_remove_pendfrom(int p, int p1, int type)
 		removed = true;
 	}
 
-	if (removed)
-		parray[p].num_from -= 1;
+	UNUSED_VAR(removed);
+	parray[p].num_from -= 1;
 
-	return (removed ? 0 : -1);
+	return (0);
 }
 
 PUBLIC int
@@ -1913,7 +1913,7 @@ player_remove_request(int p, int p1, int type)
 	bool	removed;
 	int	to = 0, from = 0;
 
-	while ((to = player_find_pendto(p, p1, type)) != -1) {
+	while (to != -1 && (to = player_find_pendto(p, p1, type)) != -1) {
 		removed = false;
 
 		for (; to < parray[p].num_to - 1; to++) {
@@ -1927,11 +1927,11 @@ player_remove_request(int p, int p1, int type)
 			removed = true;
 		}
 
-		if (removed)
-			parray[p].num_to -= 1;
+		UNUSED_VAR(removed);
+		parray[p].num_to -= 1;
 	}
 
-	while ((from = player_find_pendfrom(p1, p, type)) != -1) {
+	while (from != -1 && (from = player_find_pendfrom(p1, p, type)) != -1) {
 		removed = false;
 
 		for (; from < parray[p1].num_from - 1; from++) {
@@ -1946,8 +1946,8 @@ player_remove_request(int p, int p1, int type)
 			removed = true;
 		}
 
-		if (removed)
-			parray[p1].num_from -= 1;
+		UNUSED_VAR(removed);
+		parray[p1].num_from -= 1;
 	}
 
 	if ((type == PEND_ALL || type == PEND_MATCH) && parray[p].partner >= 0)
