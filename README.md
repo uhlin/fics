@@ -43,6 +43,9 @@ If you want you can checkout a specific version. For example:
 
     $ git checkout 1.4.4
 
+(This is a good idea since you most likely don't want to run a
+development version.)
+
 To see all tags, type:
 
     $ git tag
