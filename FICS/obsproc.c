@@ -1757,21 +1757,13 @@ com_journal(int p, param_list param)
 PRIVATE void
 jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 {
-	FILE	*Game;
-	char	*name_from = parray[p1].login;
-	char	*name_to = parray[p].login;
-	char	 BlackName[MAX_LOGIN_NAME + 1];
-	char	 WhiteName[MAX_LOGIN_NAME + 1];
-	char	 command[MAX_FILENAME_SIZE * 2 + 3];
-	char	 eco[100];
-	char	 ending[100];
-	char	 fname[MAX_FILENAME_SIZE];
-	char	 fname2[MAX_FILENAME_SIZE];
-	char	 result[100];
-	char	 type[100];
-	int	 BlackRating;
-	int	 WhiteRating;
-	int	 i, t;
+	FILE			*Game;
+	char			*name_from = parray[p1].login;
+	char			*name_to = parray[p].login;
+	char			 command[MAX_FILENAME_SIZE * 2 + 3];
+	char			 fname[MAX_FILENAME_SIZE];
+	char			 fname2[MAX_FILENAME_SIZE];
+	struct JGI_context	 ctx;
 
 	msnprintf(fname, sizeof fname, "%s/%c/%s.%c", journal_dir, name_from[0],
 	    name_from, from_spot);
@@ -1801,14 +1793,34 @@ jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    name_to[0], name_to, STATS_JOURNAL);
 
-	if (!journal_get_info(p, from_spot, WhiteName, &WhiteRating,
-	    BlackName, &BlackRating, type, &t, &i, eco, ending, result, fname))
+	/*
+	 * Init context
+	 */
+	ctx.p = p;
+	ctx.from_spot = from_spot;
+	ctx.WhiteRating = 0;
+	ctx.BlackRating = 0;
+	ctx.t = 0;
+	ctx.i = 0;
+	memset(ctx.WhiteName, 0, sizeof(ctx.WhiteName));
+	memset(ctx.BlackName, 0, sizeof(ctx.BlackName));
+	memset(ctx.type, 0, sizeof(ctx.type));
+	memset(ctx.eco, 0, sizeof(ctx.eco));
+	memset(ctx.ending, 0, sizeof(ctx.ending));
+	memset(ctx.result, 0, sizeof(ctx.result));
+
+	if (!journal_get_info(&ctx, fname))
 		return;
 
 	addjournalitem(p, toupper(save_spot),
-	    WhiteName, WhiteRating,
-	    BlackName, BlackRating,
-	    type, t, i, eco, ending, result, to_file);
+	    ctx.WhiteName, ctx.WhiteRating,
+	    ctx.BlackName, ctx.BlackRating,
+	    ctx.type,
+	    ctx.t, ctx.i,
+	    ctx.eco,
+	    ctx.ending,
+	    ctx.result,
+	    to_file);
 	pprintf(p, "Journal entry %s %c saved in slot %c in journal.\n",
 	    parray[p1].name, toupper(from_spot), toupper(save_spot));
 }
