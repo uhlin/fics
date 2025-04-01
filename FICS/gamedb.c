@@ -1856,6 +1856,16 @@ journal_get_info(struct JGI_context *ctx, const char *fname)
 	}
 
 	while (!feof(fp)) {
+		_Static_assert(ARRAY_SIZE(ctx->WhiteName) > 20,
+		    "'WhiteName' too small");
+		_Static_assert(ARRAY_SIZE(ctx->BlackName) > 20,
+		    "'BlackName' too small");
+
+		_Static_assert(ARRAY_SIZE(ctx->type) > 99,   "'type' too small");
+		_Static_assert(ARRAY_SIZE(ctx->eco) > 99,    "'eco' too small");
+		_Static_assert(ARRAY_SIZE(ctx->ending) > 99, "'ending' too small");
+		_Static_assert(ARRAY_SIZE(ctx->result) > 99, "'result' too small");
+
 		if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
 		    &count,
 		    ctx->WhiteName, &ctx->WhiteRating,
