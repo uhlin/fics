@@ -40,6 +40,8 @@
    Markus Uhlin			25/03/25	ReadGameState: fixed truncated
 						stdio return value.
    Markus Uhlin			25/04/01	Fixed call of risky function
+   Markus Uhlin			25/04/01	ReadV1GameFmt: guard num half
+						moves.
 */
 
 #include "stdinclude.h"
