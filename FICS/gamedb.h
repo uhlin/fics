@@ -187,8 +187,7 @@ extern int	 game_remove(int);
 extern int	 game_save(int);
 extern int	 game_zero(int);
 extern int	 got_attr_value(int, char *, char *, FILE *, char *);
-extern int	 journal_get_info(int, char, char *, int *, char *, int *,
-		     char *, int *, int *, char *, char *, char *, char *);
+extern int	 journal_get_info(struct JGI_context *, const char *);
 extern int	 pgames(int, int, char *);
 extern int	 pjournal(int, int, char *);
 extern void	 MakeFENpos(int, char *, size_t);

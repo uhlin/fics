@@ -1844,38 +1844,36 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
  * Find from_spot in journal list - return 0 if corrupted
  */
 PUBLIC int
-journal_get_info(int p, char from_spot, char *WhiteName, int *WhiteRating,
-    char *BlackName, int *BlackRating, char *type, int *t, int *i, char *eco,
-    char *ending, char *result, char *fname)
+journal_get_info(struct JGI_context *ctx, const char *fname)
 {
 	FILE	*fp;
 	char	 count;
 
 	if ((fp = fopen(fname, "r")) == NULL) {
 		fprintf(stderr, "Corrupt journal file! %s\n", fname);
-		pprintf(p, "The journal file is corrupt! See an admin.\n");
+		pprintf(ctx->p, "The journal file is corrupt! See an admin.\n");
 		return 0;
 	}
 
 	while (!feof(fp)) {
 		if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
 		    &count,
-		    WhiteName, &(*WhiteRating),
-		    BlackName, &(*BlackRating),
-		    type,
-		    &(*t), &(*i),
-		    eco,
-		    ending,
-		    result) != 11) {
+		    ctx->WhiteName, &ctx->WhiteRating,
+		    ctx->BlackName, &ctx->BlackRating,
+		    ctx->type,
+		    &ctx->t, &ctx->i,
+		    ctx->eco,
+		    ctx->ending,
+		    ctx->result) != 11) {
 			fprintf(stderr, "FICS: Error in journal info format. "
 			    "%s\n", fname);
-			pprintf(p, "The journal file is corrupt! Error in "
+			pprintf(ctx->p, "The journal file is corrupt! Error in "
 			    "internal format.\n");
 			fclose(fp);
 			return 0;
 		}
 
-		if (tolower(count) == from_spot) {
+		if (tolower(count) == ctx->from_spot) {
 			fclose(fp);
 			return 1;
 		}
