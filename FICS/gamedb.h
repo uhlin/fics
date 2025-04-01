@@ -149,6 +149,21 @@ typedef struct _game {
 	int winner;
 } game;
 
+struct JGI_context {
+	int	 p;
+	char	 from_spot;
+	char	 WhiteName[MAX_LOGIN_NAME + 1];
+	int	 WhiteRating;
+	char	 BlackName[MAX_LOGIN_NAME + 1];
+	int	 BlackRating;
+	char	 type[100];
+	int	 t;
+	int	 i;
+	char	 eco[100];
+	char	 ending[100];
+	char	 result[100];
+};
+
 extern game	*garray;
 extern int	 g_num;
 
