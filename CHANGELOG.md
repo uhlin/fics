@@ -9,6 +9,7 @@ documented in this file.
 - Changed the program to avoid calculating the same string multiple
   times. Multiple occurrences, found by PVS-Studio.
 - Fixed `-Wshadow` warnings. Multiple occurrences.
+- Fixed calls of risky functions.
 - Fixed double `free()` in `process_login()`.
 - Fixed memory leak in `process_login()`.
 - Fixed negative array index read in `accept_match()`.
