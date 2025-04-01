@@ -1866,7 +1866,7 @@ journal_get_info(struct JGI_context *ctx, const char *fname)
 		_Static_assert(ARRAY_SIZE(ctx->ending) > 99, "'ending' too small");
 		_Static_assert(ARRAY_SIZE(ctx->result) > 99, "'result' too small");
 
-		if (fscanf(fp, "%c %s %d %s %d %s %d %d %s %s %s\n",
+		if (fscanf(fp, "%c %20s %d %20s %d %99s %d %d %99s %99s %99s\n",
 		    &count,
 		    ctx->WhiteName, &ctx->WhiteRating,
 		    ctx->BlackName, &ctx->BlackRating,
