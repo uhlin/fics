@@ -30,6 +30,7 @@
 #include <time.h>
 
 #include "board.h"
+#include "command.h"
 
 extern const char *bstr[7];
 extern const char *rstr[2];
