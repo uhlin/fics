@@ -47,6 +47,7 @@
 
 #include <err.h>
 #include <errno.h>
+#include <limits.h>
 
 #include "command.h"
 #include "config.h"
@@ -1319,6 +1320,12 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 	ret[1] = fscanf(fp, "%d", &g->numHalfMoves);
 	if (ret[0] != 4 || ret[1] != 1) {
 		warnx("%s: fscanf error: %s", __func__, file);
+		return -1;
+	} else if (g->numHalfMoves < 0 || (size_t)g->numHalfMoves >
+	    INT_MAX / sizeof(move_t)) {
+		warnx("%s: warning: num half moves out-of-bounds (%d)",
+		    __func__,
+		    g->numHalfMoves);
 		return -1;
 	}
 
