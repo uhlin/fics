@@ -43,6 +43,8 @@
    Markus Uhlin                 25/03/29	player_remove_request:
 						fixed overflowed array index
 						read/write.
+   Markus Uhlin                 25/04/02	add_to_list: added an upper
+						limit for the list size.
 */
 
 #include "stdinclude.h"
