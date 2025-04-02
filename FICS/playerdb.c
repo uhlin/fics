@@ -584,6 +584,23 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	pp->timeOfReg = array[0];
 	pp->totalTime = array[1];
 
+	if (pp->num_plan > MAX_PLAN) {
+		warnx("Player %s is corrupt\nToo many plans (%d)",
+		   parray[p].name,
+		   pp->num_plan);
+		return;
+	} else if (pp->num_formula > MAX_FORMULA) {
+		warnx("Player %s is corrupt\nToo many formulas (%d)",
+		   parray[p].name,
+		   pp->num_formula);
+		return;
+	} else if (pp->numAlias > MAX_ALIASES) {
+		warnx("Player %s is corrupt\nToo many aliases (%d)",
+		    parray[p].name,
+		    pp->numAlias);
+		return;
+	}
+
 	if (pp->num_plan > 0) {
 		for (i = 0; i < pp->num_plan; i++) {
 			if (fgets(tmp2, sizeof tmp2, fp) == NULL) {
