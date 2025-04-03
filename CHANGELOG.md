@@ -10,6 +10,7 @@ documented in this file.
   times. Multiple occurrences, found by PVS-Studio.
 - Fixed `-Wshadow` warnings. Multiple occurrences.
 - Fixed calls of risky functions.
+- Fixed constant expression result in `tell()`.
 - Fixed double `free()` in `process_login()`.
 - Fixed memory leak in `process_login()`.
 - Fixed negative array index read in `accept_match()`.
