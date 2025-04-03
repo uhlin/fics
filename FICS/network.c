@@ -314,6 +314,7 @@ net_send_string(int fd, char *str, int format)
 				break;
 			case '\033':
 				con[which].outPos -= 3;
+				// XXX: fallthrough here?
 			default:
 				sendme(which, str, 1);
 			}
