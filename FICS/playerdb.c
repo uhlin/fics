@@ -857,9 +857,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_plan
 		 */
 
-		parray[p].num_plan = atoi(value);
-
-		if (parray[p].num_plan > 0) {
+		if ((parray[p].num_plan = atoi(value)) > MAX_PLAN) {
+			warnx("%s: %s: too many plans (%d)", __func__, file,
+			    parray[p].num_plan);
+			return -1;
+		} else if (parray[p].num_plan > 0) {
 			for (i = 0; i < parray[p].num_plan; i++) {
 
 				if (fgets(tmp, sizeof tmp, fp) == NULL) {
@@ -881,15 +883,19 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 					    xstrdup(tmp) : NULL);
 				}
 			}
+		} else {
+			/* null */;
 		}
 	} else if (!strcmp(attr, "num_formula:")) {
 		/*
 		 * num_formula
 		 */
 
-		parray[p].num_formula = atoi(value);
-
-		if (parray[p].num_formula > 0) {
+		if ((parray[p].num_formula = atoi(value)) > MAX_FORMULA) {
+			warnx("%s: %s: too many formulas (%d)", __func__, file,
+			    parray[p].num_formula);
+			return -1;
+		} else if (parray[p].num_formula > 0) {
 			for (i = 0; i < parray[p].num_formula; i++) {
 				if (fgets(tmp, sizeof tmp, fp) == NULL) {
 					warnx("%s: bad formula: feof %s",
@@ -910,6 +916,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 					    xstrdup(tmp) : NULL);
 				}
 			}
+		} else {
+			/* null */;
 		}
 	} else if (!strcmp(attr, "formula:")) {
 		/*
@@ -922,9 +930,11 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_alias
 		 */
 
-		parray[p].numAlias = atoi(value);
-
-		if (parray[p].numAlias > 0) {
+		if ((parray[p].numAlias = atoi(value)) > MAX_ALIASES) {
+			warnx("%s: %s: too many aliases (%d)", __func__, file,
+			    parray[p].numAlias);
+			return -1;
+		} else if (parray[p].numAlias > 0) {
 			for (i = 0; i < parray[p].numAlias; i++) {
 				if (fgets(tmp, sizeof tmp, fp) == NULL) {
 					warnx("%s: bad alias: feof %s",
@@ -951,6 +961,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 					    xstrdup(tmp1);
 				}
 			}
+		} else {
+			/* null */;
 		}
 	} else if (!strcmp(attr, "num_censor:")) {
 		/*
