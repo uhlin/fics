@@ -412,8 +412,8 @@ add_to_list(FILE *fp, enum ListWhich lw, int *size, int p)
 #define SCAN_STR "%1023s"
 
 	if (*size <= 0 || *size > MAX_GLOBAL_LIST_SIZE) {
-		warnx("%s: illegal list size (%d)", __func__, *size);
-		return -1;
+//		warnx("%s: illegal list size (%d)", __func__, *size);
+		return -2;
 	}
 
 	while ((*size)-- > 0 && fscanf(fp, SCAN_STR, buf) == 1)
