@@ -267,7 +267,7 @@ net_send_string(int fd, char *str, int format)
 	if ((which = findConnection(fd)) < 0)
 		return -1;
 	while (*str) {
-		const int upbound = strlen(str);
+		const int upbound = (int)strlen(str);
 
 		for (i = 0; i < upbound && str[i] >= ' '; i++) {
 			/* null */;
