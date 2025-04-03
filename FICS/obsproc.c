@@ -380,9 +380,8 @@ com_allobservers(int p, param_list param)
 		start = 0;
 		end = g_num;
 	} else if ((obgame >= g_num) ||
-	    ((obgame < g_num) &&
-	    ((garray[obgame].status != GAME_ACTIVE) &&
-	    (garray[obgame].status != GAME_EXAMINE)))) {
+	    (garray[obgame].status != GAME_ACTIVE &&
+	    garray[obgame].status != GAME_EXAMINE)) {
 		pprintf(p, "There is no such game.\n");
 		return COM_OK;
 	} else {
