@@ -34,6 +34,8 @@
    Markus Uhlin                 24/04/14	Refactored and reformatted ALL
 						functions.
    Markus Uhlin                 25/01/18	Fixed -Wshadow
+   Markus Uhlin                 25/04/04	tell: fixed constant expression
+						result
 */
 
 #include "stdinclude.h"
@@ -296,8 +298,8 @@ tell(int p, int p1, char *msg, int why, int ch)
 	}
 
 	if (player_censored(p1, p) && parray[p].adminLevel == 0) {
-		if (why != TELL_KIBITZ ||
-		    why != TELL_WHISPER ||
+		if (why != TELL_KIBITZ &&
+		    why != TELL_WHISPER &&
 		    why != TELL_CHANNEL) {
 			pprintf(p, "Player \"%s\" is censoring you.\n",
 			    parray[p1].name);
