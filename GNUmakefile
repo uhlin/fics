@@ -18,3 +18,4 @@ include common.mk
 
 include $(TARGETS_DIR)clean.mk
 include $(TARGETS_DIR)install.mk
+include $(TARGETS_DIR)tidy.mk
