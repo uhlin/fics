@@ -2368,7 +2368,6 @@ player_goto_next_board(int p)
 
 	on	= parray[p].simul_info.onBoard;
 	start	= on;
-	g	= -1;
 
 	do {
 		on++;
@@ -2397,7 +2396,6 @@ player_goto_prev_board(int p)
 
 	on	= parray[p].simul_info.onBoard;
 	start	= on;
-	g	= -1;
 
 	do {
 		--on;
