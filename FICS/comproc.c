@@ -1810,10 +1810,10 @@ FindAndShowFile(int p, param_list param, char *dir)
 {
 	char		*iwant, *filenames[1000];
 	int		 i;
-	static char	 nullify = '\0';
+//	static char	 nullify = '\0';
 
 	if (param[0].type == TYPE_NULL) {
-		iwant = &nullify;
+		iwant = NULL;
 	} else {
 		iwant = param[0].val.word;
 
@@ -1867,7 +1867,7 @@ com_mailsource(int p, param_list param)
 	char		 fname[MAX_FILENAME_SIZE];
 	char		 subj[120];
 	int		 count;
-	static char	 nullify = '\0';
+//	static char	 nullify = '\0';
 
 	if (!parray[p].registered) {
 		pprintf(p, "Only registered people can use the mailsource "
@@ -1876,7 +1876,7 @@ com_mailsource(int p, param_list param)
 	}
 
 	if (param[0].type == TYPE_NULL)
-		iwant = &nullify;
+		iwant = NULL;
 	else
 		iwant = param[0].val.word;
 
@@ -1930,7 +1930,7 @@ com_mailhelp(int p, param_list param)
 	char		 subj[120];
 	int		 count;
 	int		 lang = parray[p].language;
-	static char	 nullify = '\0';
+//	static char	 nullify = '\0';
 
 	if (!parray[p].registered) {
 		pprintf(p, "Only registered people can use the mailhelp "
@@ -1939,7 +1939,7 @@ com_mailhelp(int p, param_list param)
 	}
 
 	if (param[0].type == TYPE_NULL)
-		iwant = &nullify;
+		iwant = NULL;
 	else
 		iwant = param[0].val.word;
 
