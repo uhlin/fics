@@ -152,6 +152,9 @@ com_games(int p, param_list param)
 			wp	= garray[i].white;
 			bp	= garray[i].black;
 
+			UNUSED_VAR(wp);
+			UNUSED_VAR(bp);
+
 			if ((!selected) &&
 			    s &&
 			    strncasecmp(s, garray[i].white_name, slen) &&
