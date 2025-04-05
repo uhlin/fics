@@ -1828,9 +1828,9 @@ DisplayTargetRank(int p, char *target, int show, int showComp)
 
 	numAbove = CountAbove(numToShow, blitzRank, stdRank, wildRank, show);
 
-	blitzCount	= (blitzRank - numAbove);
-	stdCount	= (stdRank - numAbove);
-	wildCount	= (wildRank - numAbove);
+	blitzCount	= int_diff(__func__, blitzRank, numAbove);
+	stdCount	= int_diff(__func__, stdRank, numAbove);
+	wildCount	= int_diff(__func__, wildRank, numAbove);
 
 	ShowRankLines(p, fb, fs, fw, blitzCount, stdCount, wildCount, numToShow,
 	    showComp, show, target);
