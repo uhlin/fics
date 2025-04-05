@@ -1067,15 +1067,15 @@ got_attr_value(int g, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "type:")) {
 		garray[g].type = atoi(value);
 	} else if (!strcmp(attr, "halfmoves:")) {
-		garray[g].numHalfMoves = atoi(value);
-
-		if (garray[g].numHalfMoves == 0)
+		if ((garray[g].numHalfMoves = atoi(value)) == 0)
 			return 0;
 		else if (garray[g].numHalfMoves < 0 ||
 		    (size_t)garray[g].numHalfMoves > INT_MAX / sizeof(move_t)) {
 			warnx("%s: num half moves out-of-bounds (%d)", __func__,
 			    garray[g].numHalfMoves);
 			return -1;
+		} else {
+			/* null */;
 		}
 
 		garray[g].moveListSize = garray[g].numHalfMoves;
