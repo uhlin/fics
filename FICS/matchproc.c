@@ -1081,6 +1081,8 @@ com_match(int p, param_list param)
 
 		if (ctx.white >= 0)
 			print_bughouse(p, p1, &ctx, colorstr);
+		else
+			warnx("%s: cannot print bughouse", __func__);
 	}
 
 	if (in_list(p, L_COMPUTER, parray[p].name)) {
