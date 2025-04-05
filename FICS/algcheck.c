@@ -269,6 +269,11 @@ alg_parse_move(char *mstr, game_state_t *gs, move_t *mt)
 			} else {
 				tmpr = r - 1;
 			}
+			if (tmpr < 0 || tmpr >= 8) {
+				warnx("%s: out-of-bounds array read/write: "
+				    "tmpr=%d", __func__, tmpr);
+				return MOVE_AMBIGUOUS;
+			}
 
 			if (gs->board[tf][tmpr] == NOPIECE) {
 				if ((gs->ep_possible[((gs->onMove == WHITE) ?
