@@ -61,6 +61,7 @@ extern int	com_hbest(int, param_list);
 extern int	com_hrank(int, param_list);
 extern int	com_rank(int, param_list);
 extern int	com_statistics(int, param_list);
+extern int	int_diff(const char *, const int, const int);
 extern int	is_active(int);
 extern int	rating_delta(int, int, int, int, int);
 extern int	rating_update(int);

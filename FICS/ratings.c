@@ -1304,6 +1304,18 @@ com_statistics(int p, param_list param)
 	return COM_OK;
 }
 
+/*
+ * Return the difference of 'a - b'
+ */
+PUBLIC int
+int_diff(const char *fn, const int a, const int b)
+{
+	if ((b > 0 && a < INT_MIN + b) ||
+	    (b < 0 && a > INT_MAX + b))
+		errx(1, "%s: integer overflow (%d - %d)", fn, a, b);
+	return (a - b);
+}
+
 PUBLIC int
 com_fixrank(int p, param_list param)
 {
