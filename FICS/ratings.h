@@ -26,6 +26,8 @@
 #ifndef _RATINGS_H
 #define _RATINGS_H
 
+#include "common.h"
+
 #define STATS_VERSION 2
 
 #define RESULT_WIN       0
@@ -49,6 +51,7 @@ typedef struct _rateStruct {
 	int	rating;
 } rateStruct;
 
+__FICS_BEGIN_DECLS
 extern int	Best(int, param_list, int);
 extern int	DisplayRank(int, param_list, int);
 extern int	DisplayRankedPlayers(int, int, int, int, int);
@@ -73,5 +76,6 @@ extern void	rating_recalc(void);
 extern void	rating_remove(int, int);
 extern void	rating_sterr_delta(int, int, int, time_t, int, int *, double *);
 extern void	save_ratings(void);
+__FICS_END_DECLS
 
 #endif /* _RATINGS_H */
