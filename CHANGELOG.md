@@ -4,30 +4,30 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Changed the addplayer program to output a restart notice if an admin
+- **Changed** the addplayer program to output a restart notice if an admin
   account is created.
-- Changed the program to avoid calculating the same string multiple
+- **Changed** the program to avoid calculating the same string multiple
   times. Multiple occurrences, found by PVS-Studio.
-- Fixed `-Wshadow` warnings. Multiple occurrences.
-- Fixed calls of risky functions.
-- Fixed constant expression result in `tell()`.
-- Fixed double `free()` in `process_login()`.
-- Fixed excessive checks.
-- Fixed improper use of negative values.
-- Fixed memory leak in `process_login()`.
-- Fixed negative array index read in `accept_match()`.
-- Fixed null pointer dereferences.
-- Fixed out-of-bounds array access in `has_legal_move()`.
-- Fixed overflowed array index read/write. Multiple occurrences.
-- Fixed overflowed return value in `player_search()`.
-- Fixed possible buffer overflow in `FindHistory2()`.
-- Fixed possible memory corruptions and incorrect computations.
-- Fixed truncated stdio return value in `ReadGameState()`.
-- Fixed unchecked function return values. Multiple occurrences.
-- Fixed uninitialized variables.
-- Fixed untrusted array indices.
-- Fixed untrusted loop bounds.
-- Fixed use of 32-bit `time_t`. Y2K38 safety. Multiple occurrences.
+- **Fixed** `-Wshadow` warnings. Multiple occurrences.
+- **Fixed** calls of risky functions.
+- **Fixed** constant expression result in `tell()`.
+- **Fixed** double `free()` in `process_login()`.
+- **Fixed** excessive checks.
+- **Fixed** improper use of negative values.
+- **Fixed** memory leak in `process_login()`.
+- **Fixed** negative array index read in `accept_match()`.
+- **Fixed** null pointer dereferences.
+- **Fixed** out-of-bounds array access in `has_legal_move()`.
+- **Fixed** overflowed array index read/write. Multiple occurrences.
+- **Fixed** overflowed return value in `player_search()`.
+- **Fixed** possible buffer overflow in `FindHistory2()`.
+- **Fixed** possible memory corruptions and incorrect computations.
+- **Fixed** truncated stdio return value in `ReadGameState()`.
+- **Fixed** unchecked function return values. Multiple occurrences.
+- **Fixed** uninitialized variables.
+- **Fixed** untrusted array indices.
+- **Fixed** untrusted loop bounds.
+- **Fixed** use of 32-bit `time_t`. Y2K38 safety. Multiple occurrences.
 
 ## [1.4.4] - 2024-12-07 ##
 - **Added** an autorun script suitable to be run as a cron job.
