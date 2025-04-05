@@ -21,6 +21,9 @@
    name		email		yy/mm/dd	Change
    Richard Nash			93/10/22	Created
    Markus Uhlin			24/05/05	Revised
+   Markus Uhlin			25/04/05	alg_parse_move:
+						return ambiguous move on
+						out-of-bounds array read/write.
 */
 
 #include "stdinclude.h"
