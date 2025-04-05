@@ -967,7 +967,7 @@ PRIVATE void
 t_sft(const char *want, struct t_tree *t)
 {
 	if (t) {
-		int cmp = strncmp(want, t->name, strlen(want));
+		int cmp = strncmp(want ? want : "", t->name, strlen(want));
 
 		if (cmp <= 0) // If 'want' <= this one, look left
 			t_sft(want, t->left);
