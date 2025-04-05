@@ -1834,7 +1834,11 @@ com_goboard(int p, param_list param)
 	}
 
 	on = parray[p].simul_info.onBoard;
-	g = parray[p].simul_info.boards[on];
+
+	if ((g = parray[p].simul_info.boards[on]) < 0) {
+		pprintf(p, "Internal error! Unexpected negative value!\n");
+		return COM_OK;
+	}
 
 	if (p1 == garray[g].black) {
 		pprintf(p, "You are already at that board!\n");

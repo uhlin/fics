@@ -574,7 +574,7 @@ ChooseClauses(player *who, char *formula)
 		return ret;
 
 	for (i = 0; formula[i] != '\0' && formula[i] != '#'; i++) {
-		if (formula[i] != 'f' || (i > 0 && isalnum(formula[i - 1])) ||
+		if ((i > 0 && isalnum(formula[i - 1])) || formula[i] != 'f' ||
 		    !isdigit(formula[i + 1]) ||
 		    sscanf(&formula[i], "f%d", &which) != 1)
 			continue;

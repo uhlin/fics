@@ -132,7 +132,11 @@ parse_command(char *com_string, char **comm, char **parameters)
 PUBLIC int
 alias_lookup(char *tmp, alias_type *alias_list, int numalias)
 {
-	for (int i = 0; (alias_list[i].comm_name && i < numalias); i++) {
+	if (numalias >= MAX_ALIASES)
+		return -1;
+	for (int i = 0;
+	    (i < numalias && alias_list[i].comm_name != NULL);
+	    i++) {
 		if (!strcmp(tmp, alias_list[i].comm_name))
 			return i;
 	}
