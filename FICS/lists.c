@@ -60,7 +60,14 @@ list_find(int p, enum ListWhich l)
 	int	 personal;
 
 	personal	= ListArray[l].rights == P_PERSONAL;
-	starter		= (personal ? &parray[p].lists : &firstGlobalList);
+
+	if (personal) {
+		if (p < 0)
+			return NULL;
+		starter = &parray[p].lists;
+	} else {
+		starter = &firstGlobalList;
+	}
 
 	for (tempList = *starter; tempList != NULL; tempList = tempList->next) {
 		if (l == tempList->which) {
