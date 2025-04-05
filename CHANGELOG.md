@@ -13,6 +13,7 @@ documented in this file.
 - Fixed constant expression result in `tell()`.
 - Fixed double `free()` in `process_login()`.
 - Fixed excessive checks.
+- Fixed improper use of negative values.
 - Fixed memory leak in `process_login()`.
 - Fixed negative array index read in `accept_match()`.
 - Fixed null pointer dereferences.
