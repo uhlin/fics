@@ -1826,8 +1826,9 @@ FindAndShowFile(int p, param_list param, char *dir)
 	i = search_directory(dir, iwant, filenames, ARRAY_SIZE(filenames));
 
 	if (i == 0) {
-		pprintf(p, "No information available on \"%s\".\n", iwant);
-	} else if (i == 1 || !strcmp(*filenames, iwant)) {
+		pprintf(p, "No information available on \"%s\".\n",
+		    (iwant ? iwant : ""));
+	} else if (i == 1 || !strcmp(*filenames, iwant ? iwant : "")) {
 		if (psend_file(p, dir, *filenames)) {
 			/*
 			 * We should never reach this unless the file
@@ -1838,7 +1839,7 @@ FindAndShowFile(int p, param_list param, char *dir)
 			    "Thank you.\n");
 		}
 	} else {
-		if (*iwant)
+		if (iwant && *iwant)
 			pprintf(p, "Matches:\n");
 		display_directory(p, filenames, i);
 	}
@@ -1880,8 +1881,9 @@ com_mailsource(int p, param_list param)
 
 	if ((count = search_directory(source_dir, iwant, buffer,
 	    ARRAY_SIZE(buffer))) == 0) {
-		pprintf(p, "Found no source file matching \"%s\".\n", iwant);
-	} else if ((count == 1) || !strcmp(iwant, *buffer)) {
+		pprintf(p, "Found no source file matching \"%s\".\n",
+		    (iwant ? iwant : ""));
+	} else if ((count == 1) || !strcmp(iwant ? iwant : "", *buffer)) {
 		snprintf(subj, sizeof subj, "FICS source file from server "
 		    "%s: %s",
 		    fics_hostname,
@@ -1897,7 +1899,7 @@ com_mailsource(int p, param_list param)
 	} else {
 		pprintf(p, "Found %d source files matching that:\n", count);
 
-		if (*iwant) {
+		if (iwant && *iwant) {
 			display_directory(p, buffer, count);
 		} else { // this junk is to get *.c *.h
 			char		*s;
@@ -1957,8 +1959,9 @@ com_mailhelp(int p, param_list param)
 	}
 
 	if (count == 0) {
-		pprintf(p, "Found no help file matching \"%s\".\n", iwant);
-	} else if (count == 1 || !strcmp(*buffer, iwant)) {
+		pprintf(p, "Found no help file matching \"%s\".\n",
+		    (iwant ? iwant : ""));
+	} else if (count == 1 || !strcmp(*buffer, iwant ? iwant : "")) {
 		snprintf(subj, sizeof subj, "FICS help file from server %s: %s",
 		    fics_hostname,
 		    *buffer);
