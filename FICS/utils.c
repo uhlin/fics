@@ -1050,7 +1050,6 @@ PUBLIC int
 search_directory(char *dir, char *filter, char **buffer, int buffersize)
 {
 	int			 cmp;
-	static char		 nullify = '\0';
 	static struct t_dirs	*ramdirs = NULL;
 	struct stat		 statbuf;
 	struct t_dirs**		 i;
@@ -1059,9 +1058,6 @@ search_directory(char *dir, char *filter, char **buffer, int buffersize)
 	t_buffersize	= buffersize;
 
 	if (!stat(dir, &statbuf)) {
-		if (filter == NULL)	// NULL becomes pointer to null string
-			filter = &nullify;
-
 		i = &ramdirs;
 
 		while (*i) {		// Find dir in dir tree
