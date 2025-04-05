@@ -972,6 +972,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		if ((i = atoi(value)) < 0) {
 			warnx("%s: num censor negative", __func__);
 			return -1;
+		} else if (i > MAX_CENSOR) {
+			warnx("%s: num censor too large", __func__);
+			return -1;
 		}
 
 		while (i--) {
@@ -993,6 +996,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "num_notify:")) {
 		if ((i = atoi(value)) < 0) {
 			warnx("%s: num notify negative", __func__);
+			return -1;
+		} else if (i > MAX_NOTIFY) {
+			warnx("%s: num notify too large", __func__);
 			return -1;
 		}
 
