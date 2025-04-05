@@ -27,6 +27,7 @@
 #ifndef _GAMEDB_H
 #define _GAMEDB_H
 
+#include <stdint.h>
 #include <time.h>
 
 #include "board.h"
@@ -140,9 +141,9 @@ typedef struct _game {
 	move_t	*examMoveList;     // Extra movelist for examine
 	int	 examMoveListSize;
 
-	unsigned int startTime;		// The relative time the game started
-	unsigned int lastMoveTime;	// Last time a move was made
-	unsigned int lastDecTime;	// Last time a players clock was
+	uint64_t	startTime;	// The relative time the game started
+	uint64_t	lastMoveTime;	// Last time a move was made
+	uint64_t	lastDecTime;	// Last time a players clock was
 					// decremented
 
 	int result;
