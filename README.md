@@ -1,5 +1,7 @@
 # README #
 
+![Coverity Scan Build Status](https://scan.coverity.com/projects/31462/badge.svg)
+
 ## About ##
 
 This is a fork of FICS(Free Internet Chess Server) version 1.6.2 made
