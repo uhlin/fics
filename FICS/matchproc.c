@@ -1079,7 +1079,8 @@ com_match(int p, param_list param)
 			.wt	= wt,
 		};
 
-		print_bughouse(p, p1, &ctx, colorstr);
+		if (ctx.white >= 0)
+			print_bughouse(p, p1, &ctx, colorstr);
 	}
 
 	if (in_list(p, L_COMPUTER, parray[p].name)) {
