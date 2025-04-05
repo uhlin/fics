@@ -969,7 +969,10 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_censor
 		 */
 
-		i = atoi(value);
+		if ((i = atoi(value)) < 0) {
+			warnx("%s: num censor negative", __func__);
+			return -1;
+		}
 
 		while (i--) {
 			if (fgets(tmp, sizeof tmp, fp) == NULL) {
@@ -988,7 +991,10 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 			}
 		}
 	} else if (!strcmp(attr, "num_notify:")) {
-		i = atoi(value);
+		if ((i = atoi(value)) < 0) {
+			warnx("%s: num notify negative", __func__);
+			return -1;
+		}
 
 		while (i--) {
 			if (fgets(tmp, sizeof tmp, fp) == NULL) {
@@ -1007,7 +1013,10 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 			}
 		}
 	} else if (!strcmp(attr, "num_noplay:")) {
-		i = atoi(value);
+		if ((i = atoi(value)) < 0) {
+			warnx("%s: num noplay negative", __func__);
+			return -1;
+		}
 
 		while (i--) {
 			if (fgets(tmp, sizeof tmp, fp) == NULL) {
@@ -1026,7 +1035,10 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 			}
 		}
 	} else if (!strcmp(attr, "num_gnotify:")) {
-		i = atoi(value);
+		if ((i = atoi(value)) < 0) {
+			warnx("%s: num gnotify negative", __func__);
+			return -1;
+		}
 
 		while (i--) {
 			if (fgets(tmp, sizeof tmp, fp) == NULL) {
