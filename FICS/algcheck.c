@@ -253,15 +253,13 @@ alg_parse_move(char *mstr, game_state_t *gs, move_t *mt)
 		 */
 		for (InitPieceLoop(gs->board, &f, &r, gs->onMove);
 		     NextPieceLoop(gs->board, &f, &r, gs->onMove);) {
-			if (f < 0 || f >= 8 ||
-			    r < 0 || r >= 8) {
-				warnx("%s: out-of-bounds array read/write: "
-				    "f:%d r:%d", __func__, f, r);
-				return MOVE_AMBIGUOUS;
-			}
-
 			if ((ff != ALG_UNKNOWN) && (ff != f))
 				continue;
+			if (r < 0 || r >= 8) {
+				warnx("%s: out-of-bounds array read/write: "
+				    "r=%d", __func__, r);
+				return MOVE_AMBIGUOUS;
+			}
 			if (piecetype(gs->board[f][r]) != piece)
 				continue;
 			if (gs->onMove == WHITE) {
