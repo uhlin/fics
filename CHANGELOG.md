@@ -21,6 +21,7 @@ documented in this file.
 - Fixed overflowed array index read/write. Multiple occurrences.
 - Fixed overflowed return value in `player_search()`.
 - Fixed possible buffer overflow in `FindHistory2()`.
+- Fixed possible memory corruptions and incorrect computations.
 - Fixed truncated stdio return value in `ReadGameState()`.
 - Fixed unchecked function return values. Multiple occurrences.
 - Fixed uninitialized variables.
