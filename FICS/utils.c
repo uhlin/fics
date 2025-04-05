@@ -964,7 +964,7 @@ ratstrii(int rat, int reg)
  * Fill 't_buffer' with anything matching "want*" in file tree
  */
 PRIVATE void
-t_sft(char *want, struct t_tree *t)
+t_sft(const char *want, struct t_tree *t)
 {
 	if (t) {
 		int cmp = strncmp(want, t->name, strlen(want));
