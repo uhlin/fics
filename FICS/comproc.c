@@ -1320,10 +1320,7 @@ com_who(int p, param_list param)
 						sel_bits |= WHO_REGISTERED;
 					break;
 				case 'l':	// Sort order
-					cmp_func	= alpha_cmp;
-					sort_type	= none;
-					break;
-				case 'A':	// Sort order
+				case 'A':
 					cmp_func	= alpha_cmp;
 					sort_type	= none;
 					break;
