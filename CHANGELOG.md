@@ -15,6 +15,7 @@ documented in this file.
 - **Fixed** excessive checks.
 - **Fixed** improper use of negative values.
 - **Fixed** memory leak in `process_login()`.
+- **Fixed** multiple Clang Tidy warnings.
 - **Fixed** negative array index read in `accept_match()`.
 - **Fixed** null pointer dereferences.
 - **Fixed** out-of-bounds array access in `has_legal_move()`.
