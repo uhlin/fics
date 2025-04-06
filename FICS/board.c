@@ -1133,7 +1133,7 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 			case 'g':
 			case 'h':
 				onFile = (c - 'a');
-				onRank = -1;
+				onRank = -1; // NOLINT: dead store
 				break;
 			case '1':
 			case '2':
@@ -1161,7 +1161,7 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 				onColor		= -1;
 				onPiece		= -1;
 				onFile		= -1;
-				onRank		= -1;
+				onRank		= -1; // NOLINT: dead store
 				break;
 			default:
 				break;
