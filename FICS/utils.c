@@ -279,7 +279,7 @@ pcommand(int p, char *comstr, ...)
 PUBLIC void
 pprintf(int p, const char *format, ...)
 {
-	char tmp[10 * MAX_LINE_SIZE];
+	char tmp[10 * MAX_LINE_SIZE] = { '\0' };
 	int retval;
 	va_list ap;
 
