@@ -982,11 +982,16 @@ FindHistory(int p, int p1, int p_game)
 
 		ret = fscanf(fpHist, "%d %*c %*d %*c %*d %*s %*s %*d %*d %*d "
 		    "%*d %*s %*s %ld", &index, &when);
-		if (ret != 2)
-			warn("%s: %s: corrupt", __func__, &fileName[0]);
-	} while (!feof(fpHist) && index != p_game);
+		if (ret != 2) {
+			warnx("%s: %s: corrupt", __func__, fileName);
+			fclose(fpHist);
+			return NULL;
+		}
+	} while (!feof(fpHist) &&
+	    !ferror(fpHist) &&
+	    index != p_game);
 
-	if (feof(fpHist)) {
+	if (feof(fpHist) || ferror(fpHist)) {
 		pprintf(p, "There is no history game %d for %s.\n", p_game,
 		    parray[p1].name);
 		fclose(fpHist);
@@ -1021,11 +1026,16 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 	    "%%*d %%*d %%*d %%*s %%%zus %%ld\n", (End_size - 1));
 
 	do {
-		if (fscanf(fpHist, fmt, &index, End, &when) != 3)
-			warn("%s: %s: corrupt", __func__, &fileName[0]);
-	} while (!feof(fpHist) && index != p_game);
+		if (fscanf(fpHist, fmt, &index, End, &when) != 3) {
+			warnx("%s: %s: corrupt", __func__, fileName);
+			fclose(fpHist);
+			return NULL;
+		}
+	} while (!feof(fpHist) &&
+	    !ferror(fpHist) &&
+	    index != p_game);
 
-	if (feof(fpHist)) {
+	if (feof(fpHist) || ferror(fpHist)) {
 		pprintf(p, "There is no history game %d for %s.\n", p_game,
 		    parray[p1].name);
 		fclose(fpHist);
