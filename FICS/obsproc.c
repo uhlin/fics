@@ -32,6 +32,7 @@
    Markus Uhlin			25/01/18	Fixed -Wshadow
    Markus Uhlin			25/03/15	Fixed possible buffer overflow
 						in FindHistory2().
+   Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
 */
 
 #include "stdinclude.h"
