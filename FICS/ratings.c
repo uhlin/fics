@@ -1595,16 +1595,20 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 		return;
 
 	rating = nGames = is_computer = 0;
+	errno = 0;
 	rewind(fp);
+	if (errno) {
+		warn("%s: rewind", __func__);
+		return;
+	}
 
 	for (int i = 1; i < count; i++) {
 		do {
 			_Static_assert(ARRAY_SIZE(login) > 19,
 			    "'login' too small");
 
-			if (fgets(line, sizeof line, fp) == NULL ||
-			    feof(fp) ||
-			    ferror(fp))
+			if (feof(fp) || ferror(fp) ||
+			    fgets(line, sizeof line, fp) == NULL)
 				break;
 			else if (sscanf(line, "%19s %d %d %d", login, &rating,
 			    &nGames, &is_computer) != 4) {
@@ -1612,6 +1616,11 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 				break;
 			}
 		} while (!CountRankLine(showComp, login, nGames, is_computer));
+
+		if (ferror(fp)) {
+			warnx("%s: the error indicator is set", __func__);
+			return;
+		}
 
 		if (rating != *last) {
 			*nTied = 1;
@@ -1631,7 +1640,7 @@ ShowRankEntry(int p, FILE *fp, int count, int comp, char *target,
 
 	// XXX
 	rating		= 0;
-	findable	= (count > 0 && !feof(fp));
+	findable	= (count > 0 && !feof(fp) && !ferror(fp));
 	nGames		= 0;
 	is_comp		= 0;
 
