@@ -38,6 +38,7 @@
 						in truncate_file().
    Markus Uhlin			25/03/09	truncate_file:
 						fixed null ptr dereference.
+   Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
 */
 
 #include "stdinclude.h"
