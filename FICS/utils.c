@@ -418,7 +418,7 @@ psend_raw_file(int p, const char *dir, const char *file)
 	}
 
 	if (ferror(fp)) {
-		warnx("%s: %s: the error indicator is set", __func__, file);
+		warnx("%s: %s: the error indicator is set", __func__, fname);
 		fclose(fp);
 		return -1;
 	}
@@ -456,7 +456,8 @@ psend_file(int p, const char *dir, const char *file)
 
 	if (!feof(fp)) {
 		if (ferror(fp)) {
-			warnx("%s: %s: the error indicator is set", __func__, file);
+			warnx("%s: %s: the error indicator is set", __func__,
+			    fname);
 			fclose(fp);
 			return -1;
 		}
