@@ -394,7 +394,7 @@ pprintf_noformat(int p, char *format, ...)
 }
 
 PUBLIC int
-psend_raw_file(int p, char *dir, char *file)
+psend_raw_file(int p, const char *dir, const char *file)
 {
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
@@ -428,7 +428,7 @@ psend_raw_file(int p, char *dir, char *file)
 }
 
 PUBLIC int
-psend_file(int p, char *dir, char *file)
+psend_file(int p, const char *dir, const char *file)
 {
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };

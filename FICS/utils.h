@@ -96,9 +96,9 @@ extern int		 pprintf_noformat(int, char *, ...) PRINTFLIKE(2);
 extern int		 pprintf_prompt(int, char *, ...) PRINTFLIKE(2);
 extern int		 printablestring(char *);
 extern int		 psend_command(int, char *, char *);
-extern int		 psend_file(int, char *, char *);
+extern int		 psend_file(int, const char *, const char *);
 extern int		 psend_logoutfile(int, char *, char *);
-extern int		 psend_raw_file(int, char *, char *);
+extern int		 psend_raw_file(int, const char *, const char *);
 extern int		 psprintf_highlight(int, char *, size_t, char *, ...)
 			     PRINTFLIKE(4);
 extern int		 safechar(int);
