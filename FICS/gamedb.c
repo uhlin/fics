@@ -1281,8 +1281,10 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 	_Static_assert(17 < ARRAY_SIZE(g->black_name), "Unexpected array size");
 
 	ret[0] = fscanf(fp, "%17s %17s", g->white_name, g->black_name);
-	ret[1] = fscanf(fp, "%d %d", &g->white_rating, &g->black_rating);
-	ret[2] = fscanf(fp, "%d %d %d %d",
+	ret[1] = fscanf(fp, "%d %d", // NOLINT
+	    &g->white_rating,
+	    &g->black_rating);
+	ret[2] = fscanf(fp, "%d %d %d %d", // NOLINT
 	    &g->wInitTime,
 	    &g->wIncrement,
 	    &g->bInitTime,
@@ -1325,7 +1327,7 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 
 	ret[0] = fscanf(fp, "%d %d %d %d", &g->private, &g->type, &g->rated,
 	    &g->clockStopped);
-	ret[1] = fscanf(fp, "%d", &g->numHalfMoves);
+	ret[1] = fscanf(fp, "%d", &g->numHalfMoves); // NOLINT
 	if (ret[0] != 4 || ret[1] != 1) {
 		warnx("%s: fscanf error: %s", __func__, file);
 		return -1;
