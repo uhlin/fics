@@ -441,7 +441,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	/*
 	 * Name
 	 */
-	if (fgets(tmp2, sizeof tmp2, fp) != NULL &&
+	if (fgets(tmp2, sizeof tmp2, fp) != NULL && // NOLINT
 	    strcmp(tmp2, "NONE\n") != 0) {
 		tmp2[strcspn(tmp2, "\n")] = '\0';
 		pp->name = xstrdup(tmp2);
@@ -452,7 +452,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	/*
 	 * Full name
 	 */
-	if (fgets(tmp2, sizeof tmp2, fp) != NULL &&
+	if (fgets(tmp2, sizeof tmp2, fp) != NULL && // NOLINT
 	     strcmp(tmp2, "NONE\n") != 0) {
 		tmp2[strcspn(tmp2, "\n")] = '\0';
 		pp->fullName = xstrdup(tmp2);
@@ -463,7 +463,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	/*
 	 * Password
 	 */
-	if (fgets(tmp2, sizeof tmp2, fp) != NULL &&
+	if (fgets(tmp2, sizeof tmp2, fp) != NULL && // NOLINT
 	    strcmp(tmp2, "NONE\n") != 0) {
 		tmp2[strcspn(tmp2, "\n")] = '\0';
 		pp->passwd = xstrdup(tmp2);
@@ -474,7 +474,7 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	/*
 	 * Email
 	 */
-	if (fgets(tmp2, sizeof tmp2, fp) != NULL &&
+	if (fgets(tmp2, sizeof tmp2, fp) != NULL && // NOLINT
 	    strcmp(tmp2, "NONE\n") != 0) {
 		tmp2[strcspn(tmp2, "\n")] = '\0';
 		pp->emailAddress = xstrdup(tmp2);
