@@ -358,12 +358,21 @@ load_ratings(void)
 		    &lHist[i]);
 		errno_save = errno;
 		if (ret != 4) {
-			if (feof(fp) || ferror(fp))
-				break;
 			errno = errno_save;
-			warn("%s: too few items assigned (iteration: %d)",
+			warnx("%s: too few items assigned (iteration: %d)",
 			    __func__, i);
+			fclose(fp);
+			return;
 		}
+
+		if (feof(fp) || ferror(fp))
+			break;
+	}
+
+	if (ferror(fp)) {
+		warnx("%s: %s: the error indicator is set", __func__, fname);
+		fclose(fp);
+		return;
 	}
 
 	fclose(fp);
