@@ -45,6 +45,7 @@
 						read/write.
    Markus Uhlin                 25/04/02	add_to_list: added an upper
 						limit for the list size.
+   Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
 */
 
 #include "stdinclude.h"
