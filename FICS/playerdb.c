@@ -665,14 +665,13 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 				return;
 			}
 
-			if (!(len = strlen(tmp2))) {
+			if (!strlen(tmp2)) { // XXX
 				fprintf(stderr, "FICS: Error bad alias in "
 				    "file %s\n", file);
 				i--;
 				pp->numAlias--;
 			} else {
 				tmp2[strcspn(tmp2, "\n")] = '\0';
-				tmp = tmp2;
 				tmp = eatword(tmp2);
 				*tmp = '\0';
 				tmp++;
@@ -942,7 +941,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 					return -1;
 				}
 
-				if (!(len = strlen(tmp))) {
+				if (!strlen(tmp)) { // XXX
 					fprintf(stderr, "FICS: Error bad alias "
 					    "in file %s\n", file);
 					i--;
@@ -2834,7 +2833,7 @@ player_show_messages(int p)
 PUBLIC int
 ShowMsgsBySender(int p, param_list param)
 {
-	int		 nFrom, nTo;
+	int		 nFrom = -1, nTo = -1;
 	int		 p1, connected;
 	textlist	*Head;
 
@@ -2846,8 +2845,6 @@ ShowMsgsBySender(int p, param_list param)
 		    "receive messages.\n", parray[p1].name);
 		return -1; /* no need to disconnect */
 	}
-
-	nFrom = nTo = -1;
 
 	if (p != p1) {
 		if ((nTo = LoadMsgs(p1, p + 1, &Head)) <= 0) {
