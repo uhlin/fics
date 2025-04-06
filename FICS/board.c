@@ -25,6 +25,7 @@
    Markus Uhlin                 24/04/13	Added usage of the functions
 						from 'maxxes-utils.h'.
    Markus Uhlin                 24/06/01	Added and made use of brand().
+   Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
 */
 
 #include "stdinclude.h"
