@@ -408,9 +408,18 @@ psend_raw_file(int p, char *dir, char *file)
 	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
 
-	while ((num = fread(tmp, sizeof(char), MAX_LINE_SIZE - 1, fp)) > 0) {
-		tmp[num] = '\0';
-		net_send_string(parray[p].socket, tmp, 1);
+	while (!feof(fp) && !ferror(fp)) {
+		if ((num = fread(tmp, sizeof(char), MAX_LINE_SIZE - 1,
+		    fp)) > 0) {
+			tmp[num] = '\0';
+			net_send_string(parray[p].socket, tmp, 1);
+		}
+	}
+
+	if (ferror(fp)) {
+		warnx("%s: %s: the error indicator is set", __func__, file);
+		fclose(fp);
+		return -1;
 	}
 
 	fclose(fp);
@@ -445,6 +454,11 @@ psend_file(int p, char *dir, char *file)
 	}
 
 	if (!feof(fp)) {
+		if (ferror(fp)) {
+			warnx("%s: %s: the error indicator is set", __func__, file);
+			fclose(fp);
+			return -1;
+		}
 		parray[p].last_file = xstrdup(fname);
 		parray[p].last_file_byte = ftell(fp);
 		pprintf(p, "Type [next] to see next page.\n");
@@ -513,8 +527,17 @@ pmore_file(int p)
 	}
 
 	if (!feof(fp)) {
-		parray[p].last_file_byte = ftell(fp);
-		pprintf(p, "Type [next] to see next page.\n");
+		if (ferror(fp)) {
+			warnx("%s: %s: the error indicator is set", __func__,
+			    parray[p].last_file);
+			fclose(fp);
+			return -1;
+		} else if ((parray[p].last_file_byte = ftell(fp)) == -1) {
+			warn("%s: %s: ftell", __func__, parray[p].last_file);
+			fclose(fp);
+			return -1;
+		} else
+			pprintf(p, "Type [next] to see next page.\n");
 	} else {
 		rfree(parray[p].last_file);
 		parray[p].last_file = NULL;
