@@ -42,6 +42,7 @@
    Markus Uhlin			25/04/01	Fixed call of risky function
    Markus Uhlin			25/04/01	ReadV1GameFmt: guard num half
 						moves.
+   Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
 */
 
 #include "stdinclude.h"
