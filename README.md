@@ -14,6 +14,18 @@ The main goal of the fork is to modernize the codebase, improve the
 security and fix bugs. New features, for example, other chess variants
 will be added in a later stage.
 
+### Public chess server ###
+
+[IRCNow](https://ircnow.org/)
+provides a
+[public chess server](https://wiki.ircnow.org/index.php?n=Chess.Chess)
+for everyone to use!
+
+To connect to the server by using
+[XBoard](https://www.gnu.org/software/xboard/), try:
+
+    $ xboard -ics -icshost rpblc.net
+
 ### IPv6 ###
 
 IPv6 connections are at the moment not supported.
