@@ -368,29 +368,29 @@ load_ratings(void)
 
 	fclose(fp);
 
-	if (Rs_count) {
-		Ratings_S_StdDev	= sqrt(Rs_S / Rs_count);
+	if (Rs_count != 0) {
+		Ratings_S_StdDev	= sqrt(Rs_S / Rs_count); // NOLINT
 		Ratings_S_Average	= (Rs_total / (double)Rs_count);
 	} else {
 		Ratings_S_StdDev	= 0;
 		Ratings_S_Average	= 0;
 	}
-	if (Rb_count) {
-		Ratings_B_StdDev	= sqrt(Rb_S / Rb_count);
+	if (Rb_count != 0) {
+		Ratings_B_StdDev	= sqrt(Rb_S / Rb_count); // NOLINT
 		Ratings_B_Average	= (Rb_total / (double)Rb_count);
 	} else {
 		Ratings_B_StdDev	= 0;
 		Ratings_B_Average	= 0;
 	}
-	if (Rw_count) {
-		Ratings_W_StdDev	= sqrt(Rw_S / Rw_count);
+	if (Rw_count != 0) {
+		Ratings_W_StdDev	= sqrt(Rw_S / Rw_count); // NOLINT
 		Ratings_W_Average	= (Rw_total / (double)Rw_count);
 	} else {
 		Ratings_W_StdDev	= 0;
 		Ratings_W_Average	= 0;
 	}
-	if (Rl_count) {
-		Ratings_L_StdDev	= sqrt(Rl_S / Rl_count);
+	if (Rl_count != 0) {
+		Ratings_L_StdDev	= sqrt(Rl_S / Rl_count); // NOLINT
 		Ratings_L_Average	= (Rl_total / (double)Rl_count);
 	} else {
 		Ratings_L_StdDev	= 0;
