@@ -276,7 +276,7 @@ pcommand(int p, char *comstr, ...)
 	return retval;
 }
 
-PUBLIC int
+PUBLIC void
 pprintf(int p, const char *format, ...)
 {
 	char tmp[10 * MAX_LINE_SIZE];
@@ -287,8 +287,8 @@ pprintf(int p, const char *format, ...)
 	retval = vsnprintf(tmp, sizeof tmp, format, ap);
 	va_end(ap);
 
+	UNUSED_VAR(retval);
 	net_send_string(parray[p].socket, tmp, 1);
-	return retval;
 }
 
 PRIVATE void

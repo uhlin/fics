@@ -90,7 +90,7 @@ extern int		 mail_string_to_address(char *, char *, char *);
 extern int		 mail_string_to_user(int, char *, char *);
 extern int		 pcommand(int, char *, ...) PRINTFLIKE(2);
 extern int		 pmore_file(int);
-extern int		 pprintf(int, const char *, ...) PRINTFLIKE(2);
+extern void		 pprintf(int, const char *, ...) PRINTFLIKE(2);
 extern int		 pprintf_highlight(int, char *, ...) PRINTFLIKE(2);
 extern int		 pprintf_noformat(int, char *, ...) PRINTFLIKE(2);
 extern int		 pprintf_prompt(int, char *, ...) PRINTFLIKE(2);
