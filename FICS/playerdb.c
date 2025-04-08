@@ -587,17 +587,17 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	pp->timeOfReg = array[0];
 	pp->totalTime = array[1];
 
-	if (pp->num_plan > MAX_PLAN) {
+	if (pp->num_plan >= MAX_PLAN) {
 		warnx("Player %s is corrupt\nToo many plans (%d)",
 		   parray[p].name,
 		   pp->num_plan);
 		return;
-	} else if (pp->num_formula > MAX_FORMULA) {
+	} else if (pp->num_formula >= MAX_FORMULA) {
 		warnx("Player %s is corrupt\nToo many formulas (%d)",
 		   parray[p].name,
 		   pp->num_formula);
 		return;
-	} else if (pp->numAlias > MAX_ALIASES) {
+	} else if (pp->numAlias >= MAX_ALIASES) {
 		warnx("Player %s is corrupt\nToo many aliases (%d)",
 		    parray[p].name,
 		    pp->numAlias);
@@ -859,7 +859,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_plan
 		 */
 
-		if ((parray[p].num_plan = atoi(value)) > MAX_PLAN) {
+		if ((parray[p].num_plan = atoi(value)) >= MAX_PLAN) {
 			warnx("%s: %s: too many plans (%d)", __func__, file,
 			    parray[p].num_plan);
 			return -1;
@@ -893,7 +893,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_formula
 		 */
 
-		if ((parray[p].num_formula = atoi(value)) > MAX_FORMULA) {
+		if ((parray[p].num_formula = atoi(value)) >= MAX_FORMULA) {
 			warnx("%s: %s: too many formulas (%d)", __func__, file,
 			    parray[p].num_formula);
 			return -1;
@@ -932,7 +932,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_alias
 		 */
 
-		if ((parray[p].numAlias = atoi(value)) > MAX_ALIASES) {
+		if ((parray[p].numAlias = atoi(value)) >= MAX_ALIASES) {
 			warnx("%s: %s: too many aliases (%d)", __func__, file,
 			    parray[p].numAlias);
 			return -1;
