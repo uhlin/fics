@@ -35,6 +35,8 @@ jobs:
         queries: security-extended,security-and-quality
 
     - run: |
+        sudo apt-get update
+        sudo apt-get install libbsd-dev
         make
 
     - name: Perform CodeQL Analysis
