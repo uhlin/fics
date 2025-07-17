@@ -1,7 +1,7 @@
 #include "legal2.h"
 
 const char legalNotice2[] =
- "Copyright (c) 2023, 2024 Markus Uhlin <maxxe@rpblc.net>\n"
+ "Copyright (c) 2023 - 2025 Markus Uhlin <maxxe@rpblc.net>\n"
  "\n"
  "Permission to use, copy, modify, and distribute this software for any\n"
  "purpose with or without fee is hereby granted, provided that the above\n"
