@@ -4,7 +4,10 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Fixed multiplication result converted to larger type. Two occurrences.
+- Fixed multiplication result converted to larger type. Two
+  occurrences.
+- Replaced non-reentrant functions with their corresponding thread
+  safe version. (Multiple occurrences, found by CodeQL.)
 
 ## [1.4.5] - 2025-04-09 ##
 - **Changed** the addplayer program to output a restart notice if an admin
