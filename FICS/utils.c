@@ -39,6 +39,9 @@
    Markus Uhlin			25/03/09	truncate_file:
 						fixed null ptr dereference.
    Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
+   Markus Uhlin			25/07/21	Replaced non-reentrant functions
+						with their corresponding thread
+						safe version.
 */
 
 #include "stdinclude.h"
