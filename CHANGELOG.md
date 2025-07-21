@@ -3,6 +3,9 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Fixed multiplication result converted to larger type. Two occurrences.
+
 ## [1.4.5] - 2025-04-09 ##
 - **Changed** the addplayer program to output a restart notice if an admin
   account is created.
