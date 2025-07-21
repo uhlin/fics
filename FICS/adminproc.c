@@ -629,6 +629,8 @@ com_checkPLAYER(int p, param_list param)
 		player_remove(p1);
 		return COM_OK;
 	} else {
+		char tbuf[30] = { '\0' };
+
 		p1 = p1 - 1;
 
 		pprintf(p, "%s is number %d in parray of size %d\n", v_player, p1,
@@ -644,7 +646,9 @@ com_checkPLAYER(int p, param_list param)
 		pprintf(p, "last_tell = %d\n", parray[p1].last_tell);
 		pprintf(p, "last_channel = %d\n", parray[p1].last_channel);
 		pprintf(p, "logon_time = %s",
-		    ctime((time_t *) &parray[p1].logon_time));
+		    (ctime_r(&parray[p1].logon_time, tbuf) != NULL
+		    ? &tbuf[0]
+		    : "n/a"));
 		pprintf(p, "adminLevel = %d\n", parray[p1].adminLevel);
 #if 0
 		pprintf(p, "network_player = %d\n", parray[p1].network_player);
