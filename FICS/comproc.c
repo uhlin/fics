@@ -43,6 +43,8 @@
    Markus Uhlin			25/03/16	Fixed untrusted array index.
    Markus Uhlin			25/03/25	com_unalias: fixed overflowed
 						array index read/write.
+   Markus Uhlin			25/07/21	com_who: fixed multiplication
+						result converted to larger type.
 */
 
 #include "stdinclude.h"
