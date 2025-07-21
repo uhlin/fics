@@ -1377,8 +1377,8 @@ com_who(int p, param_list param)
 		count++;
 	}
 
-	startpoint	= floor((float) count * start_perc);
-	stoppoint	= ceil((float) count * stop_perc) - 1;
+	startpoint	= floorf((float) count * start_perc);
+	stoppoint	= ceilf((float) count * stop_perc) - 1;
 	num_who		= 0;
 	count		= 0;
 
