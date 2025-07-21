@@ -754,19 +754,31 @@ fix_time(char *old_time)
 }
 
 PUBLIC char *
-strltime(time_t *clock)
+strltime(time_t *p_clock)
 {
-	struct tm *stm = localtime(clock);
+	struct tm stm = {0};
 
-	return strtime(stm);
+	errno = 0;
+
+	if (localtime_r(p_clock, &stm) == NULL) {
+		warn("%s: localtime_r", __func__);
+		memset(&stm, 0, sizeof stm);
+	}
+	return strtime(&stm);
 }
 
 PUBLIC char *
-strgtime(time_t *clock)
+strgtime(time_t *p_clock)
 {
-	struct tm *stm = gmtime(clock);
+	struct tm stm = {0};
 
-	return strtime(stm);
+	errno = 0;
+
+	if (gmtime_r(p_clock, &stm) == NULL) {
+		warn("%s: gmtime_r", __func__);
+		memset(&stm, 0, sizeof stm);
+	}
+	return strtime(&stm);
 }
 
 /*
