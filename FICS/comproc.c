@@ -45,6 +45,8 @@
 						array index read/write.
    Markus Uhlin			25/07/21	com_who: fixed multiplication
 						result converted to larger type.
+   Markus Uhlin			25/07/24	Fixed use of potentially
+						dangerous functions.
 */
 
 #include "stdinclude.h"
