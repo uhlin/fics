@@ -53,6 +53,7 @@
 #include <sys/resource.h>
 
 #include <err.h>
+#include <errno.h>
 
 #include "board.h"
 #include "command.h"
