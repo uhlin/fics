@@ -591,9 +591,14 @@ com_stats(int p, param_list param)
 	if (connected &&
 	    parray[p1].registered &&
 	    (p == p1 || parray[p].adminLevel > 0)) {
-		char *timeToStr = ctime((time_t *) &parray[p1].timeOfReg);
+		char timeToStr[30] = { '\0' };
 
-		timeToStr[strlen(timeToStr) - 1] = '\0';
+		errno = 0;
+
+		if (ctime_r(&parray[p1].timeOfReg, timeToStr) == NULL)
+			warn("%s: ctime_r", __func__);
+		timeToStr[strcspn(timeToStr, "\n")] = '\0';
+
 		pprintf(p, "\n");
 
 		onTime = ((time(NULL) - parray[p1].logon_time) +
