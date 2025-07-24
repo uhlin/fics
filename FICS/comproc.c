@@ -389,11 +389,18 @@ com_stats_rating(char *hdr, statistics *stats, char *dest, const size_t dsize)
 	    stats->num);
 
 	if (stats->whenbest) {
+		struct tm res = {0};
+
 		snprintf(tmp, sizeof tmp, "   %d", stats->best);
 		strlcat(dest, tmp, dsize);
-		strftime(tmp, sizeof tmp, " (%d-%b-%y)",
-		    localtime((time_t *) &stats->whenbest));
-		strlcat(dest, tmp, dsize);
+
+		errno = 0;
+
+		if (localtime_r(&stats->whenbest, &res) != NULL) {
+			if (strftime(tmp, sizeof tmp, " (%d-%b-%y)", &res) != 0)
+				strlcat(dest, tmp, dsize);
+		} else
+			warn("%s: localtime_r", __func__);
 	}
 
 	if (strlcat(dest, "\n", dsize) >= dsize) {
