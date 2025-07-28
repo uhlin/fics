@@ -1663,7 +1663,7 @@ player_lastconnect(int p)
 	char		 loginName[MAX_LOGIN_NAME];
 	int		 inout, registered;
 	int		 ret, too_long;
-	long int	 lval;
+	long int	 lval = 0;
 	time_t		 last = 0;
 
 	ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
