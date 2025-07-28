@@ -1567,7 +1567,8 @@ GetRank(FILE *fp, char *target, int countComp)
 	char	line[MAX_RANK_LINE] = { '\0' };
 	char	login[MAX_LOGIN_NAME] = { '\0' };
 	int	count = 0;
-	int	nGames, is_computer;
+	int	is_computer = 0;
+	int	nGames = 0;
 	int	playerFound = 0;
 
 	while (fgets(line, sizeof line, fp) != NULL &&
@@ -1575,8 +1576,7 @@ GetRank(FILE *fp, char *target, int countComp)
 		_Static_assert(ARRAY_SIZE(login) > 19, "'login' too small");
 
 		if (sscanf(line, "%19s %*d %d %d", login, &nGames, &is_computer)
-		    != 1) {
-//			warnx("%s: sscanf() error", __func__);
+		    < 3) {
 			continue;
 		}
 
