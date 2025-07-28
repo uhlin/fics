@@ -4,6 +4,8 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- During file creation, took care to give it the most restrictive
+  permissions possible. Multiple occurrences.
 - Fixed missing return-value checks for a 'scanf'-like functions.
 - Fixed multiplication result converted to larger type. Two
   occurrences.
