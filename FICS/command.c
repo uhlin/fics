@@ -36,6 +36,7 @@
    Markus Uhlin                 25/03/09	Fixed double free()
    Markus Uhlin                 25/03/11	Fixed memleak
    Markus Uhlin                 25/03/16	Fixed use of 32-bit 'time_t'
+   Markus Uhlin                 25/07/28	Usage of 'int64_t'
 */
 
 #include "stdinclude.h"
@@ -44,6 +45,8 @@
 #include <sys/param.h>
 
 #include <err.h>
+#include <inttypes.h>
+#include <stdint.h>
 
 #include "command.h"
 #include "command_list.h"
@@ -716,10 +719,10 @@ boot_out(int p, int p1)
 PUBLIC void
 rscan_news(FILE *fp, int p, time_t lc)
 {
-	char		*junkp = NULL;
 	char		 count[10] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
-	long int	 lval = 0;
+	char		*junkp = NULL;
+	int64_t		 lval = 0;
 	time_t		 crtime = 0;
 
 	if (fgets(junk, sizeof junk, fp) == NULL ||
@@ -728,7 +731,7 @@ rscan_news(FILE *fp, int p, time_t lc)
 
 	_Static_assert(ARRAY_SIZE(count) > 9, "Unexpected array size");
 
-	if (sscanf(junk, "%ld %9s", &lval, count) != 2) {
+	if (sscanf(junk, ("%" SCNd64 " " "%9s"), &lval, count) != 2) {
 		warnx("%s: sscanf() error: too few items", __func__);
 		return;
 	}
@@ -752,13 +755,13 @@ rscan_news(FILE *fp, int p, time_t lc)
 PRIVATE void
 check_news(int p, int admin)
 {
-#define SCAN_JUNK "%ld %9s"
+#define SCAN_JUNK ("%" SCNd64 " " "%9s")
 	FILE		*fp = NULL;
 	char		 count[10] = { '\0' };
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	char		*junkp = NULL;
-	long int	 lval = 0;
+	int64_t		 lval = 0;
 	time_t		 crtime = 0;
 	time_t		 lc = player_lastconnect(p);
 
