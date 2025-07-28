@@ -855,8 +855,17 @@ truncate_file(char *file, int lines)
 	fclose(fp);
 
 	if (trunc) {
-		if ((fp = fopen(file, "w")) == NULL) {
-			warn("%s: fopen", __func__);
+		int fd;
+
+		errno = 0;
+		fd = open(file, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+		if (fd < 0) {
+			warn("%s: open", __func__);
+			return 1;
+		} else if ((fp = fdopen(fd, "w")) == NULL) {
+			warn("%s: fdopen", __func__);
+			close(fd);
 			return 1;
 		}
 
