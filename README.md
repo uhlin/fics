@@ -68,6 +68,15 @@ Edit `FICS/config.h` with a text editor and save the file.
 
     $ emacs FICS/config.h
 
+### Utility functions from BSD systems ###
+
+Utility functions from BSD systems are used for the FICS. Which means
+on for example a
+[Debian GNU/Linux](https://www.debian.org/)
+system you need to install the following package before running make:
+
+    # apt install libbsd-dev
+
 From the top-level directory of the cloned Git repository begin the
 building by running make.
 
