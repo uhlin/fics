@@ -19,6 +19,8 @@
 #include <sys/param.h>
 
 #include <err.h>
+#include <inttypes.h>
+#include <stdint.h>
 
 #include "adminproc.h"
 #include "command.h"
