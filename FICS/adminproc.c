@@ -369,12 +369,12 @@ PUBLIC int
 com_anews(int p, param_list param)
 {
 	FILE		*fp = NULL;
-	char		*junkp = NULL;
 	char		 count[10] = { '\0' };
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
+	char		*junkp = NULL;
 	int		 found = 0;
-	long int	 lval = 0;
+	int64_t		 lval = 0;
 	time_t		 crtime = 0;
 
 	msnprintf(filename, sizeof filename, "%s/newadminnews.index", news_dir);
@@ -384,7 +384,7 @@ com_anews(int p, param_list param)
 		return COM_OK;
 	}
 
-#define SCAN_JUNK "%ld %9s"
+#define SCAN_JUNK ("%" SCNd64 " " "%9s")
 	_Static_assert(9 < ARRAY_SIZE(count), "Array too small");
 
 	if (param[0].type == 0) {
