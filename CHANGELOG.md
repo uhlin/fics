@@ -4,6 +4,8 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Changed the program to use `int64_t` instead of `long int` in
+  contexts where `time_t` is used.
 - During file creation, took care to give it the most restrictive
   permissions possible. Multiple occurrences.
 - Fixed missing return-value checks for a 'scanf'-like functions.
