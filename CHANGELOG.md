@@ -4,6 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Fixed missing return-value checks for a 'scanf'-like functions.
 - Fixed multiplication result converted to larger type. Two
   occurrences.
 - Replaced non-reentrant functions with their corresponding thread
