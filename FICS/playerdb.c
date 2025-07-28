@@ -46,6 +46,8 @@
    Markus Uhlin                 25/04/02	add_to_list: added an upper
 						limit for the list size.
    Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
+   Markus Uhlin                 25/07/28	Restricted file permissions upon
+						creation.
 */
 
 #include "stdinclude.h"
@@ -53,6 +55,8 @@
 
 #include <err.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <inttypes.h>
 #include <stdint.h>
 
 #include "command.h"
@@ -1174,6 +1178,7 @@ player_markdeleted(int p)
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE];
 	char	 fname2[MAX_FILENAME_SIZE];
+	int	 fd;
 
 	if (!parray[p].registered)	// Player must not be registered
 		return -1;
@@ -1184,9 +1189,17 @@ player_markdeleted(int p)
 	    parray[p].login[0], parray[p].login);
 	xrename(__func__, fname, fname2);
 
-	if ((fp = fopen(fname2, "a")) != NULL) { // Touch the file
+	errno = 0;
+	fd = open(fname2, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0) {
+		warn("%s: open", __func__);
+		return -1;
+	} else if ((fp = fdopen(fd, "a")) != NULL) { // Touch the file
 		fprintf(fp, "\n");
 		fclose(fp);
+	} else {
+		close(fd);
 	}
 
 	return 0;
@@ -1290,6 +1303,7 @@ player_save(int p)
 {
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE];
+	int	 fd;
 
 	if (!player_num_ok_chk(p)) {
 		warnx("%s: invalid player number %d", __func__, p);
@@ -1314,8 +1328,15 @@ player_save(int p)
 	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
 
-	if ((fp = fopen(fname, "w")) == NULL) {
+	errno = 0;
+	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0) {
 		warn("%s: Problem opening file %s for write", __func__, fname);
+		return -1;
+	} else if ((fp = fdopen(fd, "w")) == NULL) {
+		warn("%s: Problem opening file %s for write", __func__, fname);
+		close(fd);
 		return -1;
 	}
 
