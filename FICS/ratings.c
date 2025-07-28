@@ -410,12 +410,20 @@ save_ratings(void)
 {
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	 fd;
 
 	snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
 	    STATS_VERSION);
 
-	if ((fp = fopen(fname, "w")) == NULL) {
+	errno = 0;
+	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0) {
 		warn("%s: can't write ratings data", __func__);
+		return;
+	} else if ((fp = fdopen(fd, "w")) == NULL) {
+		warn("%s: can't write ratings data", __func__);
+		close(fd);
 		return;
 	}
 
