@@ -588,6 +588,8 @@ movesToString(int g, int pgn)
 		    serv_name,
 		    serv_loc);
 
+		errno = 0;
+
 		if (localtime_r(&curTime, &v_tm) != NULL) {
 			strftime(tmp, sizeof(tmp),
 			    "[Date \"%Y.%m.%d\"]\n"
@@ -669,6 +671,8 @@ movesToString(int g, int pgn)
 
 		mstrlcat(gameString, tmp, sizeof gameString);
 		mstrlcat(gameString, "--- ", sizeof gameString);
+
+		errno = 0;
 
 		if (localtime_r(&curTime, &v_tm) != NULL) {
 			strftime(tmp, sizeof tmp, "%Y.%m.%d %H:%M:%S", &v_tm);
