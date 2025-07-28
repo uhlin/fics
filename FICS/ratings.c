@@ -35,6 +35,8 @@
    Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
    Markus Uhlin                 25/07/28	Fixed missing return-value check
 						for a 'scanf'-like function.
+   Markus Uhlin                 25/07/28	Restricted file permissions upon
+						creation.
 */
 
 #include "stdinclude.h"
