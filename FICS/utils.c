@@ -48,6 +48,8 @@
 #include "common.h"
 
 #include <err.h>
+#include <errno.h>
+#include <fcntl.h>
 
 #include "config.h"
 #include "network.h"
