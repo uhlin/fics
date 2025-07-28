@@ -33,6 +33,8 @@
    Markus Uhlin                 24/11/28	Added null checks
    Markus Uhlin                 25/03/16	Fixed use of 32-bit 'time_t'.
    Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
+   Markus Uhlin                 25/07/28	Fixed missing return-value check
+						for a 'scanf'-like function.
 */
 
 #include "stdinclude.h"
