@@ -563,12 +563,12 @@ EndSym(int g)
 PUBLIC char *
 movesToString(int g, int pgn)
 {
+	char		 tmp[160] = { '\0' };
 	char		*serv_loc = SERVER_LOCATION;
 	char		*serv_name = SERVER_NAME;
-	char		 tmp[160] = { '\0' };
 	int		 i, col;
 	int		 wr, br;
-	struct tm	*tm_ptr = NULL;
+	struct tm	 v_tm = {0};
 	time_t		 curTime;
 
 	wr = garray[g].white_rating;
@@ -586,14 +586,14 @@ movesToString(int g, int pgn)
 		    serv_name,
 		    serv_loc);
 
-		if ((tm_ptr = localtime(&curTime)) != NULL) {
+		if (localtime_r(&curTime, &v_tm) != NULL) {
 			strftime(tmp, sizeof(tmp),
 			    "[Date \"%Y.%m.%d\"]\n"
 			    "[Time \"%H:%M:%S\"]\n",
-			    tm_ptr);
+			    &v_tm);
 			mstrlcat(gameString, tmp, sizeof gameString);
 		} else
-			warn("%s: localtime", __func__);
+			warn("%s: localtime_r()", __func__);
 
 		msnprintf(tmp, sizeof tmp,
 		    "[Round \"-\"]\n"
@@ -668,11 +668,11 @@ movesToString(int g, int pgn)
 		mstrlcat(gameString, tmp, sizeof gameString);
 		mstrlcat(gameString, "--- ", sizeof gameString);
 
-		if ((tm_ptr = localtime(&curTime)) != NULL) {
-			strftime(tmp, sizeof tmp, "%Y.%m.%d %H:%M:%S", tm_ptr);
+		if (localtime_r(&curTime, &v_tm) != NULL) {
+			strftime(tmp, sizeof tmp, "%Y.%m.%d %H:%M:%S", &v_tm);
 			mstrlcat(gameString, tmp, sizeof gameString);
 		} else
-			warn("%s: localtime", __func__);
+			warn("%s: localtime_r()", __func__);
 
 		if (garray[g].rated) {
 			mstrlcat(gameString, "\nRated ", sizeof gameString);
@@ -2123,6 +2123,8 @@ pgames(int p, int p1, char *fname)
 	_Static_assert(ARRAY_SIZE(ending) > 99,  "'ending' too small");
 
 	while (!feof(fp)) {
+		char tbuf[30] = { '\0' };
+
 		if (fscanf(fp, "%d %1s %d %1s %d %19s %99s %d %d %d %d %99s "
 		    "%99s %ld\n",
 		    &count, result, &MyRating, MyColor,
@@ -2145,7 +2147,7 @@ pgames(int p, int p1, char *fname)
 		    count, result, MyRating, MyColor,
 		    OppRating, OppName,
 		    type, (wt / 600), (wi / 10), eco, ending,
-		    ctime(&t));
+		    ctime_r(&t, tbuf) != NULL ? &tbuf[0] : "");
 	}
 
 	fclose(fp);
