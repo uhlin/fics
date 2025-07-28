@@ -1622,10 +1622,20 @@ player_ontime(int p)
 PRIVATE void
 write_p_inout(int inout, int p, char *file, int maxlines)
 {
-	FILE *fp;
+	FILE	*fp;
+	int	 fd;
 
-	if ((fp = fopen(file, "a")) == NULL)
+	errno = 0;
+	fd = open(file, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0) {
+		warn("%s: open", __func__);
 		return;
+	} else if ((fp = fdopen(fd, "a")) == NULL) {
+		warn("%s: fdopen", __func__);
+		close(fd);
+		return;
+	}
 
 	fprintf(fp, "%d %s %ld %d %s\n", inout, parray[p].name,
 	    (long int)time(NULL), parray[p].registered,
@@ -2594,9 +2604,10 @@ PUBLIC int
 player_add_message(int top, int fromp, char *message)
 {
 	FILE	*fp;
-	char	 fname[MAX_FILENAME_SIZE];
-	char	 messbody[1024];
-	char	 subj[256];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	 messbody[1024] = { '\0' };
+	char	 subj[256] = { '\0' };
+	int	 fd;
 	time_t	 t = time(NULL);
 
 	if (!parray[top].registered)
@@ -2609,8 +2620,16 @@ player_add_message(int top, int fromp, char *message)
 	if (lines_file(fname) >= MAX_MESSAGES && parray[top].adminLevel == 0)
 		return -1;
 
-	if ((fp = fopen(fname, "a")) == NULL)
+	errno = 0;
+	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0)
 		return -1;
+	else if ((fp = fdopen(fd, "a")) == NULL) {
+		close(fd);
+		return -1;
+	}
+
 	fprintf(fp, "%s at %s: %s\n", parray[fromp].name, strltime(&t),
 	    message);
 	fclose(fp);
@@ -2773,13 +2792,21 @@ PRIVATE int
 WriteMsgFile(int p, textlist *Head)
 {
 	FILE		*fp;
-	char		 fName[MAX_FILENAME_SIZE];
+	char		 fName[MAX_FILENAME_SIZE] = { '\0' };
+	int		 fd;
 	textlist	*Cur;
 
 	GetMsgFile(p, fName, sizeof fName, __func__);
 
-	if ((fp = fopen(fName, "w")) == NULL)
+	errno = 0;
+	fd = open(fName, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0)
 		return 0;
+	else if ((fp = fdopen(fd, "w")) == NULL) {
+		close(fd);
+		return 0;
+	}
 	for (Cur = Head; Cur != NULL; Cur = Cur->next)
 		fprintf(fp, "%s", Cur->text);
 	fclose(fp);
@@ -3182,7 +3209,8 @@ PUBLIC int
 player_add_comment(int p_by, int p_to, char *comment)
 {
 	FILE	*fp;
-	char	 fname[MAX_FILENAME_SIZE];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	 fd;
 	time_t	 t = time(NULL);
 
 	if (!parray[p_to].registered)
@@ -3191,8 +3219,17 @@ player_add_comment(int p_by, int p_to, char *comment)
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    parray[p_to].login[0], parray[p_to].login, "comments");
 
-	if ((fp = fopen(fname, "a")) == NULL)
+	errno = 0;
+	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0) {
+		warn("%s: open", __func__);
 		return -1;
+	} else if ((fp = fdopen(fd, "a")) == NULL) {
+		warn("%s: fdopen", __func__);
+		close(fd);
+		return -1;
+	}
 
 	fprintf(fp, "%s at %s: %s\n", parray[p_by].name, strltime(&t), comment);
 	fclose(fp);
