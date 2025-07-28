@@ -43,6 +43,8 @@
    Markus Uhlin			25/04/01	ReadV1GameFmt: guard num half
 						moves.
    Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
+   Markus Uhlin			25/07/28	Fixed use of potentially
+						dangerous functions.
 */
 
 #include "stdinclude.h"
