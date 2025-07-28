@@ -42,6 +42,8 @@
    Markus Uhlin			25/07/21	Replaced non-reentrant functions
 						with their corresponding thread
 						safe version.
+   Markus Uhlin			25/07/28	truncate_file: restricted file
+						permissions upon creation.
 */
 
 #include "stdinclude.h"
