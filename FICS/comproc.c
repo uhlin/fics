@@ -47,6 +47,7 @@
 						result converted to larger type.
    Markus Uhlin			25/07/24	Fixed use of potentially
 						dangerous functions.
+   Markus Uhlin			25/07/29	Usage of 'int64_t'.
 */
 
 #include "stdinclude.h"
@@ -56,6 +57,8 @@
 
 #include <err.h>
 #include <errno.h>
+#include <inttypes.h>
+#include <stdint.h>
 
 #include "board.h"
 #include "command.h"
@@ -130,17 +133,17 @@ com_more(int p, param_list param)
 PUBLIC void
 rscan_news2(FILE *fp, int p, int num)
 {
-	char		*junkp;
 	char		 count[10] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
-	long int	 lval;
+	char		*junkp;
+	int64_t		 lval;
 	time_t		 crtime;
 
 	if (num == 0)
 		return;
 
 	if (fgets(junk, sizeof junk, fp) == NULL || feof(fp) ||
-	    sscanf(junk, "%ld %9s", &lval, count) != 2)
+	    sscanf(junk, "%" SCNd64 " " "%9s", &lval, count) != 2)
 		return;
 
 	rscan_news2(fp, p, num - 1);
@@ -157,12 +160,12 @@ PUBLIC int
 com_news(int p, param_list param)
 {
 	FILE		*fp = NULL;
-	char		*junkp = NULL;
 	char		 count[10] = { '\0' };
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
+	char		*junkp = NULL;
 	int		 found = 0;
-	long int	 lval = 0;
+	int64_t		 lval = 0;
 	time_t		 crtime = 0;
 
 	snprintf(filename, sizeof filename, "%s/newnews.index", news_dir);
@@ -172,7 +175,7 @@ com_news(int p, param_list param)
 		return COM_OK;
 	}
 
-#define SCAN_JUNK "%ld %9s"
+#define SCAN_JUNK ("%" SCNd64 " " "%9s")
 	_Static_assert(9 < ARRAY_SIZE(count), "'count' too small");
 
 	if (param[0].type == 0) {
@@ -763,7 +766,7 @@ plogins(int p, char *fname)
 	char		 ipstr[20] = { '\0' };
 	char		 loginName[MAX_LOGIN_NAME + 1] = { '\0' };
 	int		 registered = 0;
-	long int	 lval = 0;
+	int64_t		 lval = 0;
 	time_t		 tval = 0;
 	uint16_t	 inout = 0;
 
@@ -775,9 +778,10 @@ plogins(int p, char *fname)
 	_Static_assert(19 < ARRAY_SIZE(ipstr), "'ipstr' too small");
 	_Static_assert(19 < ARRAY_SIZE(loginName), "'loginName' too small");
 
+#define SCAN_FMT ("%" SCNu16 " %19s " "%" SCNd64 " " "%d %19s\n")
 	while (!feof(fp)) {
-		if (fscanf(fp, "%hu %19s %ld %d %19s\n", &inout, loginName,
-		    &lval, &registered, ipstr) != 5) {
+		if (fscanf(fp, SCAN_FMT, &inout, loginName, &lval, &registered,
+		    ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. "
 			    "%s\n", fname);
 			fclose(fp);
