@@ -45,6 +45,7 @@
    Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
    Markus Uhlin			25/07/28	Fixed use of potentially
 						dangerous functions.
+   Markus Uhlin			25/07/29	Usage of 'int64_t'.
 */
 
 #include "stdinclude.h"
@@ -52,7 +53,9 @@
 
 #include <err.h>
 #include <errno.h>
+#include <inttypes.h>
 #include <limits.h>
+#include <stdint.h>
 
 #include "command.h"
 #include "config.h"
@@ -1282,7 +1285,7 @@ PRIVATE int
 ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 {
 	int		ret[3];
-	long int	lval;
+	int64_t		lval;
 
 	_Static_assert(17 < ARRAY_SIZE(g->white_name), "Unexpected array size");
 	_Static_assert(17 < ARRAY_SIZE(g->black_name), "Unexpected array size");
@@ -1306,7 +1309,7 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 	if (version < 3 && !g->bInitTime)
 		g->bInitTime = g->wInitTime;
 
-	if (fscanf(fp, "%ld", &lval) != 1) {
+	if (fscanf(fp, "%" SCNd64, &lval) != 1) {
 		warnx("%s: %s: failed to get time of start", __func__, file);
 		return -1;
 	} else
@@ -1520,7 +1523,7 @@ PRIVATE void
 WriteGameFile(FILE *fp, int g)
 {
 	game		*gg = &garray[g];
-	long int	 lval;
+	int64_t		 lval;
 	player		*bp = &parray[gg->black];
 	player		*wp = &parray[gg->white];
 
@@ -1531,7 +1534,7 @@ WriteGameFile(FILE *fp, int g)
 	    gg->bInitTime, gg->bIncrement);
 
 	lval = gg->timeOfStart;
-	fprintf(fp, "%ld\n", lval);
+	fprintf(fp, "%" PRId64 "\n", lval);
 
 #ifdef TIMESEAL
 	fprintf(fp, "%d %d\n",
