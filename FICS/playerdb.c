@@ -48,6 +48,7 @@
    Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
    Markus Uhlin                 25/07/28	Restricted file permissions upon
 						creation.
+   Markus Uhlin                 25/07/30	Usage of 'int64_t'.
 */
 
 #include "stdinclude.h"
@@ -1694,7 +1695,7 @@ player_lastconnect(int p)
 	char		 loginName[MAX_LOGIN_NAME];
 	int		 inout, registered;
 	int		 ret, too_long;
-	long int	 lval = 0;
+	int64_t		 lval = 0;
 	time_t		 last = 0;
 
 	ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
@@ -1720,8 +1721,8 @@ player_lastconnect(int p)
 		_Static_assert(19 < ARRAY_SIZE(ipstr),
 		    "'ipstr' too small");
 
-		if (fscanf(fp, "%d %19s %ld %d %19s\n", &inout, loginName,
-		    &lval, &registered, ipstr) != 5) {
+		if (fscanf(fp, "%d %19s " "%" SCNd64 " %d %19s\n", &inout,
+		    loginName, &lval, &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. %s"
 			    "\n", fname);
 			fclose(fp);
@@ -1742,7 +1743,7 @@ player_lastdisconnect(int p)
 	char		 loginName[MAX_LOGIN_NAME];
 	int		 inout, registered;
 	int		 ret, too_long;
-	long int	 lval;
+	int64_t		 lval;
 	time_t		 last = 0;
 
 	ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
@@ -1763,8 +1764,8 @@ player_lastdisconnect(int p)
 		_Static_assert(19 < ARRAY_SIZE(ipstr),
 		    "'ipstr' too small");
 
-		if (fscanf(fp, "%d %19s %ld %d %19s\n", &inout, loginName,
-		    &lval, &registered, ipstr) != 5) {
+		if (fscanf(fp, "%d %19s " "%" SCNd64 " %d %19s\n", &inout,
+		    loginName, &lval, &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. %s"
 			    "\n", fname);
 			fclose(fp);
