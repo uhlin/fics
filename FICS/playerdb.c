@@ -1721,7 +1721,7 @@ player_lastconnect(int p)
 		_Static_assert(19 < ARRAY_SIZE(ipstr),
 		    "'ipstr' too small");
 
-		if (fscanf(fp, "%d %19s " "%" SCNd64 " %d %19s\n", &inout,
+		if (fscanf(fp, ("%d %19s " "%" SCNd64 " %d %19s\n"), &inout,
 		    loginName, &lval, &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. %s"
 			    "\n", fname);
@@ -1764,7 +1764,7 @@ player_lastdisconnect(int p)
 		_Static_assert(19 < ARRAY_SIZE(ipstr),
 		    "'ipstr' too small");
 
-		if (fscanf(fp, "%d %19s " "%" SCNd64 " %d %19s\n", &inout,
+		if (fscanf(fp, ("%d %19s " "%" SCNd64 " %d %19s\n"), &inout,
 		    loginName, &lval, &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. %s"
 			    "\n", fname);
