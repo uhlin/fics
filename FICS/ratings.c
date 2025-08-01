@@ -1488,7 +1488,8 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	char		 command[MAX_STRING_LENGTH];
 	char		 line[MAX_RANK_LINE] = { '\0' };
 	char		 login[MAX_LOGIN_NAME] = { '\0' };
-	int		 comp;
+	int		 comp = 0;
+	int		 fd = -1;
 	statistics	 sCur;
 
 	if (GetRankFileName(RankFile, sizeof RankFile, type) < 0)
@@ -1501,9 +1502,17 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 
 	snprintf(TmpRankFile, sizeof TmpRankFile, "%s/tmpRank", sdir);
 
-	if ((fptemp = fopen(TmpRankFile, "w")) == NULL) {
+	errno = 0;
+	fd = open(TmpRankFile, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0) {
+		warn("%s: open", __func__);
+		fclose(fp);
+		return;
+	} else if ((fptemp = fdopen(fd, "w")) == NULL) {
 		warn("%s: unable to open rank file for updating", __func__);
 		fclose(fp);
+		close(fd);
 		return;
 	}
 
