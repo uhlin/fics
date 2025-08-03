@@ -225,11 +225,19 @@ add_item(char *new_item, char *filename)
 	FILE	*new_fp, *old_fp;
 	char	 junk[MAX_LINE_SIZE] = { '\0' };
 	char	 tmp_file[MAX_FILENAME_SIZE] = { '\0' };
+	int	 fd;
 
 	msnprintf(tmp_file, sizeof tmp_file, "%s/.tmp.idx", news_dir);
 
-	if ((new_fp = fopen(tmp_file, "w")) == NULL)
+	fd = open(tmp_file, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+
+	if (fd < 0)
 		return 0;
+	else if ((new_fp = fdopen(fd, "w")) == NULL) {
+		close(fd);
+		return 0;
+	}
+
 	fprintf(new_fp, "%s", new_item);
 
 	if ((old_fp = fopen(filename, "r")) == NULL)
