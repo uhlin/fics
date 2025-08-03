@@ -175,6 +175,7 @@ create_news_file(int p, param_list param, int admin)
 {
 	FILE	*fp;
 	char	 filename[MAX_FILENAME_SIZE] = { '\0' };
+	int	 fd;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
 
@@ -187,10 +188,14 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/adminnews.%d",
 			    news_dir,
 			    param[0].val.integer);
-			if ((fp = fopen(filename, "w")) != NULL) {
+			fd = open(filename, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+			if (fd < 0)
+				return COM_FAILED;
+			else if ((fp = fdopen(fd, "w")) != NULL) {
 				fprintf(fp, "%s\n", param[1].val.string);
 				fclose(fp);
-			}
+			} else
+				close(fd);
 		}
 	} else {
 		if (param[0].val.integer > num_news) {
@@ -200,10 +205,14 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/news.%d",
 			    news_dir,
 			    param[0].val.integer);
-			if ((fp = fopen(filename, "w")) != NULL) {
+			fd = open(filename, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+			if (fd < 0)
+				return COM_FAILED;
+			else if ((fp = fdopen(fd, "w")) != NULL) {
 				fprintf(fp, "%s\n", param[1].val.string);
 				fclose(fp);
-			}
+			} else
+				close(fd);
 		}
 	}
 
