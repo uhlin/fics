@@ -392,6 +392,7 @@ com_anews(int p, param_list param)
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	char		*junkp = NULL;
+	const char	*v_scan_junk = "%" SCNd64 " " "%9s";
 	int		 found = 0;
 	int64_t		 lval = 0;
 	time_t		 crtime = 0;
@@ -403,7 +404,6 @@ com_anews(int p, param_list param)
 		return COM_OK;
 	}
 
-#define SCAN_JUNK ("%" SCNd64 " " "%9s")
 	_Static_assert(9 < ARRAY_SIZE(count), "Array too small");
 
 	if (param[0].type == 0) {
@@ -421,7 +421,7 @@ com_anews(int p, param_list param)
 			fclose(fp);
 			return COM_FAILED;
 		}
-		if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+		if (sscanf(junk, v_scan_junk, &lval, count) != 2) {
 			warnx("%s: sscanf() error: too few items", __func__);
 			fclose(fp);
 			return COM_FAILED;
@@ -450,7 +450,7 @@ com_anews(int p, param_list param)
 			fclose(fp);
 			return COM_FAILED;
 		}
-		if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+		if (sscanf(junk, v_scan_junk, &lval, count) != 2) {
 			warnx("%s: sscanf() error: too few items", __func__);
 			fclose(fp);
 			return COM_FAILED;
@@ -474,8 +474,11 @@ com_anews(int p, param_list param)
 				break;
 
 			if (strlen(junk) > 1) {
-				if (sscanf(junkp, SCAN_JUNK, &lval, count) != 2)
-					warnx("%s: sscanf() error...", __func__);
+				if (sscanf(junkp, v_scan_junk, &lval,
+				    count) != 2) {
+					warnx("%s: sscanf() error...",
+					    __func__);
+				}
 
 				crtime = lval;
 
