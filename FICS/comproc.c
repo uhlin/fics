@@ -136,6 +136,7 @@ rscan_news2(FILE *fp, int p, int num)
 	char		 count[10] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	char		*junkp;
+	const char	*v_scan_fmt = "%" SCNd64 " " "%9s";
 	int64_t		 lval;
 	time_t		 crtime;
 
@@ -143,7 +144,7 @@ rscan_news2(FILE *fp, int p, int num)
 		return;
 
 	if (fgets(junk, sizeof junk, fp) == NULL || feof(fp) ||
-	    sscanf(junk, "%" SCNd64 " " "%9s", &lval, count) != 2)
+	    sscanf(junk, v_scan_fmt, &lval, count) != 2)
 		return;
 
 	rscan_news2(fp, p, num - 1);
@@ -164,6 +165,7 @@ com_news(int p, param_list param)
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	char		*junkp = NULL;
+	const char	*v_scan_fmt = "%" SCNd64 " " "%9s";
 	int		 found = 0;
 	int64_t		 lval = 0;
 	time_t		 crtime = 0;
@@ -175,7 +177,6 @@ com_news(int p, param_list param)
 		return COM_OK;
 	}
 
-#define SCAN_JUNK ("%" SCNd64 " " "%9s")
 	_Static_assert(9 < ARRAY_SIZE(count), "'count' too small");
 
 	if (param[0].type == 0) {
@@ -187,7 +188,7 @@ com_news(int p, param_list param)
 		pprintf(p, "Index of recent news items:\n");
 
 		if (fgets(junk, sizeof junk, fp) == NULL ||
-		    sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+		    sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: error: fgets() or sscanf()", __func__);
 			fclose(fp);
 			return COM_FAILED;
@@ -212,7 +213,7 @@ com_news(int p, param_list param)
 		pprintf(p, "Index of all news items:\n");
 
 		if (fgets(junk, sizeof junk, fp) == NULL ||
-		    sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+		    sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: error: fgets() or sscanf()", __func__);
 			fclose(fp);
 			return COM_FAILED;
@@ -238,7 +239,7 @@ com_news(int p, param_list param)
 
 			if (fgets(junk, sizeof junk, fp) == NULL || feof(fp))
 				break;
-			if (sscanf(junkp, SCAN_JUNK, &lval, count) != 2)
+			if (sscanf(junkp, v_scan_fmt, &lval, count) != 2)
 				warnx("%s: sscanf() error...", __func__);
 			crtime = lval;
 
