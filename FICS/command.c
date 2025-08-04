@@ -722,6 +722,7 @@ rscan_news(FILE *fp, int p, time_t lc)
 	char		 count[10] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	char		*junkp = NULL;
+	const char	*scan_fmt = "%" SCNd64 " " "%9s";
 	int64_t		 lval = 0;
 	time_t		 crtime = 0;
 
@@ -731,7 +732,7 @@ rscan_news(FILE *fp, int p, time_t lc)
 
 	_Static_assert(ARRAY_SIZE(count) > 9, "Unexpected array size");
 
-	if (sscanf(junk, ("%" SCNd64 " " "%9s"), &lval, count) != 2) {
+	if (sscanf(junk, scan_fmt, &lval, count) != 2) {
 		warnx("%s: sscanf() error: too few items", __func__);
 		return;
 	}
@@ -755,12 +756,12 @@ rscan_news(FILE *fp, int p, time_t lc)
 PRIVATE void
 check_news(int p, int admin)
 {
-#define SCAN_JUNK ("%" SCNd64 " " "%9s")
 	FILE		*fp = NULL;
 	char		 count[10] = { '\0' };
 	char		 filename[MAX_FILENAME_SIZE] = { '\0' };
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	char		*junkp = NULL;
+	const char	*v_scan_fmt = "%" SCNd64 " " "%9s";
 	int64_t		 lval = 0;
 	time_t		 crtime = 0;
 	time_t		 lc = player_lastconnect(p);
@@ -791,7 +792,7 @@ check_news(int p, int admin)
 			warnx("%s: fgets() error", __func__);
 			fclose(fp);
 			return;
-		} else if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+		} else if (sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: sscanf() error", __func__);
 			fclose(fp);
 			return;
@@ -841,7 +842,7 @@ check_news(int p, int admin)
 			warnx("%s: fgets() error", __func__);
 			fclose(fp);
 			return;
-		} else if (sscanf(junk, SCAN_JUNK, &lval, count) != 2) {
+		} else if (sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: sscanf() error", __func__);
 			fclose(fp);
 			return;
