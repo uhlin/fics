@@ -766,6 +766,8 @@ plogins(int p, char *fname)
 	FILE		*fp = NULL;
 	char		 ipstr[20] = { '\0' };
 	char		 loginName[MAX_LOGIN_NAME + 1] = { '\0' };
+	const char	*v_scan_fmt = "%" SCNu16 " %19s " "%" SCNd64 " "
+			     "%d %19s\n";
 	int		 registered = 0;
 	int64_t		 lval = 0;
 	time_t		 tval = 0;
@@ -779,10 +781,9 @@ plogins(int p, char *fname)
 	_Static_assert(19 < ARRAY_SIZE(ipstr), "'ipstr' too small");
 	_Static_assert(19 < ARRAY_SIZE(loginName), "'loginName' too small");
 
-#define SCAN_FMT ("%" SCNu16 " %19s " "%" SCNd64 " " "%d %19s\n")
 	while (!feof(fp)) {
-		if (fscanf(fp, SCAN_FMT, &inout, loginName, &lval, &registered,
-		    ipstr) != 5) {
+		if (fscanf(fp, v_scan_fmt, &inout, loginName, &lval,
+		    &registered, ipstr) != 5) {
 			fprintf(stderr, "FICS: Error in login info format. "
 			    "%s\n", fname);
 			fclose(fp);
