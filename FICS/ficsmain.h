@@ -26,6 +26,12 @@
 #ifndef _FICSMAIN_H
 #define _FICSMAIN_H
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#include <fcntl.h>
+#include <unistd.h>
+
 /*
  * Heartbead functions occur approx in this time, including checking
  * for new connections and decrementing timeleft counters.
