@@ -11,7 +11,8 @@ documented in this file.
 - Fixed missing return-value checks for a 'scanf'-like functions.
 - Fixed multiplication result converted to larger type. Two
   occurrences.
-- Fixed uncontrolled data used in path expressions.
+- Fixed uncontrolled data used in path expressions, this in order to
+  prevent path traversal.
 - Replaced non-reentrant functions with their corresponding thread
   safe version. (Multiple occurrences, found by CodeQL.)
 
