@@ -1733,17 +1733,24 @@ RemHist(char *who)
 				iter_no++;
 				continue;
 			}
-			/* Additional validation: only allow alphanumeric and underscores */
-			for (char *p = Opp; *p; ++p) {
-				if (!((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') ||
-				      (*p >= '0' && *p <= '9') || *p == '_')) {
-					warnx("%s: Opp contains invalid character: '%s' (skipping)", __func__, Opp);
-					iter_no++;
+
+			/*
+			 * Additional validation: only allow
+			 * alphanumeric and underscores
+			 */
+			for (const char *p = Opp; *p; ++p) {
+				if (!((*p >= 'a' && *p <= 'z') ||
+				      (*p >= 'A' && *p <= 'Z') ||
+				      (*p >= '0' && *p <= '9') ||
+				      *p == '_')) {
+					warnx("%s: invalid characters found: "
+					    "Opp = '%s' (skipping)", __func__,
+					    Opp);
 					goto next_iter;
 				}
 			}
+
 			oppWhen = OldestHistGame(Opp);
-		next_iter:;
 
 			if (oppWhen > When || oppWhen <= 0L) {
 				char histfile[MAX_FILENAME_SIZE] = { '\0' };
@@ -1756,6 +1763,7 @@ RemHist(char *who)
 				}
 			}
 
+		  next_iter:
 			iter_no++;
 		}
 
