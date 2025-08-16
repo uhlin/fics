@@ -184,6 +184,12 @@ LoadEntries(void)
 
 			e.name[strcspn(e.name, "\n")] = '\0';
 
+			/* Validate that e.name does not contain path traversal or separators */
+			if (strstr(e.name, "..") || strchr(e.name, '/') || strchr(e.name, '\\')) {
+				printf("Skipping invalid filename: %s\n", e.name);
+				continue;
+			}
+
 			if (e.name[0] != letter1) {
 				printf("File %c/%s: wrong directory.\n",
 				    letter1, e.name);
