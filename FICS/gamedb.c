@@ -1619,6 +1619,25 @@ game_save(int g)
 	return 0;
 }
 
+/* Helper function to validate login names for file path usage */
+static int
+is_valid_login_name(const char *login)
+{
+	if (login == NULL || login[0] == '\0' ||
+	    strstr(login, "..") || strchr(login, '/') || strchr(login, '\\')) {
+		return 0;
+	}
+	for (const char *p = login; *p; ++p) {
+		if (!((*p >= 'a' && *p <= 'z') ||
+		      (*p >= 'A' && *p <= 'Z') ||
+		      (*p >= '0' && *p <= '9') ||
+		      *p == '_')) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
 PRIVATE long int
 OldestHistGame(char *login)
 {
@@ -1626,20 +1645,10 @@ OldestHistGame(char *login)
 	char		 pFile[MAX_FILENAME_SIZE] = { '\0' };
 	long int	 when;
 
-	/* Validate login to prevent path traversal and restrict to safe characters */
-	if (login == NULL || login[0] == '\0' ||
-	    strstr(login, "..") || strchr(login, '/') || strchr(login, '\\')) {
+	/* Centralized validation of login */
+	if (!is_valid_login_name(login)) {
 		warnx("%s: invalid login value: '%s'", __func__, login);
 		return 0L;
-	}
-	for (const char *p = login; *p; ++p) {
-		if (!((*p >= 'a' && *p <= 'z') ||
-		      (*p >= 'A' && *p <= 'Z') ||
-		      (*p >= '0' && *p <= '9') ||
-		      *p == '_')) {
-			warnx("%s: invalid character in login: '%s'", __func__, login);
-			return 0L;
-		}
 	}
 
 	msnprintf(pFile, sizeof pFile, "%s/player_data/%c/%s.%s", stats_dir,
@@ -1735,29 +1744,11 @@ RemHist(char *who)
 
 			stolower(Opp);
 
-			if (strstr(Opp, "..") ||
-			    strchr(Opp, '/') ||
-			    strchr(Opp, '\\')) {
-				warnx("%s: invalid value: "
-				    "Opp = '%s' (skipping)", __func__, Opp);
+			/* Centralized validation: only allow safe login names */
+			if (!is_valid_login_name(Opp)) {
+				warnx("%s: invalid value: Opp = '%s' (skipping)", __func__, Opp);
 				iter_no++;
 				continue;
-			}
-
-			/*
-			 * Additional validation: only allow
-			 * alphanumeric and underscores
-			 */
-			for (const char *p = Opp; *p; ++p) {
-				if (!((*p >= 'a' && *p <= 'z') ||
-				      (*p >= 'A' && *p <= 'Z') ||
-				      (*p >= '0' && *p <= '9') ||
-				      *p == '_')) {
-					warnx("%s: invalid characters found: "
-					    "Opp = '%s' (skipping)", __func__,
-					    Opp);
-					goto next_iter;
-				}
 			}
 
 			oppWhen = OldestHistGame(Opp);
