@@ -1935,17 +1935,22 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 	char	 result[100] = { '\0' };
 	char	 type[100] = { '\0' };
 	int	 WhiteRating, BlackRating;
+	int	 fd;
 	int	 have_output = 0;
 	int	 t, i;
 
 	mstrlcpy(fname2, fname, sizeof fname2);
 	mstrlcat(fname2, ".w", sizeof fname2);
 
-	if ((fp2 = fopen(fname2, "w")) == NULL) {
+	if ((fd = open(fname2, g_open_flags[1], g_open_modes)) < 0) {
+		warn("%s: open", __func__);
+		return;
+	} else if ((fp2 = fdopen(fd, "w")) == NULL) {
 		fprintf(stderr, "FICS: Problem opening file %s for write\n",
 		    fname);
 		pprintf(p, "Couldn't update journal! Report this to an admin."
 		    "\n");
+		close(fd);
 		return;
 	}
 
