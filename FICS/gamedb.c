@@ -1626,10 +1626,20 @@ OldestHistGame(char *login)
 	char		 pFile[MAX_FILENAME_SIZE] = { '\0' };
 	long int	 when;
 
-	/* Validate login to prevent path traversal */
-	if (strstr(login, "..") || strchr(login, '/') || strchr(login, '\\')) {
+	/* Validate login to prevent path traversal and restrict to safe characters */
+	if (login == NULL || login[0] == '\0' ||
+	    strstr(login, "..") || strchr(login, '/') || strchr(login, '\\')) {
 		warnx("%s: invalid login value: '%s'", __func__, login);
 		return 0L;
+	}
+	for (const char *p = login; *p; ++p) {
+		if (!((*p >= 'a' && *p <= 'z') ||
+		      (*p >= 'A' && *p <= 'Z') ||
+		      (*p >= '0' && *p <= '9') ||
+		      *p == '_')) {
+			warnx("%s: invalid character in login: '%s'", __func__, login);
+			return 0L;
+		}
 	}
 
 	msnprintf(pFile, sizeof pFile, "%s/player_data/%c/%s.%s", stats_dir,
