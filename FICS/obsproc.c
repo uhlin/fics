@@ -39,6 +39,8 @@
 #include "common.h"
 
 #include <err.h>
+#include <limits.h>
+#include <stdlib.h>
 
 #include "command.h"
 #include "comproc.h"
@@ -1045,8 +1047,31 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 
 	fclose(fpHist);
 
+	/* Validate 'when' before using it in a path */
+	if (when <= 0 || when > LONG_MAX) {
+		pprintf(p, "Invalid history timestamp for %s.\n", parray[p1].name);
+		return NULL;
+	}
+
 	msnprintf(fileName, sizeof fileName, "%s/%ld/%ld", hist_dir,
 	    (when % 100), when);
+
+	/* Validate that the resolved path is within hist_dir */
+	char *resolvedPath = realpath(fileName, NULL);
+	if (resolvedPath == NULL) {
+		warnx("%s: %s: realpath failed", __func__, fileName);
+		return NULL;
+	}
+	if (strncmp(resolvedPath, hist_dir, strlen(hist_dir)) != 0) {
+		warnx("%s: %s: path traversal detected", __func__, resolvedPath);
+		free(resolvedPath);
+		return NULL;
+	}
+	/* Copy resolvedPath back to fileName for return */
+	strncpy(fileName, resolvedPath, sizeof(fileName) - 1);
+	fileName[sizeof(fileName) - 1] = '\0';
+	free(resolvedPath);
+
 	return (&fileName[0]);
 }
 
