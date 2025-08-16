@@ -1724,6 +1724,12 @@ RemHist(char *who)
 			}
 
 			stolower(Opp);
+			/* Validate Opp before using it as a login */
+			if (strstr(Opp, "..") || strchr(Opp, '/') || strchr(Opp, '\\')) {
+				warnx("%s: invalid Opp value: '%s' (skipping)", __func__, Opp);
+				iter_no++;
+				continue;
+			}
 			oppWhen = OldestHistGame(Opp);
 
 			if (oppWhen > When || oppWhen <= 0L) {
