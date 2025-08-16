@@ -18,6 +18,32 @@
 static ENTRY	**list;
 static ENTRY	**sortme;
 
+
+// Returns 1 if filename is safe, 0 otherwise
+static int is_valid_filename(const char *name) {
+    // Reject empty string
+    if (!name || !*name)
+        return 0;
+    // Reject if starts with '.' (hidden files, ".", "..")
+    if (name[0] == '.')
+        return 0;
+    // Reject if contains "..", '/', '\\', or starts with '/'
+    if (strstr(name, "..") || strchr(name, '/') || strchr(name, '\\') || name[0] == '/')
+        return 0;
+    // Reject if contains whitespace or control characters
+    for (const char *p = name; *p; ++p) {
+        if (isspace((unsigned char)*p) || iscntrl((unsigned char)*p))
+            return 0;
+    }
+    // Optionally, restrict to alphanumeric and a few safe symbols
+    for (const char *p = name; *p; ++p) {
+        if (!isalnum((unsigned char)*p) && *p != '-' && *p != '_' && *p != '.') {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 static char	*rnames[] = { "std", "blitz", "wild", "lightning" };
 static int	 rtype;
 
@@ -188,9 +214,7 @@ LoadEntries(void)
 			 * Validate that e.name does not contain path
 			 * traversal or separators
 			 */
-			if (strstr(e.name, "..") ||
-			    strchr(e.name, '/') ||
-			    strchr(e.name, '\\')) {
+			if (!is_valid_filename(e.name)) {
 				printf("Skipping invalid filename: %s\n",
 				    e.name);
 				continue;
