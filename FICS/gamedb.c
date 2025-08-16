@@ -1635,9 +1635,7 @@ OldestHistGame(char *login)
 	msnprintf(pFile, sizeof pFile, "%s/player_data/%c/%s.%s", stats_dir,
 	    login[0], login, STATS_GAMES);
 
-	fp = fopen(pFile, "r");
-
-	if (fp == NULL) {
+	if ((fp = fopen(pFile, "r")) == NULL) {
 		msnprintf(pFile, sizeof pFile, "%s/player_data/%c/.rem.%s.%s",
 		    stats_dir, login[0], login, STATS_GAMES);
 		fp = fopen(pFile, "r");
