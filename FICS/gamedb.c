@@ -1714,7 +1714,6 @@ RemHist(char *who)
 			if (ret != 2) {
 				warnx("%s: fscanf() error (%s:%ld)", __func__,
 				    fName, iter_no);
-//				iter_no++;
 				break;
 			}
 
