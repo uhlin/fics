@@ -1724,9 +1724,12 @@ RemHist(char *who)
 			}
 
 			stolower(Opp);
-			/* Validate Opp before using it as a login */
-			if (strstr(Opp, "..") || strchr(Opp, '/') || strchr(Opp, '\\')) {
-				warnx("%s: invalid Opp value: '%s' (skipping)", __func__, Opp);
+
+			if (strstr(Opp, "..") ||
+			    strchr(Opp, '/') ||
+			    strchr(Opp, '\\')) {
+				warnx("%s: invalid value: "
+				    "Opp = '%s' (skipping)", __func__, Opp);
 				iter_no++;
 				continue;
 			}
