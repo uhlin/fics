@@ -1003,6 +1003,12 @@ FindHistory(int p, int p1, int p_game)
 
 	fclose(fpHist);
 
+	/* Validate 'when' before using it in a path */
+	if (when <= 0 || when > 9999999999L) {
+		pprintf(p, "Corrupt history data for %s (invalid timestamp).\n", parray[p1].name);
+		return NULL;
+	}
+
 	msnprintf(fileName, sizeof fileName, "%s/%ld/%ld", hist_dir,
 	    (when % 100), when);
 	return (&fileName[0]);
