@@ -46,6 +46,8 @@
    Markus Uhlin			25/07/28	Fixed use of potentially
 						dangerous functions.
    Markus Uhlin			25/07/29	Usage of 'int64_t'.
+   Markus Uhlin			25/08/16	Fixed uncontrolled data used in
+						path expressions.
 */
 
 #include "stdinclude.h"
