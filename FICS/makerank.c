@@ -184,9 +184,15 @@ LoadEntries(void)
 
 			e.name[strcspn(e.name, "\n")] = '\0';
 
-			/* Validate that e.name does not contain path traversal or separators */
-			if (strstr(e.name, "..") || strchr(e.name, '/') || strchr(e.name, '\\')) {
-				printf("Skipping invalid filename: %s\n", e.name);
+			/*
+			 * Validate that e.name does not contain path
+			 * traversal or separators
+			 */
+			if (strstr(e.name, "..") ||
+			    strchr(e.name, '/') ||
+			    strchr(e.name, '\\')) {
+				printf("Skipping invalid filename: %s\n",
+				    e.name);
 				continue;
 			}
 
