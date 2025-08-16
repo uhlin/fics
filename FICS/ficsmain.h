@@ -63,6 +63,9 @@
 #define STATS_GAMES	"games"
 #define STATS_JOURNAL	"journal"
 
+extern const int	g_open_flags[2];
+extern const mode_t	g_open_modes;
+
 /* Arguments */
 extern int	port;
 extern int	withConsole;
