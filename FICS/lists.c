@@ -13,6 +13,7 @@
 
 #include "command.h"
 #include "comproc.h"
+#include "ficsmain.h"
 #include "gamedb.h"
 #include "lists.h"
 #include "maxxes-utils.h"
@@ -370,6 +371,7 @@ list_addsub(int p, char *list, char *who, int addsub)
 	if (!personal) {
 		FILE	*fp;
 		char	 filename[MAX_FILENAME_SIZE] = { '\0' };
+		int	 fd;
 
 		switch (gl->which) {
 		case L_MUZZLE:
@@ -433,8 +435,11 @@ list_addsub(int p, char *list, char *who, int addsub)
 		msnprintf(filename, sizeof filename, "%s/%s", lists_dir,
 		    listname);
 
-		if ((fp = fopen(filename, "w")) == NULL) {
+		if ((fd = open(filename, g_open_flags[1], g_open_modes)) < 0) {
 			fprintf(stderr, "Couldn't save %s list.\n", listname);
+		} else if ((fp = fdopen(fd, "w")) == NULL) {
+			fprintf(stderr, "Couldn't save %s list.\n", listname);
+			close(fd);
 		} else {
 			for (int i = 0; i < gl->numMembers; i++)
 				fprintf(fp, "%s\n", gl->member[i]);
