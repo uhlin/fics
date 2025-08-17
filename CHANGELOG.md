@@ -4,6 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added validation of filenames and login names.
 - Changed the program to use `int64_t` instead of `long int` in
   contexts where `time_t` is used.
 - During file creation, took care to give it the most restrictive
