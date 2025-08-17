@@ -67,6 +67,7 @@
 #include "ficsmain.h"
 #include "gamedb.h"
 #include "lists.h"
+#include "maxxes-utils.h"
 #include "network.h"
 #include "playerdb.h"
 #include "ratings.h"
@@ -1079,16 +1080,36 @@ PUBLIC int
 player_read(int p, char *name)
 {
 	FILE	*fp = NULL;
-	char	*attr, *value;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char	 line[MAX_LINE_SIZE] = { '\0' };
+	char	*attr, *value;
+	char	*resolvedPath;
 	int	 len = 0;
 	int	 version = 0;
 
-	parray[p].login = stolower(xstrdup(name));
+	parray[p].login = stolower(xstrdup(name)); // free on error?
+
+	if (!is_valid_login_name(parray[p].login)) {
+		warnx("%s: invalid login name: %s", __func__, parray[p].login);
+		return -1;
+	}
 
 	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
+
+	if ((resolvedPath = realpath(fname, NULL)) == NULL) {
+		warn("%s: realpath", __func__);
+		return -1;
+	}
+	if (strncmp(resolvedPath, player_dir, strlen(player_dir)) != 0) {
+		warnx("%s: path traversal detected", __func__);
+		free(resolvedPath);
+		return -1;
+	}
+
+	mstrlcpy(fname, resolvedPath, sizeof fname);
+	free(resolvedPath);
+	resolvedPath = NULL;
 
 	if ((fp = fopen(fname, "r")) == NULL) { // Unregistered player
 		parray[p].name = xstrdup(name);
