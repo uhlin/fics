@@ -1003,7 +1003,7 @@ FindHistory(int p, int p1, int p_game)
 
 	fclose(fpHist);
 
-	if (when < 0) {
+	if (when < 0 || when >= LONG_MAX) {
 		pprintf(p, "Corrupt history data for %s (invalid timestamp).\n",
 		    parray[p1].name);
 		return NULL;
@@ -1054,7 +1054,7 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 
 	fclose(fpHist);
 
-	if (when < 0) {
+	if (when < 0 || when >= LONG_MAX) {
 		pprintf(p, "Invalid history timestamp for %s.\n",
 		    parray[p1].name);
 		return NULL;
