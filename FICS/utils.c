@@ -49,9 +49,11 @@
 #include "stdinclude.h"
 #include "common.h"
 
+#include <ctype.h>
 #include <err.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <string.h>
 
 #include "config.h"
 #include "network.h"
@@ -77,6 +79,28 @@ struct t_dirs {
 
 PRIVATE char**	t_buffer = NULL;
 PRIVATE int	t_buffersize = 0;
+
+PUBLIC bool
+is_valid_filename(const char *name, const bool allow_hidden)
+{
+	if (name == NULL || strcmp(name, "") == 0)
+		return false;
+	if (!allow_hidden && name[0] == '.')
+		return false;
+	if (strstr(name, "..") || strchr(name, '/') || strchr(name, '\\') ||
+	    name[0] == '/')
+		return false;
+	for (const char *p = name; *p; ++p) {
+		if (isspace((unsigned char)*p) || iscntrl((unsigned char)*p))
+			return false;
+	}
+	for (const char *p = name; *p; ++p) {
+		if (!isalnum((unsigned char)*p) && *p != '-' && *p != '_' &&
+		    *p != '.')
+			return false;
+	}
+	return true;
+}
 
 PUBLIC int
 count_lines(FILE *fp)

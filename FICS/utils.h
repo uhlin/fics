@@ -31,6 +31,7 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -58,6 +59,7 @@
 #define CheckFlag(VAR, FLAG)	(VAR & (FLAG))
 
 __FICS_BEGIN_DECLS
+extern bool		 is_valid_filename(const char *, const bool);
 extern char		*dotQuad(unsigned int);
 extern char		*eattailwhite(char *);
 extern char		*eatwhite(char *);
