@@ -1019,6 +1019,7 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 {
 	FILE		*fpHist;
 	char		 fmt[80] = { '\0' };
+	char		*resolvedPath;
 	int		 index = 0;
 	long int	 when = 0;
 	static char	 fileName[MAX_FILENAME_SIZE];
@@ -1053,29 +1054,29 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 
 	fclose(fpHist);
 
-	/* Validate 'when' before using it in a path */
-	if (when <= 0 || when > LONG_MAX) {
-		pprintf(p, "Invalid history timestamp for %s.\n", parray[p1].name);
+	if (when < 0) {
+		pprintf(p, "Invalid history timestamp for %s.\n",
+		    parray[p1].name);
 		return NULL;
 	}
 
 	msnprintf(fileName, sizeof fileName, "%s/%ld/%ld", hist_dir,
 	    (when % 100), when);
 
-	/* Validate that the resolved path is within hist_dir */
-	char *resolvedPath = realpath(fileName, NULL);
-	if (resolvedPath == NULL) {
-		warnx("%s: %s: realpath failed", __func__, fileName);
+	// Validate that the resolved path is within hist_dir
+	if ((resolvedPath = realpath(fileName, NULL)) == NULL) {
+		warn("%s: realpath", __func__);
 		return NULL;
 	}
+
 	if (strncmp(resolvedPath, hist_dir, strlen(hist_dir)) != 0) {
-		warnx("%s: %s: path traversal detected", __func__, resolvedPath);
+		warnx("%s: path traversal detected", __func__);
 		free(resolvedPath);
 		return NULL;
 	}
-	/* Copy resolvedPath back to fileName for return */
-	strncpy(fileName, resolvedPath, sizeof(fileName) - 1);
-	fileName[sizeof(fileName) - 1] = '\0';
+
+	// Copy 'resolvedPath' back to 'fileName' for return
+	mstrlcpy(fileName, resolvedPath, sizeof fileName);
 	free(resolvedPath);
 
 	return (&fileName[0]);
