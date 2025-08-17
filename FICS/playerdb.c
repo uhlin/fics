@@ -1083,7 +1083,7 @@ player_read(int p, char *name)
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char	 line[MAX_LINE_SIZE] = { '\0' };
 	char	*attr, *value;
-	char	*resolvedPath;
+	char	*resolvedPath = NULL;
 	int	 len = 0;
 	int	 version = 0;
 
@@ -1097,19 +1097,17 @@ player_read(int p, char *name)
 	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
 
-	if ((resolvedPath = realpath(fname, NULL)) == NULL) {
-		warn("%s: realpath", __func__);
-		return -1;
-	}
-	if (strncmp(resolvedPath, player_dir, strlen(player_dir)) != 0) {
-		warnx("%s: path traversal detected", __func__);
+	if ((resolvedPath = realpath(fname, NULL)) != NULL) {
+		if (strncmp(resolvedPath, player_dir,
+		    strlen(player_dir)) != 0) {
+			warnx("%s: path traversal detected", __func__);
+			free(resolvedPath);
+			return -1;
+		}
+		mstrlcpy(fname, resolvedPath, sizeof fname);
 		free(resolvedPath);
-		return -1;
+		resolvedPath = NULL;
 	}
-
-	mstrlcpy(fname, resolvedPath, sizeof fname);
-	free(resolvedPath);
-	resolvedPath = NULL;
 
 	if ((fp = fopen(fname, "r")) == NULL) { // Unregistered player
 		parray[p].name = xstrdup(name);
