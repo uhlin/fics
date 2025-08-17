@@ -1725,9 +1725,10 @@ RemHist(char *who)
 
 			stolower(Opp);
 
-			/* Centralized validation: only allow safe login names */
+			// Centralized validation: only allow safe login names
 			if (!is_valid_login_name(Opp)) {
-				warnx("%s: invalid value: Opp = '%s' (skipping)", __func__, Opp);
+				warnx("%s: invalid value: "
+				    "Opp = '%s' (skipping)", __func__, Opp);
 				iter_no++;
 				continue;
 			}
@@ -1745,7 +1746,6 @@ RemHist(char *who)
 				}
 			}
 
-		  next_iter:
 			iter_no++;
 		}
 
