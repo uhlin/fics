@@ -1619,25 +1619,6 @@ game_save(int g)
 	return 0;
 }
 
-/* Helper function to validate login names for file path usage */
-static int
-is_valid_login_name(const char *login)
-{
-	if (login == NULL || login[0] == '\0' ||
-	    strstr(login, "..") || strchr(login, '/') || strchr(login, '\\')) {
-		return 0;
-	}
-	for (const char *p = login; *p; ++p) {
-		if (!((*p >= 'a' && *p <= 'z') ||
-		      (*p >= 'A' && *p <= 'Z') ||
-		      (*p >= '0' && *p <= '9') ||
-		      *p == '_')) {
-			return 0;
-		}
-	}
-	return 1;
-}
-
 PRIVATE long int
 OldestHistGame(char *login)
 {

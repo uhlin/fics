@@ -102,6 +102,27 @@ is_valid_filename(const char *name, const bool allow_hidden)
 	return true;
 }
 
+/*
+ * Function to validate login names for file path usage
+ */
+PUBLIC bool
+is_valid_login_name(const char *login)
+{
+	if (login == NULL || login[0] == '\0' ||
+	    strstr(login, "..") || strchr(login, '/') || strchr(login, '\\'))
+		return false;
+
+	for (const char *p = login; *p; ++p) {
+		if (!((*p >= 'a' && *p <= 'z') ||
+		      (*p >= 'A' && *p <= 'Z') ||
+		      (*p >= '0' && *p <= '9') ||
+		      *p == '_'))
+			return false;
+	}
+
+	return true;
+}
+
 PUBLIC int
 count_lines(FILE *fp)
 {

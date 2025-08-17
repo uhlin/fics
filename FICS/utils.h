@@ -60,6 +60,7 @@
 
 __FICS_BEGIN_DECLS
 extern bool		 is_valid_filename(const char *, const bool);
+extern bool		 is_valid_login_name(const char *);
 extern char		*dotQuad(unsigned int);
 extern char		*eattailwhite(char *);
 extern char		*eatwhite(char *);
