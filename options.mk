@@ -31,4 +31,4 @@ AP_LDLIBS = -lbsd -lcrypt
 
 # makerank
 MR_LDFLAGS =
-MR_LDLIBS = -lbsd
+MR_LDLIBS = -lbsd -lcrypt
