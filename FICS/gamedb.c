@@ -1562,6 +1562,7 @@ game_save(int g)
 	char	 fname[MAX_FILENAME_SIZE];
 	char	 lname[MAX_FILENAME_SIZE];
 	game	*gg = &garray[g];
+	int	 fd;
 	player	*wp, *bp;
 
 	wp	= &parray[gg->white];
@@ -1572,11 +1573,13 @@ game_save(int g)
 	msnprintf(lname, sizeof lname, "%s/%c/%s-%s", adj_dir, bp->login[0],
 	    wp->login, bp->login);
 
-	fp = fopen(fname, "w");
-
-	if (!fp) {
+	if ((fd = open(fname, g_open_flags[1], g_open_modes)) < 0) {
+		warn("%s: open: %s", __func__, fname);
+		return -1;
+	} else if ((fp = fdopen(fd, "w")) == NULL) {
 		fprintf(stderr, "FICS: Problem opening file %s for write\n",
 		    fname);
+		close(fd);
 		return -1;
 	}
 
@@ -1758,12 +1761,13 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
     char *name, time_t *now)
 {
 	FILE	*fp;
-	char	*goteco;
 	char	 cResult;
 	char	 tmp[2048] = { '\0' };
-	char	*ptmp = tmp;
 	char	 type[4];
+	char	*goteco;
+	char	*ptmp = tmp;
 	int	 count = -1;
+	int	 fd;
 	int	 wp, bp;
 	int	 wr, br;
 
@@ -1830,8 +1834,14 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 
 	count = (count + 1) % 100;
 
-	if ((fp = fopen(file, "a")) == NULL)
+	if ((fd = open(file, g_open_flags[0], g_open_modes)) < 0) {
+		warn("%s: open: %s", __func__, file);
 		return;
+	} else if ((fp = fdopen(fd, "a")) == NULL) {
+		close(fd);
+		return;
+	}
+
 	goteco = getECO(g);
 
 	/*
