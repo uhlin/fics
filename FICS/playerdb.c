@@ -1208,7 +1208,7 @@ player_markdeleted(int p)
 	xrename(__func__, fname, fname2);
 
 	errno = 0;
-	fd = open(fname2, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(fname2, g_open_flags[0], g_open_modes);
 
 	if (fd < 0) {
 		warn("%s: open", __func__);
@@ -1347,7 +1347,7 @@ player_save(int p)
 	    parray[p].login[0], parray[p].login);
 
 	errno = 0;
-	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(fname, g_open_flags[1], g_open_modes);
 
 	if (fd < 0) {
 		warn("%s: Problem opening file %s for write", __func__, fname);
@@ -1644,7 +1644,7 @@ write_p_inout(int inout, int p, char *file, int maxlines)
 	int	 fd;
 
 	errno = 0;
-	fd = open(file, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(file, g_open_flags[0], g_open_modes);
 
 	if (fd < 0) {
 		warn("%s: open", __func__);
@@ -2639,7 +2639,7 @@ player_add_message(int top, int fromp, char *message)
 		return -1;
 
 	errno = 0;
-	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(fname, g_open_flags[0], g_open_modes);
 
 	if (fd < 0)
 		return -1;
@@ -2817,7 +2817,7 @@ WriteMsgFile(int p, textlist *Head)
 	GetMsgFile(p, fName, sizeof fName, __func__);
 
 	errno = 0;
-	fd = open(fName, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(fName, g_open_flags[1], g_open_modes);
 
 	if (fd < 0)
 		return 0;
@@ -3238,7 +3238,7 @@ player_add_comment(int p_by, int p_to, char *comment)
 	    parray[p_to].login[0], parray[p_to].login, "comments");
 
 	errno = 0;
-	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(fname, g_open_flags[0], g_open_modes);
 
 	if (fd < 0) {
 		warn("%s: open", __func__);

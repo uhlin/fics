@@ -51,6 +51,7 @@
 #include "command.h"
 #include "comproc.h"
 #include "config.h"
+#include "ficsmain.h"
 #include "gamedb.h"
 #include "lists.h"
 #include "playerdb.h"
@@ -418,7 +419,7 @@ save_ratings(void)
 	    STATS_VERSION);
 
 	errno = 0;
-	fd = open(fname, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(fname, g_open_flags[1], g_open_modes);
 
 	if (fd < 0) {
 		warn("%s: can't write ratings data", __func__);
@@ -1501,7 +1502,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	snprintf(TmpRankFile, sizeof TmpRankFile, "%s/tmpRank", sdir);
 
 	errno = 0;
-	fd = open(TmpRankFile, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(TmpRankFile, g_open_flags[1], g_open_modes);
 
 	if (fd < 0) {
 		warn("%s: open", __func__);

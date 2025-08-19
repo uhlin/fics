@@ -28,6 +28,7 @@
 #include "command.h"
 #include "comproc.h"
 #include "fics_getsalt.h"
+#include "ficsmain.h"
 #include "gamedb.h"
 #include "gameproc.h"
 #include "maxxes-utils.h"
@@ -188,7 +189,7 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/adminnews.%d",
 			    news_dir,
 			    param[0].val.integer);
-			fd = open(filename, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+			fd = open(filename, g_open_flags[1], g_open_modes);
 			if (fd < 0)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
@@ -205,7 +206,7 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/news.%d",
 			    news_dir,
 			    param[0].val.integer);
-			fd = open(filename, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+			fd = open(filename, g_open_flags[1], g_open_modes);
 			if (fd < 0)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
@@ -229,7 +230,7 @@ add_item(char *new_item, char *filename)
 
 	msnprintf(tmp_file, sizeof tmp_file, "%s/.tmp.idx", news_dir);
 
-	fd = open(tmp_file, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+	fd = open(tmp_file, g_open_flags[1], g_open_modes);
 
 	if (fd < 0)
 		return 0;

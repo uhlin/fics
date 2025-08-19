@@ -56,6 +56,7 @@
 #include <string.h>
 
 #include "config.h"
+#include "ficsmain.h"
 #include "network.h"
 #include "playerdb.h"
 #include "rmalloc.h"
@@ -905,7 +906,7 @@ truncate_file(char *file, int lines)
 		int fd;
 
 		errno = 0;
-		fd = open(file, O_WRONLY|O_CREAT, S_IWUSR|S_IRUSR);
+		fd = open(file, g_open_flags[1], g_open_modes);
 
 		if (fd < 0) {
 			warn("%s: open", __func__);
