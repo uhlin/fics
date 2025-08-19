@@ -32,6 +32,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "common.h"
+
 /*
  * Heartbead functions occur approx in this time, including checking
  * for new connections and decrementing timeleft counters.
@@ -63,11 +65,13 @@
 #define STATS_GAMES	"games"
 #define STATS_JOURNAL	"journal"
 
+__FICS_BEGIN_DECLS
 extern const int	g_open_flags[2];
 extern const mode_t	g_open_modes;
 
 /* Arguments */
 extern int	port;
 extern int	withConsole;
+__FICS_END_DECLS
 
 #endif /* _FICSMAIN_H */
