@@ -1303,23 +1303,32 @@ commands_init(void)
 {
 	FILE	*fp, *afp;
 	char	 fname[MAX_FILENAME_SIZE];
+	int	 fd[2];
 	int	 i = 0;
 
+	fp = afp = NULL;
 	snprintf(fname, sizeof fname, "%s/commands", comhelp_dir);
 
-	if ((fp = fopen(fname, "w")) == NULL) {
+	if ((fd[0] = open(fname, g_open_flags[1], g_open_modes)) < 0) {
+		warn("%s: open: %s", __func__, fname);
+		return;
+	} else if ((fp = fdopen(fd[0], "w")) == NULL) {
 		warn("%s: could not write commands help file (%s)", __func__,
 		    fname);
+		close(fd[0]);
 		return;
 	}
 
 	snprintf(fname, sizeof fname, "%s/admin_commands", adhelp_dir);
 
-	if ((afp = fopen(fname, "w")) == NULL) {
+	if ((fd[1] = open(fname, g_open_flags[1], g_open_modes)) < 0) {
+		warn("%s: open: %s", __func__, fname);
+		goto clean_up;
+	} else if ((afp = fdopen(fd[1], "w")) == NULL) {
 		warn("%s: could not write admin_commands help file (%s)",
 		    __func__, fname);
-		fclose(fp);
-		return;
+		close(fd[1]);
+		goto clean_up;
 	}
 
 	while (command_list[i].comm_name) {
@@ -1330,8 +1339,11 @@ commands_init(void)
 		i++;
 	}
 
-	fclose(fp);
-	fclose(afp);
+  clean_up:
+	if (fp)
+		fclose(fp);
+	if (afp)
+		fclose(afp);
 }
 
 /* Need to save rated games */
