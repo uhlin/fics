@@ -37,6 +37,8 @@
    Markus Uhlin                 25/03/11	Fixed memleak
    Markus Uhlin                 25/03/16	Fixed use of 32-bit 'time_t'
    Markus Uhlin                 25/07/28	Usage of 'int64_t'
+   Markus Uhlin                 25/08/23	Fixed file created without
+						restricting permissions.
 */
 
 #include "stdinclude.h"
