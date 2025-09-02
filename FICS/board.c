@@ -26,6 +26,8 @@
 						from 'maxxes-utils.h'.
    Markus Uhlin                 24/06/01	Added and made use of brand().
    Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
+   Markus Uhlin                 25/09/02	wild_update: fixed file created
+						without restricting permissions.
 */
 
 #include "stdinclude.h"
