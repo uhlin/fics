@@ -35,6 +35,7 @@
 #include <limits.h>
 
 #include "board.h"
+#include "ficsmain.h"
 #include "gamedb.h"
 #include "maxxes-utils.h"
 #include "playerdb.h"
