@@ -1322,12 +1322,17 @@ wild_update(int style)
 	{
 		FILE	*fp;
 		char	 fname[MAX_FILENAME_SIZE + 1];
+		int	 fd;
 		int	 onPiece;
 
 		msnprintf(fname, sizeof fname, "%s/wild/%d", board_dir, style);
 
-		if ((fp = fopen(fname, "w")) == NULL) {
+		if ((fd = open(fname, g_open_flags[1], g_open_modes)) < 0) {
 			warn("%s: can't write file name: %s", __func__, fname);
+			return;
+		} else if ((fp = fdopen(fd, "w")) == NULL) {
+			warn("%s: can't write file name: %s", __func__, fname);
+			close(fd);
 			return;
 		}
 
