@@ -1,0 +1,20 @@
+
+index for SIMUL items
+
+These commands (and help files on commands) concern simultaneous chess
+matches:
+
+  accept         simabort            simgames          simpass
+  decline        simadjourn          simmatch          simprev
+  goboard        simallabort         simnext
+  gonum          simalladjourn       simopen
+
+Other, informative files (not commands) that are relevant:
+
+  simuls
+
+Type "help TOPIC" in order to read them.
+
+
+[Last modified: July 10, 1995 by Friar]
+

@@ -1,0 +1,15 @@
+
+inchannel
+ 
+Usage: inchannel name
+
+  This command will list the channels for user 'name' so you can determine
+which channels he/she is receiving (namely tells to channels).  A user's name
+(handle) must be given.  Channels with specific purposes for the server are
+listed in the "channel_list" help file.  To add a channel to your channel
+list, type "+chan #".  More information is in the "channel" help file.
+
+See Also:  channel  channel_list  handle  lists  tell
+
+[Last modified: December 17, 1995 -- Friar]
+

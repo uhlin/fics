@@ -1,0 +1,28 @@
+
+mailmess 
+LIMITED TO REGISTERED USERS
+
+  There are two ways to have your messages mailed to you: (a) all messages
+currently stored for you sent as a group, and (b) automatically each time a
+message arrives.  The first method uses a command; the second method uses a
+variable setting.  REMINDER: only registered users can have stored messages.
+
+
+STORED MESSAGES
+
+  Use the "mailmess" command to send to you at your e-mail address the
+messages currently being stored for you.  In this way you can archive the
+messages on your own computer and then clear the message buffer on the chess
+server.  A reduced message buffer makes new messages easier to identify and
+read.  (You may want to clear unwanted messages first, then mailmes.)
+
+
+AUTOMATICALLY ONE-AT-A-TIME
+
+  When the "mailmess" variable is set to 1, each message you receive from a
+user will be automatically e-mailed to you at your email address.
+
+See Also:  clearmessages  messages  register  set  variables
+
+[Last modified:  October 8, 1995 -- Friar]
+

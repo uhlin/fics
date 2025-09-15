@@ -1,0 +1,4 @@
+Command:  tell
+Purpose:  send a message to an individual user
+Usage:    tell user message
+Examples: tell mann How do I set up xboard?

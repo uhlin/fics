@@ -1,0 +1,4 @@
+Command:  inchannel
+Purpose:  lists users currently open on the given channel(s)
+Usage:    inchannel [0-255]
+Examples: inchannel; inchannel 1

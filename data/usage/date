@@ -1,0 +1,4 @@
+Command:  date
+Purpose:  list local date/time at the server and at Greenwich, England
+Usage:    date
+Examples: date

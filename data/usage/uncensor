@@ -1,0 +1,4 @@
+Command:  uncensor
+Purpose:  remove a user (or all users) from your censor list
+Usage:    uncensor [user]
+Examples: uncensor; uncensor mann

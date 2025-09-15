@@ -1,0 +1,4 @@
+Command:  mailoldmoves  [NOTE: mailstored is a better command to use]
+Purpose:  email to you the moves from a completed game
+Usage:    mailoldmoves [user]
+Examples: mailoldmoves; mailoldmoves loon

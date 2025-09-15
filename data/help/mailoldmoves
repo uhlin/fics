@@ -1,0 +1,23 @@
+
+mailoldmoves 
+LIMITED TO REGISTERED USERS
+
+SPECIAL NOTE: This command has been superceded by an enhanced "mailstored"
+command.  Please refer to that help file.
+
+Usage: mailoldmoves [user]
+
+  Mails to you at to your email address the moves of the last game played
+by "user" or, if "user" is omitted, of yourself.  Here are the two cases:
+
+  mailoldmoves       --  mails the moves of the game you last played
+  mailoldmoves User  --  mails the moves of the game last played by User 
+
+NOTE: At present, both players of the game in question must be logged on in
+order for the stored game to be access and mailed to you.  We hope to expand
+the mail feature in the future.
+
+See Also:  mailstored  smoves
+
+[Last modified: October 8, 1995 -- Friar]
+

@@ -1,0 +1,43 @@
+
+register
+           
+           *** El registro por email ha sido automatizado! ***
+
+Para obtener una cuenta registrada, envie un mensaje a esta direccion:
+
+  chess@caissa.onenet.net
+
+... y utilice como asunto ("Subject"): "Fics Registration"
+
+Incluya una linea como la siguiente como texto de su mensaje (por favor, 
+realice las sustituciones apropiadas como indican los marcadores <>):
+
+  fics_addplayer <seudonimo> "<Nombre Completo>" <edir.> <human|computer>
+
+(donde "edir" es su direccion electronica).
+Aqui hay un ejemplo que registraria a Sparky con su nombre y direccion
+electronica correctas:
+ 
+  Ej:   fics_addplayer Sparky "Chris L. Petroff" chris@onenet.net
+  o:    fics_addplayer Sparky "Chris L. Petroff" chris@onenet.net human
+
+
+NOTAS:
+
+(1)  El nombre completo TIENE que estar entre comillas (").
+
+(2)  Si se trata de una cuenta personal, no es necesario especificar 'human'.
+     Sin embargo, ES OBLIGATORIO usar 'computer' si se esta registrando un
+     computador en FICS (ver el archivo de ayuda "computers").
+
+(3)  NO incluya los marcadores <> en su texto. Arriba se utilizaron solo para
+     indicar donde debe colocar informacion.
+
+(4)  Por favor diganos si usted es un FM (Fide Master), IM (International
+     Master) o un GM (Grand Master).
+
+Vea tambien:       computers
+
+[Ultima modificacion: junio 23, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

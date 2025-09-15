@@ -1,0 +1,6 @@
+-1 means no players but admin gods can edit, all may view it.
+0 means no players but admins can access it
+1 means only read by non-admins
+2 means that everyone can see/write to the list
+ 
+Written by Hawk :)

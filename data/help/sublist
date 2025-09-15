@@ -1,0 +1,16 @@
+
+sublist
+
+Usage: sublist list information
+
+  Removes information from the list in question.  There are several kinds of
+lists on the server.  Some can only be modified by admins; others can be
+modified by all users.  "Addlist" command adds information to a list.
+
+  The standard alias for "sublist" is "-".  For example, "sublist notify
+Stravinsky" could be typed as "-notify Stravinsky" instead.
+  
+See Also:  addlist  admins  alias  showlists
+
+[Last modified: November 26, 1995 -- Friar]
+

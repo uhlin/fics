@@ -1,0 +1,46 @@
+
+These lists explain how commands are organized by index entries.
+
+analysis commands:
+  allobservers, backward, examine, flip, forward, mexamine, observe,
+  refresh, revert, unexamine, unobserve.
+
+game_info commands:
+  allobservers, eco, games, mailmoves, mailoldmoves, mailstored,
+  moves, observe, oldmoves, smoves, sposition, stored, unobserve.
+
+help commands:
+  help, index, info, mailhelp, news, quit.
+
+mail commands:
+  mailhelp, mailmess, mailmoves, mailoldmoves, mailsource, mailstored.
+
+play commands:
+  abort, accept, adjourn, assess, boards, decline, draw, flag, flip,
+  match, moretime, open, pause, pending, promote, refresh, resign,
+  switch, takeback, time, unpause, withdraw.
+
+preferences commands:
+  addlist, alias, bell, formula, highlight, notify, password, set,
+  style, sublist, unalias, unnotify, variables.
+
+server_info commands:
+  boards, date, help, index, limits, llogons, mailhelp, mailsource,
+  news, next, servers, showlist, statistics, uptime.
+
+simul commands:
+  accept, decline, goboard, gonum, simabort, simadjourn, simallabort,
+  simalladjourn, simgames, simmatch, simnext, simopen, simpass,
+  simprev.
+
+talk commands:
+  censor, channel, clearmessages, cshout, inchannel, it, kibitz,
+  mailmess, messages, say, shout, tell, uncensor, whisper, xtell.
+
+user_info commands:
+  best, finger, handles, hbest, history, hrank, logons, mailstored,
+  rank, stored, who, znotify.
+
+Type "help TOPIC" in order to read a specific help file.
+
+[Last modified: August 17, 1995 by hersco]

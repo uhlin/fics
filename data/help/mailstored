@@ -1,0 +1,23 @@
+
+mailstored
+
+Usage: mailstored player1 {#, player2, journal_slot}
+LIMITED TO REGISTERED USERS
+
+  Mails to you at your email address the moves of player1's game, either game
+# from player1's "history" table, the "stored" (adjourned) game between
+player1 and player2, or the game from the user's journal.
+
+  Examples:
+
+    mailstored Hawk 65
+    mailstored Hawk DAV
+    mailstored Hawk K
+
+  Other useful commands:  "examine" helps you review the game; "smoves"
+displays the moves; "sposition" displays current game position.
+
+See Also:  examine  history  journal  smoves  sposition  stored
+
+[Last modified: December 17, 1995 -- Friar]
+

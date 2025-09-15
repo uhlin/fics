@@ -1,0 +1,4 @@
+Command:  mailsource
+Purpose:  email to you a sourcecode file -OR- list sourcecode files
+Usage:    mailsource [filename]
+Examples: mailsource formula.c

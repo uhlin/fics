@@ -1,0 +1,70 @@
+Index to lists and their priorities
+
+-2 set by head admin only (Not yet implemented)
+-1 set by admin gods only (V1.2.4 onward)
+0 read/write admins only
+1 write admins  - read by all
+2 read/write by all (Not used at present)
+
+lists are used for:
+
+ abuser  list of game abusers - will lose on disconnnection (V1.2.2)
+
+ admin   list of all admins - NB (V1.2.3 and below use asetadmin to add
+them)
+           +admin gives level 10 administrator - use asetadmin to increase)
+           (V1.2.4 the priveledge of the lists should be -1)
+           (Future versions should be -2)
+
+ ban     list of banned people (V1.2.4)
+
+ blind   list of people registered playing blind (style 9)
+
+ cmuzzle list of people not allowed to use cshout (V1.2.3)
+
+ computer list of computer opponents (V1.2.2)
+
+ filter list of filtered ip addresses which unregs can't log in from (V1.2.7)
+         1> eg +filter 128  does filter 128.*.*.*     where * is don't care. 
+         2> eg +filter 128.127 does filter 128.127.*.*
+         3> eg +filter 128.127.126 does filter 128.127.126.*
+         4> eg +filter 128.127.126.125 does filter 128.127.126.125
+
+           NB Never use example 1!
+              Example 2 will probably filter a whole university
+              Example 3 will filter a network
+              Example 4 will filter a machine
+
+ fm     list of FM opponents (V1.2.2)
+ gm     list of GM opponents (V1.2.2)
+ im     list of IM opponents (V1.2.2)
+
+ muzzle    list of muzzled people (use muzzle command below V1.2.3)
+            NB muzzle doesn't revoke cshout priveledges
+
+ quota     list of people who will get severe shout quotas (V1.2.5)
+             NB The quota command can change the shout limit.
+
+ removedcom    list of commands that can't be used due to bugs (V1.2.12)
+                 NB priveledge should be -1
+
+ td    list of tournament directors (V1.2.4)
+
+ teams   list of all teams and club accounts
+
+Lists are added in the index file the format is: 
+    <Name of list> <priveledge>
+
+Only one entry should appear per line.
+
+FICS commands:
+
+ +listname [name]    adds someone to a list
+ -listname [name]    removes someone from a list
+ =listname [name]    shows list
+ =                   list an index to the lists
+
+ note + is short for addlist    - short for sublist   and = short for showlist
+
+[Written by DAV 06/11/95]
+

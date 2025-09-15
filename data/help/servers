@@ -1,0 +1,15 @@
+
+servers
+
+Usage: servers
+
+  Lists all servers that are connected to and thus share ratings with the main
+ratings server.
+
+  Until this server is connected to other servers, a better way to locate
+other chess servers is by typing "help addresses".
+
+See Also: addresses
+
+[Last modified: October 16, 1995 -- Friar]
+

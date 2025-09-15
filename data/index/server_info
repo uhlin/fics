@@ -1,0 +1,20 @@
+
+index for SERVER_INFO items
+
+These commands (and help files on commands) concern information about this
+server:
+
+  boards        index          mailhelp         next         statistics
+  date          limits         mailsource       servers      uptime
+  help          llogons        news             showlist
+
+Other, informative files (not commands) that are relevant:
+
+  addresses       admins        intro_general    motd_help     totals
+  adm_info        credit        limits           newstuff
+  adm_new         interfaces    motd             sourcecode
+
+Type "help TOPIC" in order to read them.
+
+[Last modified: September 9, 1995 by Friar]
+

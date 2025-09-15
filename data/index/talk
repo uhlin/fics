@@ -1,0 +1,19 @@
+
+index for TALK items
+
+These commands (and help files on commands) concern communications on this
+server:
+
+  censor            inchannel          messages          tell
+  channel           it                 ptell             whisper
+  clearmessages     kibitz             say               xtell
+  cshout            mailmess           shout
+
+Other, informative files (not commands) that are relevant:
+
+  etiquette      limits        shout_abuse     shout_quota     intro_talking
+ 
+Type "help TOPIC" in order to read them.
+
+[Last modified: December 25, 1995 by Friar]
+

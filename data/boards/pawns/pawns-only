@@ -1,0 +1,5 @@
+# Game with pawns only...
+# Whichever color is listed first is on move
+W: P a2 b2 c2 d2 e2 f2 g2 h2 K e1
+B: P a7 b7 c7 d7 e7 f7 g7 h7 K e8
+

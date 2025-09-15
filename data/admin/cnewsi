@@ -1,0 +1,18 @@
+
+cnewsi
+
+Usage: cnewsi message
+RESTRICTED TO ADMINISTRATORS.
+
+  This command adds a new item to the news index.  The message is limited to
+45 characters for formating purposes.  In essence, the news index works like a
+newspaper headline, giving the user enough information to know whether they
+should read the entire news file for that item.  After creating the news item,
+the command reports the news item number along with a reminder to create a
+news file if necessary.  This command replaced the 'createnews' command.
+
+See ahelp:  cnewsf
+See help:   news
+
+[Last modified: August 20, 1995 -- Friar]
+

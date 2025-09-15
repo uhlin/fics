@@ -1,0 +1,5 @@
+*.o
+fics
+fics_addplayer
+include/ficspaths.h
+makerank

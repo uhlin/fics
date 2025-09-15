@@ -1,0 +1,126 @@
+bughouse
+
+  Bughouse (or siamese chess) is a "wild" variant of chess played between two
+player teams on two separate boards.  The special feature of the game is that
+pieces you capture are transferred to your partner, who is playing with the
+opposite color pieces from yourself.  He may "drop" such a piece on an empty
+square as a subsequent move in his game.
+
+
+STARTING A BUGHOUSE MATCH
+
+  First, use the "partner" command to select a partner.  Next, find an
+opponent team.  You may use the Team channel for this purpose (channel 25),
+and the command "who B" lists players who are members of a current bughouse
+team.
+
+  Then, one of your team challenges his desired opponent on the other team to
+a "wild bughouse" match.  (A useful alias for this is "alias bug match @ 2 12
+bughouse" where "bug user_name" is all you would need to type in order to
+match user_name to a bughouse game.)
+
+  When the match is accepted and all four players are present, then two games
+are initiated simultaneously: one between the challenger and the challengee
+with the desired colors, and one between the other partners, with colors
+opposite from their partners.  The same time control applies to both boards,
+though "moretime" can be used independently on each board.  Each player is
+notified of the game number of their partner's game, so he may observe it as
+well as playing in his own game.
+
+  To help you form bughouse partnerships and bughouse matches, two channels
+have been established: channels 24 and 25.  Channel 24 is for matches and
+channel 25 is for partnerships.
+
+
+PLAYING BUGHOUSE
+
+  As you play, you will be periodically notified when your partner passes you
+captured pieces.  You will be told the piece that was passed, and the set of
+pieces that you are currently holding.  You are also notified when your
+opponent's holdings change.  Both player's holdings are displayed whenever
+your board position is refreshed.
+
+  A new move notation is needed to drop one of your held pieces onto the
+board.  The notation for making a drop is "P@fr", where P is a piece you are
+holding [PNBRQ] and "fr" is the empty destination square.
+
+  You may talk to your partner.  It is recommended to set up convenient
+aliases for common messages, such as "I need a knight!!", "Don't give him a
+bishop!", and "Are you out of your mind?!".  The "ptell" command is used for
+this purpose; only your partner will hear it.
+
+  The match is finished when one player is checkmated, resigns, or is flagged. 
+At that point the wild ratings of *all* match players are adjusted, whether or
+not the team result was because of their game.  A draw request should be made
+and accepted at *both* boards before the match is ended as a draw [a near
+impossibility].
+
+  Note that checkmate is defined differently:  there must be no *possibility*
+of avoiding checkmate by a drop interposition.  Even if your opponent is
+holding no pieces that he can drop, he may later get a piece to interpose from
+his partner.  Thus, only contact and knight checks can give a "decisive"
+checkmate.
+
+
+RESTRICTIONS
+
+  Pawns cannot be dropped onto your first or eighth rank, although they may be
+dropped onto the seventh rank and promoted on the next move.
+
+  Pieces that had been promoted revert to pawns when captured and passed to
+your partner.
+
+  Your partner variable is not saved between logins.  You should set it prior
+to starting your first bughouse match in a server session and when you want to
+change partners.
+
+  Observers should observe both games to see the full match.  Kibitzes and
+whispers, however, go to observers (and players) of *both* games.  Observers
+will also be notified of pieces transferred to each player's reserves.  (Note
+that kibitz can be used as a shortcut to tell your partner something if you
+don't mind your opponents hearing it.  It also makes the game more exciting
+for the observers.)
+
+  Strength assessment takes held pieces into account.
+
+  This mode of play may break client interfaces.  Contact the author of your
+client to determine if you can play bughouse with it.  If a client relies on
+the board position rather than moves, things should work OK.  No new styles
+have been added to support bughouse.
+
+  Because this is such a nonstandard type of play, there are a number of
+commands that are not applicable to a bughouse game:
+
+  1. The move record is not saved.  Adjournments and disconnections end both
+games and the match cannot be resumed.  (This leaves a lot of room for abuse,
+but hey, bughouse is just for fun, guys!)  Disabled commands are: adjourn,
+sposition, mailstored, examine, mexamine, unexamine, backward, forward,
+revert.
+
+  2. Simul commands cannot be used for bughouse games.  [FDA regulation to
+avoid frying the brains of the participants.  :)  ]
+
+  3. Takeback is disabled (for now).  At best, takeback would work only on non-
+
+capture moves (including drops) to avoid having to take held pieces away from
+the other game.
+
+  4. Switch is disabled (for now).
+
+  5. Moves, oldmoves, mailmoves and mailoldmoves do work during a game, but
+they now break the PGN format, which doesn't allow drops.  Moves are shown as
+"P/@@-fr" and "P@fr" in the old and PGN formats.  Only moves and drops are
+recorded, not changes to a player's holdings.  Theoretically, knowing the
+duration of each move in both games allows you to reconstruct the holdings as
+well. (But who'd want to analyze or store a bughouse game??)
+
+  6. Except for commands which terminate a game, commands affect only one of
+the two games in a bughouse match.
+
+  For notes on strategy in bughouse chess, see the "bughouse_strat" help file.
+
+
+See Also:  bughouse_strat  match  partner  ptell  set  variables  wild
+
+[Last Modified: December 17, 1995 -- Friar]
+

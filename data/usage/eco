@@ -1,0 +1,4 @@
+Command:  eco
+Purpose:  display the type of opening used in the chess game
+Usage:    eco [game, name]
+Examples: eco; eco 23; eco Clovis

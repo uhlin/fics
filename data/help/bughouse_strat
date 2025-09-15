@@ -1,0 +1,214 @@
+
+BUGHOUSE STRATEGY
+
+  Bughouse games are extremely dynamic.  The position never simplifies since
+captured pieces are constantly being recycled.  Draws are unheard of.  Many of
+the strategies used in the japanese form of chess, shogi, apply:
+
+  1. King safety is paramount, so don't leave weak squares next to your king. 
+This applies in particular to KB2.  Diagonal weaknesses are prey to dropped
+pieces.
+
+  2. Contact checks and knight checks are best, so your opponent cannot drop a
+piece to interpose.  This makes the knight a very powerful piece, often worth
+more than a rook.
+
+  3. Drop pawns near the back rank, so they can promote quickly.  Pawns are
+quite useful for dropping in, to attack and to defend.  It is illegal,
+however, to drop pawns directly on the first or last rank.
+
+  4. Always keep some pieces held in reserve, rather than dropping them in for
+no reason.  "A knight in the hand is worth two on the board."
+
+  5. Be on the lookout for sacrifices to create weakness.  The game ending
+combination often starts with a blitz of sacrifice drops to lure the king out
+of hiding, and ends with a mating net.
+
+Bughouse chess is known by many names and has many of its own "special" terms
+and strategies, just as regular chess does.  Before attempting to play
+bughouse, you should attempt to learn a fair bit of both.  Just like real
+chess, it is better to learn through study than by experience!
+
+Terminology
+-----------
+
+Please note that some of this may not be especially common in real life, but
+is used quite often here on FICS.
+
+Inject: Placing pieces into your opponents position on squares that cause him
+or her untold discomfort; used as "You got injected!"
+
+Noodle/Spoon: Traditional FICS bughouse battle cries; one partner shouts
+"spooooon!!" and his partner replies "nooooooooodle"
+
+Themed: Placing two pawns side by side on the seventh rank and promoting them;
+used as "I themed you!"
+
+Rock: Used to express confidence in the defensive resources of your position;
+used as "I'm rock here"
+
+Parachute, DoubleBlitz, Doublespeed, Siamese, Chok, Tjak, Choke chess: all
+synonyms for bughouse chess in various parts of the world.
+
+Annoy: attempting to bother your opponent by projected a painful stream of
+babble across his or her screen; as in "I'm being annoyified!"
+
+The above should at least ensure that you aren't completely confused when you
+start bughouse and your opponents start kibitzing at you.  Now we move on to
+general strategy, followed by opening theory.
+
+Advanced Strategy
+-----------------
+
+  The above tips will get you started.  Here are some advanced tips on
+bughouse strategy.
+
+Holes:
+
+  AVOID leaving any holes in your position. In real chess, it may take a while
+for your opponent to maneuver a good piece to occupy a hole.  In bughouse, any
+hole can be occupied immediately.  This rule basically makes fianchettoing out
+of the question for either side, as fianchettos can be easily occupied with
+pawns.  For example after 1.e4 g6 2.d4 Nf6 white can place a pawn on h6
+already, followed by another on g7 and then white can start shouting "Inject!"
+  The main difference regarding holes in bughouse is that you also have to
+avoid leaving holes on your SECOND rank.  The main effect of this is to
+eliminate the Sicilian and Queens Gambit from bughouse, as both openings leave
+holes on the c-file.  For example, after 1.e4 c5 2. Nc3 Nc6 3. Nb5 a6 white
+can place a pawn on c7 and win blacks queen already!  This applies to the f-
+file as well. A sample game once went 1.d4 Nf6 2.Bg5 Ne4 3.h4 d5 4.f3?? and
+black placed a pawn on f2 with mate!
+  Reinfeld said it best: in bughouse, never move any pawns except the e and d
+pawns.  (Well, maybe he didn't say it about bughouse!)
+
+Initiative:
+
+  This is the key concept of bughouse. A common saying is "As long as he's in
+check, I'm winning".  Often, new bughouse players are lured by the prospect of
+winning material instead of continuing attack.  While this may help your
+partner in the short run, you and your partner will both be more comfortable
+if you are attacking.  The best way to attack is through checks that have to
+be met with a King move.  To accomplish this, checks should either be done
+with knights (which cant be blocked) or with "contact" checks (placing a piece
+within one square of the king).
+  Once attacking, communication with your partner becomes crucial.  You must
+tell him which pieces you need to finish your opponent off, and often, it is a
+good idea to warn your partner that you are about to begin sacrificing pieces
+to ensure that he is not under attack first.  On occasion, your attack leads
+to your partner getting mated!
+
+Teamwork:
+
+  This is one you dont see in real chess.  However in bughouse, without
+teamwork you will be cooked. Use the FICS command "ptell" to tell your partner
+details of your position.  Even if you have nothing specific to say, letting
+your partner know if you are rock or injected can help him or her make
+decisions about what to do.  Clock information is also quite good to tell your
+partner.  This is as a result of another key bughouse technique: the stall.
+
+The Stall:
+
+  In bughouse, you often need a certain piece to mate with.  It is perfectly
+acceptable to wait and hope your partner gets it to you.  However, stalling
+occurs more commonly when you are being mated by force.  You realize that if
+you move, you are mated in one.  Therefore, you simply decide not to move and
+let your partner try to win the game.  Naturally, for this to work, you must
+have more time than your partner's opponent, or he will also refuse to move
+and you will flag first.
+  Another element of stalling is if you know your opponent needs a certain
+piece to mate you, and your partner tells you that it will come to your
+opponent next move.  It is good strategy to tell your partner not to move
+until your opponent moves, so that your opponent will be forced to move
+without that piece.  Again, unless your partner has more time than your
+opponent, this will not work, as your partner will flag.
+  Please note that there is currently a bug in timeseal that affects bughouse:
+you cannot flag someone with timeseal until they move, so theoretically, they
+can stall forever and not be flagged.  "Sealsitting" is unethical and
+frustrating.  If you have timeseal and are trying to stall, once you are out
+of time, the accepted practice is to move or resign.  Not doing so will cause
+a great deal of ill will.  However, it is not currently considered abuse.
+
+Piece Values:
+
+  Most serious chess players are familiar with the Piece Value Table: Q=9,
+R=5, B and N=3, P=1. In bughouse however, the values are completely different.
+While there is no general consensus on bughouse values, here is an
+approximation.
+
+     Q=10, N=7, R=4, B=2, P=1
+
+The knight and queen rule the bughouse chessboard.  The queen often can be
+placed into a position with mate.  The knight is useful as well because it can
+check from a distance and not be blocked.  Many bughouse mating attacks begin
+with a sacrifice on KB7 followed by a knight check.  For example, after 1.e4
+e5 2.d4 exd4 3.Nf3 Nc6 4.Bc4 Bc5 5.Bxf7+ Kxf7 6.Ng5+ all white needs is a
+queen for f7 and black will get mated.  The bishops value is seriously
+diminished, as it often performs no better than a pawn, and sometimes not even
+as well. The pawns promotion abilities may in some positions be worth
+significantly more than a bishop.
+
+White/Black:
+
+  The general strategy of bughouse is for the partner with white to go for
+mate, and the partner with black to try to hold it together.  Black attempts
+to exchange pieces to reduce his opponents attack, while strengthening his
+partner's.  White therefore, attempts to keep pieces on the board to ensure
+attacking chances. Often in bughouse, space advantages built on pawns can
+reach epic proportions for white, so black would rather have fewer pieces to
+try and rearrange in the face of oncoming pawns.
+
+These rules are obviously meant to be general.  However, understanding and
+utilizing them will help you play much better bughouse chess!
+
+Opening Theory:
+
+  Yes, sadly bughouse has some opening theory. However, most of it is very 
+short, as new pieces appearing on the board begin to mess up opening 
+plans! Mainly, there are two or three defenses black can try, and white 
+generally attacks in one or two ways in response.
+
+  White -- White generally positions his pieces to attack the kingside, and 
+especially the square f7. This may involve Bc4, Ng5, Ne5 or any similar
+methods.  A common development scheme used is e4, d4, Bc4, Be3, Nf3, Nbd2,
+Qe2, known by some as the "Mongolian Attack".  Please notice that white does
+not castle in this line.  In fact, castling is generally bad in bughouse. It
+restrains your king to one side of the board, thus restricting it's ability to
+escape from enemy pieces.  This rule also applies to black.  White may also
+play for massive central pawn advances, attempting black to either open the
+position so that white can attack, or force black to lock the pawn chain in
+the center so that white can build a long pawn chain into the center and into
+blacks position.  This would work best against a fianchetto. For example, 1.e4
+g6 2.d4 Bg7 3.e5 and white attempts to place pawns on f6, g7 and inject black
+badly.
+
+  Black -- I have seen several defenses for black.  I will list them by the 
+names I have seen them referred to on FICS, although serious bughouse 
+players may know them by other names in real life.
+
+  Federkevic defense: 1.e4 e6 2.d4 b6 -- Black attempts to keep his pieces out
+of the center, where they may be rolled back by white pawns.  He also leaves
+the dpawn on d7, where it may support e6, preventing sacrifices.  The drawback
+is that black may get injected along the queenside light squares.
+
+  Barbeau Counter Attack: 1.e4 e6 2.d4 Qh4 -- Black pressures e4 and attempts
+to force white to adopt an awkward development to protect the e4 pawn.  For
+example, after 2.Nc3, 2...Bb4! exchanges a bishop for a knight.  The drawback
+is that white often munches blacks queen in the opening.
+
+  Fortress Defense: 1.e4 e6 2.d4 d6 - Black attempts to simply huddle in the
+center behind a wall of pieces and pawns.  By far the most common bughouse
+opening.  The drawback is that black will be cramped, but black is always
+cramped in bughouse, so this is probably your best bet!
+
+Conclusion
+----------
+
+  Bughouse is much more informal than regular chess and all four players
+generally kibitz about both games while they are on.  Oftentimes, observers
+watch and kibitz along with the games.  However, come into channel 24 and see
+for yourself.  A good way to see some of the principles above put into action
+is to ask in channel 24 if anyone is playing, and then watch their games. 
+Only then will you get a sense of what fun bughouse is! Happy bugging!
+
+[Strategy written by IanO; Advanced strategy written by dogdog; editted by
+Friar -- December 17, 1995]

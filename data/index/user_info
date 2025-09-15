@@ -1,0 +1,21 @@
+
+index for USER_INFO items
+
+These commands (and help files on commands) concern information about
+individual users on this server:
+
+   best              finger            hrank            rank
+   convert_bcf       handles           jsave            stored
+   convert_elo       hbest             logons           who
+   convert_uscf      history           mailstored       znotify
+
+Other, informative files (not commands) that are relevant:
+
+   formula           handles          ratings
+   journal           notes            register
+
+
+Type "help TOPIC" in order to read them.
+
+[Last modified: December 25, 1995 by Friar]
+

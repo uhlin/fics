@@ -1,0 +1,4 @@
+Command:  abort
+Purpose:  to request an adjournment -OR- end game if opponent has no time
+Usage:    abort
+Examples: abort

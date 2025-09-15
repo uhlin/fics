@@ -1,0 +1,22 @@
+
+clearmessages
+
+Usage: clearmessages [user,#]
+
+  Clears any message(s) previously messaged to you.  You can clear all
+messages from a user, clear a single message by its number, or clear all
+messages.  Examples:
+
+  (i)   clearmessages Bach  ---  will clear all messages from user Bach
+
+  (ii)  clear 11            ---  will clear message # 11
+
+  (iii) clear               ---  will clear all messages
+
+NOTE: If you clear one or more messages, the messages will be renumbered, so
+becareful using "clear #" consecutively.
+
+See Also:  messages
+
+[Last modified: December 17, 1995 -- Friar]
+

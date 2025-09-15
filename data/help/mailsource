@@ -1,0 +1,15 @@
+
+mailsource
+
+Usage: mailsource [filename]
+LIMITED TO REGISTERED USERS
+
+  Mails a specified sourcecode file to your e-mail address.  If no filename is
+specified, a list of available filenames is given.  This command can only be
+used by registered users.  For ftp information, see the "sourcecode" help
+file.
+
+See Also:  register  sourcecode
+
+[Last modified: November 6, 1995 -- Friar]
+

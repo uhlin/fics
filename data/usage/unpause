@@ -1,0 +1,4 @@
+Command:  unpause
+Purpose:  restarts the clocks for a game that had been paused
+Usage:    unpause
+Examples: unpause

@@ -1,0 +1,20 @@
+
+index for PREFERENCES items
+
+These commands (and help files on commands) concern settings that can be
+modified by users to set up the environment they prefer:
+
+  addlist      gnotify            password         sublist
+  alias        highlight          private          unalias
+  bell         kiblevel           set              variables
+  formula      notify             style
+
+Other, informative files (not commands) that are relevant:
+
+  intro_settings
+  showlist
+
+Type "help TOPIC" in order to read them.
+
+[Last modified: October 17, 1995 by Friar]
+

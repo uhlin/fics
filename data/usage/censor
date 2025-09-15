@@ -1,0 +1,4 @@
+Command:  censor
+Purpose:  filter comments from a user so you will not receive them
+Usage:    censor [user]
+Examples: censor; censor Friar

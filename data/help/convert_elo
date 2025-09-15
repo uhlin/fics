@@ -1,0 +1,22 @@
+
+convert_elo
+
+Usage: convert_elo #
+
+  This command will convert a ELO rating into BCF and USCF ratings.  All three
+values will be displayed to you.  The conversion formulas are:
+    USCF = ELO + 100
+    BCF = (ELO - 600)/8
+
+  BCF ratings are the official ratings of the British Chess Federation.  USCF
+ratings are the official ratings of the United States Chess Federation.  ELO
+ratings often used in international competition.
+
+  Server ratings are, of course, something entirely different.  There is no
+exact way at present to convert server ratings into equivalent official
+ratings.  For server rating information, see "rating" and "glicko".
+
+See Also:  convert_bcf  convert_uscf  glicko  rating
+
+[Last modified: October 22, 1995 -- Friar]
+

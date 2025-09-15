@@ -1,0 +1,16 @@
+
+cnewsf
+
+Usage: cnewsf # message
+RESTRICTED TO ADMINISTRATORS.
+
+   This command allows you to add additional information about a news item
+that had previously been created using 'cnewsi'.  The '#' is the number of the
+news index and 'message' is the additional text.  You can also modify a
+previous news item description and thus update the news item easily.
+
+See ahelp:  cnewsi
+See help:   news
+
+[Last modified: August 20, 1995 -- Friar]
+

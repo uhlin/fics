@@ -1,0 +1,4 @@
+Command:  channel
+Purpose:  toggles a channel on/off (1/0) -OR- turns all channels off
+Usage:    channel [0-255]
+Examples: channel 1; channel

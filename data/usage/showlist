@@ -1,0 +1,4 @@
+Command:  showlist
+Purpose:  display users who are on special lists
+Usage:    showlist [list_name]
+Examples: showlist computers; showlist admins

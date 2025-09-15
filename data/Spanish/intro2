@@ -1,0 +1,71 @@
+
+intro2
+
+COMUNICACION
+
+
+Las comunicaciones entre usuarios son  de dos tipos:  (a) mensajes,  y (b)
+peticiones.  Los  mensajes  involucran  basicamente  conversaciones  entre 
+usuarios;  el servidor simplemente transmite los mensajes.  Las peticiones
+son diferentes por cuanto  involucran el que  el servidor haga algo acerca
+de o durante una partida de ajedrez.
+
+
+MENSAJES
+
+Suponga que  usted quiere  decir  algo  a  uno o mas usuarios.  Hay varios
+comandos que puede usar:
+
+    comando      funcion
+    -------      --------------------------------------------
+    message      Enviar a un usuario un mensaje para ser almacenado, aun
+                 si el usuario no esta conectado en el momento
+    tell         Hablar a un usuario, o a usuarios en un canal
+    xtell        Hablar a un usuario, pero permitir la continuacion de la
+                 conversacion con otro
+    channel      Escuchar los tells enviados a un canal dado
+    say          Hablar al usuario con el que usted esta jugando (o con el
+                 que acaba de jugar una partida)
+    shout        Hablar a todos los usuarios que estan abiertos a los 
+                 gritos (shouts)
+    cshout       Hablar a todos los usuarios que estan abiertos a los 
+                 gritos (shouts); el mensaje debe ser sobre ajedrez
+    it           Una clase especial de grito
+    kibitz       Hablar a todos los jugadores y observadores de un juego
+                 de ajedrez especifico
+    whisper      Hablar a todos los observadores de una partida especifica
+    censor       Evita que los mensajes de un usuario dado lleguen a usted
+
+Lea mas acerca de estos comnados en sus propios archivos de ayuda. Pero en
+general,  "message"  trabaja como una maquina contestadora, "tell" y "say" 
+son como conversaciones normales uno-a-uno,  "shout",  "cshout" e "it" son
+para charlas en grupo y "kibitz" y "whisper" son para comentar una partida
+que se esta observando.  Por favor,  siga las indicaciones de etiqueta del
+servidor de ajedrez cuando utilice estos comandos.
+
+
+PETICIONES
+
+Los  usuarios necesitan  ponerse  de acuerdo sobre las  partidas que van a
+jugar.   Tambien necesitan ponerse  de acuerdo sobre  diversas situaciones 
+durante  el juego de  una partida.  Las  peticiones  sirven  como forma de
+alcanzar  dichos acuerdos,  asi como de realizar  la accion acordada.  Por
+ejemplo, los usuarios necesitan solicitar el inicio de una partida. Cuando
+ha habido acuerdo sobre las condiciones de juego, el servidor comienza una
+partida  entre  esos  dos  usuarios.  Durante  la misma,  un jugador puede
+necesitar aplazarla; si se acuerda el aplazamiento, el servidor detiene el
+juego y  lo graba, de modo que  pueda ser  reiniciado posteriormente.  Lea 
+intro6 para mas informacion sobre partidas de  ajedrez  y otras peticiones
+especiales.
+
+AYUDA UTIL: en ocasiones, muchos mensajes de varios usuarios llegaran a su
+pantalla. Para ayudarle a notar cuando un usuario le ha enviado un mensaje 
+o  solicitud  a  usted  personalmente  (en lugar de a todos los usurios de 
+FICS),  existe una variable llamada highlight que hace dichos mensajes mas
+evidentes (vea highlight).
+
+Vea tambien:       etiquette   intro6   [y los comandos individuales]
+
+[Ultima modificacion: junio 16, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+

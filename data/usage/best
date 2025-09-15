@@ -1,0 +1,4 @@
+Command:  best
+Purpose:  list the 20 highest rated players in the ratings categories
+Usage:    best [b|s|w]
+Examples: best; best s

@@ -1,0 +1,4 @@
+Command:  mailstored
+Purpose:  email to you the moves of a game (either in history or stored)
+Usage:    mailstored player1 {#, player2}
+Examples: mailstored hersco 87; mailstored Len schert

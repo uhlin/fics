@@ -1,0 +1,201 @@
+
+interface
+
+En este  archivo de ayuda aparecen algunos detalles de las diversas inter-
+faces graficas.  A menudo  es dificil jugar  ajedrez  usando los  tableros
+ASCII que genera el servidor.  No son faciles de ver,  y se ven  afectados
+por otra informacion tal como los gritos (shouts).
+
+Las interfaces graficas le  dan un tablero de ajedrez apropiado en el cual
+ver sus piezas, haciendo su ajedrez mas facil de jugar.
+
+Aqui hay un resumen:
+
+==========================================================================
+Interface    Sistema Operativo y Modo   Autor de la    Localizacion
+Grafica      de Conexion Requerido      interface      en ICL
+==========================================================================
+ZIICS     #  DOS, modem                 Zek            pub/chess/DOS
+GIICS        DOS, modem                 LLama          pub/chess/DOS
+Monarc       DOS, modem                 *Kevster       pub/chess/DOS
+JIICS        DOS, VGA, modem, mouse     Peluri         pub/chess/DOS  
+NGIICS       DOS, TCP/IP                LLama          pub/chess/DOS
+Raja         MS Win3, modem             *fischer       pub/chess/Win3
+Gilchess     MS Win3, modem             Bloodrake      pub/chess/Win3
+bludrake     MS Win3, modem             Bloodrake      pub/chess/Win3
+SLICS     #  MS Win3, TCP/IP            dfong          pub/chess/Win3
+Toolkit   ## MS Win3, TCP/IP y/o modem  MaDHaTteR      pub/chess/Win3
+WinBoard     WinNT or W95, TCP/IP y/o   mann           pub/chess/Win3
+             modem  
+PMICS        OS/2, TCP/IP y/o modem     woof           pub/chess/DOS
+XBoard    #  Unix, X11R4, TCP/IP y/o    mann           pub/chess/X
+             modem   
+xics         Unix, X11R3 , TCP/IP       *observer      pub/chess/X
+cics         TCP/IP y C, terminal       *observer      pub/chess/Unix
+             ASCII
+NeXTICS      NeXT, TCP/IP y/o modem     red            pub/chess/NeXT
+MacICS       Mac                        *douglas       pub/chess/Macintosh
+E-ICS        Mac, Modem                 *douglas       pub/chess/Macintosh
+MacICS-TCP   Mac, TCP/IP                eew            pub/chess/Macintosh
+Aics         Amiga                      *fischer       pub/chess/Amiga
+========================================================================== 
+#   Recomendado y popular
+##  Aun no funciona bien en FICS.
+*   No probado en FICS todavia.
+
+NB.  Los handles de los autores pueden referirse a los handles de personas
+en el antiguo Aics. Algunos pueden ser de personas diferentes o no existir
+hoy en dia.  La mayoria de las interfaces  deberian  trabajar;  tanto  los 
+autores como los programadores de FICS les gustaria recibir informacion si
+usted tuviera problemas con alguna de ellas aqui.
+
+Mas adelante usted encontrara un listado que explica que interfaces corren
+en una configuracion en particular y en que directorio pueden encontrarse.
+En algunas hay breves comentarios de  los usuarios o de los autores de las
+interfaces para ayudarlo a elegir.
+
+Si usted tiene preguntas o problemas ulteriores,  por favor contacte  a un
+admin.
+
+
+Instrucciones para Obtener una Interface
+----------------------------------------
+
+Cualquiera de las interfaces graficas mencionadas arriba puede encontrarse
+en el sitio ftp-anonimo  chess.onenet.net  (URL: ftp://chess.onenet.net/).
+La mayoria viene con algunas instrucciones. :-)
+
+Elija una, utilice ftp (help ftp-hints), Netscape o algun software similar
+para acceder a ella por Internet y transfierala a su sistema PC o estacion
+de trabajo local a traves de su metodo preferido (zmodem,  kermit  para la
+mayoria de conexiones telefonicas distintas de tcp/ip), desempaquetela (la 
+mayoria utilizan  software de compresion,  o son auto-extractables), y por 
+ultimo configurela. :-)
+
+
+Comentarios sobre las Interfaces
+--------------------------------
+
+Este listado describe las  interfaces en un detalle ligermante mayor,  con
+algunos comentarios de los usuarios/autores  de las interfaces  que pueden
+servir para ayudarlo a elegir.
+
+Si usted  tiene preguntas o problemas ulteriores,  por favor contacte a un
+admin.
+
+
+PC y compatibles (Usando DOS y modem): pub/chess/DOS 
+----------------------------------------------------
+
+ZIICS por Zek:
+  Una muy popular interfce para el PC.
+
+  ZIICS  requiere una  coneccion normal  por modem y un  adaptador grafico
+  (VGA, EGA, CGA o Hercules). En VGA hay varios estilos de tableros, desde
+  32 pixeles por escaque hasta 56 pixeles por escaque  (casi llena toda la
+  pantalla  verticalmente).   Usted  puede  configurar  los  colores y las 
+  funciones de los botones editando un archivo tipo texto.    
+                                                       [comentario de Zek]
+
+GIICS por LLama:
+
+JIICS por Peluri:
+  Necesitara VGA y un mouse para usar esta interface.
+
+Monarc por Kevster:
+
+
+PC y compatibles (Usando DOS y TCP/IP): pub/chess/DOS
+-----------------------------------------------------
+
+NGIICS por LLama:
+
+
+PC y compatibles (Usando Windows y modem): pub/chess/Win3
+---------------------------------------------------------
+
+Raja (elefante) de fischer:
+
+Gilchess por Azorduldu:
+
+bludrake por Bloodrake:
+
+
+PC y compatibles (Usando Windows y TCP/IP): pub/chess/Win3
+----------------------------------------------------------
+
+SLICS por dfong:
+
+Toolkit por MaDHaTteR:
+  Aun no funciona aqui correctamente, pero deberia hacerlo pronto.
+
+
+PC y compatibles (Usando Windows NT (o 95) y TCP/IP): pub/chess/Win3
+--------------------------------------------------------------------
+
+WinBoard por mann:
+  "finger mann" para obtener los ultimos detalles.
+
+
+PC y compatibles (OS/2 PM ): pub/chess/DOS
+------------------------------------------
+
+PMICS por woof:
+
+
+Unix (Xwindows): pub/chess/X
+----------------------------
+
+XBoard por mann:
+  Ciertamente la mejor de las interfaces UNIX, sigue siendo soportada para
+  trabajar aun mejor en FICS. A los usuarios de maquinas UNIX se les reco-
+  mienda ampliamente conseguir esta interface. Tambien es aconsejable para
+  usarla con GNUchess.
+                                                       [comentario de DAV]
+ 
+  "finger mann" para obtener los ultimos detalles.
+
+xics por observer:
+
+
+Unix (terminal vt100): pub/chess/Unix
+-------------------------------------
+
+cics por observer:
+
+
+NeXT: pub/chess/NeXT
+--------------------
+
+NeXTICS por red:
+
+
+MAC: pub/chess/Macintosh
+------------------------
+
+MacICS por douglas:
+
+
+MAC (Modem): pub/chess/Macintosh
+-------------------------------- 
+
+E-ICS por douglas:
+
+
+MAC (TCP\IP): pub/chess/Macintosh
+---------------------------------
+
+MacTCP por eew:
+
+
+Amiga: pub/chess/Amiga
+----------------------
+
+Aics por fischer:
+  Podria no trabajar con KS2.0 y anteriores.
+
+Vea tambien:       ftp-hints
+
+[Ultima modificacion: junio 16, 1995 -- Friar
+ Version en espanhol: julio  3, 1995 -- Spike]
+
