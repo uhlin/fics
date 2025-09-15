@@ -1,16 +1,16 @@
 /*
- 
-  The timeseal package must NEVER be distributed without  
+
+  The timeseal package must NEVER be distributed without
   permission from Henrik Gram <u940456@daimi.aau.dk>
- 
+
   It's security is based SOLELY on keeping the crypt alg.
-  secret.  
- 
-  Both the timeseal server and client code was written 
-  entirely by Henrik Gram. 
- 
-  Only the FICS sites at chess.onenet.net and *.daimi.aau.dk 
-  are allowed to have it and use it - and NEVER charge for 
-  its use nor for the distribution of the timeseal client. 
- 
+  secret.
+
+  Both the timeseal server and client code was written
+  entirely by Henrik Gram.
+
+  Only the FICS sites at chess.onenet.net and *.daimi.aau.dk
+  are allowed to have it and use it - and NEVER charge for
+  its use nor for the distribution of the timeseal client.
+
 */
