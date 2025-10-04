@@ -258,10 +258,10 @@ com_shutdown(int p, param_list param)
 			    "%s. ****\n", reason);
 		}
 
-		pprintf(p1, "    **** Server going down in %ld minutes and %ld "
+		pprintf(p1, "    **** Server going down in %jd minutes and %jd "
 		    "seconds. ****\n",
-		    (long int)(shutdownTime / 60),
-		    (long int)(shutdownTime % 60));
+		    (intmax_t)(shutdownTime / 60),
+		    (intmax_t)(shutdownTime % 60));
 		if (p != p1)  // fix double prompt - DAV
 			pprintf_prompt(p1, "\n");
 		else
@@ -291,10 +291,10 @@ server_shutdown(int secs, char *why)
 			continue;
 		pprintf(p1, "\n\n    **** Automatic Server shutdown. ****\n");
 		pprintf(p1, "%s\n", why);
-		pprintf_prompt(p1, "    **** Server going down in %ld minutes "
-		    "and %ld seconds. ****\n\n",
-		    (long int)(shutdownTime / 60),
-		    (long int)(shutdownTime - ((shutdownTime / 60) * 60)));
+		pprintf_prompt(p1, "    **** Server going down in %jd minutes "
+		    "and %jd seconds. ****\n\n",
+		    (intmax_t)(shutdownTime / 60),
+		    (intmax_t)(shutdownTime - ((shutdownTime / 60) * 60)));
 	}
 
 	fprintf(stderr, "FICS:    **** Automatic Server shutdown. ****\n");
