@@ -16,6 +16,8 @@ cat <<EOF >${HDRPATH}
 #ifndef _FICSPATHS_H_
 #define _FICSPATHS_H_
 
+#define FICS_PREFIX "${PREFIX}"
+
 #define DEFAULT_ADHELP        "${PREFIX}/data/admin"
 #define DEFAULT_ADJOURNED     "${PREFIX}/games/adjourned"
 #define DEFAULT_BOARDS        "${PREFIX}/data/boards"
