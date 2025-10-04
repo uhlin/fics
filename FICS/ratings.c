@@ -418,10 +418,7 @@ save_ratings(void)
 	snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
 	    STATS_VERSION);
 
-	errno = 0;
-	fd = open(fname, g_open_flags[1], g_open_modes);
-
-	if (fd < 0) {
+	if ((fd = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: can't write ratings data", __func__);
 		return;
 	} else if ((fp = fdopen(fd, "w")) == NULL) {
@@ -1501,10 +1498,8 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 
 	snprintf(TmpRankFile, sizeof TmpRankFile, "%s/tmpRank", sdir);
 
-	errno = 0;
-	fd = open(TmpRankFile, g_open_flags[1], g_open_modes);
-
-	if (fd < 0) {
+	if ((fd = open(TmpRankFile, g_open_flags[OPFL_WRITE],
+	    g_open_modes)) < 0) {
 		warn("%s: open", __func__);
 		fclose(fp);
 		return;

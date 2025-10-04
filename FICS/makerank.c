@@ -315,7 +315,8 @@ makerank(void)
 		snprintf(fName, sizeof fName, "%s/rank.%s", DEFAULT_STATS,
 		    rnames[rtype]);
 
-		if ((fd = open(fName, g_open_flags[1], g_open_modes)) < 0 ||
+		if ((fd = open(fName, g_open_flags[OPFL_WRITE],
+		    g_open_modes)) < 0 ||
 		    (fp = fdopen(fd, "w")) == NULL)
 			err(1, "%s: rank file open error", __func__);
 

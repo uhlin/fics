@@ -1311,7 +1311,7 @@ commands_init(void)
 	fp = afp = NULL;
 	snprintf(fname, sizeof fname, "%s/commands", comhelp_dir);
 
-	if ((fd[0] = open(fname, g_open_flags[1], g_open_modes)) < 0) {
+	if ((fd[0] = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: open: %s", __func__, fname);
 		return;
 	} else if ((fp = fdopen(fd[0], "w")) == NULL) {
@@ -1323,7 +1323,7 @@ commands_init(void)
 
 	snprintf(fname, sizeof fname, "%s/admin_commands", adhelp_dir);
 
-	if ((fd[1] = open(fname, g_open_flags[1], g_open_modes)) < 0) {
+	if ((fd[1] = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: open: %s", __func__, fname);
 		goto clean_up;
 	} else if ((afp = fdopen(fd[1], "w")) == NULL) {

@@ -65,7 +65,7 @@ add_handle_to_list(const char *handle)
 
 	snprintf(path, sizeof path, "%s/admin", DEFAULT_LISTS);
 
-	if ((fd = open(path, g_open_flags[0], g_open_modes)) < 0) {
+	if ((fd = open(path, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
 		warn("%s: unable to open %s", __func__, path);
 		return;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {

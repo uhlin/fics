@@ -1573,7 +1573,7 @@ game_save(int g)
 	msnprintf(lname, sizeof lname, "%s/%c/%s-%s", adj_dir, bp->login[0],
 	    wp->login, bp->login);
 
-	if ((fd = open(fname, g_open_flags[1], g_open_modes)) < 0) {
+	if ((fd = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: open: %s", __func__, fname);
 		return -1;
 	} else if ((fp = fdopen(fd, "w")) == NULL) {
@@ -1834,7 +1834,7 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 
 	count = (count + 1) % 100;
 
-	if ((fd = open(file, g_open_flags[0], g_open_modes)) < 0) {
+	if ((fd = open(file, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
 		warn("%s: open: %s", __func__, file);
 		return;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {
@@ -1967,7 +1967,7 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 	mstrlcpy(fname2, fname, sizeof fname2);
 	mstrlcat(fname2, ".w", sizeof fname2);
 
-	if ((fd = open(fname2, g_open_flags[1], g_open_modes)) < 0) {
+	if ((fd = open(fname2, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: open", __func__);
 		return;
 	} else if ((fp2 = fdopen(fd, "w")) == NULL) {

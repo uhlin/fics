@@ -1207,10 +1207,7 @@ player_markdeleted(int p)
 	    parray[p].login[0], parray[p].login);
 	xrename(__func__, fname, fname2);
 
-	errno = 0;
-	fd = open(fname2, g_open_flags[0], g_open_modes);
-
-	if (fd < 0) {
+	if ((fd = open(fname2, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
 		warn("%s: open", __func__);
 		return -1;
 	} else if ((fp = fdopen(fd, "a")) != NULL) { // Touch the file
@@ -1346,10 +1343,7 @@ player_save(int p)
 	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
 
-	errno = 0;
-	fd = open(fname, g_open_flags[1], g_open_modes);
-
-	if (fd < 0) {
+	if ((fd = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: Problem opening file %s for write", __func__, fname);
 		return -1;
 	} else if ((fp = fdopen(fd, "w")) == NULL) {
@@ -1643,10 +1637,7 @@ write_p_inout(int inout, int p, char *file, int maxlines)
 	FILE	*fp;
 	int	 fd;
 
-	errno = 0;
-	fd = open(file, g_open_flags[0], g_open_modes);
-
-	if (fd < 0) {
+	if ((fd = open(file, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
 		warn("%s: open", __func__);
 		return;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {
@@ -2638,10 +2629,7 @@ player_add_message(int top, int fromp, char *message)
 	if (lines_file(fname) >= MAX_MESSAGES && parray[top].adminLevel == 0)
 		return -1;
 
-	errno = 0;
-	fd = open(fname, g_open_flags[0], g_open_modes);
-
-	if (fd < 0)
+	if ((fd = open(fname, g_open_flags[OPFL_APPEND], g_open_modes)) < 0)
 		return -1;
 	else if ((fp = fdopen(fd, "a")) == NULL) {
 		close(fd);
@@ -2816,10 +2804,7 @@ WriteMsgFile(int p, textlist *Head)
 
 	GetMsgFile(p, fName, sizeof fName, __func__);
 
-	errno = 0;
-	fd = open(fName, g_open_flags[1], g_open_modes);
-
-	if (fd < 0)
+	if ((fd = open(fName, g_open_flags[OPFL_WRITE], g_open_modes)) < 0)
 		return 0;
 	else if ((fp = fdopen(fd, "w")) == NULL) {
 		close(fd);
@@ -3237,10 +3222,7 @@ player_add_comment(int p_by, int p_to, char *comment)
 	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    parray[p_to].login[0], parray[p_to].login, "comments");
 
-	errno = 0;
-	fd = open(fname, g_open_flags[0], g_open_modes);
-
-	if (fd < 0) {
+	if ((fd = open(fname, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
 		warn("%s: open", __func__);
 		return -1;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {

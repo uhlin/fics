@@ -435,7 +435,8 @@ list_addsub(int p, char *list, char *who, int addsub)
 		msnprintf(filename, sizeof filename, "%s/%s", lists_dir,
 		    listname);
 
-		if ((fd = open(filename, g_open_flags[1], g_open_modes)) < 0) {
+		if ((fd = open(filename, g_open_flags[OPFL_WRITE],
+		    g_open_modes)) < 0) {
 			fprintf(stderr, "Couldn't save %s list.\n", listname);
 		} else if ((fp = fdopen(fd, "w")) == NULL) {
 			fprintf(stderr, "Couldn't save %s list.\n", listname);

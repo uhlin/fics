@@ -189,8 +189,8 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/adminnews.%d",
 			    news_dir,
 			    param[0].val.integer);
-			fd = open(filename, g_open_flags[1], g_open_modes);
-			if (fd < 0)
+			if ((fd = open(filename, g_open_flags[OPFL_WRITE],
+			    g_open_modes)) < 0)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
 				fprintf(fp, "%s\n", param[1].val.string);
@@ -206,8 +206,8 @@ create_news_file(int p, param_list param, int admin)
 			msnprintf(filename, sizeof filename, "%s/news.%d",
 			    news_dir,
 			    param[0].val.integer);
-			fd = open(filename, g_open_flags[1], g_open_modes);
-			if (fd < 0)
+			if ((fd = open(filename, g_open_flags[OPFL_WRITE],
+			    g_open_modes)) < 0)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
 				fprintf(fp, "%s\n", param[1].val.string);
@@ -230,9 +230,7 @@ add_item(char *new_item, char *filename)
 
 	msnprintf(tmp_file, sizeof tmp_file, "%s/.tmp.idx", news_dir);
 
-	fd = open(tmp_file, g_open_flags[1], g_open_modes);
-
-	if (fd < 0)
+	if ((fd = open(tmp_file, g_open_flags[OPFL_WRITE], g_open_modes)) < 0)
 		return 0;
 	else if ((new_fp = fdopen(fd, "w")) == NULL) {
 		close(fd);

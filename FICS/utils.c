@@ -905,10 +905,8 @@ truncate_file(char *file, int lines)
 	if (trunc) {
 		int fd;
 
-		errno = 0;
-		fd = open(file, g_open_flags[1], g_open_modes);
-
-		if (fd < 0) {
+		if ((fd = open(file, g_open_flags[OPFL_WRITE],
+		    g_open_modes)) < 0) {
 			warn("%s: open", __func__);
 			return 1;
 		} else if ((fp = fdopen(fd, "w")) == NULL) {

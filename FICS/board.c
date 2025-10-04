@@ -1329,7 +1329,8 @@ wild_update(int style)
 
 		msnprintf(fname, sizeof fname, "%s/wild/%d", board_dir, style);
 
-		if ((fd = open(fname, g_open_flags[1], g_open_modes)) < 0) {
+		if ((fd = open(fname, g_open_flags[OPFL_WRITE],
+		    g_open_modes)) < 0) {
 			warn("%s: can't write file name: %s", __func__, fname);
 			return;
 		} else if ((fp = fdopen(fd, "w")) == NULL) {
