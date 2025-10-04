@@ -6,6 +6,8 @@ documented in this file.
 ## [Unreleased] ##
 - Added more open flags and changed the code to refer to them by using
   enums.
+- Assured that no conversion loss takes place when dealing with
+  `time_t` conversions. Multiple occurrences.
 
 ## [1.4.6] - 2025-09-14 ##
 - **Added** validation of filenames and login names.
