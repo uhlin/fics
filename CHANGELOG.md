@@ -3,6 +3,10 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Added more open flags and changed the code to refer to them by using
+  enums.
+
 ## [1.4.6] - 2025-09-14 ##
 - **Added** validation of filenames and login names.
 - **Changed** the program to use `int64_t` instead of `long int` in
