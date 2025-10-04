@@ -685,9 +685,9 @@ com_password(int p, param_list param)
 PUBLIC int
 com_uptime(int p, param_list param)
 {
-	int days, hours, mins, secs;
-	struct rusage ru;
-	unsigned long int uptime = (time(NULL) - startuptime);
+	const uint64_t	uptime = (time(NULL) - startuptime);
+	int		days, hours, mins, secs;
+	struct rusage	ru;
 
 	(void) param; // XXX: unused
 
