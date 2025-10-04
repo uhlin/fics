@@ -1646,8 +1646,8 @@ write_p_inout(int inout, int p, char *file, int maxlines)
 		return;
 	}
 
-	fprintf(fp, "%d %s %ld %d %s\n", inout, parray[p].name,
-	    (long int)time(NULL), parray[p].registered,
+	fprintf(fp, "%d %s %jd %d %s\n", inout, parray[p].name,
+	    (intmax_t)time(NULL), parray[p].registered,
 	    dotQuad(parray[p].thisHost));
 
 	fclose(fp);
