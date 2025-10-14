@@ -223,7 +223,7 @@ unveil_doit()
 	if (unveil(FICS_PREFIX, "rwc") == -1)
 		err(1, "unveil");
 
-	for (struct whitelist_tag *wl_p = addrof(whitelist[0]);
+	for (struct whitelist_tag *wl_p = &whitelist[0];
 	    wl_p < &whitelist[ARRAY_SIZE(whitelist)];
 	    wl_p++) {
 		errno = 0;
