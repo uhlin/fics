@@ -175,6 +175,67 @@ TerminateServer(int sig)
 	exit(EXIT_FAILURE);
 }
 
+#if defined(OpenBSD) && OpenBSD >= 201811
+PRIVATE void
+unveil_doit()
+{
+	struct whitelist_tag {
+		const char	*path;
+		const char	*permissions;
+	} whitelist[] = {
+		{DEFAULT_ADHELP, ""},		// data/admin
+		{DEFAULT_ADJOURNED, ""},	// games/adjourned
+		{DEFAULT_BOARDS, ""},		// data/boards
+		{DEFAULT_BOOK, ""},		// data/book
+		{DEFAULT_COMHELP, ""},		// data/com_help
+		{DEFAULT_CONFIG, "rwc"},	// config
+		{DEFAULT_HELP, ""},		// data/help
+		{DEFAULT_HISTORY, ""},		// games/history
+		{DEFAULT_INDEX, ""},		// data/index
+		{DEFAULT_INFO, ""},		// data/info
+		{DEFAULT_JOURNAL, ""},		// games/journal
+		{DEFAULT_LISTS, ""},		// data/lists
+		{DEFAULT_MESS, ""},		// data/messages
+		{DEFAULT_NEWS, ""},		// data/news
+		{DEFAULT_PLAYERS, ""},		// players
+		{DEFAULT_SOURCE, "r"},		// FICS
+		{DEFAULT_STATS, ""},		// data/stats
+		{DEFAULT_USAGE, ""},		// data/usage
+		{DEFAULT_USCF, ""},		// data/uscf
+
+		{HELP_DANISH, "r"},		// data/Danish
+		{HELP_FRENCH, "r"},		// data/French
+		{HELP_SPANISH, "r"},		// data/Spanish
+
+		{MESS_FULL, ""},		// data/messages/full
+		{MESS_FULL_UNREG, ""},		// data/messages/full_unreg
+
+		{USAGE_DANISH, "r"},		// data/usage_danish
+		{USAGE_FRENCH, "r"},		// data/usage_french
+		{USAGE_SPANISH, "r"},		// data/usage_spanish
+
+		{DAEMON_LOCKFILE, "rw"},	// fics.pid
+		{DAEMON_LOGFILE, "rwc"},	// fics.log
+	};
+
+	if (unveil(FICS_PREFIX, "rwc") == -1)
+		err(1, "unveil");
+
+	for (struct whitelist_tag *wl_p = addrof(whitelist[0]);
+	    wl_p < &whitelist[ARRAY_SIZE(whitelist)];
+	    wl_p++) {
+		errno = 0;
+
+		if (strcmp(wl_p->path, "") == 0 ||
+		    strcmp(wl_p->permissions, "") == 0)
+			continue;
+		if (unveil(wl_p->path, wl_p->permissions) == -1 &&
+		    errno != ENOENT)
+			err(1, "unveil(%s, %s)", wl_p->path, wl_p->permissions);
+	}
+}
+#endif
+
 PRIVATE void
 main_event_loop(void)
 {
@@ -255,6 +316,17 @@ main(int argc, char *argv[])
 	player_array_init();
 	fprintf(stderr, "FICS: player_init(withConsole=%d)\n", withConsole);
 	player_init(withConsole);
+
+#if defined(OpenBSD) && OpenBSD >= 201811
+	unveil_doit();
+#endif
+
+#if defined(OpenBSD) && OpenBSD >= 201605
+	if (pledge("cpath rpath wpath dns inet stdio tty", NULL) == -1) {
+		warn("pledge");
+		return EXIT_FAILURE;
+	}
+#endif
 
 	main_event_loop();
 
