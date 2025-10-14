@@ -211,8 +211,8 @@ unveil_doit(void)
 		{HELP_SPANISH, "r"},		// data/Spanish
 #endif
 
-		{MESS_FULL, ""},		// data/messages/full
-		{MESS_FULL_UNREG, ""},		// data/messages/full_unreg
+		{MESS_FULL, "r"},		// data/messages/full
+		{MESS_FULL_UNREG, "r"},		// data/messages/full_unreg
 
 #if NOT_USED_ANYWHERE
 		{USAGE_DANISH, "r"},		// data/usage_danish
