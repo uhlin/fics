@@ -27,6 +27,8 @@
    Markus Uhlin                 24/06/01	Added command-line option 'l'
    Markus Uhlin                 24/08/03	Added command-line option 'd'
    Markus Uhlin                 24/12/04	Added command-line option 'v'
+   Markus Uhlin                 25/10/14	Added usage of unveil() and
+						pledge() (OpenBSD only).
 */
 
 #include "stdinclude.h"
