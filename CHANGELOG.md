@@ -6,6 +6,8 @@ documented in this file.
 ## [Unreleased] ##
 - Added more open flags and changed the code to refer to them by using
   enums.
+- Added usage of `unveil()` and `pledge()`. (OpenBSD mitigation
+  techniques, so OpenBSD only.)
 - Assured that no conversion loss takes place when dealing with
   `time_t` conversions. Multiple occurrences.
 
