@@ -37,6 +37,7 @@
 #include <err.h>
 #include <errno.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "board.h"
 #include "command.h"
@@ -46,6 +47,7 @@
 #include "eco.h"
 #endif
 #include "ficsmain.h"
+#include "ficspaths.h"
 #include "legal.h"
 #include "legal2.h"
 #include "network.h"
