@@ -186,16 +186,16 @@ unveil_doit(void)
 		const char	*permissions;
 	} whitelist[] = {
 		{DEFAULT_ADHELP, ""},		// data/admin
-		{DEFAULT_ADJOURNED, ""},	// games/adjourned
+		{DEFAULT_ADJOURNED, "rwc"},	// games/adjourned
 		{DEFAULT_BOARDS, ""},		// data/boards
 		{DEFAULT_BOOK, ""},		// data/book
 		{DEFAULT_COMHELP, ""},		// data/com_help
 		{DEFAULT_CONFIG, "rwc"},	// config
 		{DEFAULT_HELP, ""},		// data/help
-		{DEFAULT_HISTORY, ""},		// games/history
+		{DEFAULT_HISTORY, "rwc"},	// games/history
 		{DEFAULT_INDEX, ""},		// data/index
 		{DEFAULT_INFO, ""},		// data/info
-		{DEFAULT_JOURNAL, ""},		// games/journal
+		{DEFAULT_JOURNAL, "rwc"},	// games/journal
 		{DEFAULT_LISTS, ""},		// data/lists
 		{DEFAULT_MESS, ""},		// data/messages
 		{DEFAULT_NEWS, ""},		// data/news
