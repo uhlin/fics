@@ -179,7 +179,7 @@ TerminateServer(int sig)
 
 #if defined(OpenBSD) && OpenBSD >= 201811
 PRIVATE void
-unveil_doit()
+unveil_doit(void)
 {
 	struct whitelist_tag {
 		const char	*path;
