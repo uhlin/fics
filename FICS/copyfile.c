@@ -73,6 +73,9 @@ fics_copyfile(const char *p1, const char *p2, const bool post_checks)
 		str[0] = &buf[0][0];
 		str[1] = &buf[1][0];
 
+		memset(str[0], 0, sizeof(buf[0]));
+		memset(str[1], 0, sizeof(buf[1]));
+
 		if (SHA1File(p1, str[0]) != NULL &&
 		    SHA1File(p2, str[1]) != NULL) {
 #if PRINT_CHECKSUMS
