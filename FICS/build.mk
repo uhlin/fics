@@ -9,6 +9,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)board.o\
 	$(SRC_DIR)command.o\
 	$(SRC_DIR)comproc.o\
+	$(SRC_DIR)copyfile.o\
 	$(SRC_DIR)eco.o\
 	$(SRC_DIR)fics_getsalt.o\
 	$(SRC_DIR)ficslim.o\
@@ -43,6 +44,7 @@ SRCS = $(SRC_DIR)adminproc.c\
 	$(SRC_DIR)board.c\
 	$(SRC_DIR)command.c\
 	$(SRC_DIR)comproc.c\
+	$(SRC_DIR)copyfile.c\
 	$(SRC_DIR)eco.c\
 	$(SRC_DIR)fics_getsalt.cpp\
 	$(SRC_DIR)ficslim.cpp\
