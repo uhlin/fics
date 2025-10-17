@@ -14,6 +14,7 @@
 
 #include "copyfile.h"
 
+#define PRINT_CHECKSUMS 0
 #define SELF_TEST 0
 
 bool
