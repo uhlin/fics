@@ -17,6 +17,34 @@
 #define PRINT_CHECKSUMS 0
 #define SELF_TEST 0
 
+static int
+do_post_checks(const char *p1, const char *p2)
+{
+	char	 buf[2][41];
+	char	*str[2];
+
+	str[0] = &buf[0][0];
+	str[1] = &buf[1][0];
+
+	memset(str[0], 0, sizeof(buf[0]));
+	memset(str[1], 0, sizeof(buf[1]));
+
+	if (SHA1File(p1, str[0]) != NULL &&
+	    SHA1File(p2, str[1]) != NULL) {
+#if PRINT_CHECKSUMS
+		puts(str[0]);
+		puts(str[1]);
+#endif
+
+		if (strcmp(str[0], str[1]) != 0) {
+			warnx("%s: digest mismatch", __func__);
+			return -1;
+		}
+	} else
+		warnx("%s: failed to calculate file digest", __func__);
+	return 0;
+}
+
 bool
 fics_copyfile(const char *p1, const char *p2, const bool post_checks)
 {
@@ -67,28 +95,8 @@ fics_copyfile(const char *p1, const char *p2, const bool post_checks)
 		warnx("%s: total written mismatch total read", __func__);
 		return false;
 	} else if (post_checks) {
-		char	 buf[2][41];
-		char	*str[2];
-
-		str[0] = &buf[0][0];
-		str[1] = &buf[1][0];
-
-		memset(str[0], 0, sizeof(buf[0]));
-		memset(str[1], 0, sizeof(buf[1]));
-
-		if (SHA1File(p1, str[0]) != NULL &&
-		    SHA1File(p2, str[1]) != NULL) {
-#if PRINT_CHECKSUMS
-			puts(str[0]);
-			puts(str[1]);
-#endif
-
-			if (strcmp(str[0], str[1]) != 0) {
-				warnx("%s: digest mismatch", __func__);
-				return false;
-			}
-		} else
-			warnx("%s: failed to calculate file digest", __func__);
+		if (do_post_checks(p1, p2) == -1)
+			return false;
 	}
 
 	return true;
