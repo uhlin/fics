@@ -18,7 +18,7 @@
 #define SELF_TEST 0
 
 bool
-fics_copyfile(const char *p1, const char *p2)
+fics_copyfile(const char *p1, const char *p2, const bool post_checks)
 {
 	char	tmp[2048] = { '\0' };
 	int	fd[2];
@@ -66,6 +66,26 @@ fics_copyfile(const char *p1, const char *p2)
 	if (total_read != total_written) {
 		warnx("%s: total written mismatch total read", __func__);
 		return false;
+	} else if (post_checks) {
+		char	 buf[2][MD5_DIGEST_STRING_LENGTH + 1];
+		char	*str[2];
+
+		str[0] = &buf[0][0];
+		str[1] = &buf[1][0];
+
+		if (MD5File(p1, str[0]) != NULL &&
+		    MD5File(p2, str[1]) != NULL) {
+#if PRINT_CHECKSUMS
+			puts(str[0]);
+			puts(str[1]);
+#endif
+
+			if (strcmp(str[0], str[1]) != 0) {
+				warnx("%s: digest mismatch", __func__);
+				return false;
+			}
+		} else
+			warnx("%s: failed to calculate file digest", __func__);
 	}
 
 	return true;
