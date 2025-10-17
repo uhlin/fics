@@ -52,8 +52,8 @@ fics_copyfile(const char *p1, const char *p2)
 		total_written += ret[1];
 	}
 
-	close(fd[0]);
-	close(fd[1]);
+	if (close(fd[0]) != 0 || close(fd[1]) != 0)
+		perror("close");
 
 	if (total_read != total_written) {
 		warnx("%s: total written mismatch total read", __func__);
