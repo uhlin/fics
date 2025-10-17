@@ -185,6 +185,13 @@ unveil_doit(void)
 		const char	*path;
 		const char	*permissions;
 	} whitelist[] = {
+#ifdef MAILPROGRAM
+		{MAILPROGRAM, "rx"},
+#endif
+#ifdef SENDMAILPROG
+		{SENDMAILPROG, "rx"},
+#endif
+
 		{DEFAULT_ADHELP, ""},		// data/admin
 		{DEFAULT_ADJOURNED, "rwc"},	// games/adjourned
 		{DEFAULT_BOARDS, ""},		// data/boards
