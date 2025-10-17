@@ -67,7 +67,7 @@ fics_copyfile(const char *p1, const char *p2, const bool post_checks)
 		warnx("%s: total written mismatch total read", __func__);
 		return false;
 	} else if (post_checks) {
-		char	 buf[2][SHA1_DIGEST_LENGTH + 1];
+		char	 buf[2][41];
 		char	*str[2];
 
 		str[0] = &buf[0][0];
