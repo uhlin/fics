@@ -33,8 +33,8 @@
    Markus Uhlin			25/03/15	Fixed possible buffer overflow
 						in FindHistory2().
    Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
-   Markus Uhlin			25/10/17	jsave_journalentry: replaced
-						system() with copyfile().
+   Markus Uhlin			25/10/17	Replaced system() with
+						fics_copyfile().
 */
 
 #include "stdinclude.h"
