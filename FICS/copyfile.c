@@ -107,6 +107,6 @@ main(int argc, char *argv[])
 {
 	if (argc != 3)
 		errx(1, "bogus number of args");
-	return (fics_copyfile(argv[1], argv[2]) ? EXIT_SUCCESS : EXIT_FAILURE);
+	return (fics_copyfile(argv[1], argv[2], true) ? 0 : 1);
 }
 #endif

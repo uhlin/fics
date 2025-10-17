@@ -1828,7 +1828,7 @@ jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 	    name_to, save_spot);
 	unlink(fname2);
 
-	if (!fics_copyfile(fname, fname2)) {
+	if (!fics_copyfile(fname, fname2, true)) {
 		pprintf(p, "System command in jsave_journalentry failed!\n");
 		pprintf(p, "Please report this to an admin.\n");
 		fprintf(stderr, "FICS: System command failed in "
@@ -1898,7 +1898,7 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 			    save_spot);
 			unlink(jfname);
 
-			if (!fics_copyfile(HistoryFname, jfname)) {
+			if (!fics_copyfile(HistoryFname, jfname, true)) {
 				pprintf(p, "System command in jsave_history "
 				    "failed!\n");
 				pprintf(p, "Please report this to an admin.\n");
