@@ -12,6 +12,8 @@
 
 #include "copyfile.h"
 
+#define SELF_TEST 0
+
 bool
 fics_copyfile(const char *p1, const char *p2)
 {
@@ -75,3 +77,13 @@ is_regular_file(const char *path)
 		return false;
 	return (stat(path, &sb) == 0 && S_ISREG(sb.st_mode));
 }
+
+#if SELF_TEST
+int
+main(int argc, char *argv[])
+{
+	if (argc != 3)
+		errx(1, "bogus number of args");
+	return (fics_copyfile(argv[1], argv[2]) ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+#endif
