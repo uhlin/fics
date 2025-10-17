@@ -65,7 +65,8 @@
  * options. These may differ significantly depending on the type of
  * system and what mailer is installed.
  */
-#define SENDMAILPROG "/usr/sbin/sendmail -t"
+#define SENDMAILPROG		"/usr/sbin/sendmail"
+#define SENDMAILPROG_ARGS	"-t"
 
 /*
  * Details of the head admin

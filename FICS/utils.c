@@ -224,7 +224,7 @@ mail_string_to_address(char *addr, char *subj, char *str)
 	char	 com[1000];
 
 #ifdef SENDMAILPROG
-	snprintf(com, sizeof com, "%s\n", SENDMAILPROG);
+	snprintf(com, sizeof com, "%s %s\n", SENDMAILPROG, SENDMAILPROG_ARGS);
 #else
 	snprintf(com, sizeof com, "%s -s \"%s\" %s", MAILPROGRAM, subj, addr);
 #endif
@@ -268,7 +268,7 @@ mail_file_to_address(char *addr, char *subj, char *fname)
 	(void) tmp;
 
 #ifdef SENDMAILPROG
-	snprintf(com, sizeof com, "%s\n", SENDMAILPROG);
+	snprintf(com, sizeof com, "%s %s\n", SENDMAILPROG, SENDMAILPROG_ARGS);
 #else
 	snprintf(com, sizeof com, "%s -s \"%s\" %s < %s&", MAILPROGRAM, subj,
 	    addr, fname);
