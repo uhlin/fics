@@ -1898,7 +1898,7 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 			    save_spot);
 			unlink(jfname);
 
-			if (fics_copyfile(HistoryFname, jfname)) {
+			if (!fics_copyfile(HistoryFname, jfname)) {
 				pprintf(p, "System command in jsave_history "
 				    "failed!\n");
 				pprintf(p, "Please report this to an admin.\n");
