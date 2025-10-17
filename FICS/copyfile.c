@@ -6,7 +6,7 @@
 
 #include <err.h>
 #include <fcntl.h>
-#include <md5.h>
+#include <sha1.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,14 +67,14 @@ fics_copyfile(const char *p1, const char *p2, const bool post_checks)
 		warnx("%s: total written mismatch total read", __func__);
 		return false;
 	} else if (post_checks) {
-		char	 buf[2][MD5_DIGEST_STRING_LENGTH + 1];
+		char	 buf[2][SHA1_DIGEST_LENGTH + 1];
 		char	*str[2];
 
 		str[0] = &buf[0][0];
 		str[1] = &buf[1][0];
 
-		if (MD5File(p1, str[0]) != NULL &&
-		    MD5File(p2, str[1]) != NULL) {
+		if (SHA1File(p1, str[0]) != NULL &&
+		    SHA1File(p2, str[1]) != NULL) {
 #if PRINT_CHECKSUMS
 			puts(str[0]);
 			puts(str[1]);
