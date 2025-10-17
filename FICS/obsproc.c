@@ -1808,7 +1808,6 @@ jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 	FILE			*Game;
 	char			*name_from = parray[p1].login;
 	char			*name_to = parray[p].login;
-	char			 command[MAX_FILENAME_SIZE * 2 + 3];
 	char			 fname[MAX_FILENAME_SIZE];
 	char			 fname2[MAX_FILENAME_SIZE];
 	struct JGI_context	 ctx;
