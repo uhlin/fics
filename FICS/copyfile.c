@@ -75,7 +75,7 @@ fics_copyfile(const char *p1, const char *p2, const bool post_checks)
 		return false;
 	}
 
-	while ((ret[0] = read(fd[0], tmp, sizeof tmp)) != -1 && ret[0] != 0) {
+	while ((ret[0] = read(fd[0], tmp, sizeof tmp)) > 0) {
 		total_read += ret[0];
 
 		if ((ret[1] = write(fd[1], tmp, ret[0])) != ret[0]) {
