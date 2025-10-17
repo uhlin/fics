@@ -24,6 +24,10 @@ fics_copyfile(const char *p1, const char *p2)
 	    strcmp(p1, "") == 0 ||
 	    strcmp(p2, "") == 0)
 		return false;
+	if (!is_regular_file(p1)) {
+		warnx("%s: not a regular file", __func__);
+		return false;
+	}
 	if ((fd[0] = open(p1, O_RDONLY)) < 0) {
 		warn("%s: open(%s, ...)", __func__, p1);
 		return false;
