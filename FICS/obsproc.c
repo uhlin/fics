@@ -45,6 +45,7 @@
 #include "command.h"
 #include "comproc.h"
 #include "config.h"
+#include "copyfile.h"
 #include "eco.h"
 #include "ficsmain.h"
 #include "formula.h"
@@ -1826,8 +1827,7 @@ jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 	    name_to, save_spot);
 	unlink(fname2);
 
-	msnprintf(command, sizeof command, "cp %s %s", fname, fname2);
-	if (system(command)) { // XXX
+	if (!fics_copyfile(fname, fname2)) {
 		pprintf(p, "System command in jsave_journalentry failed!\n");
 		pprintf(p, "Please report this to an admin.\n");
 		fprintf(stderr, "FICS: System command failed in "
