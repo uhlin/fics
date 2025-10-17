@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2025 Markus Uhlin <maxxe@rpblc.net>
 // SPDX-License-Identifier: ISC
 
+#include <sys/types.h>
 #include <sys/stat.h>
 
 #include <err.h>
 #include <fcntl.h>
+#include <md5.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
