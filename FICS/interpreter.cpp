@@ -1,0 +1,196 @@
+// SPDX-FileCopyrightText: 2012-2025 Markus Uhlin <maxxe@rpblc.net>
+// SPDX-License-Identifier: ISC
+
+#include <err.h>
+#include <errno.h>
+#include <iostream>
+#include <stdexcept>
+
+#include "interpreter.h"
+#include "utils.h"
+
+const char g_fgets_nullret_err1[70] = "error: fgets() returned null and the "
+    "error indicator is set";
+const char g_fgets_nullret_err2[70] = "error: fgets() returned null for an "
+    "unknown reason";
+
+static const char ArgBegin = '"';
+static const char ArgEnd = '"';
+static const char CommentChar = '#';
+
+static const size_t	identifier_maxSize = 64;
+static const size_t	argument_maxSize = 512;
+
+/**
+ * Copy identifier
+ */
+static char *
+copy_identifier(const char *&id)
+{
+	size_t	 count = identifier_maxSize;
+	char	*dest_buf = new char[count + 1];
+	char	*dest = &dest_buf[0];
+
+	while ((isalnum(*id) || *id == '_') && count > 1)
+		*dest++ = *id++, count--;
+
+	*dest = '\0';
+
+	if (count == 1)
+		errx(1, "%s: fatal: string was truncated", __func__);
+	return dest_buf;
+}
+
+/**
+ * Copy argument
+ */
+//lint -sem(copy_argument, r_null)
+static char *
+copy_argument(const char *&arg)
+{
+	bool	 inside_arg = true;
+	size_t	 count = argument_maxSize;
+	char	*dest_buf = new char[count + 1];
+	char	*dest = &dest_buf[0];
+
+	while (*arg && count > 1) {
+		if (*arg == ArgEnd) {
+			inside_arg = false;
+			arg++;
+			break;
+		}
+
+		*dest++ = *arg++, count--;
+	}
+
+	*dest = '\0';
+
+	if (inside_arg && count == 1)
+		errx(1, "%s: fatal: string was truncated", __func__);
+	if (inside_arg) {
+		delete[] dest_buf;
+		return nullptr;
+	}
+	return dest_buf;
+}
+
+static void
+clean_up(char *id, char *arg)
+{
+	delete[] id;
+	delete[] arg;
+}
+
+/**
+ * Interpreter
+ *
+ * @param in Context structure
+ * @return Void
+ *
+ * An interpreter for configuration files. The context structure
+ * contains the data to be passed to the interpreter.
+ */
+void
+Interpreter(const struct Interpreter_in *in)
+{
+	char	*id = nullptr;
+	char	*arg = nullptr;
+
+	if (in == nullptr)
+		errx(1, "%s: invalid argument", __func__);
+
+	try {
+		const char *cp = &in->line[0];
+
+		if (!isalnum(*cp) && *cp != '_')
+			throw std::runtime_error("unexpected leading "
+			    "character");
+		id = copy_identifier(cp);
+		adv_while_isspace(&cp);
+		if (*cp++ != '=') {
+			throw std::runtime_error("expected assignment "
+			    "operator");
+		}
+
+		adv_while_isspace(&cp);
+		if (*cp++ != ArgBegin)
+			throw std::runtime_error("expected arg begin");
+		else if ((arg = copy_argument(cp)) == nullptr)
+			throw std::runtime_error("unterminated argument");
+
+		adv_while_isspace(&cp);
+		if (*cp++ != ';')
+			throw std::runtime_error("no line terminator!");
+
+		adv_while_isspace(&cp);
+		if (*cp && *cp != CommentChar) {
+			throw std::runtime_error("implicit data after "
+			    "line terminator!");
+		} else if (!(in->validator_func(id))) {
+#if IGNORE_UNRECOGNIZED_IDENTIFIERS
+			/* ignore */;
+#else
+			throw std::runtime_error("no such identifier");
+#endif
+		} else if ((errno = in->install_func(id, arg)) != 0) {
+			throw std::runtime_error("install error");
+		}
+	} catch (const std::bad_alloc &e) {
+		std::cerr << "out of memory: " << e.what() << '\n';
+		clean_up(id, arg);
+		abort();
+	} catch (const std::runtime_error &e) {
+		std::cerr << '\t' << in->line << '\n';
+
+		if (strings_match(e.what(), "install error")) {
+			warn("%s:%ld: error: "
+			    "install_func returned %d", in->path, in->line_num,
+			    errno);
+		} else {
+			warnx("%s:%ld: error: %s", in->path, in->line_num,
+			    e.what());
+		}
+
+		clean_up(id, arg);
+		abort();
+	} catch (...) {
+		std::cerr << "unknown exception  --  should not be reached\n";
+		clean_up(id, arg);
+		abort();
+	}
+
+	clean_up(id, arg);
+}
+
+void
+Interpreter_processAllLines(FILE *fp, const char *path, Interpreter_vFunc func1,
+    Interpreter_instFunc func2)
+{
+	char		buf[MAXLINE] = { '\0' };
+	long int	line_num = 0;
+
+	while (fgets(buf, sizeof buf, fp) != nullptr) {
+		char			*line;
+		const char		*cp;
+		struct Interpreter_in	 in;
+
+		cp = &buf[0];
+		adv_while_isspace(&cp);
+		if (strings_match(cp, "") || *cp == CommentChar) {
+			line_num++;
+			continue;
+		}
+
+		if ((line = eattailwhite(xstrdup(cp))) == nullptr)
+			errx(1, "%s: unexpected null pointer", __func__);
+
+		in.path			= const_cast<char *>(path);
+		in.line			= line;
+		in.line_num		= ++line_num;
+		in.validator_func	= func1;
+		in.install_func		= func2;
+		Interpreter(&in);
+
+		free(line);
+	}
+}

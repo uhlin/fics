@@ -17,6 +17,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)formula.o\
 	$(SRC_DIR)gamedb.o\
 	$(SRC_DIR)gameproc.o\
+	$(SRC_DIR)interpreter.o\
 	$(SRC_DIR)iset.o\
 	$(SRC_DIR)legal.o\
 	$(SRC_DIR)legal2.o\
@@ -52,6 +53,7 @@ SRCS = $(SRC_DIR)adminproc.c\
 	$(SRC_DIR)formula.c\
 	$(SRC_DIR)gamedb.c\
 	$(SRC_DIR)gameproc.c\
+	$(SRC_DIR)interpreter.cpp\
 	$(SRC_DIR)iset.cpp\
 	$(SRC_DIR)legal.c\
 	$(SRC_DIR)legal2.c\
