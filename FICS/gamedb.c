@@ -1863,13 +1863,13 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 		else
 			cResult = '-';
 
-		fprintf(fp, "%d %c %d W %d %s %s %d %d %d %d %s %s %ld\n",
+		fprintf(fp, "%d %c %d W %d %s %s %d %d %d %d %s %s %jd\n",
 		    count, cResult, wr, br, parray[bp].name, type,
 		    garray[g].wInitTime, garray[g].wIncrement,
 		    garray[g].bInitTime, garray[g].bIncrement,
 		    goteco,
 		    EndSymbol,
-		    (long int) *now);
+		    (intmax_t) *now);
 	} else {
 		if (isDraw)
 			cResult = '=';
@@ -1878,13 +1878,13 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 		else
 			cResult = '-';
 
-		fprintf(fp, "%d %c %d B %d %s %s %d %d %d %d %s %s %ld\n",
+		fprintf(fp, "%d %c %d B %d %s %s %d %d %d %d %s %s %jd\n",
 		    count, cResult, br, wr, parray[wp].name, type,
 		    garray[g].wInitTime, garray[g].wIncrement,
 		    garray[g].bInitTime, garray[g].bIncrement,
 		    goteco,
 		    EndSymbol,
-		    (long int) *now);
+		    (intmax_t) *now);
 	}
 
 	fclose(fp);
