@@ -212,20 +212,8 @@ unveil_doit(void)
 		{DEFAULT_USAGE, ""},		// data/usage
 		{DEFAULT_USCF, ""},		// data/uscf
 
-#if NOT_USED_ANYWHERE
-		{HELP_DANISH, "r"},		// data/Danish
-		{HELP_FRENCH, "r"},		// data/French
-		{HELP_SPANISH, "r"},		// data/Spanish
-#endif
-
 		{MESS_FULL, "r"},		// data/messages/full
 		{MESS_FULL_UNREG, "r"},		// data/messages/full_unreg
-
-#if NOT_USED_ANYWHERE
-		{USAGE_DANISH, "r"},		// data/usage_danish
-		{USAGE_FRENCH, "r"},		// data/usage_french
-		{USAGE_SPANISH, "r"},		// data/usage_spanish
-#endif
 
 		{DAEMON_LOCKFILE, "rw"},	// fics.pid
 		{DAEMON_LOGFILE, "rwc"},	// fics.log
