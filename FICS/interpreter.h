@@ -16,9 +16,9 @@
 #define MAXLINE 3200
 
 enum setting_type {
-	TYPE_BOOLEAN,
-	TYPE_INTEGER,
-	TYPE_STRING
+	STYPE_BOOLEAN,
+	STYPE_INTEGER,
+	STYPE_STRING
 };
 
 typedef bool (*Interpreter_vFunc)(const char *);
