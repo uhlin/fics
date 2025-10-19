@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023-2024 Markus Uhlin <maxxe@rpblc.net>
+# SPDX-FileCopyrightText: 2023-2025 Markus Uhlin <maxxe@rpblc.net>
 # SPDX-License-Identifier: ISC
 
 # Don't provide a default value for DESTDIR. It should be empty.
@@ -85,3 +85,4 @@ install: install-init
 	$(ROOT)scripts/i-games-history.sh $(DESTDIR)$(FICS_HOME)/games/history
 	$(ROOT)scripts/i-games-journal.sh $(DESTDIR)$(FICS_HOME)/games/journal
 	$(ROOT)scripts/i-players.sh $(DESTDIR)$(FICS_HOME)/players
+	install -b -m 0600 $(ROOT)fics.conf $(DESTDIR)$(FICS_HOME)
