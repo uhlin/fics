@@ -4,6 +4,8 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added a config file interpreter and moved some settings from
+  `config.h` to `fics.conf` which is read at startup.
 - Added more open flags and changed the code to refer to them by using
   enums.
 - Added usage of `unveil()` and `pledge()`. (OpenBSD mitigation
