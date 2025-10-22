@@ -69,6 +69,7 @@
 #include "network.h"
 #include "playerdb.h"
 #include "rmalloc.h"
+#include "settings.h"
 #include "utils.h"
 
 #if __linux__
@@ -571,8 +572,8 @@ PUBLIC char *
 movesToString(int g, int pgn)
 {
 	char		 tmp[160] = { '\0' };
-	char		*serv_loc = SERVER_LOCATION;
-	char		*serv_name = SERVER_NAME;
+	const char	*serv_loc = settings_get("server_location");
+	const char	*serv_name = settings_get("server_name");
 	int		 i, col;
 	int		 wr, br;
 	struct tm	 v_tm = {0};
