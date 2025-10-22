@@ -30,14 +30,6 @@
 #define DEFAULT_PORT      5000
 
 /*
- * At AFICS we just use 'fics'. But for your server you might want to
- * change this e.g. to BICS, EICS, DICS etc.
- */
-#define SERVER_NAME       "Xfics" /* for pgn output */
-
-#define SERVER_LOCATION   "Las Vegas, USA" /* for pgn output */
-
-/*
  * Which is the default language for help files? See 'variable.h' for
  * the currently available settings.
  */
