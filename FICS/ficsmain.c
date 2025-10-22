@@ -55,6 +55,7 @@
 #include "network.h"
 #include "playerdb.h"
 #include "ratings.h"
+#include "settings.h"
 #include "shutdown.h"
 #include "talkproc.h"
 #include "utils.h"
@@ -283,6 +284,9 @@ main(int argc, char *argv[])
 	signal(SIGINT, TerminateServer);
 	signal(SIGPIPE, BrokenPipe);
 	signal(SIGTERM, TerminateServer);
+
+	settings_init();
+	settings_read_conf(FICS_SETTINGS);
 
 	if (net_init(port)) {
 		fprintf(stderr, "FICS: Network initialize failed on port %d.\n",
