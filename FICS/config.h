@@ -30,11 +30,6 @@
 #define DEFAULT_PORT      5000
 
 /*
- * Must be a dns recognisable host name
- */
-#define SERVER_HOSTNAME   "rpblc.net"
-
-/*
  * At AFICS we just use 'fics'. But for your server you might want to
  * change this e.g. to BICS, EICS, DICS etc.
  */
