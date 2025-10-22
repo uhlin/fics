@@ -32,6 +32,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)rating_conv.o\
 	$(SRC_DIR)ratings.o\
 	$(SRC_DIR)rmalloc.o\
+	$(SRC_DIR)settings.o\
 	$(SRC_DIR)shutdown.o\
 	$(SRC_DIR)sought.o\
 	$(SRC_DIR)talkproc.o\
@@ -68,6 +69,7 @@ SRCS = $(SRC_DIR)adminproc.c\
 	$(SRC_DIR)rating_conv.c\
 	$(SRC_DIR)ratings.c\
 	$(SRC_DIR)rmalloc.c\
+	$(SRC_DIR)settings.cpp\
 	$(SRC_DIR)shutdown.c\
 	$(SRC_DIR)sought.cpp\
 	$(SRC_DIR)talkproc.c\
