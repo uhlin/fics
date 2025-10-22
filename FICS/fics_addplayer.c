@@ -42,6 +42,7 @@
 #include "fics_getsalt.h"
 #include "ficsmain.h"
 #include "playerdb.h"
+#include "settings.h"
 #include "utils.h"
 
 #if __linux__
@@ -131,6 +132,9 @@ main(int argc, char *argv[])
 		errx(1, "Illegal characters in player name. "
 		    "Only A-Za-z allowed.");
 	}
+
+	settings_init();
+	settings_read_conf(FICS_SETTINGS);
 
 	player_init(0);
 	p = player_new();
