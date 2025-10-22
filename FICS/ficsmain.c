@@ -295,7 +295,8 @@ main(int argc, char *argv[])
 	}
 
 	startuptime = time(NULL);
-	strlcpy(fics_hostname, SERVER_HOSTNAME, sizeof fics_hostname);
+	strlcpy(fics_hostname, settings_get("server_hostname"),
+		sizeof fics_hostname);
 	game_high = 0;
 	player_high = 0;
 	quota_time = 60;

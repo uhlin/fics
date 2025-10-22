@@ -197,7 +197,7 @@ main(int argc, char *argv[])
 	    "and enter your handle name and password.\n\n"
 
 	    "Regards,\n\nThe FICS admins\n", funame, fname, email, password,
-	    SERVER_HOSTNAME);
+	    settings_get("server_hostname"));
 
 	mail_string_to_address(email, "FICS Account Created", text);
 	explicit_bzero(password, sizeof(password));
