@@ -209,7 +209,7 @@ unveil_doit(void)
 		{DEFAULT_NEWS, ""},		// data/news
 		{DEFAULT_PLAYERS, ""},		// players
 		{DEFAULT_SOURCE, "r"},		// FICS
-		{DEFAULT_STATS, ""},		// data/stats
+		{DEFAULT_STATS, "rwc"},		// data/stats
 		{DEFAULT_USAGE, ""},		// data/usage
 		{DEFAULT_USCF, ""},		// data/uscf
 
