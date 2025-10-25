@@ -83,7 +83,7 @@ install_setting(const char *name, const char *value)
 		return EINVAL;
 	for (auto it = settings.begin(); it != settings.end(); ++it) {
 		if (strings_match((*it).name.c_str(), name)) {
-			(*it).name.assign(value);
+			(*it).value.assign(value);
 			return 0;
 		}
 	}
