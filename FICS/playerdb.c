@@ -72,6 +72,7 @@
 #include "playerdb.h"
 #include "ratings.h"
 #include "rmalloc.h"
+#include "settings.h"
 #include "talkproc.h"
 #include "utils.h"
 
@@ -3256,5 +3257,5 @@ player_show_comments(int p, int p1)
 PUBLIC int
 player_ishead(int p)
 {
-	return (!strcasecmp(parray[p].name, hadmin_handle));
+	return (strcasecmp(parray[p].name, settings_get("HADMINHANDLE")) == 0);
 }

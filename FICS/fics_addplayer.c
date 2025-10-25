@@ -158,7 +158,8 @@ main(int argc, char *argv[])
 	parray[p].registered	= 1;
 	parray[p].rated		= 1;
 
-	if (strcasecmp(parray[p].login, HADMINHANDLE) == 0 || admin) {
+	if (strcasecmp(parray[p].login, settings_get("HADMINHANDLE")) == 0 ||
+	    admin) {
 		parray[p].adminLevel = ADMIN_ADMIN;
 		add_handle_to_list(parray[p].login);
 	}

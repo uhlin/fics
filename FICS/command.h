@@ -119,8 +119,6 @@ extern char	*stats_dir;
 extern char	*usage_dir[NUM_LANGS];
 extern char	*uscf_dir;
 
-extern char *hadmin_handle;
-
 extern char	 fics_hostname[81];
 extern int	 MailGameResult;
 extern int	 game_high;

@@ -64,6 +64,7 @@
 #include "playerdb.h"
 #include "ratings.h"
 #include "rmalloc.h"
+#include "settings.h"
 #include "shutdown.h"
 #include "utils.h"
 #include "vers.h"
@@ -96,10 +97,6 @@ PUBLIC char	*usage_dir[NUM_LANGS] = {
 	USAGE_DANISH
 };
 PUBLIC char	*uscf_dir	= DEFAULT_USCF;
-
-PUBLIC char	*hadmin_handle = HADMINHANDLE;
-PRIVATE char	*hadmin_email = HADMINEMAIL;
-PRIVATE char	*reg_addr = REGMAIL;
 
 PUBLIC char	 fics_hostname[81];
 PUBLIC int	 MailGameResult;
@@ -617,7 +614,7 @@ process_login(int p, char *loginname)
 					    "nobody from your site may login.\n");
 					pprintf(p, "If you wish to use this "
 					    "server please email %s\n",
-					    reg_addr);
+					    settings_get("REGMAIL"));
 					pprintf(p, "Include details of a "
 					    "nick-name to be called here, "
 					    "e-mail address and your real name."
@@ -1163,8 +1160,8 @@ process_new_connection(int fd, unsigned int fromHost)
 
 	psend_raw_file(p, mess_dir, MESS_WELCOME);
 	pprintf(p, "Head admin : %s   Complaints to : %s\n",
-	    hadmin_handle,
-	    hadmin_email);
+	    settings_get("HADMINHANDLE"),
+	    settings_get("HADMINEMAIL"));
 	pprintf(p, "Server location: %s   Server version : %s\n", fics_hostname,
 	    VERS_NUM);
 	psend_raw_file(p, mess_dir, MESS_LOGIN);
