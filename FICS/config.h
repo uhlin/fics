@@ -55,15 +55,4 @@
 #define SENDMAILPROG		"/usr/sbin/sendmail"
 #define SENDMAILPROG_ARGS	"-t"
 
-/*
- * Details of the head admin
- */
-#define HADMINHANDLE      "maxxe"
-#define HADMINEMAIL       "maxxe@rpblc.net"
-
-/*
- * Registration mail address
- */
-#define REGMAIL           "maxxe@rpblc.net"
-
 #endif    /* _CONFIG_H */
