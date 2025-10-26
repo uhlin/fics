@@ -193,6 +193,8 @@ unveil_doit(void)
 		{SENDMAILPROG, "rx"},
 #endif
 
+		{FICS_SETTINGS, "r"},
+
 		{DEFAULT_ADHELP, ""},		// data/admin
 		{DEFAULT_ADJOURNED, "rwc"},	// games/adjourned
 		{DEFAULT_BOARDS, ""},		// data/boards
