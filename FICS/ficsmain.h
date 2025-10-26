@@ -65,6 +65,8 @@
 #define STATS_GAMES	"games"
 #define STATS_JOURNAL	"journal"
 
+#define UID_SUPER_USER 0
+
 enum {
 	OPFL_APPEND,
 	OPFL_WRITE,
