@@ -49,6 +49,8 @@ settings_init(void)
 	struct setting s4("HADMINHANDLE",    STYPE_STRING, "");
 	struct setting s5("HADMINEMAIL",     STYPE_STRING, "");
 	struct setting s6("REGMAIL",         STYPE_STRING, "");
+	struct setting s7("privdrop_user",   STYPE_STRING, "nobody");
+	struct setting s8("sysgroup",        STYPE_STRING, "chess");
 
 	SET_PB(s1);
 	SET_PB(s2);
@@ -56,6 +58,8 @@ settings_init(void)
 	SET_PB(s4);
 	SET_PB(s5);
 	SET_PB(s6);
+	SET_PB(s7);
+	SET_PB(s8);
 }
 
 void
