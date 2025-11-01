@@ -114,7 +114,7 @@ prep_dir_for_privdrop(const char *path)
 		return 0;
 	try {
 		fs::path		v_path = path;
-		fs::directory_iterator	dir_it(v_path);
+		fs::recursive_directory_iterator dir_it(v_path);
 		uid_t			uid = 0;
 		gid_t			gid = 0;
 		constexpr mode_t	dir_mode = (S_IRUSR|S_IWUSR|
