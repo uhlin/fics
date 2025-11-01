@@ -298,6 +298,19 @@ main(int argc, char *argv[])
 	settings_init();
 	settings_read_conf(FICS_SETTINGS);
 
+	if (is_super_user()) {
+		if (strncmp(FICS_PREFIX, "/home", 5) == 0)
+			errx(1, "Do not run as root");
+		else if (read_the_group_permissions_file("/etc/group") != 0)
+			errx(1, "Failed to read the group permissions file");
+		else if (fics_addgroup(settings_get("sysgroup")) != 0)
+			errx(1, "Failed to add the system group");
+		else if (prep_dir_for_privdrop(FICS_PREFIX) != 0)
+			errx(1, "Dir preparation failed");
+		else if (drop_root_privileges(FICS_PREFIX) != 0)
+			errx(1, "Privdrop failed");
+	}
+
 	if (net_init(port)) {
 		fprintf(stderr, "FICS: Network initialize failed on port %d.\n",
 		    port);
