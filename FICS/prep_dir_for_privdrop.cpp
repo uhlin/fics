@@ -122,12 +122,18 @@ prep_dir_for_privdrop(const char *path)
 		constexpr mode_t	file_mode = (S_IRUSR|S_IWUSR|S_IRGRP|
 					    S_IROTH);
 
-		if (get_uid_and_gid(uid, gid) == -1)
+		if (get_uid_and_gid(uid, gid) == -1) {
 			throw std::runtime_error("failed to get uid/gid");
-		else if (chown(path, uid, gid) != 0)
-			throw std::runtime_error("chown() error");
-		else if (chmod(path, dir_mode) != 0)
-			throw std::runtime_error("chmod() error");
+		} else if (chown(path, uid, gid) != 0) {
+			std::string str("chown() error: ");
+			str.append(strerror(errno));
+			throw std::runtime_error(str);
+		} else if (chmod(path, dir_mode) != 0) {
+			std::string str("chmod() error: ");
+			str.append(strerror(errno));
+			throw std::runtime_error(str);
+		}
+
 		for (auto const &dir_ent : dir_it) {
 			const std::string str(dir_ent.path().string());
 			
