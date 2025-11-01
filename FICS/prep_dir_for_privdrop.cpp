@@ -124,6 +124,10 @@ prep_dir_for_privdrop(const char *path)
 
 		if (get_uid_and_gid(uid, gid) == -1)
 			throw std::runtime_error("failed to get uid/gid");
+		else if (chown(path, uid, gid) != 0)
+			throw std::runtime_error("chown() error");
+		else if (chmod(path, dir_mode) != 0)
+			throw std::runtime_error("chmod() error");
 		for (auto const &dir_ent : dir_it) {
 			const std::string str(dir_ent.path().string());
 			
