@@ -83,7 +83,7 @@ extern int		 alphastring(char *);
 extern int		 available_space(void);
 extern int		 count_lines(FILE *);
 extern int		 display_directory(int, char **, int);
-extern int		 file_exists(char *);
+extern int		 file_exists(const char *);
 extern int		 file_has_pname(char *, char *);
 extern int		 iswhitespace(int);
 extern int		 lines_file(char *);

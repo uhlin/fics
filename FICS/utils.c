@@ -1007,7 +1007,7 @@ available_space(void)
 }
 
 PUBLIC int
-file_exists(char *fname)
+file_exists(const char *fname)
 {
 	FILE *fp;
 
