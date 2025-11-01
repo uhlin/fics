@@ -23,8 +23,8 @@ namespace fs = std::filesystem;
 static int
 get_uid_and_gid(uid_t &uid, gid_t &gid)
 {
-	struct passwd *pw = nullptr;
-	int i = 0;
+	struct passwd	*pw = nullptr;
+	int		 i = 0;
 
 	if ((pw = getpwnam(settings_get("privdrop_user"))) == nullptr ||
 	    !get_group_id(settings_get("sysgroup"), &i)) {
