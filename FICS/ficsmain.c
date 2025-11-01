@@ -273,6 +273,12 @@ usage(char *progname)
 	exit(EXIT_FAILURE);
 }
 
+PUBLIC bool
+is_super_user(void)
+{
+	return (geteuid() == UID_SUPER_USER);
+}
+
 PUBLIC int
 main(int argc, char *argv[])
 {

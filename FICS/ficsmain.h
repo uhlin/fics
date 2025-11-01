@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 
 #include <fcntl.h>
+#include <stdbool.h>
 #include <unistd.h>
 
 #include "common.h"
@@ -81,6 +82,8 @@ extern const mode_t	g_open_modes;
 /* Arguments */
 extern int	port;
 extern int	withConsole;
+
+bool is_super_user(void);
 __FICS_END_DECLS
 
 #endif /* _FICSMAIN_H */
