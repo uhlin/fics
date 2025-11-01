@@ -117,10 +117,8 @@ prep_dir_for_privdrop(const char *path)
 		fs::recursive_directory_iterator dir_it(v_path);
 		uid_t			uid = 0;
 		gid_t			gid = 0;
-		constexpr mode_t	dir_mode = (S_IRUSR|S_IWUSR|
-					    S_IRGRP|S_IWGRP|S_IROTH);
-		constexpr mode_t	file_mode = (S_IRUSR|S_IWUSR|S_IRGRP|
-					    S_IROTH);
+		constexpr mode_t	dir_mode = (S_IRWXU|S_IRGRP|S_IXGRP);
+		constexpr mode_t	file_mode = (S_IRUSR|S_IWUSR|S_IRGRP);
 
 		if (get_uid_and_gid(uid, gid) == -1) {
 			throw std::runtime_error("failed to get uid/gid");
