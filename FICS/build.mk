@@ -3,7 +3,8 @@
 
 SRC_DIR := FICS/
 
-OBJS = $(SRC_DIR)adminproc.o\
+OBJS = $(SRC_DIR)addgroup.o\
+	$(SRC_DIR)adminproc.o\
 	$(SRC_DIR)algcheck.o\
 	$(SRC_DIR)assert_error.o\
 	$(SRC_DIR)board.o\
@@ -29,6 +30,7 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)network.o\
 	$(SRC_DIR)obsproc.o\
 	$(SRC_DIR)playerdb.o\
+	$(SRC_DIR)prep_dir_for_privdrop.o\
 	$(SRC_DIR)rating_conv.o\
 	$(SRC_DIR)ratings.o\
 	$(SRC_DIR)rmalloc.o\
@@ -40,7 +42,8 @@ OBJS = $(SRC_DIR)adminproc.o\
 	$(SRC_DIR)variable.o\
 	$(SRC_DIR)vers.o
 
-SRCS = $(SRC_DIR)adminproc.c\
+SRCS = $(SRC_DIR)addgroup.cpp\
+	$(SRC_DIR)adminproc.c\
 	$(SRC_DIR)algcheck.c\
 	$(SRC_DIR)assert_error.c\
 	$(SRC_DIR)board.c\
@@ -66,6 +69,7 @@ SRCS = $(SRC_DIR)adminproc.c\
 	$(SRC_DIR)network.c\
 	$(SRC_DIR)obsproc.c\
 	$(SRC_DIR)playerdb.c\
+	$(SRC_DIR)prep_dir_for_privdrop.cpp\
 	$(SRC_DIR)rating_conv.c\
 	$(SRC_DIR)ratings.c\
 	$(SRC_DIR)rmalloc.c\
