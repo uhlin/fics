@@ -41,6 +41,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "addgroup.h"
 #include "board.h"
 #include "command.h"
 #include "comproc.h"
@@ -54,6 +55,7 @@
 #include "legal2.h"
 #include "network.h"
 #include "playerdb.h"
+#include "prep_dir_for_privdrop.h"
 #include "ratings.h"
 #include "settings.h"
 #include "shutdown.h"
