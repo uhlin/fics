@@ -140,6 +140,27 @@ group_exists(const char *name)
 	return false;
 }
 
+bool
+is_valid_group_name(const char *name)
+{
+	const char legal_index[] =
+	    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	    "abcdefghijklmnopqrstuvwxyz"
+	    "0123456789_-";
+	const size_t name_min = 2;
+	const size_t name_max = 30;
+
+	if (name == nullptr || strcmp(name, "") == 0)
+		return false;
+	else if (strlen(name) < name_min || strlen(name) > name_max)
+		return false;
+	for (const char *cp = name; *cp != '\0'; cp++) {
+		if (strchr(legal_index, *cp) == nullptr)
+			return false;
+	}
+	return true;
+}
+
 int
 read_the_group_permissions_file(const char *path)
 {
