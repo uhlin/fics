@@ -49,6 +49,8 @@
    Markus Uhlin                 25/07/28	Restricted file permissions upon
 						creation.
    Markus Uhlin                 25/07/30	Usage of 'int64_t'.
+   Markus Uhlin                 25/11/02	Added overflow checks for array
+						indices.
 */
 
 #include "stdinclude.h"
