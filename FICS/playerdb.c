@@ -2082,14 +2082,17 @@ player_decline_offers(int p, int p1, int offerType)
 		type	= parray[p].p_from_list[offer].type;
 		p2	= parray[p].p_from_list[offer].whofrom;
 		p2Name	= parray[p2].name;
-		part	= parray[p].partner;
 
-		if (part >= 0 && parray[part].partner != p)
+		if ((part = parray[p].partner) >= (int)ARRAY_SIZE(parray)) {
+			errx(1, "%s: 'part' (%d) too large", __func__,
+			    part);
+		} else if (part >= 0 && parray[part].partner != p)
 			part = -1;
 
-		p2part = parray[p2].partner;
-
-		if (p2part >= 0 && parray[p2part].partner != p2)
+		if ((p2part = parray[p2].partner) >= (int)ARRAY_SIZE(parray)) {
+			errx(1, "%s: 'p2part' (%d) too large", __func__,
+			    p2part);
+		} else if (p2part >= 0 && parray[p2part].partner != p2)
 			p2part = -1;
 
 		switch (type) {
@@ -2200,14 +2203,17 @@ player_withdraw_offers(int p, int p1, int offerType)
 		type	= parray[p].p_to_list[offer].type;
 		p2	= parray[p].p_to_list[offer].whoto;
 		p2Name	= parray[p2].name;
-		part	= parray[p].partner;
 
-		if (part >= 0 && parray[part].partner != p)
+		if ((part = parray[p].partner) >= (int)ARRAY_SIZE(parray)) {
+			errx(1, "%s: 'part' (%d) too large", __func__,
+			    part);
+		} else if (part >= 0 && parray[part].partner != p)
 			part = -1;
 
-		p2part = parray[p2].partner;
-
-		if (p2part >= 0 && parray[p2part].partner != p2)
+		if ((p2part = parray[p2].partner) >= (int)ARRAY_SIZE(parray)) {
+			errx(1, "%s: 'p2part' (%d) too large", __func__,
+			    p2part);
+		} else if (p2part >= 0 && parray[p2part].partner != p2)
 			p2part = -1;
 
 		switch (type) {
