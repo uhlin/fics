@@ -8,6 +8,7 @@ documented in this file.
   `config.h` to `fics.conf` which is read at startup.
 - Added more open flags and changed the code to refer to them by using
   enums.
+- Added overflow checks for array indices. Multiple occurrences.
 - Added usage of `unveil()` and `pledge()`. (OpenBSD mitigation
   techniques, so OpenBSD only.)
 - Assured that no conversion loss takes place when dealing with
