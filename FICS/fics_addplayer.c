@@ -42,6 +42,7 @@
 #include "fics_getsalt.h"
 #include "ficsmain.h"
 #include "playerdb.h"
+#include "prep_dir_for_privdrop.h"
 #include "settings.h"
 #include "utils.h"
 
@@ -135,6 +136,16 @@ main(int argc, char *argv[])
 
 	settings_init();
 	settings_read_conf(FICS_SETTINGS);
+
+	if (strncmp(FICS_PREFIX, "/home", 5) == 0) {
+		if (is_super_user())
+			errx(1, "Do not run as root");
+	} else {
+		if (!is_super_user())
+			errx(1, "Need root privileges");
+		else if (drop_root_privileges(FICS_PREFIX) == -1)
+			errx(1, "Privdrop failed");
+	}
 
 	player_init(0);
 	p = player_new();

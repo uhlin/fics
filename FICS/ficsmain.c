@@ -298,9 +298,12 @@ main(int argc, char *argv[])
 	settings_init();
 	settings_read_conf(FICS_SETTINGS);
 
-	if (is_super_user()) {
-		if (strncmp(FICS_PREFIX, "/home", 5) == 0)
+	if (strncmp(FICS_PREFIX, "/home", 5) == 0) {
+		if (is_super_user())
 			errx(1, "Do not run as root");
+	} else {
+		if (!is_super_user())
+			errx(1, "Need root privileges");
 		else if (read_the_group_permissions_file("/etc/group") != 0)
 			errx(1, "Failed to read the group permissions file");
 		else if (fics_addgroup(settings_get("sysgroup")) != 0)
