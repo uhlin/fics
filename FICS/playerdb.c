@@ -2072,6 +2072,11 @@ player_decline_offers(int p, int p1, int offerType)
 	}
 
 	while ((offer = player_find_pendfrom(p, p1, offerType)) >= 0) {
+		if (offer >= (int)ARRAY_SIZE(parray[0].p_from_list)) {
+			warnx("%s: 'offer' too large", __func__);
+			break;
+		}
+
 		type	= parray[p].p_from_list[offer].type;
 		p2	= parray[p].p_from_list[offer].whofrom;
 		p2Name	= parray[p2].name;
@@ -2185,6 +2190,11 @@ player_withdraw_offers(int p, int p1, int offerType)
 	}
 
 	while ((offer = player_find_pendto(p, p1, offerType)) >= 0) {
+		if (offer >= (int)ARRAY_SIZE(parray[0].p_to_list)) {
+			warnx("%s: 'offer' too large", __func__);
+			break;
+		}
+
 		type	= parray[p].p_to_list[offer].type;
 		p2	= parray[p].p_to_list[offer].whoto;
 		p2Name	= parray[p2].name;
