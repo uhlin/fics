@@ -1087,8 +1087,8 @@ player_read(int p, char *name)
 	char	 line[MAX_LINE_SIZE] = { '\0' };
 	char	*attr, *value;
 	char	*resolvedPath = NULL;
-	int	 len = 0;
 	int	 version = 0;
+	size_t	 len = 0;
 
 	parray[p].login = stolower(xstrdup(name)); // free on error?
 
