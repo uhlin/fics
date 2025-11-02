@@ -29,6 +29,9 @@
    Markus Uhlin			24/05/25	Added command-line option 'a'
    Markus Uhlin			25/03/23	Output restart notice if the
 						player is admin.
+   Markus Uhlin			25/11/02	Require root privileges if the
+						FICS prefix compares to anything
+						else than '/home'.
 */
 
 #include "stdinclude.h"
