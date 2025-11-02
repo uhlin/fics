@@ -9,6 +9,7 @@ documented in this file.
 - Added more open flags and changed the code to refer to them by using
   enums.
 - Added overflow checks for array indices. Multiple occurrences.
+- Added the possibility for the FICS to be installed system-wide.
 - Added usage of `unveil()` and `pledge()`. (OpenBSD mitigation
   techniques, so OpenBSD only.)
 - Assured that no conversion loss takes place when dealing with
