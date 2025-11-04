@@ -3,6 +3,10 @@
 
 #include "common.h"
 
+typedef struct {
+	char data[400];
+} err_reason_t;
+
 __FICS_BEGIN_DECLS
 void		 settings_init(void);
 void		 settings_deinit(void);
