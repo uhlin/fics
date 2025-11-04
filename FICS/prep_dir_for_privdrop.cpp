@@ -82,6 +82,8 @@ drop_root_privileges(const char *path)
 {
 	struct passwd *pw;
 
+	puts("Dropping the root privileges...");
+
 	if ((pw = getpwnam(settings_get("privdrop_user"))) == nullptr) {
 		warnx("%s: password database search failed", __func__);
 		return -1;
