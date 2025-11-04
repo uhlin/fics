@@ -38,7 +38,7 @@ get_uid_and_gid(uid_t &uid, gid_t &gid)
 	return 0;
 }
 
-static int
+int
 check_prep_done(const char *p_path)
 {
 	std::string path(p_path);

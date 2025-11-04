@@ -4,6 +4,7 @@
 #include "common.h"
 
 __FICS_BEGIN_DECLS
+int	check_prep_done(const char *);
 int	drop_root_privileges(const char *);
 int	prep_dir_for_privdrop(const char *);
 __FICS_END_DECLS
