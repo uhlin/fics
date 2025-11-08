@@ -7,9 +7,14 @@
 #include <string>
 #include <vector>
 
+#include "addgroup.h"
 #include "copyfile.h"
 #include "interpreter.h"
 #include "settings.h"
+
+#if __linux__
+#include <bsd/string.h>
+#endif
 
 struct setting {
 	std::string		name;
