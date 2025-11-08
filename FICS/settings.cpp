@@ -99,6 +99,19 @@ install_setting(const char *name, const char *value)
 	return ENOENT;
 }
 
+void
+check_some_settings_strictly(void)
+{
+	err_reason_t reason;
+
+	if (!is_valid_hostname(settings_get("server_hostname"), &reason))
+		errx(1, "error: server_hostname: %s", reason.data);
+	else if (!is_valid_username(settings_get("privdrop_user"), &reason))
+		errx(1, "error: privdrop_user: %s", reason.data);
+	else if (!is_valid_group_name(settings_get("sysgroup")))
+		errx(1, "error: sysgroup: invalid group name");
+}
+
 bool
 is_valid_hostname(const char *p_str, err_reason_t *p_reason)
 {
