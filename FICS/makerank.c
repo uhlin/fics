@@ -15,6 +15,7 @@
 #include "common.h"
 #include "ficsmain.h"
 #include "makerank.h"
+#include "prep_dir_for_privdrop.h"
 #include "utils.h"
 
 static ENTRY	**list;
@@ -338,6 +339,16 @@ main(int argc, char **argv)
 	if (argc > 1) {
 		fprintf(stderr, "usage: %s.\n", argv[0]);
 		return EXIT_FAILURE;
+	}
+
+	if (strncmp(FICS_PREFIX, "/home", 5) == 0) {
+		if (is_super_user())
+			errx(1, "Do not run as root");
+	} else {
+		if (!is_super_user())
+			errx(1, "Need root privileges");
+		else if (drop_root_privileges(FICS_PREFIX) == -1)
+			errx(1, "Privdrop failed");
 	}
 
 	makerank();
