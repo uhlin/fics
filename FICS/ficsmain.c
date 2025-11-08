@@ -297,6 +297,7 @@ main(int argc, char *argv[])
 
 	settings_init();
 	settings_read_conf(FICS_SETTINGS);
+	check_some_settings_strictly();
 
 	if (strncmp(FICS_PREFIX, "/home", 5) == 0) {
 		if (is_super_user())
