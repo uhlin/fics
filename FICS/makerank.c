@@ -347,7 +347,10 @@ main(int argc, char **argv)
 	} else {
 		if (!is_super_user())
 			errx(1, "Need root privileges");
-		else if (drop_root_privileges(FICS_PREFIX) == -1)
+		else if (check_prep_done(FICS_PREFIX) == -1) {
+			errx(1, "Prep not done. Solve it by starting the FICS "
+			    "once (as root).");
+		} else if (drop_root_privileges(FICS_PREFIX) == -1)
 			errx(1, "Privdrop failed");
 	}
 
