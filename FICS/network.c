@@ -596,16 +596,19 @@ turn_echo_off(int fd)
 		warn("%s: cannot send", __func__);
 }
 
-PUBLIC unsigned int
-net_connected_host(int fd)
+PUBLIC bool
+net_connected_host(int fd, unsigned int *fromHost)
 {
 	int which;
 
 	if ((which = findConnection(fd)) < 0) {
 		fprintf(stderr, "FICS: FD not in connection table!\n");
-		return -1;
+		*fromHost = 0;
+		return false;
 	}
-	return con[which].fromHost;
+
+	*fromHost = con[which].fromHost;
+	return true;
 }
 
 PUBLIC void

@@ -26,6 +26,8 @@
 #ifndef _NETWORK_H
 #define _NETWORK_H
 
+#include <stdbool.h>
+
 #include "command.h"	/* For MAX_STRING_LENGTH */
 
 #define NET_NETERROR		0
@@ -86,8 +88,7 @@ extern int	 net_consize(void);
 extern int	 net_init(int);
 extern int	 net_send_string(int, char *, int);
 extern int	 readline2(comstr_t *, int);
-extern unsigned int
-		 net_connected_host(int);
+extern bool	 net_connected_host(int, unsigned int *);
 extern void	 net_close(void);
 extern void	 net_close_connection(int);
 extern void	 ngc2(comstr_t *, int);
