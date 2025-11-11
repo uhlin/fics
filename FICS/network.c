@@ -627,7 +627,14 @@ ngc2(comstr_t *cs, int timeout)
 			psend_raw_file(fd, mess_dir, MESS_FULL);
 			close(fd);
 		} else {
-			process_new_connection(fd, net_connected_host(fd));
+			unsigned int fromHost = 0;
+
+			if (!net_connected_host(fd, &fromHost)) {
+				close(fd);
+				continue;
+			}
+
+			process_new_connection(fd, fromHost);
 		}
 	}
 
