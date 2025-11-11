@@ -63,7 +63,7 @@ list_find(int p, enum ListWhich l)
 	personal	= ListArray[l].rights == P_PERSONAL;
 
 	if (personal) {
-		if (p < 0)
+		if (p < 0 || p >= (int)ARRAY_SIZE(parray))
 			return NULL;
 		starter = &parray[p].lists;
 	} else {
