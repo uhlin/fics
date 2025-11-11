@@ -622,7 +622,7 @@ ngc2(comstr_t *cs, int timeout)
 
 	while ((fd = accept(sockfd, (struct sockaddr *) &cli_addr, &cli_len)) !=
 	    -1) {
-		if (net_addConnection(fd, cli_addr.sin_addr.s_addr)) {
+		if (net_addConnection(fd, cli_addr.sin_addr.s_addr) != 0) {
 			fprintf(stderr, "FICS is full.  fd = %d.\n", fd);
 			psend_raw_file(fd, mess_dir, MESS_FULL);
 			close(fd);
