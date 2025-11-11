@@ -14,6 +14,7 @@ documented in this file.
   techniques, so OpenBSD only.)
 - Assured that no conversion loss takes place when dealing with
   `time_t` conversions. Multiple occurrences.
+- Fixed error handling issues.
 - Replaced calls to `system()`. Two occurrences.
 
 ## [1.4.6] - 2025-09-14 ##
