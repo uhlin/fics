@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/13	Cleaned up the file
+   Markus Uhlin                 25/11/11	Changed net_connected_host().
 */
 
 #ifndef _NETWORK_H
