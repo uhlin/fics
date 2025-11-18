@@ -27,6 +27,8 @@
 						functions.
    Markus Uhlin                 25/03/21	Fixed out-of-bounds array access
 						in has_legal_move().
+   Markus Uhlin                 25/11/18	Fixed possible array underrun in
+						legal_move().
 */
 
 #include "stdinclude.h"
