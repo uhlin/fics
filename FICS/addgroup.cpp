@@ -85,7 +85,11 @@ fics_addgroup(const char *name)
 	dprintf(fd, "%s:%s:%d:%s\n", group.name.c_str(), group.password.c_str(),
 	    group.gid, group.members.c_str());
 	close(fd);
+#if defined(__cplusplus) && __cplusplus >= 201103L
+	groups.emplace_back(group);
+#else
 	groups.push_back(group);
+#endif
 	return 0;
 }
 
