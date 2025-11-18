@@ -193,7 +193,11 @@ read_the_group_permissions_file(const char *path)
 		}
 
 		struct group_info group(token[0], token[1], gid, token[3]);
+#if defined(__cplusplus) && __cplusplus >= 201103L
+		groups.emplace_back(group);
+#else
 		groups.push_back(group);
+#endif
 	}
 
 	if (feof(fp))
