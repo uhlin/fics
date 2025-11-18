@@ -15,6 +15,7 @@ documented in this file.
 - Assured that no conversion loss takes place when dealing with
   `time_t` conversions. Multiple occurrences.
 - Fixed error handling issues.
+- Fixed null pointer dereferences.
 - Replaced calls to `system()`. Two occurrences.
 
 ## [1.4.6] - 2025-09-14 ##
