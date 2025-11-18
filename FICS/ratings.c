@@ -1530,8 +1530,16 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 		    CompareStats(addName, sNew, login, &sCur) > 0) {
 			int computer = in_list(-1, L_COMPUTER, addName);
 
-			fprintf(fptemp, "%s %d %d %d\n", addName, sNew->rating,
-			    sNew->num, computer);
+			if (sNew) {
+				fprintf(fptemp, "%s %d %d %d\n", addName,
+				    sNew->rating, sNew->num, computer);
+			} else {
+				warnx("%s: 'sNew' null: addName = %s", __func__,
+				    addName);
+				fprintf(fptemp, "%s %d %d %d\n", addName,
+				    0, 0, computer);
+			}
+
 			addName = NULL;
 		}
 
