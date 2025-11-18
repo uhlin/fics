@@ -991,7 +991,10 @@ com_match(int p, param_list param)
 		}
 	} else {
 		ppend = pendto;
-		p1pend = player_find_pendfrom(p1, p, PEND_MATCH);
+		if ((p1pend = player_find_pendfrom(p1, p, PEND_MATCH)) < 0) {
+			pprintf(p, "Unable to find pending match\n");
+			return COM_OK;
+		}
 	}
 
 	parray[p].p_to_list[ppend].param1 = wt;

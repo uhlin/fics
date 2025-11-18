@@ -306,8 +306,14 @@ list_addsub(int p, char *list, char *who, int addsub)
 				return COM_OK;
 			member = who; // allow sub removed/renamed player
 			loadme = 0;
-		} else
-			member = parray[p1].name;
+		} else {
+			if (p1 < 0) {
+				warnx("%s: unexpected negative number",
+				    __func__);
+				return COM_OK;
+			} else
+				member = parray[p1].name;
+		}
 	} else {
 		member = who;
 	}
