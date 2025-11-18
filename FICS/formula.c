@@ -68,7 +68,7 @@
 PRIVATE char *
 GetPlayersFormula(player *pWho, int clause)
 {
-	if (clause == MAX_FORMULA)
+	if (clause < 0 || clause >= (int)ARRAY_SIZE(pWho->formulaLines))
 		return pWho->formula;
 	return pWho->formulaLines[clause];
 }
