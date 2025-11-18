@@ -37,6 +37,8 @@
 						for a 'scanf'-like function.
    Markus Uhlin                 25/07/28	Restricted file permissions upon
 						creation.
+   Markus Uhlin                 25/11/18	Fixed null pointer dereference
+						in UpdateRank().
 */
 
 #include "stdinclude.h"
