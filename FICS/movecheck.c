@@ -31,6 +31,8 @@
 
 #include "stdinclude.h"
 
+#include <err.h>
+
 #include "algcheck.h"
 #include "board.h"
 #include "common.h"
@@ -718,6 +720,15 @@ legal_move(game_state_t *gs,
 {
 	int	legal;
 	int	move_piece;
+
+	if (gs == NULL) {
+		warnx("%s: hoser! null game state", __func__);
+		return 0;
+	} else if ((fFile < 0 && fFile != ALG_DROP) ||
+		   fFile >= (int)ARRAY_SIZE(gs->board)) {
+		warnx("%s: 'fFile' (%d) out of range", __func__, fFile);
+		return 0;
+	}
 
 	if (fFile == ALG_DROP) {
 		move_piece = fRank;
