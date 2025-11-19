@@ -113,6 +113,20 @@ check_some_settings_strictly(void)
 }
 
 bool
+is_numeric(const char *string)
+{
+	if (string == nullptr || *string == '\0')
+		return false;
+
+	for (const char *cp = &string[0]; *cp != '\0'; cp++) {
+		if (!isdigit(*cp))
+			return false;
+	}
+
+	return true;
+}
+
+bool
 is_valid_hostname(const char *p_str, err_reason_t *p_reason)
 {
 	const char	legal_index[] =
