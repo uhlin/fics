@@ -133,12 +133,10 @@ install_setting(const char *name, const char *value)
 		return EINVAL;
 	for (auto it = settings.begin(); it != settings.end(); ++it) {
 		if (strings_match((*it).name.c_str(), name)) {
-			if (!is_setting_ok(value, (*it).type)) {
+			if (!is_setting_ok(value, (*it).type))
 				return EINVAL;
-			} else {
-				(*it).value.assign(value);
-				return 0;
-			}
+			(*it).value.assign(value);
+			return 0;
 		}
 	}
 	return ENOENT;
