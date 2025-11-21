@@ -158,7 +158,7 @@ check_some_settings_strictly(void)
 bool
 is_numeric(const char *string)
 {
-	if (string == nullptr || *string == '\0')
+	if (string == nullptr || strcmp(string, "") == 0)
 		return false;
 
 	for (const char *cp = &string[0]; *cp != '\0'; cp++) {
