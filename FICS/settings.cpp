@@ -3,6 +3,7 @@
 
 #include <err.h>
 #include <errno.h>
+#include <string.h>
 
 #include <string>
 #include <vector>
@@ -85,6 +86,46 @@ is_recognized_setting(const char *name)
 	return false;
 }
 
+static bool
+is_setting_ok(const char *value, enum setting_type type)
+{
+	if (value == nullptr)
+		return false;
+
+	switch (type) {
+	case STYPE_BOOLEAN: {
+		if (!strings_match(value, "yes") &&
+		    !strings_match(value, "YES") &&
+		    !strings_match(value, "no") &&
+		    !strings_match(value, "NO")) {
+			warnx("%s: booleans must be either: "
+			    "yes, YES, no or NO", __func__);
+			return false;
+		}
+		break;
+	}
+	case STYPE_INTEGER: {
+		if (!is_numeric(value)) {
+			warnx("%s: integer not all numeric", __func__);
+			return false;
+		}
+		break;
+	}
+	case STYPE_STRING: {
+		if (strpbrk(value, " \f\n\r\t\v\"") != NULL) {
+			warnx("%s: illegal characters in string", __func__);
+			return false;
+		}
+		break;
+	}
+	default:
+		errx(1, "%s: statement reached unexpectedly", __func__);
+		break;
+	}
+
+	return true;
+}
+
 static int
 install_setting(const char *name, const char *value)
 {
@@ -92,8 +133,12 @@ install_setting(const char *name, const char *value)
 		return EINVAL;
 	for (auto it = settings.begin(); it != settings.end(); ++it) {
 		if (strings_match((*it).name.c_str(), name)) {
-			(*it).value.assign(value);
-			return 0;
+			if (!is_setting_ok(value, (*it).type)) {
+				return EINVAL;
+			} else {
+				(*it).value.assign(value);
+				return 0;
+			}
 		}
 	}
 	return ENOENT;
