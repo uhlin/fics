@@ -112,7 +112,7 @@ is_setting_ok(const char *value, enum setting_type type)
 		break;
 	}
 	case STYPE_STRING: {
-		if (strpbrk(value, " \f\n\r\t\v\"") != NULL) {
+		if (strpbrk(value, "\f\n\r\t\v\"") != NULL) {
 			warnx("%s: illegal characters in string", __func__);
 			return false;
 		}
