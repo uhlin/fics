@@ -260,12 +260,10 @@ settings_read_conf(const char *path)
 {
 	FILE *fp = nullptr;
 
-	if (!is_regular_file(path)) {
-		errx(1, "%s: either the config file is nonexistent"
-		    "  --  or it isn't a regular file", __func__);
-	} else if ((fp = fopen(path, "r")) == nullptr) {
+	if (path == nullptr)
+		errx(1, "%s: null path", __func__);
+	else if ((fp = fopen(path, "r")) == nullptr)
 		err(1, "%s: fopen", __func__);
-	}
 
 	Interpreter_processAllLines(fp, path, is_recognized_setting,
 	    install_setting);
