@@ -287,7 +287,7 @@ list_addsub(int p, char *list, char *who, int addsub)
 	List	*gl;
 	char	*listname, *member;
 	char	*yourthe, *addrem;
-	int	 p1 = -1, connected, loadme, personal, ch;
+	int	 p1 = -1, connected = 0, loadme, personal, ch;
 
 	if ((gl = list_findpartial(p, list, addsub)) == NULL)
 		return COM_OK;

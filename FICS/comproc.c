@@ -137,8 +137,8 @@ rscan_news2(FILE *fp, int p, int num)
 	char		 junk[MAX_LINE_SIZE] = { '\0' };
 	char		*junkp;
 	const char	*v_scan_fmt = "%" SCNd64 " " "%9s";
-	int64_t		 lval;
-	time_t		 crtime;
+	int64_t		 lval = 0;
+	time_t		 crtime = 0;
 
 	if (num == 0)
 		return;

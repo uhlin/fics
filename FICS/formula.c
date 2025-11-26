@@ -568,7 +568,7 @@ CheckFormula(game *g, int clause, int *i, int op_type, int *result, int eval)
 PRIVATE int
 ChooseClauses(player *who, char *formula)
 {
-	int i, which, ret = 0;
+	int i, which = 0, ret = 0;
 
 	if (formula == NULL)
 		return ret;

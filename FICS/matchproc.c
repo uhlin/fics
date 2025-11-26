@@ -306,7 +306,7 @@ accept_match(int p, int p1)
 	char	 board[50] = { '\0' };
 	char	 category[50] = { '\0' };
 	char	 tmp[100] = { '\0' };
-	int	 bh = 0, pp, pp1;
+	int	 bh = 0, pp = 0, pp1 = 0;
 	int	 g, adjourned, foo, which;
 	int	 wt, winc, bt, binc, rated, white;
 	pending	*pend;
@@ -633,7 +633,7 @@ com_match(int p, param_list param)
 	char		*colorstr[] = { "", "[black] ", "[white] " };
 	char		*val;
 	int		 adjourned;	// adjourned game?
-	int		 bh = 0, pp, pp1;
+	int		 bh = 0, pp = 0, pp1 = 0;
 	int		 binc = -1;	// black increment
 	int		 bt = -1;	// black start time
 	int		 confused = 0;
@@ -642,7 +642,7 @@ com_match(int p, param_list param)
 	int		 pendfrom, pendto;
 	int		 ppend, p1pend;
 	int		 rated = -1;	// 1 = rated, 0 = unrated
-	int		 type;
+	int		 type = TYPE_UNTIMED;
 	int		 white = -1;	// 1 = want white, 0 = want black
 	int		 winc = -1;	// white increment
 	int		 wt = -1;	// white start time

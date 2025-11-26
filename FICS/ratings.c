@@ -1488,7 +1488,17 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	char		 login[MAX_LOGIN_NAME] = { '\0' };
 	int		 comp = 0;
 	int		 fd = -1;
-	statistics	 sCur;
+	statistics	 sCur = {
+		.sterr = 0.0,
+		.num = 0,
+		.win = 0,
+		.los = 0,
+		.dra = 0,
+		.rating = 0,
+		.best = 0,
+		.ltime = 0,
+		.whenbest = 0,
+	};
 
 	if (GetRankFileName(RankFile, sizeof RankFile, type) < 0)
 		return;

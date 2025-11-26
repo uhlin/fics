@@ -443,6 +443,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	intmax_t	 wb_tmp[5] = { 0 };
 	size_t		 n;
 
+	bs = ss = ws = ls = bugs = 0;
+
 	/* XXX: not referenced */
 	(void) version;
 
