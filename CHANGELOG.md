@@ -16,6 +16,7 @@ documented in this file.
   `time_t` conversions. Multiple occurrences.
 - **Fixed** error handling issues.
 - **Fixed** null pointer dereferences.
+- **Fixed** potentially uninitialized vars.
 - **Replaced** calls to `system()`. Two occurrences.
 
 ## [1.4.6] - 2025-09-14 ##
