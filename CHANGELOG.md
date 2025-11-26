@@ -4,19 +4,19 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Added a config file interpreter and moved some settings from
+- **Added** a config file interpreter and moved some settings from
   `config.h` to `fics.conf` which is read at startup.
-- Added more open flags and changed the code to refer to them by using
+- **Added** more open flags and changed the code to refer to them by using
   enums.
-- Added overflow checks for array indices. Multiple occurrences.
-- Added the possibility for the FICS to be installed system-wide.
-- Added usage of `unveil()` and `pledge()`. (OpenBSD mitigation
+- **Added** overflow checks for array indices. Multiple occurrences.
+- **Added** the possibility for the FICS to be installed system-wide.
+- **Added** usage of `unveil()` and `pledge()`. (OpenBSD mitigation
   techniques, so OpenBSD only.)
-- Assured that no conversion loss takes place when dealing with
+- **Assured** that no conversion loss takes place when dealing with
   `time_t` conversions. Multiple occurrences.
-- Fixed error handling issues.
-- Fixed null pointer dereferences.
-- Replaced calls to `system()`. Two occurrences.
+- **Fixed** error handling issues.
+- **Fixed** null pointer dereferences.
+- **Replaced** calls to `system()`. Two occurrences.
 
 ## [1.4.6] - 2025-09-14 ##
 - **Added** validation of filenames and login names.
