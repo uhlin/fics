@@ -16,6 +16,7 @@
 #include "ficsmain.h"
 #include "makerank.h"
 #include "prep_dir_for_privdrop.h"
+#include "settings.h"
 #include "utils.h"
 
 static ENTRY	**list;
@@ -340,6 +341,10 @@ main(int argc, char **argv)
 		fprintf(stderr, "usage: %s.\n", argv[0]);
 		return EXIT_FAILURE;
 	}
+
+	settings_init();
+	settings_read_conf(FICS_SETTINGS);
+	check_some_settings_strictly();
 
 	if (strncmp(FICS_PREFIX, "/home", 5) == 0) {
 		if (is_super_user())
