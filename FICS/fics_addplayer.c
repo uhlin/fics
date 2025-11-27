@@ -137,6 +137,10 @@ main(int argc, char *argv[])
 		    "Only A-Za-z allowed.");
 	}
 
+	settings_init();
+	settings_read_conf(FICS_SETTINGS);
+	check_some_settings_strictly();
+
 	if (strncmp(FICS_PREFIX, "/home", 5) == 0) {
 		if (is_super_user())
 			errx(1, "Do not run as root");
@@ -149,10 +153,6 @@ main(int argc, char *argv[])
 		} else if (drop_root_privileges(FICS_PREFIX) == -1)
 			errx(1, "Privdrop failed");
 	}
-
-	settings_init();
-	settings_read_conf(FICS_SETTINGS);
-	check_some_settings_strictly();
 
 	player_init(0);
 	p = player_new();
