@@ -412,7 +412,8 @@ printusage(int p, char *command_str)
 	int	 command;
 	int	 i, parlen, UseLang = parray[p].language;
 
-	if ((command = match_command(command_str, p)) < 0) {
+	if ((command = match_command(command_str, p)) < 0 ||
+	    command >= (int)ARRAY_SIZE(command_list)) {
 		pprintf(p, "  UNKNOWN COMMAND\n");
 		return;
 	}
