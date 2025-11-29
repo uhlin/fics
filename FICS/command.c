@@ -665,7 +665,8 @@ process_login(int p, char *loginname)
 			    !in_list(p, L_ADMIN, parray[p].name)) {
 				pprintf(p, "\nYou've got a bad playerfile -- "
 				    "please report this to an admin!\n");
-				pprintf(p, "Your handle is missing!");
+				pprintf(p, "Your handle is missing!\n"
+				    "(This in '%s/admin'.)\n", lists_dir);
 				pprintf(p, "Please log on as an unreg until "
 				    "an admin can correct this.\n");
 				return COM_LOGOUT;
