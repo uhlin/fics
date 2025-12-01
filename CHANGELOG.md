@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.4.7] - 2025-12-01 ##
 - **Added** a config file interpreter and moved some settings from
   `config.h` to `fics.conf` which is read at startup.
 - **Added** more open flags and changed the code to refer to them by using
