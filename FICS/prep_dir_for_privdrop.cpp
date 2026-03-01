@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Markus Uhlin <maxxe@rpblc.net>
+// SPDX-FileCopyrightText: 2025-2026 Markus Uhlin <maxxe@rpblc.net>
 // SPDX-License-Identifier: ISC
 
 #include <sys/types.h>
@@ -7,9 +7,9 @@
 #include <err.h>
 #include <fcntl.h>
 #include <pwd.h>
-#include <string.h>
 #include <unistd.h>
 
+#include <cstring>
 #include <filesystem>
 #include <string>
 
