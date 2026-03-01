@@ -3,6 +3,9 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
+## [Unreleased] ##
+- Replaced C-style headers in C++ files.
+
 ## [1.4.7] - 2025-12-01 ##
 - **Added** a config file interpreter and moved some settings from
   `config.h` to `fics.conf` which is read at startup.
