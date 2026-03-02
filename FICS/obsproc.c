@@ -35,6 +35,7 @@
    Markus Uhlin			25/04/06	Fixed Clang Tidy warnings.
    Markus Uhlin			25/10/17	Replaced system() with
 						fics_copyfile().
+   Markus Uhlin			26/03/02	Replaced atoi() with strtol().
 */
 
 #include "stdinclude.h"

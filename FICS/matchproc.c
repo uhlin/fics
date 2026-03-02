@@ -34,6 +34,8 @@
    Markus Uhlin                         25/03/12	Fixed negative array
 							index read in
 							accept_match().
+   Markus Uhlin                         26/03/02	Replaced atoi() with
+							strtol().
 */
 
 #include "stdinclude.h"

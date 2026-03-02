@@ -30,6 +30,7 @@
    Markus Uhlin                 24/07/08	Added var 'interface'
    Markus Uhlin                 24/11/19	Improved Language()
    Markus Uhlin                 24/11/24	Added var 'seek'.
+   Markus Uhlin                 26/03/02	Replaced atoi() with strtol().
 */
 
 #include "stdinclude.h"
