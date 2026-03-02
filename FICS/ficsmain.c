@@ -29,6 +29,7 @@
    Markus Uhlin                 24/12/04	Added command-line option 'v'
    Markus Uhlin                 25/10/14	Added usage of unveil() and
 						pledge() (OpenBSD only).
+   Markus Uhlin                 26/03/02	Check signal() return.
 */
 
 #include "stdinclude.h"
