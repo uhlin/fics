@@ -42,6 +42,7 @@
 #include <sys/resource.h>
 
 #include <err.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "board.h"
@@ -725,7 +726,7 @@ com_match(int p, param_list param)
 		}
 
 		if (param[1].type != TYPE_NULL) {
-			int	numba; // temp for atoi()
+			int	numba;
 
 			val = param[1].val.string;
 
@@ -737,7 +738,8 @@ com_match(int p, param_list param)
 				if (category[0] != '\0' && board[0] == '\0') {
 					strlcpy(board, parsebuf, sizeof board);
 				} else if (isdigit(*parsebuf)) {
-					if ((numba = atoi(parsebuf)) < 0) {
+					if ((numba = (int)strtol(parsebuf,
+					    (char **)NULL, 10)) < 0) {
 						pprintf(p, "You can't specify "
 						    "negative time controls."
 						    "\n");

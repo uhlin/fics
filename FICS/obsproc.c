@@ -144,7 +144,7 @@ com_games(int p, param_list param)
 			s	= param[0].val.word;
 			slen	= strlen(s);
 
-			if ((selected = atoi(s)) < 0)
+			if ((selected = (int)strtol(s, (char **)NULL, 10)) < 0)
 				selected = 0;
 		}
 

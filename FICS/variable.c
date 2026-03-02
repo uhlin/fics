@@ -738,7 +738,7 @@ set_plan(int p, char *var, char *val)
 
 	if (val && !printablestring(val))
 		return VAR_BADVAL;
-	if ((which = atoi(var)) > MAX_PLAN)
+	if ((which = (int)strtol(var, (char **)NULL, 10)) > MAX_PLAN)
 		return VAR_BADVAL;
 	if (which > parray[p].num_plan)
 		which = parray[p].num_plan + 1;
