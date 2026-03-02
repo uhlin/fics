@@ -5,6 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Replaced C-style headers in C++ files.
+- Replaced `atoi()` with `strtol()`. Multiple occurrences.
 
 ## [1.4.7] - 2025-12-01 ##
 - **Added** a config file interpreter and moved some settings from
