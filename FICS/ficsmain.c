@@ -291,9 +291,12 @@ main(int argc, char *argv[])
 #endif
 	GetArgs(argc, argv);
 
-	signal(SIGINT, TerminateServer);
-	signal(SIGPIPE, BrokenPipe);
-	signal(SIGTERM, TerminateServer);
+	if (signal(SIGINT, TerminateServer) == SIG_ERR)
+		err(1, "%s: SIGINT(%d) error", __func__, SIGINT);
+	if (signal(SIGPIPE, BrokenPipe) == SIG_ERR)
+		err(1, "%s: SIGPIPE(%d) error", __func__, SIGPIPE);
+	if (signal(SIGTERM, TerminateServer) == SIG_ERR)
+		err(1, "%s: SIGTERM(%d) error", __func__, SIGTERM);
 
 	settings_init();
 	settings_read_conf(FICS_SETTINGS);
