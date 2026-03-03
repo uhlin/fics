@@ -48,6 +48,7 @@
    Markus Uhlin			25/07/29	Usage of 'int64_t'.
    Markus Uhlin			25/08/16	Fixed uncontrolled data used in
 						path expressions.
+   Markus Uhlin			26/03/03	Usage of strtonum().
 */
 
 #include "stdinclude.h"
