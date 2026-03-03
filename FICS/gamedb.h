@@ -205,6 +205,8 @@ extern void	 game_write_complete(int, int, char *);
 extern void	 send_board_to(int, int);
 extern void	 send_boards(int);
 
+extern int	 get_intval(const char *);
+extern time_t	 get_timeval(const char *);
 __FICS_END_DECLS
 
 #endif

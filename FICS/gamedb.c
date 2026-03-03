@@ -62,6 +62,7 @@
 #include "command.h"
 #include "config.h"
 #include "eco.h"
+#include "ficslim.h"
 #include "ficsmain.h"
 #include "gamedb.h"
 #include "gameproc.h"
@@ -73,6 +74,7 @@
 #include "utils.h"
 
 #if __linux__
+#include <bsd/stdlib.h>
 #include <bsd/string.h>
 #endif
 
@@ -1043,16 +1045,35 @@ ReadGameState(FILE *fp, game_state_t *gs, int version)
 }
 
 PUBLIC int
+get_intval(const char *nptr)
+{
+	const char	*errstr = NULL;
+	const int	 val = (int) strtonum(nptr, INT_MIN, INT_MAX, &errstr);
+
+	return (errstr ? 0 : val);
+}
+
+PUBLIC time_t
+get_timeval(const char *nptr)
+{
+	const char	*errstr = NULL;
+	const time_t	 val = (time_t) strtonum(nptr, g_time_min, g_time_max,
+			     &errstr);
+
+	return (errstr ? 0 : val);
+}
+
+PUBLIC int
 got_attr_value(int g, char *attr, char *value, FILE *fp, char *file)
 {
 	if (!strcmp(attr, "w_init:")) {
-		garray[g].wInitTime = atoi(value);
+		garray[g].wInitTime = get_intval(value);
 	} else if (!strcmp(attr, "w_inc:")) {
-		garray[g].wIncrement = atoi(value);
+		garray[g].wIncrement = get_intval(value);
 	} else if (!strcmp(attr, "b_init:")) {
-		garray[g].bInitTime = atoi(value);
+		garray[g].bInitTime = get_intval(value);
 	} else if (!strcmp(attr, "b_inc:")) {
-		garray[g].bIncrement = atoi(value);
+		garray[g].bIncrement = get_intval(value);
 	} else if (!strcmp(attr, "white_name:")) {
 		mstrlcpy(garray[g].white_name, value,
 		    sizeof(garray[g].white_name));
@@ -1060,27 +1081,27 @@ got_attr_value(int g, char *attr, char *value, FILE *fp, char *file)
 		mstrlcpy(garray[g].black_name, value,
 		    sizeof(garray[g].black_name));
 	} else if (!strcmp(attr, "white_rating:")) {
-		garray[g].white_rating = atoi(value);
+		garray[g].white_rating = get_intval(value);
 	} else if (!strcmp(attr, "black_rating:")) {
-		garray[g].black_rating = atoi(value);
+		garray[g].black_rating = get_intval(value);
 	} else if (!strcmp(attr, "result:")) {
-		garray[g].result = atoi(value);
+		garray[g].result = get_intval(value);
 	} else if (!strcmp(attr, "timestart:")) {
-		garray[g].timeOfStart = atoi(value);
+		garray[g].timeOfStart = get_timeval(value);
 	} else if (!strcmp(attr, "w_time:")) {
-		garray[g].wTime = atoi(value);
+		garray[g].wTime = get_intval(value);
 	} else if (!strcmp(attr, "b_time:")) {
-		garray[g].bTime = atoi(value);
+		garray[g].bTime = get_intval(value);
 	} else if (!strcmp(attr, "clockstopped:")) {
-		garray[g].clockStopped = atoi(value);
+		garray[g].clockStopped = get_intval(value);
 	} else if (!strcmp(attr, "rated:")) {
-		garray[g].rated = atoi(value);
+		garray[g].rated = get_intval(value);
 	} else if (!strcmp(attr, "private:")) {
-		garray[g].private = atoi(value);
+		garray[g].private = get_intval(value);
 	} else if (!strcmp(attr, "type:")) {
-		garray[g].type = atoi(value);
+		garray[g].type = get_intval(value);
 	} else if (!strcmp(attr, "halfmoves:")) {
-		if ((garray[g].numHalfMoves = atoi(value)) == 0)
+		if ((garray[g].numHalfMoves = get_intval(value)) == 0)
 			return 0;
 		else if (garray[g].numHalfMoves < 0 ||
 		    (size_t)garray[g].numHalfMoves > INT_MAX / sizeof(move_t)) {
