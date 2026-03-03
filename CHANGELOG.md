@@ -7,6 +7,7 @@ documented in this file.
 - Fixed unchecked function return values. Multiple occurrences.
 - Replaced C-style headers in C++ files.
 - Replaced `atoi()` with `strtol()`. Multiple occurrences.
+- Replaced `atoi()` with `strtonum()`. Multiple occurrences.
 
 ## [1.4.7] - 2025-12-01 ##
 - **Added** a config file interpreter and moved some settings from
