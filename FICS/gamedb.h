@@ -22,6 +22,8 @@
    Richard Nash                 93/10/22	Created
    Markus Uhlin                 23/12/20	Cleaned up the file
    Markus Uhlin                 24/04/29	Added missing parameter lists
+   Markus Uhlin                 26/03/03	Added begin/end decls and new
+						functions.
 */
 
 #ifndef _GAMEDB_H
