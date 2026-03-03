@@ -33,8 +33,10 @@
 #include "board.h"
 #include "command.h"
 
+__FICS_BEGIN_DECLS
 extern const char *bstr[7];
 extern const char *rstr[2];
+__FICS_END_DECLS
 
 #define GAMEFILE_VERSION	3
 #define MAX_GLINE_SIZE		1024
@@ -165,6 +167,7 @@ struct JGI_context {
 	char	 result[100];
 };
 
+__FICS_BEGIN_DECLS
 extern game	*garray;
 extern int	 g_num;
 
@@ -201,5 +204,7 @@ extern void	 game_update_times(void);
 extern void	 game_write_complete(int, int, char *);
 extern void	 send_board_to(int, int);
 extern void	 send_boards(int);
+
+__FICS_END_DECLS
 
 #endif
