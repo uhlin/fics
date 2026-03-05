@@ -51,6 +51,7 @@
    Markus Uhlin                 25/07/30	Usage of 'int64_t'.
    Markus Uhlin                 25/11/02	Added overflow checks for array
 						indices.
+   Markus Uhlin                 26/03/05	Replaced atoi().
 */
 
 #include "stdinclude.h"
