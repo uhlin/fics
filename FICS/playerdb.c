@@ -742,7 +742,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "s_rating:")) {
 		parray[p].s_stats.rating = get_intval(value);
 	} else if (!strcmp(attr, "s_sterr:")) {
-		parray[p].s_stats.sterr = (atoi(value) / 10.0);
+		parray[p].s_stats.sterr = (get_intval(value) / 10.0); // XXX
 	} else if (!strcmp(attr, "s_ltime:")) {
 		parray[p].s_stats.ltime = get_timeval(value);
 	} else if (!strcmp(attr, "s_best:")) {
@@ -760,7 +760,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "b_rating:")) {
 		parray[p].b_stats.rating = get_intval(value);
 	} else if (!strcmp(attr, "b_sterr:")) {
-		parray[p].b_stats.sterr = (atoi(value) / 10.0);
+		parray[p].b_stats.sterr = (get_intval(value) / 10.0); // XXX
 	} else if (!strcmp(attr, "b_ltime:")) {
 		parray[p].b_stats.ltime = get_timeval(value);
 	} else if (!strcmp(attr, "b_best:")) {
@@ -778,7 +778,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "w_rating:")) {
 		parray[p].w_stats.rating = get_intval(value);
 	} else if (!strcmp(attr, "w_sterr:")) {
-		parray[p].w_stats.sterr = (atoi(value) / 10.0);
+		parray[p].w_stats.sterr = (get_intval(value) / 10.0); // XXX
 	} else if (!strcmp(attr, "w_ltime:")) {
 		parray[p].w_stats.ltime = get_timeval(value);
 	} else if (!strcmp(attr, "w_best:")) {
@@ -869,7 +869,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_plan
 		 */
 
-		if ((parray[p].num_plan = atoi(value)) >= MAX_PLAN) {
+		if ((parray[p].num_plan =
+		    (int)strtol(value, (char **)NULL, 10)) >= MAX_PLAN) {
 			warnx("%s: %s: too many plans (%d)", __func__, file,
 			    parray[p].num_plan);
 			return -1;
@@ -903,7 +904,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_formula
 		 */
 
-		if ((parray[p].num_formula = atoi(value)) >= MAX_FORMULA) {
+		if ((parray[p].num_formula =
+		    (int)strtol(value, (char **)NULL, 10)) >= MAX_FORMULA) {
 			warnx("%s: %s: too many formulas (%d)", __func__, file,
 			    parray[p].num_formula);
 			return -1;
@@ -942,7 +944,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_alias
 		 */
 
-		if ((parray[p].numAlias = atoi(value)) >= MAX_ALIASES) {
+		if ((parray[p].numAlias =
+		    (int)strtol(value, (char **)NULL, 10)) >= MAX_ALIASES) {
 			warnx("%s: %s: too many aliases (%d)", __func__, file,
 			    parray[p].numAlias);
 			return -1;
@@ -981,7 +984,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 		 * num_censor
 		 */
 
-		if ((i = atoi(value)) < 0) {
+		if ((i = (int)strtol(value, (char **)NULL, 10)) < 0) {
 			warnx("%s: num censor negative", __func__);
 			return -1;
 		} else if (i > MAX_CENSOR) {
@@ -1006,7 +1009,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 			}
 		}
 	} else if (!strcmp(attr, "num_notify:")) {
-		if ((i = atoi(value)) < 0) {
+		if ((i = (int)strtol(value, (char **)NULL, 10)) < 0) {
 			warnx("%s: num notify negative", __func__);
 			return -1;
 		} else if (i > MAX_NOTIFY) {
@@ -1031,7 +1034,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 			}
 		}
 	} else if (!strcmp(attr, "num_noplay:")) {
-		if ((i = atoi(value)) < 0) {
+		if ((i = (int)strtol(value, (char **)NULL, 10)) < 0) {
 			warnx("%s: num noplay negative", __func__);
 			return -1;
 		}
@@ -1053,7 +1056,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 			}
 		}
 	} else if (!strcmp(attr, "num_gnotify:")) {
-		if ((i = atoi(value)) < 0) {
+		if ((i = (int)strtol(value, (char **)NULL, 10)) < 0) {
 			warnx("%s: num gnotify negative", __func__);
 			return -1;
 		}
