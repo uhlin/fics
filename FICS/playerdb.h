@@ -200,6 +200,7 @@ typedef struct _textlist {
 
 #define PARRAY_SIZE (MAX_PLAYER + 50)
 
+__FICS_BEGIN_DECLS
 extern player	 parray[PARRAY_SIZE];
 extern int	 p_num;
 
@@ -279,4 +280,6 @@ extern void	 player_write_login(int);
 extern void	 player_write_logout(int);
 
 extern unsigned int get_uint(const char *);
+__FICS_END_DECLS
+
 #endif /* _PLAYERDB_H */
