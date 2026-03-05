@@ -871,7 +871,7 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "network:")) {
 		/* parray[p].network_player = atoi(value) */;
 	} else if (!strcmp(attr, "lasthost:")) {
-		parray[p].lastHost = atoi(value); // XXX: unsigned int
+		parray[p].lastHost = get_uint(value);
 	} else if (!strcmp(attr, "channel:")) {
 		list_addsub(p, "channel", value, 1);
 	} else if (!strcmp(attr, "num_comments:")) {
