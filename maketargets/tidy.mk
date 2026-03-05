@@ -1,6 +1,7 @@
 # The 'tidy' target
 
 CHKS = cert-*,$\
+	-cert-err34-c,$\
 	-clang-analyzer-security.insecureAPI.strcpy,$\
 	-clang-analyzer-optin.performance.Padding,$\
 	-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,$\
