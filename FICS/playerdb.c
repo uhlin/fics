@@ -731,111 +731,111 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "prompt:")) {
 		parray[p].prompt = xstrdup(value);
 	} else if (!strcmp(attr, "s_num:")) {
-		parray[p].s_stats.num = atoi(value);
+		parray[p].s_stats.num = get_intval(value);
 	} else if (!strcmp(attr, "s_win:")) {
-		parray[p].s_stats.win = atoi(value);
+		parray[p].s_stats.win = get_intval(value);
 	} else if (!strcmp(attr, "s_loss:")) {
-		parray[p].s_stats.los = atoi(value);
+		parray[p].s_stats.los = get_intval(value);
 	} else if (!strcmp(attr, "s_draw:")) {
-		parray[p].s_stats.dra = atoi(value);
+		parray[p].s_stats.dra = get_intval(value);
 	} else if (!strcmp(attr, "s_rating:")) {
-		parray[p].s_stats.rating = atoi(value);
+		parray[p].s_stats.rating = get_intval(value);
 	} else if (!strcmp(attr, "s_sterr:")) {
 		parray[p].s_stats.sterr = (atoi(value) / 10.0);
 	} else if (!strcmp(attr, "s_ltime:")) {
-		parray[p].s_stats.ltime = atoi(value);
+		parray[p].s_stats.ltime = get_timeval(value);
 	} else if (!strcmp(attr, "s_best:")) {
-		parray[p].s_stats.best = atoi(value);
+		parray[p].s_stats.best = get_intval(value);
 	} else if (!strcmp(attr, "s_wbest:")) {
-		parray[p].s_stats.whenbest = atoi(value);
+		parray[p].s_stats.whenbest = get_timeval(value);
 	} else if (!strcmp(attr, "b_num:")) {
-		parray[p].b_stats.num = atoi(value);
+		parray[p].b_stats.num = get_intval(value);
 	} else if (!strcmp(attr, "b_win:")) {
-		parray[p].b_stats.win = atoi(value);
+		parray[p].b_stats.win = get_intval(value);
 	} else if (!strcmp(attr, "b_loss:")) {
-		parray[p].b_stats.los = atoi(value);
+		parray[p].b_stats.los = get_intval(value);
 	} else if (!strcmp(attr, "b_draw:")) {
-		parray[p].b_stats.dra = atoi(value);
+		parray[p].b_stats.dra = get_intval(value);
 	} else if (!strcmp(attr, "b_rating:")) {
-		parray[p].b_stats.rating = atoi(value);
+		parray[p].b_stats.rating = get_intval(value);
 	} else if (!strcmp(attr, "b_sterr:")) {
 		parray[p].b_stats.sterr = (atoi(value) / 10.0);
 	} else if (!strcmp(attr, "b_ltime:")) {
-		parray[p].b_stats.ltime = atoi(value);
+		parray[p].b_stats.ltime = get_timeval(value);
 	} else if (!strcmp(attr, "b_best:")) {
-		parray[p].b_stats.best = atoi(value);
+		parray[p].b_stats.best = get_intval(value);
 	} else if (!strcmp(attr, "b_wbest:")) {
-		parray[p].b_stats.whenbest = atoi(value);
+		parray[p].b_stats.whenbest = get_timeval(value);
 	} else if (!strcmp(attr, "w_num:")) {
-		parray[p].w_stats.num = atoi(value);
+		parray[p].w_stats.num = get_intval(value);
 	} else if (!strcmp(attr, "w_win:")) {
-		parray[p].w_stats.win = atoi(value);
+		parray[p].w_stats.win = get_intval(value);
 	} else if (!strcmp(attr, "w_loss:")) {
-		parray[p].w_stats.los = atoi(value);
+		parray[p].w_stats.los = get_intval(value);
 	} else if (!strcmp(attr, "w_draw:")) {
-		parray[p].w_stats.dra = atoi(value);
+		parray[p].w_stats.dra = get_intval(value);
 	} else if (!strcmp(attr, "w_rating:")) {
-		parray[p].w_stats.rating = atoi(value);
+		parray[p].w_stats.rating = get_intval(value);
 	} else if (!strcmp(attr, "w_sterr:")) {
 		parray[p].w_stats.sterr = (atoi(value) / 10.0);
 	} else if (!strcmp(attr, "w_ltime:")) {
-		parray[p].w_stats.ltime = atoi(value);
+		parray[p].w_stats.ltime = get_timeval(value);
 	} else if (!strcmp(attr, "w_best:")) {
-		parray[p].w_stats.best = atoi(value);
+		parray[p].w_stats.best = get_intval(value);
 	} else if (!strcmp(attr, "w_wbest:")) {
-		parray[p].w_stats.whenbest = atoi(value);
+		parray[p].w_stats.whenbest = get_timeval(value);
 	} else if (!strcmp(attr, "open:")) {
-		parray[p].open = atoi(value);
+		parray[p].open = get_intval(value);
 	} else if (!strcmp(attr, "rated:")) {
-		parray[p].rated = atoi(value);
+		parray[p].rated = get_intval(value);
 	} else if (!strcmp(attr, "ropen:")) {
-		parray[p].ropen = atoi(value);
+		parray[p].ropen = get_intval(value);
 	} else if (!strcmp(attr, "bell:")) {
-		parray[p].bell = atoi(value);
+		parray[p].bell = get_intval(value);
 	} else if (!strcmp(attr, "pgn:")) {
-		parray[p].pgn = atoi(value);
+		parray[p].pgn = get_intval(value);
 	} else if (!strcmp(attr, "timeofreg:")) {
-		parray[p].timeOfReg = atoi(value);
+		parray[p].timeOfReg = get_timeval(value);
 	} else if (!strcmp(attr, "totaltime:")) {
-		parray[p].totalTime = atoi(value);
+		parray[p].totalTime = get_timeval(value);
 	} else if (!strcmp(attr, "notifiedby:")) {
-		parray[p].notifiedby = atoi(value);
+		parray[p].notifiedby = get_intval(value);
 	} else if (!strcmp(attr, "i_login:")) {
-		parray[p].i_login = atoi(value);
+		parray[p].i_login = get_intval(value);
 	} else if (!strcmp(attr, "i_game:")) {
-		parray[p].i_game = atoi(value);
+		parray[p].i_game = get_intval(value);
 	} else if (!strcmp(attr, "i_shout:")) {
-		parray[p].i_shout = atoi(value);
+		parray[p].i_shout = get_intval(value);
 	} else if (!strcmp(attr, "i_cshout:")) {
-		parray[p].i_cshout = atoi(value);
+		parray[p].i_cshout = get_intval(value);
 	} else if (!strcmp(attr, "i_tell:")) {
-		parray[p].i_tell = atoi(value);
+		parray[p].i_tell = get_intval(value);
 	} else if (!strcmp(attr, "i_kibitz:")) {
-		parray[p].i_kibitz = atoi(value);
+		parray[p].i_kibitz = get_intval(value);
 	} else if (!strcmp(attr, "kiblevel:")) {
-		parray[p].kiblevel = atoi(value);
+		parray[p].kiblevel = get_intval(value);
 	} else if (!strcmp(attr, "private:")) {
-		parray[p].private = atoi(value);
+		parray[p].private = get_intval(value);
 	} else if (!strcmp(attr, "jprivate:")) {
-		parray[p].jprivate = atoi(value);
+		parray[p].jprivate = get_intval(value);
 	} else if (!strcmp(attr, "automail:")) {
-		parray[p].automail = atoi(value);
+		parray[p].automail = get_intval(value);
 	} else if (!strcmp(attr, "i_mailmess:")) {
-		parray[p].i_mailmess = atoi(value);
+		parray[p].i_mailmess = get_intval(value);
 	} else if (!strcmp(attr, "style:")) {
-		parray[p].style = atoi(value);
+		parray[p].style = get_intval(value);
 	} else if (!strcmp(attr, "d_time:")) {
-		parray[p].d_time = atoi(value);
+		parray[p].d_time = get_intval(value);
 	} else if (!strcmp(attr, "d_inc:")) {
-		parray[p].d_inc = atoi(value);
+		parray[p].d_inc = get_intval(value);
 	} else if (!strcmp(attr, "d_height:")) {
-		parray[p].d_height = atoi(value);
+		parray[p].d_height = get_intval(value);
 	} else if (!strcmp(attr, "d_width:")) {
-		parray[p].d_width = atoi(value);
+		parray[p].d_width = get_intval(value);
 	} else if (!strcmp(attr, "language:")) {
-		parray[p].language = atoi(value);
+		parray[p].language = get_intval(value);
 	} else if (!strcmp(attr, "admin_level:")) {
-		parray[p].adminLevel = atoi(value);
+		parray[p].adminLevel = get_intval(value);
 
 		if (parray[p].adminLevel >= ADMIN_ADMIN)
 			parray[p].i_admin = 1;
@@ -844,9 +844,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "computer:")) {
 		/* parray[p].computer = atoi(value) */;
 	} else if (!strcmp(attr, "black_games:")) {
-		parray[p].num_black = atoi(value);
+		parray[p].num_black = get_intval(value);
 	} else if (!strcmp(attr, "white_games:")) {
-		parray[p].num_white = atoi(value);
+		parray[p].num_white = get_intval(value);
 	} else if (!strcmp(attr, "uscf:")) {
 		/* parray[p].uscfRating = atoi(value) */;
 	} else if (!strcmp(attr, "muzzled:")) {
@@ -854,15 +854,15 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 	} else if (!strcmp(attr, "cmuzzled:")) {
 		/* obsolete */;
 	} else if (!strcmp(attr, "highlight:")) {
-		parray[p].highlight = atoi(value);
+		parray[p].highlight = get_intval(value);
 	} else if (!strcmp(attr, "network:")) {
 		/* parray[p].network_player = atoi(value) */;
 	} else if (!strcmp(attr, "lasthost:")) {
-		parray[p].lastHost = atoi(value);
+		parray[p].lastHost = atoi(value); // XXX: unsigned int
 	} else if (!strcmp(attr, "channel:")) {
 		list_addsub(p, "channel", value, 1);
 	} else if (!strcmp(attr, "num_comments:")) {
-		parray[p].num_comments = atoi(value);
+		parray[p].num_comments = get_intval(value);
 	} else if (!strcmp(attr, "num_plan:")) {
 		/*
 		 * num_plan
