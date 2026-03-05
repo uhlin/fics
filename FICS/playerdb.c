@@ -61,6 +61,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <limits.h>
 #include <stdint.h>
 
 #include "command.h"
@@ -80,6 +81,7 @@
 #include "utils.h"
 
 #if __linux__
+#include <bsd/stdlib.h>
 #include <bsd/string.h>
 #endif
 
@@ -712,6 +714,16 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 		warnx("%s: add to list error (L_CHANNEL): player: %s",
 		    __func__, parray[p].name);
 	}
+}
+
+PUBLIC unsigned int
+get_uint(const char *nptr)
+{
+	const char		*errstr = NULL;
+	const unsigned int	 val = (unsigned int) strtonum(nptr,
+				     0, UINT_MAX, &errstr);
+
+	return (errstr ? 0 : val);
 }
 
 PRIVATE int

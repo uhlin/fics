@@ -278,4 +278,5 @@ extern void	 player_pend_print(int, pending *);
 extern void	 player_write_login(int);
 extern void	 player_write_logout(int);
 
+extern unsigned int get_uint(const char *);
 #endif /* _PLAYERDB_H */
