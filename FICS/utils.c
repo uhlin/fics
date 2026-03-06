@@ -44,6 +44,7 @@
 						safe version.
    Markus Uhlin			25/07/28	truncate_file: restricted file
 						permissions upon creation.
+   Markus Uhlin			26/03/06	Improved multiple utilities.
 */
 
 #include "stdinclude.h"
