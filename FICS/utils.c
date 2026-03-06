@@ -249,7 +249,7 @@ mail_string_to_address(char *addr, char *subj, char *str)
 	if (ret < 0)
 		warnx("%s: fprintf() error", __func__);
 	if (pclose(fp) == -1)
-		warnx("%s: pclose() error", __func__);
+		warn("%s: pclose() error", __func__);
 	return 0;
 }
 
