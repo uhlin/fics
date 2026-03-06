@@ -221,25 +221,35 @@ PUBLIC int
 mail_string_to_address(char *addr, char *subj, char *str)
 {
 	FILE	*fp;
-	char	 com[1000];
+	char	 com[1000] = { '\0' };
+	int	 ret;
 
 #ifdef SENDMAILPROG
-	snprintf(com, sizeof com, "%s %s\n", SENDMAILPROG, SENDMAILPROG_ARGS);
+	ret = snprintf(com, sizeof com, "%s %s\n", SENDMAILPROG,
+		       SENDMAILPROG_ARGS);
 #else
-	snprintf(com, sizeof com, "%s -s \"%s\" %s", MAILPROGRAM, subj, addr);
+	ret = snprintf(com, sizeof com, "%s -s \"%s\" %s", MAILPROGRAM, subj,
+		       addr);
 #endif
 
-	fp = popen(com, "w");
-	if (!fp)
+	if (ret < 0 || (size_t)ret >= sizeof com) {
+		warnx("%s: command too long", __func__);
+		return -1;
+	}
+
+	if ((fp = popen(com, "w")) == NULL)
 		return -1;
 
 #ifdef SENDMAILPROG
-	fprintf(fp, "To: %s\nSubject: %s\n%s", addr, subj, str);
+	ret = fprintf(fp, "To: %s\nSubject: %s\n%s", addr, subj, str);
 #else
-	fprintf(fp, "%s", str);
+	ret = fprintf(fp, "%s", str);
 #endif
 
-	pclose(fp);
+	if (ret < 0)
+		warnx("%s: fprintf() error", __func__);
+	if (pclose(fp) == -1)
+		warnx("%s: pclose() error", __func__);
 	return 0;
 }
 
