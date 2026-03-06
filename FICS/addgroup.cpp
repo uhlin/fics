@@ -22,20 +22,18 @@ struct group_info {
 	int		gid;
 	std::string	members;
 
-	group_info()
+	group_info() : gid(0)
 	{
 		this->name.assign("");
 		this->password.assign("");
-		this->gid = 0;
 		this->members.assign("");
 	}
 
 	group_info(const char *p_name, const char *p_password, const int p_gid,
-		   const char *p_members)
+		   const char *p_members) : gid(p_gid)
 	{
 		this->name.assign(p_name);
 		this->password.assign(p_password);
-		this->gid = p_gid;
 		this->members.assign(p_members);
 	}
 };
