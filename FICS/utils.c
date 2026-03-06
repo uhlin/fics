@@ -269,35 +269,52 @@ mail_string_to_user(int p, char *subj, char *str)
 PUBLIC int
 mail_file_to_address(char *addr, char *subj, char *fname)
 {
-	FILE	*fp1, *fp2;
+	FILE	*fp[2] = { NULL, NULL };
 	char	 com[1000] = { '\0' };
 	char	 tmp[MAX_LINE_SIZE] = { '\0' };
+	int	 ret;
 
 	/* maybe unused */
-	(void) fp2;
 	(void) tmp;
 
 #ifdef SENDMAILPROG
-	snprintf(com, sizeof com, "%s %s\n", SENDMAILPROG, SENDMAILPROG_ARGS);
+	ret = snprintf(com, sizeof com, "%s %s\n", SENDMAILPROG,
+		       SENDMAILPROG_ARGS);
 #else
-	snprintf(com, sizeof com, "%s -s \"%s\" %s < %s&", MAILPROGRAM, subj,
-	    addr, fname);
+	ret = snprintf(com, sizeof com, "%s -s \"%s\" %s < %s&", MAILPROGRAM,
+		       subj, addr, fname);
 #endif
-	if ((fp1 = popen(com, "w")) == NULL)
-		return -1;
-#ifdef SENDMAILPROG
-	if ((fp2 = fopen(fname, "r")) == NULL) {
-		pclose(fp1);
+
+	if (ret < 0 || (size_t)ret >= sizeof com) {
+		warnx("%s: command too long", __func__);
 		return -1;
 	}
 
-	fprintf(fp1, "To: %s\nSubject: %s\n", addr, subj);
+	if ((fp[0] = popen(com, "w")) == NULL)
+		return -1;
 
-	while (fgets(tmp, sizeof tmp, fp2) != NULL && !feof(fp2))
-		fputs(tmp, fp1);
-	fclose(fp2);
+#ifdef SENDMAILPROG
+	if ((fp[1] = fopen(fname, "r")) == NULL) {
+		(void) pclose(fp[0]);
+		return -1;
+	}
+
+	ret = fprintf(fp[0], "To: %s\nSubject: %s\n", addr, subj);
+
+	if (ret < 0)
+		warnx("%s: fprintf() error", __func__);
+
+	while (fgets(tmp, sizeof tmp, fp[1]) != NULL &&
+	       fputs(tmp, fp[0]) != EOF) {
+		/* null */;
+	}
+
+	if (fclose(fp[1]) != 0)
+		warn("%s: fclose() error", __func__);
 #endif
-	pclose(fp1);
+
+	if (pclose(fp[0]) == -1)
+		warn("%s: pclose() error", __func__);
 	return 0;
 }
 
