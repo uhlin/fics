@@ -8,6 +8,7 @@ documented in this file.
 - Replaced C-style headers in C++ files.
 - Replaced `atoi()` with `strtol()`. Multiple occurrences.
 - Replaced `atoi()` with `strtonum()`. Multiple occurrences.
+- Usage of member initializers.
 
 ## [1.4.7] - 2025-12-01 ##
 - **Added** a config file interpreter and moved some settings from
