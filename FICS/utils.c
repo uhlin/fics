@@ -662,11 +662,16 @@ psend_command(int p, char *command, char *input)
 	char	 tmp[MAX_LINE_SIZE];
 	int	 num;
 
+	if (command == NULL || strcmp(command, "") == 0) {
+		warnx("%s: error: no command", __func__);
+		return -1;
+	}
+
 	if (input)
 		fp = popen(command, "w");
 	else
 		fp = popen(command, "r");
-	if (!fp)
+	if (fp == NULL)
 		return -1;
 
 	if (input) {
@@ -679,8 +684,7 @@ psend_command(int p, char *command, char *input)
 		}
 	}
 
-	pclose(fp);
-	return 0;
+	return (pclose(fp) == -1 ? -1 : 0);
 }
 
 PUBLIC char *
