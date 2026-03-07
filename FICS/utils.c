@@ -851,7 +851,7 @@ fix_time(const char *old_time)
 	char		 day[5] = { '\0' };
 	char		 i;
 	char		 month[5] = { '\0' };
-	static char	 new_time[20];
+	static char	 new_time[20] = { '\0' };
 
 	_Static_assert(4 < ARRAY_SIZE(day), "'day' too small");
 	_Static_assert(4 < ARRAY_SIZE(month), "'month' too small");
