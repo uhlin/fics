@@ -487,6 +487,11 @@ psend_raw_file(int p, const char *dir, const char *file)
 	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 	int	 num;
 
+	if (file == NULL || strcmp(file, "") == 0) {
+		warnx("%s: no file", __func__);
+		return -1;
+	}
+
 	if (dir)
 		(void) snprintf(fname, sizeof fname, "%s/%s", dir, file);
 	else
