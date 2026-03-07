@@ -1087,7 +1087,7 @@ file_exists(const char *fname)
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return 0;
-	fclose(fp);
+	(void) fclose(fp);
 	return 1;
 }
 
