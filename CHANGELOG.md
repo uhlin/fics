@@ -5,7 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added null checks.
-- Fixed unchecked function return values. Multiple occurrences.
+- Fixed unchecked function return values. _MULTIPLE_ occurrences.
 - Replaced C-style headers in C++ files.
 - Replaced `atoi()` with `strtol()`. Multiple occurrences.
 - Replaced `atoi()` with `strtonum()`. Multiple occurrences.
