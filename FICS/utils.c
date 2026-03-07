@@ -796,7 +796,7 @@ hms_desc(int t)
 PUBLIC char *
 hms(int t, int showhour, int showseconds, int spaces)
 {
-	char		tmp[10];
+	char		tmp[10] = { '\0' };
 	int		h, m, s;
 	static char	tstr[20];
 
