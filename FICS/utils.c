@@ -1100,9 +1100,9 @@ ratstr(int rat)
 	if (on == 20)
 		on = 0;
 	if (rat) {
-		snprintf(tmp[on], sizeof tmp[on], "%4d", rat);
+		(void) snprintf(tmp[on], sizeof tmp[on], "%4d", rat);
 	} else {
-		snprintf(tmp[on], sizeof tmp[on], "----");
+		(void) snprintf(tmp[on], sizeof tmp[on], "----");
 	}
 
 	on++;
