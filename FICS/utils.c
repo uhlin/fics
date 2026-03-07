@@ -622,7 +622,7 @@ pmore_file(int p)
 		return -1;
 	} else if (fseek(fp, parray[p].last_file_byte, SEEK_SET) == -1) {
 		pprintf(p, "Unable to set the file position indicator.\n");
-		fclose(fp);
+		(void) fclose(fp);
 		return -1;
 	}
 
@@ -636,11 +636,11 @@ pmore_file(int p)
 		if (ferror(fp)) {
 			warnx("%s: %s: the error indicator is set", __func__,
 			    parray[p].last_file);
-			fclose(fp);
+			(void) fclose(fp);
 			return -1;
 		} else if ((parray[p].last_file_byte = ftell(fp)) == -1) {
 			warn("%s: %s: ftell", __func__, parray[p].last_file);
-			fclose(fp);
+			(void) fclose(fp);
 			return -1;
 		} else
 			pprintf(p, "Type [next] to see next page.\n");
