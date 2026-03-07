@@ -1018,7 +1018,7 @@ lines_file(char *file)
 	while (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
 		lcount++;
 
-	fclose(fp);
+	(void) fclose(fp);
 	return lcount;
 }
 
