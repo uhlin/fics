@@ -952,7 +952,7 @@ truncate_file(char *file, int lines)
 		lines = MAX_TRUNC_SIZE;
 
 	if ((fp = fopen(file, "r")) == NULL)
-		return 1;
+		return -1;
 
 	while (fgets(tBuf[bptr], MAX_LINE_SIZE, fp) != NULL) {
 		if (strchr(tBuf[bptr], '\n') == NULL) {
@@ -975,11 +975,11 @@ truncate_file(char *file, int lines)
 		if ((fd = open(file, g_open_flags[OPFL_WRITE],
 		    g_open_modes)) < 0) {
 			warn("%s: open", __func__);
-			return 1;
+			return -1;
 		} else if ((fp = fdopen(fd, "w")) == NULL) {
 			warn("%s: fdopen", __func__);
 			close(fd);
-			return 1;
+			return -1;
 		}
 
 		for (i = 0; i < lines; i++) {
