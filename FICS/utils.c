@@ -967,7 +967,8 @@ truncate_file(const char *file, int lines)
 		}
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: fclose() error", __func__);
 
 	if (trunc) {
 		int fd;
@@ -989,7 +990,8 @@ truncate_file(const char *file, int lines)
 				bptr = 0;
 		}
 
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: fclose() error", __func__);
 	}
 
 	return 0;
