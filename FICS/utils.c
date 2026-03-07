@@ -338,23 +338,28 @@ mail_file_to_user(int p, char *subj, char *fname)
 PUBLIC int
 pcommand(int p, char *comstr, ...)
 {
-	char tmp[MAX_LINE_SIZE] = { '\0' };
-	int current_socket = parray[p].socket;
-	int retval;
-	va_list ap;
+	char	tmp[MAX_LINE_SIZE] = { '\0' };
+	int	current_socket = parray[p].socket;
+	int	ret[2];
+	va_list	ap;
 
 	va_start(ap, comstr);
-	vsnprintf(tmp, sizeof tmp, comstr, ap);
+	ret[0] = vsnprintf(tmp, sizeof tmp, comstr, ap);
 	va_end(ap);
 
-	retval = process_input(current_socket, tmp);
+	if (ret[0] < 0 || (size_t)ret[0] >= sizeof tmp) {
+		warnx("%s: command string too long: p=%d", __func__, p);
+		return COM_FAILED;
+	}
 
-	if (retval == COM_LOGOUT) {
+	ret[1] = process_input(current_socket, tmp);
+
+	if (ret[1] == COM_LOGOUT) {
 		process_disconnection(current_socket);
 		net_close_connection(current_socket);
 	}
 
-	return retval;
+	return ret[1];
 }
 
 PUBLIC void
