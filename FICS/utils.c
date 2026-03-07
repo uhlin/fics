@@ -579,23 +579,29 @@ psend_logoutfile(int p, char *dir, char *file)
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char	 tmp[MAX_LINE_SIZE] = { '\0' };
 
+	if (file == NULL || strcmp(file, "") == 0) {
+		warnx("%s: error: no file", __func__);
+		return -1;
+	}
+
 	if (parray[p].last_file)
 		rfree(parray[p].last_file);
 	parray[p].last_file = NULL;
 	parray[p].last_file_byte = 0L;
 
 	if (dir)
-		snprintf(fname, sizeof fname, "%s/%s", dir, file);
+		(void) snprintf(fname, sizeof fname, "%s/%s", dir, file);
 	else
-		strlcpy(fname, file, sizeof fname);
+		(void) strlcpy(fname, file, sizeof fname);
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
 
-	while (fgets(tmp, sizeof tmp, fp) != NULL && !feof(fp))
+	while (fgets(tmp, sizeof tmp, fp) != NULL)
 		net_send_string(parray[p].socket, tmp, 1);
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: fclose() error", __func__);
 	return 0;
 }
 
