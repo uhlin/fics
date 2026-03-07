@@ -532,6 +532,11 @@ psend_file(int p, const char *dir, const char *file)
 	parray[p].last_file = NULL;
 	parray[p].last_file_byte = 0L;
 
+	if (file == NULL || strcmp(file, "") == 0) {
+		warnx("%s: error: no file", __func__);
+		return -1;
+	}
+
 	if (dir)
 		snprintf(fname, sizeof fname, "%s/%s", dir, file);
 	else
