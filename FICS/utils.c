@@ -1066,11 +1066,12 @@ file_bplayer(char *fname)
 PUBLIC char *
 dotQuad(unsigned int a)
 {
-	static char	 tmp[20];
+	static char	 tmp[20] = { '\0' };
 	unsigned char	*aa = (unsigned char *) &a;
 
-	snprintf(tmp, sizeof tmp, "%d.%d.%d.%d", aa[0], aa[1], aa[2], aa[3]);
-	return tmp;
+	(void) snprintf(tmp, sizeof tmp, "%d.%d.%d.%d", aa[0], aa[1], aa[2],
+			aa[3]);
+	return &tmp[0];
 }
 
 PUBLIC int
