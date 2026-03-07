@@ -865,9 +865,10 @@ fix_time(char *old_time)
 		date[0] = '0';
 		date[1] = i;
 	}
+
 	date[2] = '\0';
 
-	snprintf(new_time, sizeof new_time, "%s, %s %s", day, month, date);
+	msnprintf(new_time, sizeof new_time, "%s, %s %s", day, month, date);
 
 	return &new_time[0];
 }
