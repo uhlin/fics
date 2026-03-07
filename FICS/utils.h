@@ -107,7 +107,7 @@ extern int		 psprintf_highlight(int, char *, size_t, char *, ...)
 extern int		 safechar(int);
 extern int		 safestring(char *);
 extern int		 search_directory(char *, char *, char **, int);
-extern int		 truncate_file(char *, int);
+extern int		 truncate_file(const char *, int);
 extern time_t		 untenths(uint64_t);
 extern unsigned int	 tenth_secs(void);
 __FICS_END_DECLS

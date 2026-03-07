@@ -941,7 +941,7 @@ tenth_str(unsigned int t, int spaces)
  * this won't work!
  */
 PUBLIC int
-truncate_file(char *file, int lines)
+truncate_file(const char *file, int lines)
 {
 #define MAX_TRUNC_SIZE 100
 	FILE	*fp;
