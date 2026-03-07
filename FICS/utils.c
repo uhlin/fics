@@ -675,7 +675,8 @@ psend_command(int p, char *command, char *input)
 		return -1;
 
 	if (input) {
-		fwrite(input, sizeof(char), strlen(input), fp);
+		if (fwrite(input, sizeof(char), strlen(input), fp) == 0)
+			warnx("%s: fwrite: zero return", __func__);
 	} else {
 		while (!feof(fp)) {
 			num = fread(tmp, sizeof(char), MAX_LINE_SIZE - 1, fp);
