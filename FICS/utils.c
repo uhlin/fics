@@ -538,9 +538,9 @@ psend_file(int p, const char *dir, const char *file)
 	}
 
 	if (dir)
-		snprintf(fname, sizeof fname, "%s/%s", dir, file);
+		(void) snprintf(fname, sizeof fname, "%s/%s", dir, file);
 	else
-		strlcpy(fname, file, sizeof fname);
+		(void) strlcpy(fname, file, sizeof fname);
 
 	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
