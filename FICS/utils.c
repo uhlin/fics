@@ -1118,12 +1118,12 @@ ratstrii(int rat, int reg)
 	if (on == 20)
 		on = 0;
 	if (rat) {
-		snprintf(tmp[on], sizeof tmp[on], "%4d", rat);
+		(void) snprintf(tmp[on], sizeof tmp[on], "%4d", rat);
 	} else {
 		if (reg) {
-			snprintf(tmp[on], sizeof tmp[on], "----");
+			(void) snprintf(tmp[on], sizeof tmp[on], "----");
 		} else {
-			snprintf(tmp[on], sizeof tmp[on], "++++");
+			(void) snprintf(tmp[on], sizeof tmp[on], "++++");
 		}
 	}
 
