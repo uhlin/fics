@@ -510,7 +510,7 @@ psend_raw_file(int p, const char *dir, const char *file)
 
 	if (ferror(fp)) {
 		warnx("%s: %s: the error indicator is set", __func__, fname);
-		fclose(fp);
+		(void) fclose(fp);
 		return -1;
 	}
 
