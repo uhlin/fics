@@ -563,7 +563,8 @@ psend_file(int p, const char *dir, const char *file)
 		pprintf(p, "Type [next] to see next page.\n");
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: fclose() error", __func__);
 	return 0;
 }
 
