@@ -957,7 +957,7 @@ truncate_file(const char *file, int lines)
 	while (fgets(tBuf[bptr], MAX_LINE_SIZE, fp) != NULL) {
 		if (strchr(tBuf[bptr], '\n') == NULL) {
 			// Line too long
-			fclose(fp);
+			(void) fclose(fp);
 			return -1;
 		}
 
