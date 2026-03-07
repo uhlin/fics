@@ -1184,7 +1184,7 @@ t_mft(struct t_dirs *d)
 	struct t_tree **t;
 
 	if ((dirp = opendir(d->name)) == NULL) {
-		fprintf(stderr, "FICS: %s: couldn't opendir\n", __func__);
+		warn("%s: opendir() error", __func__);
 		return;
 	}
 	while ((dp = readdir(dirp))) {
