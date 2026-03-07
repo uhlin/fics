@@ -650,7 +650,8 @@ pmore_file(int p)
 		parray[p].last_file_byte = 0L;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: fclose() error", __func__);
 	return 0;
 }
 
