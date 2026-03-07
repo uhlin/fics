@@ -67,7 +67,7 @@ extern char		*eatwhite(char *);
 extern char		*eatword(char *);
 extern char		*file_bplayer(char *);
 extern char		*file_wplayer(char *);
-extern char		*fix_time(char *);
+extern char		*fix_time(const char *);
 extern char		*getword(char *);
 extern char		*hms(int, int, int, int);
 extern char		*hms_desc(int);

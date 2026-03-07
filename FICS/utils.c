@@ -845,7 +845,7 @@ strtime(struct tm *stm)
 }
 
 PUBLIC char *
-fix_time(char *old_time)
+fix_time(const char *old_time)
 {
 	char		 date[5] = { '\0' };
 	char		 day[5] = { '\0' };
