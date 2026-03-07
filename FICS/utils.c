@@ -979,7 +979,10 @@ truncate_file(const char *file, int lines)
 			return -1;
 		} else if ((fp = fdopen(fd, "w")) == NULL) {
 			warn("%s: fdopen", __func__);
-			close(fd);
+
+			if (close(fd) != 0)
+				warn("%s: close() error", __func__);
+
 			return -1;
 		}
 
