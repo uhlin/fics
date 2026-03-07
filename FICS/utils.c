@@ -514,7 +514,8 @@ psend_raw_file(int p, const char *dir, const char *file)
 		return -1;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: fclose() error", __func__);
 	return 0;
 }
 
