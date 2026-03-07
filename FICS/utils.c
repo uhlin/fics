@@ -825,15 +825,23 @@ hms(int t, int showhour, int showseconds, int spaces)
 }
 
 PRIVATE char *
-strtime(struct tm * stm)
+strtime(struct tm *stm)
 {
-	static char tstr[100];
+	static char	tstr[100] = { '\0' };
+
 #if defined (SGI)
-	strftime(tstr, sizeof(tstr), "%a %b %e, %H:%M %Z", stm);
+	if (strftime(tstr, sizeof(tstr), "%a %b %e, %H:%M %Z", stm) == 0) {
+		memset(tstr, 0, sizeof(tstr));
+		return &tstr[0];
+	}
 #else
-	strftime(tstr, sizeof(tstr), "%a %b %e, %k:%M %Z", stm);
+	if (strftime(tstr, sizeof(tstr), "%a %b %e, %k:%M %Z", stm) == 0) {
+		memset(tstr, 0, sizeof(tstr));
+		return &tstr[0];
+	}
 #endif
-	return (tstr);
+
+	return (&tstr[0]);
 }
 
 PUBLIC char *
