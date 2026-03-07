@@ -771,19 +771,19 @@ hms_desc(int t)
 	secs	= ((t % (60 * 60 * 24)) % (60 * 60)) % 60;
 
 	if (days == 0 && hours == 0 && mins == 0) {
-		snprintf(tstr, sizeof tstr, "%d sec%s", secs, (secs == 1 ? "" :
-		    "s"));
+		(void)snprintf(tstr, sizeof tstr, "%d sec%s", secs, (secs == 1 ?
+		    "" : "s"));
 	} else if (days == 0 && hours == 0) {
-		snprintf(tstr, sizeof tstr, "%d min%s", mins, (mins == 1 ? "" :
-		    "s"));
+		(void)snprintf(tstr, sizeof tstr, "%d min%s", mins, (mins == 1 ?
+		    "" : "s"));
 	} else if (days == 0) {
-		snprintf(tstr, sizeof tstr, "%d hr%s, %d min%s, %d sec%s",
+		(void)snprintf(tstr, sizeof tstr, "%d hr%s, %d min%s, %d sec%s",
 		    hours, (hours == 1 ? "" : "s"),
 		    mins, (mins == 1 ? "" : "s"),
 		    secs, (secs == 1 ? "" : "s"));
 	} else {
-		snprintf(tstr, sizeof tstr, "%d day%s, %d hour%s, %d minute%s "
-		    "and %d second%s",
+		(void)snprintf(tstr, sizeof tstr, "%d day%s, %d hour%s, "
+		    "%d minute%s and %d second%s",
 		    days, (days == 1 ? "" : "s"),
 		    hours, (hours == 1 ? "" : "s"),
 		    mins, (mins == 1 ? "" : "s"),
