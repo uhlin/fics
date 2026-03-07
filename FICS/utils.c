@@ -987,7 +987,8 @@ truncate_file(const char *file, int lines)
 		}
 
 		for (i = 0; i < lines; i++) {
-			fputs(tBuf[bptr], fp);
+			if (fputs(tBuf[bptr], fp) < 0)
+				warnx("%s: fputs() error", __func__);
 
 			if (++bptr == lines)
 				bptr = 0;
