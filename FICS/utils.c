@@ -58,6 +58,7 @@
 
 #include "config.h"
 #include "ficsmain.h"
+#include "maxxes-utils.h"
 #include "network.h"
 #include "playerdb.h"
 #include "rmalloc.h"
@@ -807,18 +808,18 @@ hms(int t, int showhour, int showseconds, int spaces)
 
 	if (h || showhour) {
 		if (spaces)
-			snprintf(tstr, sizeof tstr, "%d : %02d", h, m);
+			msnprintf(tstr, sizeof tstr, "%d : %02d", h, m);
 		else
-			snprintf(tstr, sizeof tstr, "%d:%02d", h, m);
+			msnprintf(tstr, sizeof tstr, "%d:%02d", h, m);
 	} else {
-		snprintf(tstr, sizeof tstr, "%d", m);
+		msnprintf(tstr, sizeof tstr, "%d", m);
 	}
 	if (showseconds) {
 		if (spaces)
-			snprintf(tmp, sizeof tmp, " : %02d", s);
+			msnprintf(tmp, sizeof tmp, " : %02d", s);
 		else
-			snprintf(tmp, sizeof tmp, ":%02d", s);
-		strlcat(tstr, tmp, sizeof tstr);
+			msnprintf(tmp, sizeof tmp, ":%02d", s);
+		mstrlcat(tstr, tmp, sizeof tstr);
 	}
 	return tstr;
 }
