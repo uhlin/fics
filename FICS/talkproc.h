@@ -32,6 +32,7 @@
 
 #define MAX_CHANNELS 256
 
+__FICS_BEGIN_DECLS
 extern int quota_time;
 
 extern int	com_clearmessages(int, param_list);
@@ -52,5 +53,6 @@ extern int	com_xtell(int, param_list);
 extern int	com_znotify(int, param_list);
 
 extern int	on_channel(int, int);
+__FICS_END_DECLS
 
 #endif /* _TALKPROC_H */
