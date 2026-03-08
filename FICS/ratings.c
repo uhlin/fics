@@ -416,8 +416,9 @@ save_ratings(void)
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	int	 fd;
+	int	 ret[5];
 
-	snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
+	(void) snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
 	    STATS_VERSION);
 
 	if ((fd = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
@@ -425,21 +426,33 @@ save_ratings(void)
 		return;
 	} else if ((fp = fdopen(fd, "w")) == NULL) {
 		warn("%s: can't write ratings data", __func__);
-		close(fd);
+
+		if (close(fd) != 0)
+			warn("%s: close() error", __func__);
+
 		return;
 	}
 
-	fprintf(fp, "%10f %10f %10f %d\n", Rb_M, Rb_S, Rb_total, Rb_count);
-	fprintf(fp, "%10f %10f %10f %d\n", Rs_M, Rs_S, Rs_total, Rs_count);
-	fprintf(fp, "%10f %10f %10f %d\n", Rw_M, Rw_S, Rw_total, Rw_count);
-	fprintf(fp, "%10f %10f %10f %d\n", Rl_M, Rl_S, Rl_total, Rl_count);
+	ret[0] = fprintf(fp, "%10f %10f %10f %d\n", Rb_M, Rb_S, Rb_total, Rb_count);
+	ret[1] = fprintf(fp, "%10f %10f %10f %d\n", Rs_M, Rs_S, Rs_total, Rs_count);
+	ret[2] = fprintf(fp, "%10f %10f %10f %d\n", Rw_M, Rw_S, Rw_total, Rw_count);
+	ret[3] = fprintf(fp, "%10f %10f %10f %d\n", Rl_M, Rl_S, Rl_total, Rl_count);
+
+	if (ret[0] < 0 || ret[1] < 0 || ret[2] < 0 || ret[3] < 0)
+		warnx("%s: error writing to file", __func__);
 
 	for (int i = 0; i < MAXHIST; i++) {
-		fprintf(fp, "%d %d %d %d\n", sHist[i], bHist[i], wHist[i],
-		    lHist[i]);
+		ret[4] = fprintf(fp, "%d %d %d %d\n", sHist[i], bHist[i],
+		    wHist[i], lHist[i]);
+		if (ret[4] < 0) {
+			warnx("%s: error writing to file (in the loop)",
+			    __func__);
+			break;
+		}
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: fclose() error", __func__);
 }
 
 PRIVATE void
