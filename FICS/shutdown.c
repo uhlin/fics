@@ -28,7 +28,8 @@ output_shut_mess(void)
 {
 	time_t shuttime = time(NULL);
 
-	fprintf(stderr, "FICS: Shutting down at %s\n", strltime(&shuttime));
+	(void) fprintf(stderr, "FICS: Shutting down at %s\n",
+		       strltime(&shuttime));
 }
 
 PUBLIC __dead void
@@ -50,8 +51,8 @@ ShutDown(void)
 	}
 
 	TerminateCleanup();
-	fprintf(stderr, "FICS: Shut down ordered at %s by %s.\n",
-	    strltime(&shuttime), downer);
+	(void) fprintf(stderr, "FICS: Shut down ordered at %s by %s.\n",
+		       strltime(&shuttime), downer);
 	output_shut_mess();
 	net_close();
 	exit(0);
@@ -90,14 +91,14 @@ ShutHeartBeat(void)
 		crossing = 1;
 
 	if (crossing) {
-		fprintf(stderr, "FICS:   **** Server going down in %d minutes "
-		    "and %d seconds. ****\n\n",
+		(void) fprintf(stderr, "FICS:   **** Server going down in "
+		    "%d minutes and %d seconds. ****\n\n",
 		    (timeLeft / 60),
 		    timeLeft - ((timeLeft / 60) * 60));
 
 		if (reason[0] != '\0') {
-			fprintf(stderr,"FICS: We are going down because: %s.\n",
-			    reason);
+			(void) fprintf(stderr, "FICS: "
+			    "We are going down because: %s.\n", reason);
 		}
 
 		for (p1 = 0; p1 < p_num; p1++) {
@@ -192,8 +193,8 @@ com_shutdown(int p, param_list param)
 		if (!strcmp(param[0].val.word, "now")) {
 			shutdownTime = 0;
 		} else if (!strcmp(param[0].val.word, "die")) {
-			fprintf(stderr,"%s salutes FICS and presses the "
-			    "self-destruct button.\n", parray[p].name);
+			(void) fprintf(stderr, "%s salutes FICS and presses "
+			    "the self-destruct button.\n", parray[p].name);
 			output_shut_mess();
 			abort();
 		} else if (!strcmp(param[0].val.word, "cancel")) {
@@ -297,8 +298,9 @@ server_shutdown(int secs, char *why)
 		    (intmax_t)(shutdownTime - ((shutdownTime / 60) * 60)));
 	}
 
-	fprintf(stderr, "FICS:    **** Automatic Server shutdown. ****\n");
-	fprintf(stderr, "FICS: %s\n", why);
+	(void) fprintf(stderr, "FICS:    **** Automatic Server shutdown. "
+	    "****\n");
+	(void) fprintf(stderr, "FICS: %s\n", why);
 	return 0;
 }
 
