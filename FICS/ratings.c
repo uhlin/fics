@@ -666,7 +666,8 @@ rating_recalc(void)
 #endif
 	time_t		 t = time(NULL);
 
-	fprintf(stderr, "FICS: Recalculating ratings at %s\n", strltime(&t));
+	(void) fprintf(stderr, "FICS: Recalculating ratings at %s\n",
+		       strltime(&t));
 	zero_stats();
 
 	for (c = 'a'; c <= 'z'; c++) {
@@ -682,8 +683,9 @@ rating_recalc(void)
 				if (player_read(p1, dp->d_name)) {
 					player_remove(p1);
 
-					fprintf(stderr, "FICS: Problem reading "
-					    "player %s.\n", dp->d_name);
+					(void) fprintf(stderr, "FICS: "
+					    "Problem reading player %s.\n",
+					    dp->d_name);
 
 					continue;
 				}
@@ -747,7 +749,7 @@ rating_recalc(void)
 	save_ratings();
 
 	t = time(NULL);
-	fprintf(stderr, "FICS: Finished at %s\n", strltime(&t));
+	(void) fprintf(stderr, "FICS: Finished at %s\n", strltime(&t));
 }
 
 PRIVATE int
@@ -911,7 +913,7 @@ rating_update(int g)
 		w_stats = &parray[garray[g].white].l_stats;
 		b_stats = &parray[garray[g].black].l_stats;
 	} else {
-		fprintf(stderr, "FICS: Can't update untimed ratings!\n");
+		(void) fprintf(stderr, "FICS: Can't update untimed ratings!\n");
 		return -1;
 	}
 
@@ -939,8 +941,8 @@ rating_update(int g)
 		wRes = bRes = RESULT_DRAW;
 		break;
 	default:
-		fprintf(stderr, "FICS: Update undecided game %d?\n",
-		    garray[g].result);
+		(void) fprintf(stderr, "FICS: Update undecided game %d?\n",
+			       garray[g].result);
 		return -1;
 	}
 
@@ -995,15 +997,15 @@ rating_update(int g)
 	if (wDelta < -1000) {
 		pprintf(garray[g].white, "not changed due to bug "
 		    "(way too small)! sorry!\n");
-		fprintf(stderr, "FICS: Got too small ratings bug for %s "
-		    "(w) vs. %s\n",
+		(void) fprintf(stderr, "FICS: Got too small ratings bug for "
+		    "%s (w) vs. %s\n",
 		    parray[garray[g].white].login,
 		    parray[garray[g].black].login);
 	} else if (wDelta > 3000) {
 		pprintf(garray[g].white, "not changed due to bug "
 		    "(way too big)! sorry!\n");
-		fprintf(stderr, "FICS: Got too big ratings bug for %s "
-		    "(w) vs. %s\n",
+		(void) fprintf(stderr, "FICS: Got too big ratings bug for "
+		    "%s (w) vs. %s\n",
 		    parray[garray[g].white].login,
 		    parray[garray[g].black].login);
 	} else {
@@ -1014,15 +1016,15 @@ rating_update(int g)
 	if (bDelta < -1000) {
 		pprintf(garray[g].black, "not changed due to bug "
 		    "(way too small)! sorry!\n");
-		fprintf(stderr, "FICS: Got too small ratings bug for %s "
-		    "(b) vs. %s\n",
+		(void) fprintf(stderr, "FICS: Got too small ratings bug for "
+		    "%s (b) vs. %s\n",
 		    parray[garray[g].black].login,
 		    parray[garray[g].white].login);
 	} else if (bDelta > 3000) {
 		pprintf(garray[g].black, "not changed due to bug "
 		    "(way too big)! sorry!\n");
-		fprintf(stderr, "FICS: Got too big ratings bug for %s "
-		    "(b) vs. %s\n",
+		(void) fprintf(stderr, "FICS: Got too big ratings bug for "
+		    "%s (b) vs. %s\n",
 		    parray[garray[g].black].login,
 		    parray[garray[g].white].login);
 	} else {
@@ -1454,7 +1456,7 @@ CompareStats(char *name1, statistics *s1,
 	if (name2[i] != '\0')
 		return 1;
 
-	fprintf(stderr, "Duplicate entries found: %s.\n", name1);
+	(void) fprintf(stderr, "Duplicate entries found: %s.\n", name1);
 	return 0;
 }
 
