@@ -39,6 +39,8 @@
 						creation.
    Markus Uhlin                 25/11/18	Fixed null pointer dereference
 						in UpdateRank().
+   Markus Uhlin                 26/03/08	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
