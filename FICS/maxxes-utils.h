@@ -1,6 +1,7 @@
 #ifndef MAXXES_UTILITIES_H
 #define MAXXES_UTILITIES_H
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "common.h"
@@ -11,6 +12,8 @@
 	strlcpy_trunc_chk((p_dst), (p_src), (p_dstsize), __FILE__, __LINE__)
 #define mstrlcat(p_dst, p_src, p_dstsize) \
 	strlcat_trunc_chk((p_dst), (p_src), (p_dstsize), __FILE__, __LINE__)
+
+bool	is_too_long(const int, const size_t);
 
 void	snprintf_trunc_chk(const char *file, const long int line,
 	    char *str, size_t size, const char *format, ...) PRINTFLIKE(5);

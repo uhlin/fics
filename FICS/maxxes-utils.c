@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 Markus Uhlin <maxxe@rpblc.net>
+// SPDX-FileCopyrightText: 2024-2026 Markus Uhlin <maxxe@rpblc.net>
 // SPDX-License-Identifier: ISC
 
 #include <err.h>
@@ -11,6 +11,12 @@
 #endif
 
 #include "maxxes-utils.h"
+
+bool
+is_too_long(const int p_ret, const size_t p_maxlen)
+{
+	return (p_ret < 0 || (size_t)p_ret >= p_maxlen);
+}
 
 void
 snprintf_trunc_chk(const char *file, const long int line,
