@@ -878,7 +878,7 @@ com_mailmess(int p, param_list param)
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char	 mdir[MAX_FILENAME_SIZE] = { '\0' };
 	char	 subj[120] = { '\0' };
-	int	 ret, too_long;
+	int	 ret[3];
 
 	if (!parray[p].registered) {
 		pprintf(p, "Only registered people can use the mailmess "
@@ -886,18 +886,24 @@ com_mailmess(int p, param_list param)
 		return COM_OK;
 	}
 
-	snprintf(filename, sizeof filename, "%s.messages", parray[p].login);
-	snprintf(mdir, sizeof mdir, "%s/player_data/%c/", stats_dir,
-	    parray[p].login[0]);
+	ret[0] = snprintf(filename, sizeof filename, "%s.messages",
+			  parray[p].login);
+	ret[1] = snprintf(mdir, sizeof mdir, "%s/player_data/%c/", stats_dir,
+			  parray[p].login[0]);
+
+	if (is_too_long(ret[0], sizeof filename) ||
+	    is_too_long(ret[1], sizeof mdir)) {
+		pprintf(p, "Insufficient buffer space\n");
+		return COM_OK;
+	}
 
 	if (search_directory(mdir, filename, buffer, ARRAY_SIZE(buffer))) {
-		snprintf(subj, sizeof subj, "Your FICS messages from server %s",
-		    fics_hostname);
+		(void) snprintf(subj, sizeof subj, "Your FICS messages from "
+		    "server %s", fics_hostname);
 
-		ret = snprintf(fname, sizeof fname, "%s/%s", mdir, filename);
-		too_long = (ret < 0 || (size_t)ret >= sizeof fname);
+		ret[2] = snprintf(fname, sizeof fname, "%s/%s", mdir, filename);
 
-		if (!too_long) {
+		if (!is_too_long(ret[2], sizeof fname)) {
 			mail_file_to_user(p, subj, fname);
 			pprintf(p, "Messages sent to %s\n",
 			    parray[p].emailAddress);
