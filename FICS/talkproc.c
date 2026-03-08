@@ -1084,9 +1084,9 @@ com_qtell(int p, param_list param)
 PUBLIC int
 on_channel(int ch, int p)
 {
-	char tmp[20];
+	char tmp[20] = { '\0' };
 
-	snprintf(tmp, sizeof tmp, "%d", ch);
+	(void) snprintf(tmp, sizeof tmp, "%d", ch);
 	return in_list(p, L_CHANNEL, tmp);	// since needs 'ch' converted
 						// to a string keep hidden from
 						// view
