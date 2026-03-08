@@ -36,6 +36,7 @@
    Markus Uhlin                 25/01/18	Fixed -Wshadow
    Markus Uhlin                 25/04/04	tell: fixed constant expression
 						result
+   Markus Uhlin                 26/03/08	Improved com_mailmess().
 */
 
 #include "stdinclude.h"
