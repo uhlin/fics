@@ -13,6 +13,7 @@
 #define mstrlcat(p_dst, p_src, p_dstsize) \
 	strlcat_trunc_chk((p_dst), (p_src), (p_dstsize), __FILE__, __LINE__)
 
+__FICS_BEGIN_DECLS
 bool	is_too_long(const int, const size_t);
 
 void	snprintf_trunc_chk(const char *file, const long int line,
@@ -21,5 +22,6 @@ void	strlcpy_trunc_chk(char *dst, const char *src, size_t dstsize,
 	    const char *, const long int);
 void	strlcat_trunc_chk(char *dst, const char *src, size_t dstsize,
 	    const char *, const long int);
+__FICS_END_DECLS
 
 #endif
