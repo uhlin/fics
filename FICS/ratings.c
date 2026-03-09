@@ -1506,11 +1506,11 @@ GetRankFileName(char *out, const size_t size, int type)
 PUBLIC void
 UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 {
-	FILE		*fp;
-	FILE		*fptemp;
-	char		 RankFile[MAX_FILENAME_SIZE];
-	char		 TmpRankFile[MAX_FILENAME_SIZE];
-	char		 command[MAX_STRING_LENGTH];
+	FILE		*fp = NULL;
+	FILE		*fptemp = NULL;
+	char		 RankFile[MAX_FILENAME_SIZE] = { '\0' };
+	char		 TmpRankFile[MAX_FILENAME_SIZE] = { '\0' };
+	char		 command[MAX_STRING_LENGTH] = { '\0' };
 	char		 line[MAX_RANK_LINE] = { '\0' };
 	char		 login[MAX_LOGIN_NAME] = { '\0' };
 	int		 comp = 0;
