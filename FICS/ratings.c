@@ -355,7 +355,10 @@ load_ratings(void)
 	    fscanf(fp, "%lf %lf %lf %d", &Rl_M, &Rl_S, &Rl_total,
 	    &Rl_count) != 4) {
 		warn("%s: fscanf", __func__);
-		fclose(fp);
+
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
+
 		return;
 	}
 
@@ -369,18 +372,25 @@ load_ratings(void)
 		if (ret != 4) {
 			warnx("%s: %s: too few items assigned (iteration: %d)",
 			    __func__, fname, i);
-			fclose(fp);
+
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
+
 			return;
 		}
 	}
 
 	if (ferror(fp)) {
 		warnx("%s: %s: the error indicator is set", __func__, fname);
-		fclose(fp);
+
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
+
 		return;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 
 	if (Rs_count != 0) {
 		Ratings_S_StdDev	= sqrt(Rs_S / Rs_count); // NOLINT
