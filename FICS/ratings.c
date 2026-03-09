@@ -1540,12 +1540,17 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	if ((fd = open(TmpRankFile, g_open_flags[OPFL_WRITE],
 	    g_open_modes)) < 0) {
 		warn("%s: open", __func__);
-		fclose(fp);
+
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 		return;
 	} else if ((fptemp = fdopen(fd, "w")) == NULL) {
 		warn("%s: unable to open rank file for updating", __func__);
-		fclose(fp);
-		close(fd);
+
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
+		if (close(fd) != 0)
+			warn("%s: error: close", __func__);
 		return;
 	}
 
@@ -1586,8 +1591,9 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 		    comp);
 	}
 
-	fclose(fptemp);
-	fclose(fp);
+	if (fclose(fptemp) != 0 ||
+	    fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 
 	// XXX
 #define NASH_CODE 0
