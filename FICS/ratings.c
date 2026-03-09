@@ -1900,11 +1900,11 @@ DisplayTargetRank(int p, char *target, int show, int showComp)
 		pprintf(p, "No ratings to show.\n");
 
 		if (fb != NULL)
-			fclose(fb);
+			(void) fclose(fb);
 		if (fs != NULL)
-			fclose(fs);
+			(void) fclose(fs);
 		if (fw != NULL)
-			fclose(fw);
+			(void) fclose(fw);
 		return 0;
 	}
 
@@ -1918,11 +1918,11 @@ DisplayTargetRank(int p, char *target, int show, int showComp)
 	    showComp, show, target);
 
 	if (fb != NULL)
-		fclose(fb);
+		(void) fclose(fb);
 	if (fs != NULL)
-		fclose(fs);
+		(void) fclose(fs);
 	if (fw != NULL)
-		fclose(fw);
+		(void) fclose(fw);
 	return 1;
 }
 
@@ -1965,11 +1965,11 @@ DisplayRankedPlayers(int p, int start, int end, int show, int showComp)
 	    "");
 
 	if (fb)
-		fclose(fb);
+		(void) fclose(fb);
 	if (fs)
-		fclose(fs);
+		(void) fclose(fs);
 	if (fw)
-		fclose(fw);
+		(void) fclose(fw);
 	return 1;
 }
 
