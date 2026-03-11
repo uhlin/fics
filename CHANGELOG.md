@@ -10,6 +10,7 @@ documented in this file.
 - Replaced C-style headers in C++ files.
 - Replaced `atoi()` with `strtol()`. Multiple occurrences.
 - Replaced `atoi()` with `strtonum()`. Multiple occurrences.
+- Replaced `rewind()` with `fseek()`.
 - Usage of `const`.
 - Usage of begin/end decls, in header files.
 - Usage of member initializers.
