@@ -1712,9 +1712,9 @@ PositionFilePtr(FILE *fp, int count, int *last, int *nTied, int showComp)
 
 	rating = nGames = is_computer = 0;
 	errno = 0;
-	rewind(fp);
-	if (errno) {
-		warn("%s: rewind", __func__);
+
+	if (fseek(fp, 0L, SEEK_SET) == -1) {
+		warn("%s: fseek", __func__);
 		return;
 	}
 
