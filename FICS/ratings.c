@@ -1572,7 +1572,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 		return;
 	}
 
-	snprintf(TmpRankFile, sizeof TmpRankFile, "%s/tmpRank", sdir);
+	(void) snprintf(TmpRankFile, sizeof TmpRankFile, "%s/tmpRank", sdir);
 
 	if ((fd = open(TmpRankFile, g_open_flags[OPFL_WRITE],
 	    g_open_modes)) < 0) {
