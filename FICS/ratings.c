@@ -58,6 +58,7 @@
 #include "ficsmain.h"
 #include "gamedb.h"
 #include "lists.h"
+#include "maxxes-utils.h"
 #include "playerdb.h"
 #include "ratings.h"
 #include "utils.h"
@@ -339,9 +340,14 @@ load_ratings(void)
 {
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	 ret;
 
-	snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
+	ret = snprintf(fname, sizeof fname, "%s/newratingsV%d_data", stats_dir,
 	    STATS_VERSION);
+	if (is_too_long(ret, sizeof fname)) {
+		warnx("%s: too long filename", __func__);
+		return;
+	}
 
 	if ((fp = fopen(fname, "r")) == NULL) {
 		warn("%s: can't read ratings data", __func__);
@@ -363,8 +369,6 @@ load_ratings(void)
 	}
 
 	for (int i = 0; i < MAXHIST && !feof(fp) && !ferror(fp); i++) {
-		int ret;
-
 		sHist[i] = bHist[i] = wHist[i] = lHist[i] = 0;
 
 		ret = fscanf(fp, "%d %d %d %d", &sHist[i], &bHist[i], &wHist[i],
