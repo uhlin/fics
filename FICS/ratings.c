@@ -1552,6 +1552,7 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 	char		 login[MAX_LOGIN_NAME] = { '\0' };
 	int		 comp = 0;
 	int		 fd = -1;
+	int		 ret = -1;
 	statistics	 sCur = {
 		.sterr = 0.0,
 		.num = 0,
@@ -1612,20 +1613,24 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 			int computer = in_list(-1, L_COMPUTER, addName);
 
 			if (sNew) {
-				fprintf(fptemp, "%s %d %d %d\n", addName,
+				ret = fprintf(fptemp, "%s %d %d %d\n", addName,
 				    sNew->rating, sNew->num, computer);
 			} else {
 				warnx("%s: 'sNew' null: addName = %s", __func__,
 				    addName);
-				fprintf(fptemp, "%s %d %d %d\n", addName,
+				ret = fprintf(fptemp, "%s %d %d %d\n", addName,
 				    0, 0, computer);
 			}
 
+			if (ret < 0)
+				warnx("%s: error: fprintf", __func__);
 			addName = NULL;
 		}
 
-		fprintf(fptemp, "%s %d %d %d\n", login, sCur.rating, sCur.num,
-		    comp);
+		ret = fprintf(fptemp, "%s %d %d %d\n",
+		    login, sCur.rating, sCur.num, comp);
+		if (ret < 0)
+			warnx("%s: error: fprintf", __func__);
 	}
 
 	if (fclose(fptemp) != 0 ||
