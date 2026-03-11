@@ -1633,8 +1633,9 @@ UpdateRank(int type, char *addName, statistics *sNew, char *delName)
 			warnx("%s: error: fprintf", __func__);
 	}
 
-	if (fclose(fptemp) != 0 ||
-	    fclose(fp) != 0)
+	if (fclose(fptemp) != 0)
+		warn("%s: error: fclose", __func__);
+	if (fclose(fp) != 0)
 		warn("%s: error: fclose", __func__);
 
 	// XXX
