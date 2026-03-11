@@ -688,6 +688,7 @@ rating_recalc(void)
 	char		 dname[MAX_FILENAME_SIZE];
 	int		 c;
 	int		 p1;
+	int		 ret;
 #if USE_DIRENT
 	struct dirent	*dp;
 #else
@@ -700,7 +701,12 @@ rating_recalc(void)
 	zero_stats();
 
 	for (c = 'a'; c <= 'z'; c++) {
-		snprintf(dname, sizeof dname, "%s/%c", player_dir, c);
+		ret = snprintf(dname, sizeof dname, "%s/%c", player_dir, c);
+
+		if (is_too_long(ret, sizeof dname)) {
+			warnx("%s: too long dir name", __func__);
+			return;
+		}
 
 		if ((dirp = opendir(dname)) == NULL)
 			continue;
