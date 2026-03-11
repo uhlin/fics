@@ -1498,19 +1498,46 @@ CompareStats(char *name1, statistics *s1,
 PRIVATE int
 GetRankFileName(char *out, const size_t size, int type)
 {
-	switch (type) {
-	case TYPE_BLITZ:
-		snprintf(out, size, "%s/rank.blitz", sdir);
-		return type;
-	case TYPE_STAND:
-		snprintf(out, size, "%s/rank.std", sdir);
-		return type;
-	case TYPE_WILD:
-		snprintf(out, size, "%s/rank.wild", sdir);
-		return type;
-	default:
+	int ret;
+
+	if (out == NULL) {
+		warnx("%s: invalid arg: null pointer detected", __func__);
 		return -1;
 	}
+
+	switch (type) {
+	case TYPE_BLITZ:
+		ret = snprintf(out, size, "%s/rank.blitz", sdir);
+
+		if (is_too_long(ret, size)) {
+			warnx("%s: snprintf: truncated", __func__);
+			return -1;
+		}
+
+		return type;
+	case TYPE_STAND:
+		ret = snprintf(out, size, "%s/rank.std", sdir);
+
+		if (is_too_long(ret, size)) {
+			warnx("%s: snprintf: truncated", __func__);
+			return -1;
+		}
+
+		return type;
+	case TYPE_WILD:
+		ret = snprintf(out, size, "%s/rank.wild", sdir);
+
+		if (is_too_long(ret, size)) {
+			warnx("%s: snprintf: truncated", __func__);
+			return -1;
+		}
+
+		return type;
+	default:
+		break;
+	}
+
+	return -1;
 }
 
 PUBLIC void
