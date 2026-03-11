@@ -1976,21 +1976,18 @@ DisplayRankedPlayers(int p, int start, int end, int show, int showComp)
 		num = 100;
 
 	if (CheckFlag(show, SHOW_BLITZ)) {
-		GetRankFileName(Path, sizeof Path, TYPE_BLITZ);
-
-		if ((fb = fopen(Path, "r")) == NULL)
+		if (GetRankFileName(Path, sizeof Path, TYPE_BLITZ) >= 0 &&
+		    (fb = fopen(Path, "r")) == NULL)
 			ClearFlag(show, SHOW_BLITZ);
 	}
 	if (CheckFlag(show, SHOW_STANDARD)) {
-		GetRankFileName(Path, sizeof Path, TYPE_STAND);
-
-		if ((fs = fopen(Path, "r")) == NULL)
+		if (GetRankFileName(Path, sizeof Path, TYPE_STAND) >= 0 &&
+		    (fs = fopen(Path, "r")) == NULL)
 			ClearFlag(show, SHOW_STANDARD);
 	}
 	if (CheckFlag(show, SHOW_WILD)) {
-		GetRankFileName(Path, sizeof Path, TYPE_WILD);
-
-		if ((fw = fopen(Path, "r")) == NULL)
+		if (GetRankFileName(Path, sizeof Path, TYPE_WILD) >= 0 &&
+		    (fw = fopen(Path, "r")) == NULL)
 			ClearFlag(show, SHOW_WILD);
 	}
 
