@@ -11,6 +11,7 @@ documented in this file.
 - Replaced `atoi()` with `strtol()`. Multiple occurrences.
 - Replaced `atoi()` with `strtonum()`. Multiple occurrences.
 - Usage of `const`.
+- Usage of begin/end decls, in header files.
 - Usage of member initializers.
 
 ## [1.4.7] - 2025-12-01 ##
