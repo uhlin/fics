@@ -2911,10 +2911,11 @@ WriteMsgFile(int p, textlist *Head)
 		close(fd);
 		return 0;
 	}
+
 	for (Cur = Head; Cur != NULL; Cur = Cur->next)
 		fprintf(fp, "%s", Cur->text);
-	fclose(fp);
-	return 1;
+
+	return (fclose(fp) == 0 ? 1 : 0);
 }
 
 PUBLIC int
