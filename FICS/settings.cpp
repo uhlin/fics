@@ -22,18 +22,16 @@ struct setting {
 	enum setting_type	type;
 	std::string		value;
 
-	setting()
+	setting() : type(STYPE_STRING)
 	{
 		this->name.assign("");
-		this->type = STYPE_STRING;
 		this->value.assign("");
 	}
 
 	setting(const char *p_name, enum setting_type p_type,
-		const char *p_value)
+		const char *p_value) : type(p_type)
 	{
 		this->name.assign(p_name);
-		this->type = p_type;
 		this->value.assign(p_value);
 	}
 };
