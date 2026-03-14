@@ -1400,7 +1400,10 @@ player_save(int p)
 		return -1;
 	} else if ((fp = fdopen(fd, "w")) == NULL) {
 		warn("%s: Problem opening file %s for write", __func__, fname);
-		close(fd);
+
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
+
 		return -1;
 	}
 
@@ -1694,7 +1697,10 @@ write_p_inout(int inout, int p, const char *file, int maxlines)
 		return;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {
 		warn("%s: fdopen", __func__);
-		close(fd);
+
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
+
 		return;
 	}
 
@@ -2726,7 +2732,8 @@ player_add_message(int top, int fromp, char *message)
 	if ((fd = open(fname, g_open_flags[OPFL_APPEND], g_open_modes)) < 0)
 		return -1;
 	else if ((fp = fdopen(fd, "a")) == NULL) {
-		close(fd);
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
 		return -1;
 	}
 
@@ -2908,7 +2915,8 @@ WriteMsgFile(int p, textlist *Head)
 	if ((fd = open(fName, g_open_flags[OPFL_WRITE], g_open_modes)) < 0)
 		return 0;
 	else if ((fp = fdopen(fd, "w")) == NULL) {
-		close(fd);
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
 		return 0;
 	}
 
