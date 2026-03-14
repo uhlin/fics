@@ -3325,7 +3325,7 @@ player_show_comments(int p, int p1)
 {
 	char fname[MAX_FILENAME_SIZE] = { '\0' };
 
-	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    parray[p1].login[0], parray[p1].login, "comments");
 
 	if (psend_file(p, NULL, fname) == -1)
