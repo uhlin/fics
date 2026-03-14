@@ -2813,8 +2813,8 @@ PRIVATE int
 LoadMsgs(int p, int which, textlist **Head)
 {
 	FILE		*fp;
-	char		 fName[MAX_FILENAME_SIZE];
-	char		 line[MAX_LINE_SIZE];
+	char		 fName[MAX_FILENAME_SIZE] = { '\0' };
+	char		 line[MAX_LINE_SIZE] = { '\0' };
 	int		 n = 0, nSave = 0;
 	textlist**	 Cur = Head;
 
@@ -2845,8 +2845,8 @@ PRIVATE int
 LoadMsgRange(int p, int start, int end, textlist **Head)
 {
 	FILE		*fp;
-	char		 fName[MAX_FILENAME_SIZE];
-	char		 line[MAX_LINE_SIZE];
+	char		 fName[MAX_FILENAME_SIZE] = { '\0' };
+	char		 line[MAX_LINE_SIZE] = { '\0' };
 	int		 n = 1, nSave = 0, nKill = 0;
 	textlist**	 Cur = Head;
 
