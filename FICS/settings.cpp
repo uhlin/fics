@@ -71,7 +71,7 @@ settings_init(void)
 void
 settings_deinit(void)
 {
-	fprintf(stderr, "FICS: Deinitialized the conf settings\n");
+	(void) fprintf(stderr, "FICS: Deinitialized the conf settings\n");
 }
 
 static bool
@@ -271,7 +271,7 @@ settings_read_conf(const char *path)
 	    install_setting);
 
 	if (feof(fp))
-		fclose(fp);
+		(void) fclose(fp);
 	else if (ferror(fp))
 		errx(1, "%s: %s", __func__, g_fgets_nullret_err1);
 	else
