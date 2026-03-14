@@ -126,8 +126,8 @@ get_empty_slot(void)
 	p_num++;
 
 	if ((p_num + 1) >= PARRAY_SIZE) {
-		fprintf(stderr, "*** Bogus attempt to %s() past end of parray "
-		    "***\n", __func__);
+		(void) fprintf(stderr, "*** Bogus attempt to %s() past end "
+		    "of parray ***\n", __func__);
 	}
 
 	parray[p_num - 1].status = PLAYER_EMPTY;
@@ -523,7 +523,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	    &ltime_tmp[4], &pp->bug_stats.best, &wb_tmp[4],
 
 	    &pp->lastHost) != 46) {
-		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
+		(void) fprintf(stderr, "Player %s is corrupt\n",
+			       parray[p].name);
 		return;
 	}
 
@@ -566,7 +567,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	pp->bug_stats.sterr	= (bugs / 10.0);
 
 	if (fgets(tmp2, sizeof tmp2, fp) == NULL) {
-		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
+		(void) fprintf(stderr, "Player %s is corrupt\n",
+			       parray[p].name);
 		return;
 	} else {
 		tmp2[strcspn(tmp2, "\n")] = '\0';
@@ -584,7 +586,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 	    &pp->highlight, &pp->num_comments, &pp->num_plan, &pp->num_formula,
 	    &size_cens, &size_not, &size_noplay, &size_gnot, &pp->numAlias,
 	    &size_chan) != 37) {
-		fprintf(stderr, "Player %s is corrupt\n", parray[p].name);
+		(void) fprintf(stderr, "Player %s is corrupt\n",
+			       parray[p].name);
 		return;
 	}
 
@@ -626,8 +629,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 			}
 
 			if (!(len = strlen(tmp2))) {
-				fprintf(stderr, "FICS: Error bad plan in "
-				    "file %s\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Error bad plan in file %s\n", file);
 				i--;
 				pp->num_plan--;
 			} else {
@@ -649,8 +652,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 			}
 
 			if (!(len = strlen(tmp2))) {
-				fprintf(stderr, "FICS: Error bad formula in "
-				    "file %s\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Error bad formula in file %s\n", file);
 				i--;
 				pp->num_formula--;
 			} else {
@@ -683,8 +686,8 @@ ReadV1PlayerFmt(int p, player *pp, FILE *fp, char *file, int version)
 			}
 
 			if (!strlen(tmp2)) { // XXX
-				fprintf(stderr, "FICS: Error bad alias in "
-				    "file %s\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Error bad alias in file %s\n", file);
 				i--;
 				pp->numAlias--;
 			} else {
@@ -898,8 +901,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 				}
 
 				if (!(len = strlen(tmp))) {
-					fprintf(stderr, "FICS: Error bad plan "
-					    "in file %s\n", file);
+					(void) fprintf(stderr, "FICS: "
+					    "Error bad plan in file %s\n",
+					    file);
 					i--;
 					parray[p].num_plan--;
 				} else {
@@ -932,8 +936,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 				}
 
 				if (!(len = strlen(tmp))) {
-					fprintf(stderr, "FICS: Error bad "
-					    "formula in file %s\n", file);
+					(void) fprintf(stderr, "FICS: "
+					    "Error bad formula in file %s\n",
+					    file);
 					i--;
 					parray[p].num_formula--;
 				} else {
@@ -972,8 +977,9 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 				}
 
 				if (!strlen(tmp)) { // XXX
-					fprintf(stderr, "FICS: Error bad alias "
-					    "in file %s\n", file);
+					(void) fprintf(stderr, "FICS: "
+					    "Error bad alias in file %s\n",
+					    file);
 					i--;
 					parray[p].numAlias--;
 				} else {
@@ -1015,8 +1021,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
-				fprintf(stderr, "FICS: Error bad censor in "
-				    "file %s\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Error bad censor in file %s\n", file);
 			} else {
 				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_CENSOR, tmp);
@@ -1040,8 +1046,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
-				fprintf(stderr, "FICS: Error bad notify in "
-				    "file %s\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Error bad notify in file %s\n", file);
 			} else {
 				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_NOTIFY, tmp);
@@ -1062,8 +1068,8 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
-				fprintf(stderr, "FICS: Error bad noplay in "
-				    "file %s\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Error bad noplay in file %s\n", file);
 			} else {
 				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_NOPLAY, tmp);
@@ -1084,15 +1090,16 @@ got_attr_value_player(int p, char *attr, char *value, FILE *fp, char *file)
 
 			if (!(len = strlen(tmp)) || len == 1) {	// blank lines
 								// do occur!
-				fprintf(stderr, "FICS: Error bad gnotify in "
-				    "file %s\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Error bad gnotify in file %s\n", file);
 			} else {
 				tmp[strcspn(tmp, "\n")] = '\0';
 				list_add(p, L_GNOTIFY, tmp);
 			}
 		}
 	} else {
-		fprintf(stderr, "FICS: Error bad attribute >%s< from file %s\n",
+		(void) fprintf(stderr, "FICS: Error bad attribute >%s< "
+		    "from file %s\n",
 		    attr, file);
 	}
 
@@ -1171,7 +1178,8 @@ player_read(int p, char *name)
 			value = eatword(attr);
 
 			if (!*value) {
-				fprintf(stderr, "FICS: Error reading file %s\n",
+				(void) fprintf(stderr, "FICS: "
+				    "Error reading file %s\n",
 				    fname);
 				continue;
 			}
@@ -1763,7 +1771,8 @@ player_lastconnect(int p)
 	too_long = (ret < 0 || (size_t)ret >= sizeof fname);
 
 	if (too_long) {
-		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		(void) fprintf(stderr, "FICS: %s: warning: "
+		    "snprintf truncated\n",
 		    __func__);
 	}
 
@@ -1783,8 +1792,8 @@ player_lastconnect(int p)
 
 		if (fscanf(fp, ("%d %19s " "%" SCNd64 " %d %19s\n"), &inout,
 		    loginName, &lval, &registered, ipstr) != 5) {
-			fprintf(stderr, "FICS: Error in login info format. %s"
-			    "\n", fname);
+			(void) fprintf(stderr, "FICS: "
+			    "Error in login info format. %s\n", fname);
 			fclose(fp);
 			return 0;
 		}
@@ -1811,7 +1820,8 @@ player_lastdisconnect(int p)
 	too_long = (ret < 0 || (size_t)ret >= sizeof fname);
 
 	if (too_long) {
-		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		(void) fprintf(stderr, "FICS: %s: warning: "
+		    "snprintf truncated\n",
 		    __func__);
 	}
 
@@ -1826,8 +1836,8 @@ player_lastdisconnect(int p)
 
 		if (fscanf(fp, ("%d %19s " "%" SCNd64 " %d %19s\n"), &inout,
 		    loginName, &lval, &registered, ipstr) != 5) {
-			fprintf(stderr, "FICS: Error in login info format. %s"
-			    "\n", fname);
+			(void) fprintf(stderr, "FICS: "
+			    "Error in login info format. %s\n", fname);
 			fclose(fp);
 			return 0;
 		}
@@ -2662,7 +2672,8 @@ GetMsgFile(int p, char *fName, const size_t size, const char *func)
 	too_long = (ret < 0 || (size_t)ret >= size);
 
 	if (too_long) {
-		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		(void) fprintf(stderr, "FICS: %s: warning: "
+		    "snprintf truncated\n",
 		    func);
 	}
 }
@@ -2910,8 +2921,8 @@ ClearMsgsBySender(int p, param_list param)
 		} else {
 			pprintf(p, "Problem writing message file; "
 			    "please contact an admin.\n");
-			fprintf(stderr, "Problem writing message file for "
-			    "%s.\n", parray[p].name);
+			(void) fprintf(stderr, "Problem writing message file "
+			    "for %s.\n", parray[p].name);
 		}
 
 		ClearTextList(Head);
