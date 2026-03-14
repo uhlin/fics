@@ -1154,7 +1154,10 @@ player_read(int p, char *name)
 
 	if (fgets(line, sizeof line, fp) == NULL) {	// Ok, so which version
 		warnx("%s: fgets() error", __func__);	// file?
-		fclose(fp);
+
+		if (fclose(fp) != 0)
+			warn("%s: error closing file pointer", __func__);
+
 		return -1;
 	}
 
@@ -1195,7 +1198,8 @@ player_read(int p, char *name)
 		} while (!feof(fp));
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error closing file pointer", __func__);
 
 	if (version == 0) {
 		player_save(p);	// Ensure old files are quickly converted e.g.
