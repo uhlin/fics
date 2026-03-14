@@ -1849,18 +1849,20 @@ player_pend_print(int p, pending *pend)
 	if (p == pend->whofrom) {
 		(void)strlcpy(outstr, "You are offering ", sizeof outstr);
 	} else {
-		snprintf(outstr, sizeof outstr, "%s is offering ",
+		(void)snprintf(outstr, sizeof outstr, "%s is offering ",
 		    parray[pend->whofrom].name);
 	}
 
 	if (p == pend->whoto) {
 		/* null */;
 	} else {
-		snprintf(tmp, sizeof tmp, "%s ", parray[pend->whoto].name);
+		(void)snprintf(tmp, sizeof tmp, "%s ",
+			       parray[pend->whoto].name);
 	}
 
 	if (strlcat(outstr, tmp, sizeof outstr) >= sizeof outstr) {
-		fprintf(stderr, "FICS: %s: warning: strlcat() truncated\n",
+		(void)fprintf(stderr, "FICS: %s: warning: "
+		    "strlcat() truncated\n",
 		    __func__);
 	}
 
