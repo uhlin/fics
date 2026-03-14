@@ -1587,7 +1587,8 @@ showstored(int p)
 	struct direct	*dp;
 #endif
 
-	snprintf(dname, sizeof dname, "%s/%c", adj_dir, parray[p].login[0]);
+	(void) snprintf(dname, sizeof dname, "%s/%c", adj_dir,
+			parray[p].login[0]);
 
 	if ((dirp = opendir(dname)) == NULL) {
 		multicol_end(m);
