@@ -6,6 +6,7 @@
 #include "command.h" /* param_list */
 #include "common.h" /* __dead */
 
+__FICS_BEGIN_DECLS
 extern int	 check_and_print_shutdown(int);
 extern int	 com_shutdown(int, param_list);
 extern int	 com_whenshut(int, param_list);
@@ -15,5 +16,6 @@ extern __dead void ShutDown(void);
 
 extern void	 ShutHeartBeat(void);
 extern void	 output_shut_mess(void);
+__FICS_END_DECLS
 
 #endif /* _SHUTDOWN_H */
