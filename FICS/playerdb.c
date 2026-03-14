@@ -1402,8 +1402,7 @@ player_save(int p)
 	}
 
 	WritePlayerFile(fp, p);
-	fclose(fp);
-	return 0;
+	return (fclose(fp) == 0 ? 0 : -1);
 }
 
 PUBLIC int
@@ -1700,7 +1699,8 @@ write_p_inout(int inout, int p, const char *file, int maxlines)
 	    (intmax_t)time(NULL), parray[p].registered,
 	    dotQuad(parray[p].thisHost));
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error closing file pointer", __func__);
 
 	if (maxlines)
 		truncate_file(file, maxlines);
