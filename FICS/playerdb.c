@@ -1726,20 +1726,24 @@ player_write_login(int p)
 PUBLIC void
 player_write_logout(int p)
 {
-	char fname[MAX_FILENAME_SIZE];
+	char	fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	ret;
 
 	if (parray[p].registered) {
-		snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+		ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
 		    stats_dir, parray[p].login[0], parray[p].login,
 		    STATS_LOGONS);
-		write_p_inout(P_LOGOUT, p, fname, 8);
+		if (!is_too_long(ret, sizeof fname))
+			write_p_inout(P_LOGOUT, p, fname, 8);
 	}
 
-	snprintf(fname, sizeof fname, "%s/%s", stats_dir, STATS_LOGONS);
-	write_p_inout(P_LOGOUT, p, fname, 30);
+	ret = snprintf(fname, sizeof fname, "%s/%s", stats_dir, STATS_LOGONS);
+	if (!is_too_long(ret, sizeof fname))
+		write_p_inout(P_LOGOUT, p, fname, 30);
 
-	snprintf(fname, sizeof fname, "%s/%s", stats_dir, "logons.log");
-	write_p_inout(P_LOGOUT, p, fname, 0);
+	ret = snprintf(fname, sizeof fname, "%s/%s", stats_dir, "logons.log");
+	if (!is_too_long(ret, sizeof fname))
+		write_p_inout(P_LOGOUT, p, fname, 0);
 }
 
 PUBLIC time_t
