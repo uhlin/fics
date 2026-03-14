@@ -181,7 +181,8 @@ is_valid_hostname(const char *p_str, err_reason_t *p_reason)
 	size_t		len = 0;
 
 	if (p_str == nullptr || strcmp(p_str, "") == 0) {
-		strlcpy(p_reason->data, "no hostname", sizeof p_reason->data);
+		(void)strlcpy(p_reason->data, "no hostname",
+		    sizeof p_reason->data);
 		return false;
 	} else if ((len = strlen(p_str)) < HOST_MIN) {
 		(void)snprintf(p_reason->data, sizeof p_reason->data,
@@ -192,7 +193,7 @@ is_valid_hostname(const char *p_str, err_reason_t *p_reason)
 		    "hostname too long (%zu): max=%zu", len, HOST_MAX);
 		return false;
 	} else if (strstr(p_str, "..")) {
-		strlcpy(p_reason->data, "dot followed by dot",
+		(void)strlcpy(p_reason->data, "dot followed by dot",
 		    sizeof p_reason->data);
 		return false;
 	}
@@ -220,7 +221,8 @@ is_valid_username(const char *p_str, err_reason_t *p_reason)
 	size_t		len = 0;
 
 	if (p_str == nullptr || strcmp(p_str, "") == 0) {
-		strlcpy(p_reason->data, "no username", sizeof p_reason->data);
+		(void)strlcpy(p_reason->data, "no username",
+		    sizeof p_reason->data);
 		return false;
 	} else if ((len = strlen(p_str)) < USER_MIN) {
 		(void)snprintf(p_reason->data, sizeof p_reason->data,
