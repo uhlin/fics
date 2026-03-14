@@ -3292,13 +3292,18 @@ player_add_comment(int p_by, int p_to, char *comment)
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	int	 fd;
+	int	 ret;
 	time_t	 t = time(NULL);
 
 	if (!parray[p_to].registered)
 		return -1;
 
-	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
-	    parray[p_to].login[0], parray[p_to].login, "comments");
+	ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+	    stats_dir, parray[p_to].login[0], parray[p_to].login, "comments");
+	if (is_too_long(ret, sizeof fname)) {
+		warnx("%s: filename too long", __func__);
+		return -1;
+	}
 
 	if ((fd = open(fname, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
 		warn("%s: open", __func__);
