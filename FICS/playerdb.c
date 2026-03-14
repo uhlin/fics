@@ -52,6 +52,8 @@
    Markus Uhlin                 25/11/02	Added overflow checks for array
 						indices.
    Markus Uhlin                 26/03/05	Replaced atoi().
+   Markus Uhlin                 26/03/14	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
