@@ -3054,8 +3054,8 @@ player_clear_messages(int p)
 PUBLIC int
 player_search(int p, char *name)
 {
-	char	*buffer[1000];
-	char	 pdir[MAX_FILENAME_SIZE];
+	char	*buffer[1000] = { NULL };
+	char	 pdir[MAX_FILENAME_SIZE] = { '\0' };
 	int	 p1, count;
 
 	// Exact match with connected player?
