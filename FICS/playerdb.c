@@ -3199,36 +3199,36 @@ player_rename(char *name, char *newname)
 PUBLIC int
 player_raise(char *name)
 {
-	char	fname[MAX_FILENAME_SIZE];
-	char	fname2[MAX_FILENAME_SIZE];
+	char	fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	fname2[MAX_FILENAME_SIZE] = { '\0' };
 
-	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	msnprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    name[0], name);
-	snprintf(fname2, sizeof fname2, "%s/%c/.rem.%s", player_dir,
+	msnprintf(fname2, sizeof fname2, "%s/%c/.rem.%s", player_dir,
 	    name[0], name);
 	xrename(__func__, fname2, fname);
 
-	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.games",
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.games",
 	    stats_dir, name[0], name);
-	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.games",
-	    stats_dir, name[0], name);
-	xrename(__func__, fname2, fname);
-
-	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.comments",
-	    stats_dir, name[0], name);
-	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.comments",
+	msnprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.games",
 	    stats_dir, name[0], name);
 	xrename(__func__, fname2, fname);
 
-	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.logons",
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.comments",
 	    stats_dir, name[0], name);
-	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.logons",
+	msnprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.comments",
 	    stats_dir, name[0], name);
 	xrename(__func__, fname2, fname);
 
-	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.messages",
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.logons",
 	    stats_dir, name[0], name);
-	snprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.messages",
+	msnprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.logons",
+	    stats_dir, name[0], name);
+	xrename(__func__, fname2, fname);
+
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.messages",
+	    stats_dir, name[0], name);
+	msnprintf(fname2, sizeof fname2, "%s/player_data/%c/.rem.%s.messages",
 	    stats_dir, name[0], name);
 	xrename(__func__, fname2, fname);
 
