@@ -1105,6 +1105,7 @@ player_read(int p, char *name)
 	char	 line[MAX_LINE_SIZE] = { '\0' };
 	char	*attr, *value;
 	char	*resolvedPath = NULL;
+	int	 ret;
 	int	 version = 0;
 	size_t	 len = 0;
 
@@ -1115,8 +1116,12 @@ player_read(int p, char *name)
 		return -1;
 	}
 
-	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	ret = snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
+	if (is_too_long(ret, sizeof fname)) {
+		warnx("%s: too long filename", __func__);
+		return -1;
+	}
 
 	if ((resolvedPath = realpath(fname, NULL)) != NULL) {
 		if (strncmp(resolvedPath, player_dir,
@@ -1199,16 +1204,20 @@ player_read(int p, char *name)
 PUBLIC int
 player_delete(int p)
 {
-	char fname[MAX_FILENAME_SIZE];
+	char	fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	ret;
 
 	if (!parray[p].registered)	// Player must not be registered
 		return -1;
 
-	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	ret = snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
-	unlink(fname);
+	if (is_too_long(ret, sizeof fname)) {
+		warnx("%s: too long filename", __func__);
+		return -1;
+	}
 
-	return 0;
+	return (unlink(fname) == 0 ? 0 : -1);
 }
 
 PUBLIC int
@@ -1222,9 +1231,9 @@ player_markdeleted(int p)
 	if (!parray[p].registered)	// Player must not be registered
 		return -1;
 
-	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	(void) snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
-	snprintf(fname2, sizeof fname2, "%s/%c/%s.delete", player_dir,
+	(void) snprintf(fname2, sizeof fname2, "%s/%c/%s.delete", player_dir,
 	    parray[p].login[0], parray[p].login);
 	xrename(__func__, fname, fname2);
 
@@ -1337,9 +1346,10 @@ WritePlayerFile(FILE *fp, int p)
 PUBLIC int
 player_save(int p)
 {
-	FILE	*fp;
-	char	 fname[MAX_FILENAME_SIZE];
+	FILE	*fp = NULL;
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	int	 fd;
+	int	 ret;
 
 	if (!player_num_ok_chk(p)) {
 		warnx("%s: invalid player number %d", __func__, p);
@@ -1361,8 +1371,12 @@ player_save(int p)
 		return -1;
 	}
 
-	snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
+	ret = snprintf(fname, sizeof fname, "%s/%c/%s", player_dir,
 	    parray[p].login[0], parray[p].login);
+	if (is_too_long(ret, sizeof fname)) {
+		warnx("%s: too long filename", __func__);
+		return -1;
+	}
 
 	if ((fd = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: Problem opening file %s for write", __func__, fname);
