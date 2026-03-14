@@ -2870,7 +2870,10 @@ LoadMsgRange(int p, int start, int end, textlist **Head)
 			nKill++;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0) {
+		warn("%s: error closing file pointer", __func__);
+		return -1;
+	}
 
 	if (start < 0) {
 		if (n <= -start)
