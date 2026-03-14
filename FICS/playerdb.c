@@ -1255,10 +1255,13 @@ player_markdeleted(int p)
 		warn("%s: open", __func__);
 		return -1;
 	} else if ((fp = fdopen(fd, "a")) != NULL) { // Touch the file
-		fprintf(fp, "\n");
-		fclose(fp);
+		if (fprintf(fp, "\n") < 0)
+			warnx("%s: fprintf() error", __func__);
+		if (fclose(fp) != 0)
+			warn("%s: error closing file pointer", __func__);
 	} else {
-		close(fd);
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
 	}
 
 	return 0;
