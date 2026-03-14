@@ -3322,15 +3322,15 @@ player_add_comment(int p_by, int p_to, char *comment)
 	FILE	*fp;
 	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	int	 fd;
-	int	 ret;
+	int	 ret[3];
 	time_t	 t = time(NULL);
 
 	if (!parray[p_to].registered)
 		return -1;
 
-	ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+	ret[0] = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
 	    stats_dir, parray[p_to].login[0], parray[p_to].login, "comments");
-	if (is_too_long(ret, sizeof fname)) {
+	if (is_too_long(ret[0], sizeof fname)) {
 		warnx("%s: filename too long", __func__);
 		return -1;
 	}
@@ -3340,12 +3340,22 @@ player_add_comment(int p_by, int p_to, char *comment)
 		return -1;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {
 		warn("%s: fdopen", __func__);
-		close(fd);
+
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
+
 		return -1;
 	}
 
-	fprintf(fp, "%s at %s: %s\n", parray[p_by].name, strltime(&t), comment);
-	fclose(fp);
+	ret[1] = fprintf(fp, "%s at %s: %s\n", parray[p_by].name, strltime(&t),
+			 comment);
+	ret[2] = fclose(fp);
+
+	if (ret[1] < 0 || ret[2] != 0) {
+		warnx("%s: certain file operations failed", __func__);
+		return -1;
+	}
+
 	parray[p_to].num_comments = player_num_comments(p_to);
 	return 0;
 }
