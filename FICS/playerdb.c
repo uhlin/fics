@@ -1762,9 +1762,9 @@ PUBLIC time_t
 player_lastconnect(int p)
 {
 	FILE		*fp;
-	char		 fname[MAX_FILENAME_SIZE];
-	char		 ipstr[20];
-	char		 loginName[MAX_LOGIN_NAME];
+	char		 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char		 ipstr[20] = { '\0' };
+	char		 loginName[MAX_LOGIN_NAME] = { '\0' };
 	int		 inout, registered;
 	int		 ret, too_long;
 	int64_t		 lval = 0;
