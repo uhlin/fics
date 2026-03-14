@@ -3277,11 +3277,11 @@ player_reincarn(char *name, char *newname)
 PUBLIC int
 player_num_comments(int p)
 {
-	char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE] = { '\0' };
 
 	if (!parray[p].registered)
 		return 0;
-	snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
+	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s", stats_dir,
 	    parray[p].login[0], parray[p].login, "comments");
 	return lines_file(fname);
 }
