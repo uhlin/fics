@@ -3057,6 +3057,7 @@ player_search(int p, char *name)
 	char	*buffer[1000] = { NULL };
 	char	 pdir[MAX_FILENAME_SIZE] = { '\0' };
 	int	 p1, count;
+	int	 ret;
 
 	// Exact match with connected player?
 	if ((p1 = player_find_bylogin(name)) >= 0) {
@@ -3066,7 +3067,13 @@ player_search(int p, char *name)
 	}
 
 	// Exact match with registered player?
-	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, name[0]);
+	ret = snprintf(pdir, sizeof pdir, "%s/%c", player_dir, name[0]);
+
+	if (is_too_long(ret, sizeof pdir)) {
+		warnx("%s: player dir too long", __func__);
+		return 0;
+	}
+
 	count = search_directory(pdir, name, buffer, ARRAY_SIZE(buffer));
 
 	if (count > 0 && !strcmp(name, *buffer))
