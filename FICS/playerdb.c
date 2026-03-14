@@ -1798,13 +1798,15 @@ player_lastconnect(int p)
 		    loginName, &lval, &registered, ipstr) != 5) {
 			(void) fprintf(stderr, "FICS: "
 			    "Error in login info format. %s\n", fname);
-			fclose(fp);
+			if (fclose(fp) != 0) {
+				warn("%s: error closing file pointer",
+				     __func__);
+			}
 			return 0;
 		}
 	}
 
-	fclose(fp);
-	return last;
+	return (fclose(fp) == 0 ? last : 0);
 }
 
 PUBLIC time_t
