@@ -1238,8 +1238,8 @@ PUBLIC int
 player_markdeleted(int p)
 {
 	FILE	*fp;
-	char	 fname[MAX_FILENAME_SIZE];
-	char	 fname2[MAX_FILENAME_SIZE];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	 fname2[MAX_FILENAME_SIZE] = { '\0' };
 	int	 fd;
 
 	if (!parray[p].registered)	// Player must not be registered
