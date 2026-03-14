@@ -184,12 +184,12 @@ is_valid_hostname(const char *p_str, err_reason_t *p_reason)
 		strlcpy(p_reason->data, "no hostname", sizeof p_reason->data);
 		return false;
 	} else if ((len = strlen(p_str)) < HOST_MIN) {
-		snprintf(p_reason->data, sizeof p_reason->data, "hostname too "
-		    "short (%zu): min=%zu", len, HOST_MIN);
+		(void)snprintf(p_reason->data, sizeof p_reason->data,
+		    "hostname too short (%zu): min=%zu", len, HOST_MIN);
 		return false;
 	} else if (len > HOST_MAX) {
-		snprintf(p_reason->data, sizeof p_reason->data, "hostname too "
-		    "long (%zu): max=%zu", len, HOST_MAX);
+		(void)snprintf(p_reason->data, sizeof p_reason->data,
+		    "hostname too long (%zu): max=%zu", len, HOST_MAX);
 		return false;
 	} else if (strstr(p_str, "..")) {
 		strlcpy(p_reason->data, "dot followed by dot",
@@ -199,7 +199,7 @@ is_valid_hostname(const char *p_str, err_reason_t *p_reason)
 
 	for (const char *cp = p_str; *cp != '\0'; cp++) {
 		if (strchr(legal_index, *cp) == nullptr) {
-			snprintf(p_reason->data, sizeof p_reason->data,
+			(void)snprintf(p_reason->data, sizeof p_reason->data,
 			    "invalid chars found: first was '%c'", *cp);
 			return false;
 		}
@@ -223,18 +223,18 @@ is_valid_username(const char *p_str, err_reason_t *p_reason)
 		strlcpy(p_reason->data, "no username", sizeof p_reason->data);
 		return false;
 	} else if ((len = strlen(p_str)) < USER_MIN) {
-		snprintf(p_reason->data, sizeof p_reason->data, "username too "
-		    "short (%zu): min=%zu", len, USER_MIN);
+		(void)snprintf(p_reason->data, sizeof p_reason->data,
+		    "username too short (%zu): min=%zu", len, USER_MIN);
 		return false;
 	} else if (len > USER_MAX) {
-		snprintf(p_reason->data, sizeof p_reason->data, "username too "
-		    "long (%zu): max=%zu", len, USER_MAX);
+		(void)snprintf(p_reason->data, sizeof p_reason->data,
+		    "username too long (%zu): max=%zu", len, USER_MAX);
 		return false;
 	}
 
 	for (const char *cp = p_str; *cp != '\0'; cp++) {
 		if (strchr(legal_index, *cp) == nullptr) {
-			snprintf(p_reason->data, sizeof p_reason->data,
+			(void)snprintf(p_reason->data, sizeof p_reason->data,
 			    "invalid chars found: first was '%c'", *cp);
 			return false;
 		}
