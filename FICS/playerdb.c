@@ -1868,7 +1868,7 @@ player_pend_print(int p, pending *pend)
 
 	switch (pend->type) {
 	case PEND_MATCH:
-		snprintf(tmp, sizeof tmp, "%s.", game_str(pend->param5,
+		msnprintf(tmp, sizeof tmp, "%s.", game_str(pend->param5,
 		    (pend->param1 * 60),
 		    pend->param2,
 		    (pend->param3 * 60),
@@ -1877,34 +1877,35 @@ player_pend_print(int p, pending *pend)
 		    pend->char2));
 		break;
 	case PEND_DRAW:
-		strlcpy(tmp, "a draw.\n", sizeof tmp);
+		(void)strlcpy(tmp, "a draw.\n", sizeof tmp);
 		break;
 	case PEND_PAUSE:
-		strlcpy(tmp, "to pause the clock.\n", sizeof tmp);
+		(void)strlcpy(tmp, "to pause the clock.\n", sizeof tmp);
 		break;
 	case PEND_ABORT:
-		strlcpy(tmp, "to abort the game.\n", sizeof tmp);
+		(void)strlcpy(tmp, "to abort the game.\n", sizeof tmp);
 		break;
 	case PEND_TAKEBACK:
-		snprintf(tmp, sizeof tmp, "to takeback the last %d "
+		(void)snprintf(tmp, sizeof tmp, "to takeback the last %d "
 		    "half moves.\n", pend->param1);
 		break;
 	case PEND_SIMUL:
-		strlcpy(tmp, "to play a simul match.\n", sizeof tmp);
+		(void)strlcpy(tmp, "to play a simul match.\n", sizeof tmp);
 		break;
 	case PEND_SWITCH:
-		strlcpy(tmp, "to switch sides.\n", sizeof tmp);
+		(void)strlcpy(tmp, "to switch sides.\n", sizeof tmp);
 		break;
 	case PEND_ADJOURN:
-		strlcpy(tmp, "an adjournment.\n", sizeof tmp);
+		(void)strlcpy(tmp, "an adjournment.\n", sizeof tmp);
 		break;
 	case PEND_PARTNER:
-		strlcpy(tmp, "to be bughouse partners.\n", sizeof tmp);
+		(void)strlcpy(tmp, "to be bughouse partners.\n", sizeof tmp);
 		break;
 	}
 
 	if (strlcat(outstr, tmp, sizeof outstr) >= sizeof outstr) {
-		fprintf(stderr, "FICS: %s: warning: strlcat() truncated\n",
+		(void)fprintf(stderr, "FICS: %s: warning: "
+		    "strlcat() truncated\n",
 		    __func__);
 	}
 
@@ -2615,7 +2616,7 @@ player_simul_over(int p, int g, int result)
 	parray[p].simul_info.results[won]	= result;
 
 	if (player_num_active_boards(p) == 0) {
-		snprintf(tmp, sizeof tmp, "\n{Simul (%s vs. %d) is over.}\n"
+		msnprintf(tmp, sizeof tmp, "\n{Simul (%s vs. %d) is over.}\n"
 		    "Results: %d Wins, %d Losses, %d Draws, %d Aborts\n",
 		    parray[p].name,
 		    parray[p].simul_info.numBoards,
@@ -2713,10 +2714,10 @@ player_add_message(int top, int fromp, char *message)
 	pprintf(fromp, "\nThe following message was sent ");
 
 	if (parray[top].i_mailmess) {
-		snprintf(subj, sizeof subj, "FICS message from %s at FICS %s "
+		msnprintf(subj, sizeof subj, "FICS message from %s at FICS %s "
 		    "(Do not reply by mail)", parray[fromp].name,
 		    fics_hostname);
-		snprintf(messbody, sizeof messbody, "%s at %s: %s\n",
+		msnprintf(messbody, sizeof messbody, "%s at %s: %s\n",
 		    parray[fromp].name, strltime(&t), message);
 		mail_string_to_user(top, subj, messbody);
 		pprintf(fromp, "(and emailed) ");
