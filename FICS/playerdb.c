@@ -1670,7 +1670,7 @@ player_ontime(int p)
 }
 
 PRIVATE void
-write_p_inout(int inout, int p, char *file, int maxlines)
+write_p_inout(int inout, int p, const char *file, int maxlines)
 {
 	FILE	*fp;
 	int	 fd;
