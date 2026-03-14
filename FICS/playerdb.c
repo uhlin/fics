@@ -2710,6 +2710,7 @@ player_add_message(int top, int fromp, char *message)
 	char	 messbody[1024] = { '\0' };
 	char	 subj[256] = { '\0' };
 	int	 fd;
+	int	 ret[2];
 	time_t	 t = time(NULL);
 
 	if (!parray[top].registered)
@@ -2729,9 +2730,14 @@ player_add_message(int top, int fromp, char *message)
 		return -1;
 	}
 
-	fprintf(fp, "%s at %s: %s\n", parray[fromp].name, strltime(&t),
+	ret[0] = fprintf(fp, "%s at %s: %s\n", parray[fromp].name, strltime(&t),
 	    message);
-	fclose(fp);
+	ret[1] = fclose(fp);
+
+	if (ret[0] < 0 || ret[1] != 0) {
+		warnx("%s: certain file operations failed", __func__);
+		return -1;
+	}
 
 	pprintf(fromp, "\nThe following message was sent ");
 
