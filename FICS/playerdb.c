@@ -54,6 +54,8 @@
    Markus Uhlin                 26/03/05	Replaced atoi().
    Markus Uhlin                 26/03/14	Fixed unchecked function return
 						values.
+   Markus Uhlin                 26/03/15	Fixed potential uncovered code
+						paths.
 */
 
 #include "stdinclude.h"
