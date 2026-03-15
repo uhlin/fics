@@ -3101,7 +3101,7 @@ ClrMsgRange(int p, int start, int end)
 PUBLIC int
 player_clear_messages(int p)
 {
-	char fname[MAX_FILENAME_SIZE];
+	char fname[MAX_FILENAME_SIZE] = { '\0' };
 
 	if (!parray[p].registered)
 		return -1;
