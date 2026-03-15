@@ -727,11 +727,14 @@ old_mail_moves(int p, int mail, param_list param)
 
 	if (sscanf(ptmp, "%d", &count) != 1) {
 		warnx("%s: sscanf() error", __func__);
-		fclose(fp);
+		(void) fclose(fp);
 		return COM_FAILED;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0) {
+		warn("%s: error closing file pointer", __func__);
+		return COM_FAILED;
+	}
 	pprintf(p, "Last game for %s was history game %d.\n", parray[p1].name,
 	    count);
 
