@@ -2945,7 +2945,7 @@ WriteMsgFile(int p, textlist *Head)
 	}
 
 	for (Cur = Head; Cur != NULL; Cur = Cur->next)
-		fprintf(fp, "%s", Cur->text);
+		(void) fprintf(fp, "%s", Cur->text);
 
 	return (fclose(fp) == 0 ? 1 : 0);
 }
