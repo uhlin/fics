@@ -36,6 +36,8 @@
    Markus Uhlin			25/10/17	Replaced system() with
 						fics_copyfile().
    Markus Uhlin			26/03/02	Replaced atoi() with strtol().
+   Markus Uhlin			26/03/15	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
