@@ -29,6 +29,8 @@
 						in has_legal_move().
    Markus Uhlin                 25/11/18	Fixed possible array underrun in
 						legal_move().
+   Markus Uhlin                 26/03/16	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
