@@ -1709,6 +1709,7 @@ write_p_inout(int inout, int p, const char *file, int maxlines)
 {
 	FILE	*fp;
 	int	 fd;
+	int	 ret;
 
 	if ((fd = open(file, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
 		warn("%s: open", __func__);
@@ -1722,9 +1723,14 @@ write_p_inout(int inout, int p, const char *file, int maxlines)
 		return;
 	}
 
-	fprintf(fp, "%d %s %jd %d %s\n", inout, parray[p].name,
-	    (intmax_t)time(NULL), parray[p].registered,
+	ret = fprintf(fp, "%d %s %jd %d %s\n",
+	    inout,
+	    parray[p].name,
+	    (intmax_t)time(NULL),
+	    parray[p].registered,
 	    dotQuad(parray[p].thisHost));
+	if (ret < 0)
+		warnx("%s: error writing to file", __func__);
 
 	if (fclose(fp) != 0)
 		warn("%s: error closing file pointer", __func__);
