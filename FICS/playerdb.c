@@ -2269,6 +2269,9 @@ player_decline_offers(int p, int p1, int offerType)
 			pprintf(p, "You decline the partnership request from "
 			    "%s.\n", p2Name);
 			break;
+		default:
+			warnx("%s: invalid type %d", __func__, type);
+			break;
 		} /* switch */
 
 		player_remove_request(p2, p, type);
@@ -2388,6 +2391,9 @@ player_withdraw_offers(int p, int p1, int offerType)
 			    "\n", pName);
 			pprintf(p, "You withdraw the partnership request to %s."
 			    "\n", p2Name);
+			break;
+		default:
+			warnx("%s: invalid type %d", __func__, type);
 			break;
 		} /* switch */
 
