@@ -21,6 +21,7 @@
    name		email		yy/mm/dd	Change
    Dave Herscovici		95/11/26	Created
    Markus Uhlin			24/04/28	Revised
+   Markus Uhlin			26/03/15	Added begin/end decls.
 */
 
 #ifndef _OBSPROC_H
