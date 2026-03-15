@@ -3105,9 +3105,10 @@ player_clear_messages(int p)
 
 	if (!parray[p].registered)
 		return -1;
+
 	GetMsgFile(p, fname, sizeof fname, __func__);
-	unlink(fname);
-	return 0;
+
+	return (unlink(fname) == 0 ? 0 : -1);
 }
 
 /*
