@@ -5,6 +5,8 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added null checks.
+- Fixed potential uncovered code paths, i.e. added a default label to
+  the `switch` statements.
 - Fixed unchecked function return values. _MULTIPLE_ occurrences.
 - Fixed uninitialized variables.
 - Replaced C-style headers in C++ files.
