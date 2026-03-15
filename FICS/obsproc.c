@@ -960,7 +960,9 @@ ExamineAdjourned(int p, int p1, int p2)
 	}
 
 	g = ExamineStored(fp, p, filename);
-	fclose(fp);
+
+	if (fclose(fp) != 0)
+		warn("%s: error closing file pointer", __func__);
 
 	if (g >= 0) {
 		if (garray[g].white_name[0] == '\0') {
@@ -997,7 +999,7 @@ FindHistory(int p, int p1, int p_game)
 		    "%*d %*s %*s %ld", &index, &when);
 		if (ret != 2) {
 			warnx("%s: %s: corrupt", __func__, fileName);
-			fclose(fpHist);
+			(void) fclose(fpHist);
 			return NULL;
 		}
 	} while (!feof(fpHist) &&
@@ -1007,11 +1009,12 @@ FindHistory(int p, int p1, int p_game)
 	if (feof(fpHist) || ferror(fpHist)) {
 		pprintf(p, "There is no history game %d for %s.\n", p_game,
 		    parray[p1].name);
-		fclose(fpHist);
+		(void) fclose(fpHist);
 		return NULL;
 	}
 
-	fclose(fpHist);
+	if (fclose(fpHist) != 0)
+		warn("%s: error closing file pointer", __func__);
 
 	if (when < 0 || when >= LONG_MAX) {
 		pprintf(p, "Corrupt history data for %s (invalid timestamp).\n",
@@ -1048,7 +1051,7 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 	do {
 		if (fscanf(fpHist, fmt, &index, End, &when) != 3) {
 			warnx("%s: %s: corrupt", __func__, fileName);
-			fclose(fpHist);
+			(void) fclose(fpHist);
 			return NULL;
 		}
 	} while (!feof(fpHist) &&
@@ -1058,11 +1061,12 @@ FindHistory2(int p, int p1, int p_game, char *End, const size_t End_size)
 	if (feof(fpHist) || ferror(fpHist)) {
 		pprintf(p, "There is no history game %d for %s.\n", p_game,
 		    parray[p1].name);
-		fclose(fpHist);
+		(void) fclose(fpHist);
 		return NULL;
 	}
 
-	fclose(fpHist);
+	if (fclose(fpHist) != 0)
+		warn("%s: error closing file pointer", __func__);
 
 	if (when < 0 || when >= LONG_MAX) {
 		pprintf(p, "Invalid history timestamp for %s.\n",
@@ -1104,7 +1108,11 @@ ExamineHistory(int p, int p1, int p_game)
 			    p_game, parray[p1].name);
 		} else {
 			ExamineStored(fpGame, p, fileName);
-			fclose(fpGame);
+
+			if (fclose(fpGame) != 0) {
+				warn("%s: error closing file pointer",
+				     __func__);
+			}
 		}
 	}
 }
