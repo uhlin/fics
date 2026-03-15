@@ -30,6 +30,7 @@
 
 #define MAX_JOURNAL 10
 
+__FICS_BEGIN_DECLS
 extern int	GameNumFromParam(int, int *, parameter *);
 extern int	com_allobservers(int, param_list);
 extern int	com_backward(int, param_list);
@@ -55,5 +56,6 @@ extern int	com_unobserve(int, param_list);
 extern void	ExamineScratch(int, param_list);
 extern void	jsave_history(int, char, int, int, char *);
 extern void	unobserveAll(int);
+__FICS_END_DECLS
 
 #endif /* _OBSPROC_H */
