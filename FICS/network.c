@@ -460,6 +460,9 @@ readline2(comstr_t *cs, int who)
 			}
 			state = 2;
 			break;
+		default:
+			warnx("%s: unknown state %d", __func__, state);
+			break;
 		}
 
 		s++;
