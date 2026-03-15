@@ -1271,18 +1271,23 @@ PRIVATE void
 WritePlayerFile(FILE *fp, int p)
 {
 	int	 i;
+	int	 ret;
 	player	*pp = &parray[p];
 
-	fprintf(fp, "v %d\n", PLAYER_VERSION);
+	if (fprintf(fp, "v %d\n", PLAYER_VERSION) < 0) {
+		warnx("%s: error writing to file! returning...", __func__);
+		return;
+	}
 
-	fprintf(fp, "%s\n", (pp->name ? pp->name : "NONE"));
-	fprintf(fp, "%s\n", (pp->fullName ? pp->fullName : "NONE"));
-	fprintf(fp, "%s\n", (pp->passwd ? pp->passwd : "NONE"));
-	fprintf(fp, "%s\n", (pp->emailAddress ? pp->emailAddress : "NONE"));
+	(void) fprintf(fp, "%s\n", (pp->name ? pp->name : "NONE"));
+	(void) fprintf(fp, "%s\n", (pp->fullName ? pp->fullName : "NONE"));
+	(void) fprintf(fp, "%s\n", (pp->passwd ? pp->passwd : "NONE"));
+	(void) fprintf(fp, "%s\n",
+	    (pp->emailAddress ? pp->emailAddress : "NONE"));
 
-	fprintf(fp, "%d %d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd %d %jd %d "
-	    "%d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd %d %jd %d %d %d %d %d "
-	    "%d %jd %d %jd %u\n",
+	ret = fprintf(fp, "%d %d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd "
+	    "%d %jd %d %d %d %d %d %d %jd %d %jd %d %d %d %d %d %d %jd %d %jd "
+	    "%d %d %d %d %d %d %jd %d %jd %u\n",
 	    pp->s_stats.num, pp->s_stats.win, pp->s_stats.los,
 	    pp->s_stats.dra, pp->s_stats.rating,
 	    (int)(pp->s_stats.sterr * 10.0),
@@ -1314,11 +1319,13 @@ WritePlayerFile(FILE *fp, int p)
 	    (intmax_t)pp->bug_stats.whenbest,
 
 	    pp->lastHost); /* fprintf() */
+	if (ret < 0)
+		warnx("%s: error writing to file", __func__);
 
-	fprintf(fp, "%s\n", pp->prompt);
+	(void) fprintf(fp, "%s\n", pp->prompt);
 
-	fprintf(fp, "%d %d %d %jd %jd %d %d %d %d %d %d %d %d %d %d %d %d %d %d "
-	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+	ret = fprintf(fp, "%d %d %d %jd %jd %d %d %d %d %d %d %d %d %d %d %d "
+	    "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	    pp->open, pp->rated, pp->ropen,
 	    (intmax_t)pp->timeOfReg,
 	    (intmax_t)pp->totalTime,
@@ -1335,21 +1342,29 @@ WritePlayerFile(FILE *fp, int p)
 	    list_size(p, L_GNOTIFY),
 	    pp->numAlias,
 	    list_size(p, L_CHANNEL));
+	if (ret < 0)
+		warnx("%s: error writing to file", __func__);
 
-	for (i = 0; i < pp->num_plan; i++)
-		fprintf(fp, "%s\n", (pp->planLines[i] ? pp->planLines[i] : ""));
+	for (i = 0; i < pp->num_plan; i++) {
+		(void) fprintf(fp, "%s\n",
+		    (pp->planLines[i] ? pp->planLines[i] : ""));
+	}
 	for (i = 0; i < pp->num_formula; i++) {
-		fprintf(fp, "%s\n", (pp->formulaLines[i] ? pp->formulaLines[i] :
-		    ""));
+		(void) fprintf(fp, "%s\n",
+		    (pp->formulaLines[i] ? pp->formulaLines[i] : ""));
 	}
 
-	if (parray[p].formula != NULL)
-		fprintf(fp, "%s\n", pp->formula);
-	else
-		fprintf(fp, "NONE\n");
+	if (parray[p].formula != NULL) {
+		if (fprintf(fp, "%s\n", pp->formula) < 0)
+			warnx("%s: error writing to file", __func__);
+	} else {
+		if (fprintf(fp, "NONE\n") < 0)
+			warnx("%s: error writing to file", __func__);
+	}
 
 	for (i = 0; i < pp->numAlias; i++) {
-		fprintf(fp, "%s %s\n", pp->alias_list[i].comm_name,
+		(void) fprintf(fp, "%s %s\n",
+		    pp->alias_list[i].comm_name,
 		    pp->alias_list[i].alias);
 	}
 
