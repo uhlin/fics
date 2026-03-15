@@ -713,7 +713,7 @@ old_mail_moves(int p, int mail, param_list param)
 	fp = fopen(fname, "r");	// old moves now looks in history to save mem
 				// - DAV
 
-	if (!fp) {
+	if (fp == NULL) {
 		pprintf(p, "There is no old game for %s.\n", parray[p1].name);
 
 		if (!connected)
