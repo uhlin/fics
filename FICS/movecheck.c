@@ -813,7 +813,7 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 		too_long = (ret < 0 || (size_t)ret >= sizeof mt->moveString);
 
 		if (too_long) { /* XXX */
-			fprintf(stderr, "FICS: %s: warning: "
+			(void) fprintf(stderr, "FICS: %s: warning: "
 			    "snprintf truncated\n", __func__);
 		}
 	} else {
@@ -853,7 +853,7 @@ move_calculate(game_state_t *gs, move_t *mt, int promote)
 			too_long = (ret < 0 || (size_t)ret >= sizeof mt->moveString);
 
 			if (too_long) { /* XXX */
-				fprintf(stderr, "FICS: %s: warning: "
+				(void) fprintf(stderr, "FICS: %s: warning: "
 				    "snprintf truncated\n", __func__);
 			}
 		}
@@ -927,7 +927,7 @@ in_check(game_state_t *gs)
 	}
 
 	if (kf < 0) {
-		fprintf(stderr, "FICS: Error game with no king!\n");
+		(void) fprintf(stderr, "FICS: Error game with no king!\n");
 		return 0;
 	}
 
@@ -983,7 +983,7 @@ has_legal_move(game_state_t *gs)
 			break;
 		}
 		if (numpossible >= 500) {
-			fprintf(stderr, "FICS: Possible move overrun\n");
+			(void) fprintf(stderr, "FICS: Possible move overrun\n");
 			return 0;
 		}
 		for (i = 0; i < numpossible; i++) {
@@ -994,7 +994,8 @@ has_legal_move(game_state_t *gs)
 	}
 
 	if (!kf_and_kr_set && kf == 0 && kr == -1) {
-		fprintf(stderr, "FICS: %s: 'kf_and_kr_set' is 0\n", __func__);
+		(void) fprintf(stderr, "FICS: %s: 'kf_and_kr_set' is 0\n",
+			       __func__);
 		return 0;
 	}
 
@@ -1023,7 +1024,7 @@ has_legal_move(game_state_t *gs)
 		gs->holding[gs->onMove == WHITE ? 0 : 1][QUEEN - 1]--;
 	}
 
-	fprintf(stderr, "FICS: NO LEGAL MOVE!\n");
+	(void) fprintf(stderr, "FICS: NO LEGAL MOVE!\n");
 	return 0;
 }
 
