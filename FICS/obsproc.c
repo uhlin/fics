@@ -838,7 +838,8 @@ ExamineScratch(int p, param_list param)
 	}
 	if (board_init(&garray[g].game_state, category, board)) {
 		pprintf(p, "PROBLEM LOADING BOARD. Game Aborted.\n");
-		fprintf(stderr, "FICS: PROBLEM LOADING BOARD. Game Aborted.\n");
+		(void) fprintf(stderr, "FICS: PROBLEM LOADING BOARD. "
+		    "Game Aborted.\n");
 		return;
 	}
 
@@ -876,7 +877,7 @@ ExamineStored(FILE *fp, int p, char *filename)
 
 	if (board_init(&gg->game_state, category, board)) {
 		pprintf(p, "PROBLEM LOADING BOARD. Game Aborted.\n");
-		fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. "
+		(void) fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. "
 		    "Game Aborted.\n", category, board);
 		return -1;
 	}
@@ -1703,7 +1704,8 @@ com_revert(int p, param_list param)
 	}
 
 	if (nHalfMoves < 0) {	// eek - should NEVER happen!
-		fprintf(stderr, "OUCH! in %s: nHalfMoves < 0\n", __func__);
+		(void) fprintf(stderr, "OUCH! in %s: nHalfMoves < 0\n",
+			       __func__);
 		return COM_OK;
 	}
 
@@ -1832,7 +1834,7 @@ jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 	if (!fics_copyfile(fname, fname2, true)) {
 		pprintf(p, "System command in jsave_journalentry failed!\n");
 		pprintf(p, "Please report this to an admin.\n");
-		fprintf(stderr, "FICS: System command failed in "
+		(void) fprintf(stderr, "FICS: System command failed in "
 		    "jsave_journalentry\n");
 		return;
 	}
@@ -1903,8 +1905,9 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 				pprintf(p, "System command in jsave_history "
 				    "failed!\n");
 				pprintf(p, "Please report this to an admin.\n");
-				fprintf(stderr, "FICS: System command failed "
-				    "in jsave_journalentry\n");
+				(void) fprintf(stderr, "FICS: "
+				    "System command failed in "
+				    "jsave_journalentry\n");
 				fclose(Game);
 				return;
 			}
