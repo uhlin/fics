@@ -1149,7 +1149,9 @@ ExamineJournal(int p, int p1, char slot)
 		    parray[p1].name);
 	} else {
 		ExamineStored(fpGame, p, fname);
-		fclose(fpGame);
+
+		if (fclose(fpGame) != 0)
+			warn("%s: error closing file pointer", __func__);
 	}
 }
 
@@ -1305,7 +1307,10 @@ stored_mail_moves(int p, int mail, param_list param)
 				else
 					gotit = 1;
 
-				fclose(fpGame);
+				if (fclose(fpGame) != 0) {
+					warn("%s: error closing file pointer",
+					     __func__);
+				}
 			}
 		}
 	} else {
@@ -1357,7 +1362,12 @@ stored_mail_moves(int p, int mail, param_list param)
 						else
 							gotit = 1;
 
-						fclose(fpGame);
+						if (fclose(fpGame) != 0) {
+							warn("%s: error "
+							    "closing file "
+							    "pointer",
+							    __func__);
+						}
 					}
 				}
 			}
@@ -1838,7 +1848,8 @@ jsave_journalentry(int p, char save_spot, int p1, char from_spot, char *to_file)
 		return;
 	}
 
-	fclose(Game);
+	if (fclose(Game) != 0)
+		warn("%s: error closing file pointer", __func__);
 
 	msnprintf(fname2, sizeof fname2, "%s/%c/%s.%c", journal_dir, name_to[0],
 	    name_to, save_spot);
@@ -1921,7 +1932,10 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 				(void) fprintf(stderr, "FICS: "
 				    "System command failed in "
 				    "jsave_journalentry\n");
-				fclose(Game);
+				if (fclose(Game) != 0) {
+					warn("%s: error closing file pointer",
+					     __func__);
+				}
 				return;
 			}
 
@@ -1932,11 +1946,17 @@ jsave_history(int p, char save_spot, int p1, int from, char *to_file)
 				pprintf(p, "Gamefile is corrupt. Please tell "
 				    "an admin.\n");
 				game_free(g);
-				fclose(Game);
+				if (fclose(Game) != 0) {
+					warn("%s: error closing file pointer",
+					     __func__);
+				}
 				return;
 			}
 
-			fclose(Game);
+			if (fclose(Game) != 0) {
+				warn("%s: error closing file pointer",
+				     __func__);
+			}
 
 			if (garray[g].private) {
 				type[0] = 'p';
