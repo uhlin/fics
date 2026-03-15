@@ -572,8 +572,12 @@ net_close_connection(int fd)
 	if (con[fd].status == NETSTAT_CONNECTED)
 		net_flush_connection(fd);
 	if (!remConnection(fd)) {
-		if (fd > 2)
-			close(fd);
+		if (fd > 2) {
+			if (close(fd) != 0) {
+				warn("%s: error closing file descriptor",
+				     __func__);
+			}
+		}
 	}
 }
 
@@ -627,13 +631,19 @@ ngc2(comstr_t *cs, int timeout)
 	    -1) {
 		if (net_addConnection(fd, cli_addr.sin_addr.s_addr) != 0) {
 			(void) fprintf(stderr, "FICS is full.  fd = %d.\n", fd);
+
 			psend_raw_file(fd, mess_dir, MESS_FULL);
-			close(fd);
+
+			if (close(fd) != 0) {
+				warn("%s: error closing file descriptor",
+				     __func__);
+			}
 		} else {
 			unsigned int fromHost = 0;
 
 			if (!net_connected_host(fd, &fromHost)) {
-				close(fd);
+				warn("%s: error closing file descriptor",
+				     __func__);
 				continue;
 			}
 
