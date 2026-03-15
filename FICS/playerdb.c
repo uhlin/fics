@@ -180,7 +180,6 @@ player_new(void)
 PUBLIC int
 player_zero(int p)
 {
-#define INVALID ((char *)-42)
 	int i;
 
 	parray[p].name		= NULL;
@@ -193,8 +192,8 @@ player_zero(int p)
 	parray[p].automail = 0;
 
 	for (i = 0; i < MAX_ALIASES; i++) {
-		parray[p].alias_list[i].comm_name = INVALID;
-		parray[p].alias_list[i].alias = INVALID;
+		parray[p].alias_list[i].comm_name = NULL;
+		parray[p].alias_list[i].alias = NULL;
 	}
 
 	parray[p].bell		= 0;
@@ -253,7 +252,7 @@ player_zero(int p)
 	parray[p].partner = -1;
 	parray[p].pgn = 0;
 	for (i = 0; i < MAX_PLAN; i++)
-		parray[p].planLines[i] = INVALID;
+		parray[p].planLines[i] = NULL;
 	parray[p].private = 0;
 	parray[p].promote = QUEEN;
 
