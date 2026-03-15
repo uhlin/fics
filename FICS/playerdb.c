@@ -1274,7 +1274,10 @@ WritePlayerFile(FILE *fp, int p)
 	int	 ret;
 	player	*pp = &parray[p];
 
-	if (fprintf(fp, "v %d\n", PLAYER_VERSION) < 0) {
+	if (fp == NULL) {
+		warnx("%s: invalid argument: null pointer detected", __func__);
+		return;
+	} else if (fprintf(fp, "v %d\n", PLAYER_VERSION) < 0) {
 		warnx("%s: error writing to file! returning...", __func__);
 		return;
 	}
