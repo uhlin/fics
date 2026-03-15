@@ -49,14 +49,15 @@ net_addConnection(int fd, unsigned int fromHost)
 	int noblock = 1;
 
 	if (findConnection(fd) >= 0) {
-		fprintf(stderr, "FICS: FD already in connection table!\n");
+		(void) fprintf(stderr, "FICS: "
+		    "FD already in connection table!\n");
 		return -1;
 	}
 	if (numConnections >= max_connections)
 		return -1;
 	if (ioctl(fd, FIONBIO, &noblock) == -1) {
-		fprintf(stderr, "Error setting nonblocking mode errno=%d\n",
-		    errno);
+		(void) fprintf(stderr, "Error setting nonblocking mode "
+		    "errno=%d\n", errno);
 	}
 
 	con[fd].fd = fd;
@@ -81,14 +82,15 @@ net_addConnection(int fd, unsigned int fromHost)
 
 	if (con[fd].sndbuf == NULL) {
 #ifdef DEBUG
-		fprintf(stderr, "FICS: nac(%d) allocating sndbuf.\n", fd);
+		(void) fprintf(stderr, "FICS: nac(%d) allocating sndbuf.\n",
+		    fd);
 #endif
 		con[fd].sndbufpos = 0;
 		con[fd].sndbufsize = MAX_STRING_LENGTH;
 		con[fd].sndbuf = rmalloc(MAX_STRING_LENGTH);
 	} else {
 #ifdef DEBUG
-		fprintf(stderr, "FICS: nac(%d) reusing old sndbuf "
+		(void) fprintf(stderr, "FICS: nac(%d) reusing old sndbuf "
 		    "size %d pos %d.\n", fd,
 		    con[fd].sndbufsize, con[fd].sndbufpos);
 #else
@@ -100,7 +102,8 @@ net_addConnection(int fd, unsigned int fromHost)
 	numConnections++;
 
 #ifdef DEBUG
-	fprintf(stderr, "FICS: fd: %d connections: %d  descriptors: %d \n", fd,
+	(void) fprintf(stderr, "FICS: "
+	    "fd: %d connections: %d  descriptors: %d \n", fd,
 	    numConnections, getdtablesize()); /* sparky 3/13/95 */
 #endif
 
@@ -117,7 +120,7 @@ remConnection(int fd)
 	con[fd].status = NETSTAT_EMPTY;
 
 	if (con[fd].sndbuf == NULL) {
-		fprintf(stderr, "FICS: remcon(%d) SNAFU, "
+		(void) fprintf(stderr, "FICS: remcon(%d) SNAFU, "
 		    "this shouldn't happen.\n", fd);
 	} else {
 		if (con[fd].sndbufsize > MAX_STRING_LENGTH) {
@@ -141,8 +144,8 @@ net_flushme(int which)
 	if ((sent = send(con[which].outFd, con[which].sndbuf,
 	    con[which].sndbufpos, 0)) == -1) {
 		if (errno != EPIPE) { // EPIPE = they've disconnected
-			fprintf(stderr, "FICS: net_flushme(%d) couldn't send, "
-			    "errno=%d.\n",
+			(void) fprintf(stderr, "FICS: "
+			    "net_flushme(%d) couldn't send, errno=%d.\n",
 			    which, errno);
 		}
 
@@ -346,7 +349,7 @@ readline2(comstr_t *cs, int who)
 	state = con[who].state;
 
 	if (state == 2 || state > 4) {
-		fprintf(stderr, "FICS: state screwed for con[%d], "
+		(void) fprintf(stderr, "FICS: state screwed for con[%d], "
 		    "this is a bug.\n", who);
 		state = 0;
 	}
@@ -509,7 +512,7 @@ net_init(int p_port)
 
 	/* Open a TCP socket (an Internet stream socket) */
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		fprintf(stderr, "FICS: can't open stream socket\n");
+		(void) fprintf(stderr, "FICS: can't open stream socket\n");
 		return -1;
 	}
 
@@ -543,8 +546,8 @@ net_init(int p_port)
 		warn("%s: SO_LINGER", __func__);
 
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof serv_addr) < 0) {
-		fprintf(stderr, "FICS: can't bind local address.  errno=%d\n",
-		    errno);
+		(void) fprintf(stderr, "FICS: can't bind local address. "
+		    "errno=%d\n", errno);
 		return -1;
 	}
 
@@ -602,7 +605,7 @@ net_connected_host(int fd, unsigned int *fromHost)
 	int which;
 
 	if ((which = findConnection(fd)) < 0) {
-		fprintf(stderr, "FICS: FD not in connection table!\n");
+		(void) fprintf(stderr, "FICS: FD not in connection table!\n");
 		*fromHost = 0;
 		return false;
 	}
@@ -623,7 +626,7 @@ ngc2(comstr_t *cs, int timeout)
 	while ((fd = accept(sockfd, (struct sockaddr *) &cli_addr, &cli_len)) !=
 	    -1) {
 		if (net_addConnection(fd, cli_addr.sin_addr.s_addr) != 0) {
-			fprintf(stderr, "FICS is full.  fd = %d.\n", fd);
+			(void) fprintf(stderr, "FICS is full.  fd = %d.\n", fd);
 			psend_raw_file(fd, mess_dir, MESS_FULL);
 			close(fd);
 		} else {
@@ -639,8 +642,8 @@ ngc2(comstr_t *cs, int timeout)
 	}
 
 	if (errno != EWOULDBLOCK) {
-		fprintf(stderr, "FICS: Problem with accept().  errno=%d\n",
-		    errno);
+		(void) fprintf(stderr, "FICS: Problem with accept(). "
+		    "errno=%d\n", errno);
 	}
 	net_flush_all_connections();
 
