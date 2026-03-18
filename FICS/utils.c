@@ -449,20 +449,26 @@ psprintf_highlight(int p, char *s, size_t size, char *format, ...)
 	return retval;
 }
 
-PUBLIC int
+PUBLIC void
 pprintf_prompt(int p, char *format, ...)
 {
-	char tmp[10 * MAX_LINE_SIZE];
-	int retval;
-	va_list ap;
+	char	tmp[10 * MAX_LINE_SIZE] = { '\0' };
+	int	retval;
+	va_list	ap;
 
 	va_start(ap, format);
 	retval = vsnprintf(tmp, sizeof tmp, format, ap);
 	va_end(ap);
 
-	net_send_string(parray[p].socket, tmp, 1);
-	net_send_string(parray[p].socket, parray[p].prompt, 1);
-	return retval;
+	if (is_too_long(retval, sizeof tmp)) {
+		warnx("%s: error: vsnprintf() truncated", __func__);
+		return;
+	}
+
+	if (net_send_string(parray[p].socket, tmp, 1) == -1)
+		warnx("%s: send error", __func__);
+	if (net_send_string(parray[p].socket, parray[p].prompt, 1) == -1)
+		warnx("%s: send error", __func__);
 }
 
 PUBLIC int
