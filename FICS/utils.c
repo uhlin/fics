@@ -391,12 +391,12 @@ pprintf_dohightlight(int p)
 		pprintf(p, "\033[2m");
 }
 
-PUBLIC int
+PUBLIC void
 pprintf_highlight(int p, char *format, ...)
 {
-	char tmp[10 * MAX_LINE_SIZE];
-	int retval;
-	va_list ap;
+	char	tmp[10 * MAX_LINE_SIZE] = { '\0' };
+	int	retval;
+	va_list	ap;
 
 	pprintf_dohightlight(p);
 
@@ -404,11 +404,16 @@ pprintf_highlight(int p, char *format, ...)
 	retval = vsnprintf(tmp, sizeof tmp, format, ap);
 	va_end(ap);
 
-	net_send_string(parray[p].socket, tmp, 1);
+	if (is_too_long(retval, sizeof tmp)) {
+		warnx("%s: error: vsnprintf() truncated", __func__);
+		return;
+	}
+
+	if (net_send_string(parray[p].socket, tmp, 1) == -1)
+		warnx("%s: send error", __func__);
 
 	if (parray[p].highlight)
 		pprintf(p, "\033[0m");
-	return retval;
 }
 
 PRIVATE void
