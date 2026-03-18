@@ -55,6 +55,7 @@
 #include "gamedb.h"
 #include "lists.h"
 #include "matchproc.h"
+#include "maxxes-utils.h"
 #include "network.h"
 #include "obsproc.h"
 #include "playerdb.h"
@@ -234,7 +235,7 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 	garray[g].lastDecTime	= garray[g].startTime;
 	garray[g].clockStopped	= 0;
 
-	snprintf(outStr, sizeof outStr, "\n{Game %d (%s vs. %s) "
+	msnprintf(outStr, sizeof outStr, "\n{Game %d (%s vs. %s) "
 	    "Creating %s %s match.}\n",
 	    (g + 1),
 	    parray[white_player].name,
@@ -470,7 +471,7 @@ accept_match(int p, int p1)
 
 		if (create_new_match(p, p1, wt, winc, bt, binc, rated, category,
 		    board, white) != COM_OK) {
-			snprintf(tmp, sizeof tmp, "There was a problem "
+			msnprintf(tmp, sizeof tmp, "There was a problem "
 			    "creating the new match.\n");
 			pprintf(p, "%s", tmp);
 			pprintf_prompt(p1, "%s", tmp);
@@ -479,13 +480,13 @@ accept_match(int p, int p1)
 
 			if (create_new_match(pp, pp1, wt, winc, bt, binc, rated,
 			    category, board, white) != COM_OK) {
-				snprintf(tmp, sizeof tmp, "There was a problem "
-				    "creating the new match.\n"); // XXX
+				msnprintf(tmp, sizeof tmp, "There was a "
+				    "problem creating the new match.\n");
 				pprintf_prompt(pp, "%s", tmp);
 				pprintf_prompt(pp1, "%s", tmp);
 
-				snprintf(tmp, sizeof tmp, "There was a problem "
-				    "creating your partner's match.\n");
+				msnprintf(tmp, sizeof tmp, "There was a "
+				    "problem creating your partner's match.\n");
 				pprintf(p, "%s", tmp);
 				pprintf_prompt(p1, "%s", tmp);
 				// IanO: abort_game()?
@@ -496,7 +497,7 @@ accept_match(int p, int p1)
 				garray[g1].link = g2;
 				garray[g2].link = g1;
 
-				snprintf(tmp, sizeof tmp, "\nYour partner is "
+				msnprintf(tmp, sizeof tmp, "\nYour partner is "
 				    "playing game %d (%s vs. %s).\n",
 				    (g2 + 1),
 				    garray[g2].white_name,
@@ -504,7 +505,7 @@ accept_match(int p, int p1)
 				pprintf(p, "%s", tmp);
 				pprintf_prompt(p1, "%s", tmp);
 
-				snprintf(tmp, sizeof tmp, "\nYour partner is "
+				msnprintf(tmp, sizeof tmp, "\nYour partner is "
 				    "playing game %d (%s vs. %s).\n",
 				    (g1 + 1),
 				    garray[g1].white_name,
@@ -527,7 +528,7 @@ accept_match(int p, int p1)
 			garray[g].rated = TYPE_UNRATED;
 		}
 
-		snprintf(tmp, sizeof tmp, "{Game %d (%s vs. %s) Continuing "
+		msnprintf(tmp, sizeof tmp, "{Game %d (%s vs. %s) Continuing "
 		    "%s %s match.}\n",
 		    (g + 1),
 		    parray[p].name,
