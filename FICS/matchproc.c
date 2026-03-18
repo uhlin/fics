@@ -36,6 +36,8 @@
 							accept_match().
    Markus Uhlin                         26/03/02	Replaced atoi() with
 							strtol().
+   Markus Uhlin                         26/03/18	Fixed unchecked function
+							return values.
 */
 
 #include "stdinclude.h"
