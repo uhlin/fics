@@ -181,7 +181,7 @@ create_new_match(int white_player, int black_player, int wt, int winc, int bt,
 		pprintf(white_player, "PROBLEM LOADING BOARD. Game Aborted.\n");
 		pprintf(black_player, "PROBLEM LOADING BOARD. Game Aborted.\n");
 
-		fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. "
+		(void) fprintf(stderr, "FICS: PROBLEM LOADING BOARD %s %s. "
 		    "Game Aborted.\n", category, board);
 	}
 
@@ -955,7 +955,7 @@ com_match(int p, param_list param)
 	if (pendfrom >= 0) {
 		if (pendto >= 0) {
 			pprintf(p, "Internal error\n");
-			fprintf(stderr, "FICS: This shouldn't happen. "
+			(void) fprintf(stderr, "FICS: This shouldn't happen. "
 			    "You can't have a match pending from and to the "
 			    "same person.\n");
 			return COM_OK;
