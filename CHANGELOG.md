@@ -10,6 +10,8 @@ documented in this file.
   the `switch` statements.
 - Fixed unchecked function return values. _MULTIPLE_ occurrences.
 - Fixed uninitialized variables.
+- Made `pprintf_highlight()`, `pprintf_noformat()` and `pprintf_prompt()`
+  void. Their return values were unused through the whole project.
 - Replaced C-style headers in C++ files.
 - Replaced `atoi()` with `strtol()`. Multiple occurrences.
 - Replaced `atoi()` with `strtonum()`. Multiple occurrences.
