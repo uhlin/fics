@@ -95,7 +95,7 @@ extern int		 pcommand(int, char *, ...) PRINTFLIKE(2);
 extern int		 pmore_file(int);
 extern void		 pprintf(int, const char *, ...) PRINTFLIKE(2);
 extern int		 pprintf_highlight(int, char *, ...) PRINTFLIKE(2);
-extern int		 pprintf_noformat(int, char *, ...) PRINTFLIKE(2);
+extern void		 pprintf_noformat(int, char *, ...) PRINTFLIKE(2);
 extern void		 pprintf_prompt(int, char *, ...) PRINTFLIKE(2);
 extern int		 printablestring(char *);
 extern int		 psend_command(int, char *, char *);

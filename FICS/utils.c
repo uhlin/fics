@@ -471,19 +471,24 @@ pprintf_prompt(int p, char *format, ...)
 		warnx("%s: send error", __func__);
 }
 
-PUBLIC int
+PUBLIC void
 pprintf_noformat(int p, char *format, ...)
 {
-	char tmp[10 * MAX_LINE_SIZE];
-	int retval;
-	va_list ap;
+	char	tmp[10 * MAX_LINE_SIZE] = { '\0' };
+	int	retval;
+	va_list	ap;
 
 	va_start(ap, format);
 	retval = vsnprintf(tmp, sizeof tmp, format, ap);
 	va_end(ap);
 
-	net_send_string(parray[p].socket, tmp, 0);
-	return retval;
+	if (is_too_long(retval, sizeof tmp)) {
+		warnx("%s: error: vsnprintf() truncated", __func__);
+		return;
+	}
+
+	if (net_send_string(parray[p].socket, tmp, 0) == -1)
+		warnx("%s: send error", __func__);
 }
 
 PUBLIC int
