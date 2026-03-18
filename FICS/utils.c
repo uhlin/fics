@@ -45,6 +45,9 @@
    Markus Uhlin			25/07/28	truncate_file: restricted file
 						permissions upon creation.
    Markus Uhlin			26/03/06	Improved multiple utilities.
+   Markus Uhlin			26/03/18	Made certain functions void.
+						Their return values were unused
+						through the whole project.
 */
 
 #include "stdinclude.h"
