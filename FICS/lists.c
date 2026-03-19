@@ -103,7 +103,8 @@ list_find(int p, enum ListWhich l)
 			tempList->member[count++] = xstrdup(listmember);
 		}
 
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	}
 
 	tempList->which		= l;
@@ -461,7 +462,8 @@ list_addsub(int p, char *list, char *who, int addsub)
 				if (fprintf(fp, "%s\n", gl->member[i]) < 0)
 					warnx("%s: error: fprintf", __func__);
 			}
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 		}
 	}
 
