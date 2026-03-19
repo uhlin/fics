@@ -174,6 +174,11 @@ list_print(FILE *fp, int p, enum ListWhich l)
 {
 	List *gl;
 
+	if (fp == NULL) {
+		warnx("%s: invalid argument: null pointer detected", __func__);
+		return;
+	}
+
 	if ((gl = list_find(p, l)) != NULL) {
 		for (int i = 0; i < gl->numMembers; i++) {
 			if (fprintf(fp, "%s\n", gl->member[i]) < 0)
