@@ -443,9 +443,11 @@ list_addsub(int p, char *list, char *who, int addsub)
 
 		if ((fd = open(filename, g_open_flags[OPFL_WRITE],
 		    g_open_modes)) < 0) {
-			fprintf(stderr, "Couldn't save %s list.\n", listname);
+			(void) fprintf(stderr, "Couldn't save %s list.\n",
+				       listname);
 		} else if ((fp = fdopen(fd, "w")) == NULL) {
-			fprintf(stderr, "Couldn't save %s list.\n", listname);
+			(void) fprintf(stderr, "Couldn't save %s list.\n",
+				       listname);
 			close(fd);
 		} else {
 			for (int i = 0; i < gl->numMembers; i++)
