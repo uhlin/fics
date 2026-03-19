@@ -456,7 +456,8 @@ list_addsub(int p, char *list, char *who, int addsub)
 		} else if ((fp = fdopen(fd, "w")) == NULL) {
 			(void) fprintf(stderr, "Couldn't save %s list.\n",
 				       listname);
-			close(fd);
+			if (close(fd) != 0)
+				warn("%s: error: close", __func__);
 		} else {
 			for (int i = 0; i < gl->numMembers; i++) {
 				if (fprintf(fp, "%s\n", gl->member[i]) < 0)
