@@ -175,8 +175,10 @@ list_print(FILE *fp, int p, enum ListWhich l)
 	List *gl;
 
 	if ((gl = list_find(p, l)) != NULL) {
-		for (int i = 0; i < gl->numMembers; i++)
-			fprintf(fp, "%s\n", gl->member[i]);
+		for (int i = 0; i < gl->numMembers; i++) {
+			if (fprintf(fp, "%s\n", gl->member[i]) < 0)
+				warnx("%s: error: fprintf", __func__);
+		}
 	}
 }
 
@@ -450,8 +452,10 @@ list_addsub(int p, char *list, char *who, int addsub)
 				       listname);
 			close(fd);
 		} else {
-			for (int i = 0; i < gl->numMembers; i++)
-				fprintf(fp, "%s\n", gl->member[i]);
+			for (int i = 0; i < gl->numMembers; i++) {
+				if (fprintf(fp, "%s\n", gl->member[i]) < 0)
+					warnx("%s: error: fprintf", __func__);
+			}
 			fclose(fp);
 		}
 	}
