@@ -16,8 +16,8 @@
 #include <bsd/string.h>
 #endif
 
-PRIVATE char	 downer[1024];
-PRIVATE char	 reason[1024];
+PRIVATE char	 downer[1024] = { '\0' };
+PRIVATE char	 reason[1024] = { '\0' };
 
 PRIVATE time_t	 lastTimeLeft;
 PRIVATE time_t	 shutdownStartTime;
