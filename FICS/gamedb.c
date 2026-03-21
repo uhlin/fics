@@ -49,6 +49,8 @@
    Markus Uhlin			25/08/16	Fixed uncontrolled data used in
 						path expressions.
    Markus Uhlin			26/03/03	Usage of strtonum().
+   Markus Uhlin			26/03/21	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
