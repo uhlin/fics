@@ -1124,20 +1124,21 @@ got_attr_value(int g, char *attr, char *value, FILE *fp, char *file)
 
 		for (int i = 0; i < garray[g].numHalfMoves; i++) {
 			if (ReadMove(fp, &garray[g].moveList[i])) {
-				fprintf(stderr, "FICS: Trouble reading moves "
-				    "from %s.\n", file);
+				(void) fprintf(stderr, "FICS: "
+				    "Trouble reading moves from %s.\n", file);
 				return -1;
 			}
 		}
 	} else if (!strcmp(attr, "gamestate:")) {	// Value meaningless
 		if (garray[g].status != GAME_EXAMINE &&
 		    ReadGameState(fp, &garray[g].game_state, 0)) {
-			fprintf(stderr, "FICS: Trouble reading game state "
-			    "from %s.\n", file);
+			(void) fprintf(stderr, "FICS: "
+			    "Trouble reading game state from %s.\n", file);
 			return -1;
 		}
 	} else {
-		fprintf(stderr, "FICS: Error bad attribute >%s< from file %s\n",
+		(void) fprintf(stderr, "FICS: Error bad attribute >%s< "
+		    "from file %s\n",
 		    attr, file);
 	}
 
@@ -1275,7 +1276,7 @@ ReadOneV1Move(FILE *fp, move_t *m)
 		too_long = (ret < 0 || (size_t)ret >= sizeof m->moveString);
 
 		if (too_long) {
-			fprintf(stderr, "FICS: %s: warning: "
+			(void) fprintf(stderr, "FICS: %s: warning: "
 			    "snprintf truncated\n", __func__);
 		}
 	}
@@ -1381,7 +1382,8 @@ ReadV1GameFmt(game *g, FILE *fp, const char *file, int version)
 
 	if (g->status != GAME_EXAMINE &&
 	    ReadGameState(fp, &g->game_state, version)) {
-		fprintf(stderr, "FICS: Trouble reading game state from %s.\n",
+		(void) fprintf(stderr, "FICS: "
+		    "Trouble reading game state from %s.\n",
 		    file);
 		return -1;
 	}
@@ -1427,7 +1429,8 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 			value = eatword(attr);
 
 			if (!*value) {
-				fprintf(stderr, "FICS: Error reading file %s\n",
+				(void) fprintf(stderr, "FICS: "
+				    "Error reading file %s\n",
 				    fname);
 				if (fgets(line, sizeof line, fp) == NULL)
 					break;
@@ -1439,7 +1442,8 @@ ReadGameAttrs(FILE *fp, char *fname, int g)
 			value = eatwhite(value);
 
 			if (!*value) {
-				fprintf(stderr, "FICS: Error reading file %s\n",
+				(void) fprintf(stderr, "FICS: "
+				    "Error reading file %s\n",
 				    fname);
 				if (fgets(line, sizeof line, fp) == NULL)
 					break;
@@ -1600,7 +1604,8 @@ game_save(int g)
 		warn("%s: open: %s", __func__, fname);
 		return -1;
 	} else if ((fp = fdopen(fd, "w")) == NULL) {
-		fprintf(stderr, "FICS: Problem opening file %s for write\n",
+		(void) fprintf(stderr, "FICS: "
+		    "Problem opening file %s for write\n",
 		    fname);
 		close(fd);
 		return -1;
@@ -1924,7 +1929,7 @@ journal_get_info(struct JGI_context *ctx, const char *fname)
 	char	 count;
 
 	if ((fp = fopen(fname, "r")) == NULL) {
-		fprintf(stderr, "Corrupt journal file! %s\n", fname);
+		(void) fprintf(stderr, "Corrupt journal file! %s\n", fname);
 		pprintf(ctx->p, "The journal file is corrupt! See an admin.\n");
 		return 0;
 	}
@@ -1949,8 +1954,9 @@ journal_get_info(struct JGI_context *ctx, const char *fname)
 		    ctx->eco,
 		    ctx->ending,
 		    ctx->result) != 11) {
-			fprintf(stderr, "FICS: Error in journal info format. "
-			    "%s\n", fname);
+			(void) fprintf(stderr, "FICS: "
+			    "Error in journal info format. %s\n",
+			    fname);
 			pprintf(ctx->p, "The journal file is corrupt! Error in "
 			    "internal format.\n");
 			fclose(fp);
@@ -1994,7 +2000,8 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		warn("%s: open", __func__);
 		return;
 	} else if ((fp2 = fdopen(fd, "w")) == NULL) {
-		fprintf(stderr, "FICS: Problem opening file %s for write\n",
+		(void) fprintf(stderr, "FICS: "
+		    "Problem opening file %s for write\n",
 		    fname);
 		pprintf(p, "Couldn't update journal! Report this to an admin."
 		    "\n");
@@ -2037,8 +2044,9 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 			    eco,
 			    ending,
 			    result) != 11) {
-				fprintf(stderr, "FICS: Error in journal info "
-				    "format - aborting. %s\n", fname);
+				(void) fprintf(stderr, "FICS: Error in "
+				    "journal info format - aborting. %s\n",
+				    fname);
 				fclose(fp);
 				fclose(fp2);
 				return;
@@ -2131,8 +2139,9 @@ pjournal(int p, int p1, char *fname)
 		    eco,
 		    ending,
 		    result) != 11) {
-			fprintf(stderr, "FICS: Error in journal info format. "
-			    "%s\n", fname);
+			(void) fprintf(stderr, "FICS: "
+			    "Error in journal info format. %s\n",
+			    fname);
 			fclose(fp);
 			return COM_OK;
 		}
@@ -2196,8 +2205,9 @@ pgames(int p, int p1, char *fname)
 		    eco,
 		    ending,
 		    (long int *)&t) != 14) {
-			fprintf(stderr, "FICS: Error in games info format. "
-			    "%s\n", fname);
+			(void) fprintf(stderr, "FICS: Error in "
+			    "games info format. %s\n",
+			    fname);
 			fclose(fp);
 			return COM_OK;
 		}
@@ -2240,7 +2250,8 @@ game_write_complete(int g, int isDraw, char *EndSymbol)
 			WriteGameFile(fp, g);
 			fclose(fp);
 		} else {
-			fprintf(stderr, "Trouble writing history file %s",
+			(void) fprintf(stderr, "Trouble writing history file "
+			    "%s\n",
 			    fname);
 		}
 
