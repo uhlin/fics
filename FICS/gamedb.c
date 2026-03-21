@@ -104,7 +104,7 @@ PUBLIC const char *rstr[2] = {
 	[TYPE_RATED] = "rated"
 };
 
-PRIVATE char gameString[GAME_STRING_LEN];
+PRIVATE char gameString[GAME_STRING_LEN] = { '\0' };
 
 /*
  * This method is awful! How about allocation as we need it and
