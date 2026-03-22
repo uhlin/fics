@@ -4,6 +4,7 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
+- Added and made use of `mfprintf()`.
 - Added null checks.
 - Fixed integer to pointer casts.
 - Fixed potential uncovered code paths, i.e. added a default label to
