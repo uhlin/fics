@@ -1512,11 +1512,13 @@ game_read(int g, int wp, int bp)
 		return -1;
 
 	if (ReadGameAttrs(fp, fname, g) < 0) {
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 		return -1;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 
 	if (garray[g].result == END_ADJOURN || garray[g].result ==
 	    END_COURTESYADJOURN)
@@ -1638,7 +1640,8 @@ game_save(int g)
 	WriteGameState(fp, &garray[g].game_state);
 #endif
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 
 	/*
 	 * Create link for easier stored game finding
@@ -1676,10 +1679,13 @@ OldestHistGame(char *login)
 		    "%*s %*s %ld", &when) != 1) {
 			warnx("%s: %s: failed to read 'when'", __func__,
 			    &pFile[0]);
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 			return 0L;
 		}
-		fclose(fp);
+
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 		return when;
 	} else
 		return 0L;
@@ -1701,12 +1707,12 @@ RemoveHistGame(char *file, int maxlines)
 		return;
 	} else if (fgets(line, ARRAY_SIZE(line), fp) == NULL) {
 		warnx("%s: fgets error (file: %s)", __func__, file);
-		fclose(fp);
+		(void) fclose(fp);
 		return;
 	} else if (sscanf(line, "%*d %*c %*d %*c %*d %20s %*s %*d %*d %*d "
 	    "%*d %*s %*s %ld", Opponent, &When) != 2) {
 		warnx("%s: unexpected initial line (file: %s)", __func__, file);
-		fclose(fp);
+		(void) fclose(fp);
 		return;
 	}
 
@@ -1715,7 +1721,8 @@ RemoveHistGame(char *file, int maxlines)
 	while (fgets(line, ARRAY_SIZE(line), fp) != NULL)
 		count++;
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	stolower(Opponent);
 
 	if (count > maxlines) {
@@ -1779,7 +1786,8 @@ RemHist(char *who)
 			iter_no++;
 		}
 
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	}
 }
 
@@ -1856,7 +1864,8 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 		}
 		if (sscanf(ptmp, "%d", &count) != 1)
 			warnx("%s: failed to read 'count'", __func__);
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	}
 
 	count = (count + 1) % 100;
@@ -1914,7 +1923,8 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 		    (intmax_t) *now);
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	RemoveHistGame(file, maxlines);
 }
 
@@ -1958,17 +1968,17 @@ journal_get_info(struct JGI_context *ctx, const char *fname)
 			    fname);
 			pprintf(ctx->p, "The journal file is corrupt! Error in "
 			    "internal format.\n");
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 			return 0;
 		}
 
-		if (tolower(count) == ctx->from_spot) {
-			fclose(fp);
-			return 1;
-		}
+		if (tolower(count) == ctx->from_spot)
+			return (fclose(fp) == 0 ? 1 : 0);
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	return 0;
 }
 
@@ -2018,7 +2028,8 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		    eco2,
 		    ending2,
 		    result2);
-		fclose(fp2);
+		if (fclose(fp2) != 0)
+			warn("%s: error: fclose", __func__);
 		xrename(__func__, fname2, fname);
 		return;
 	} else {
@@ -2046,8 +2057,10 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 				(void) fprintf(stderr, "FICS: Error in "
 				    "journal info format - aborting. %s\n",
 				    fname);
-				fclose(fp);
-				fclose(fp2);
+				if (fclose(fp) != 0)
+					warn("%s: error: fclose", __func__);
+				if (fclose(fp2) != 0)
+					warn("%s: error: fclose", __func__);
 				return;
 			}
 
@@ -2091,8 +2104,10 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		}
 	}
 
-	fclose(fp);
-	fclose(fp2);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
+	if (fclose(fp2) != 0)
+		warn("%s: error: fclose", __func__);
 
 	xrename(__func__, fname2, fname);
 }
@@ -2141,7 +2156,8 @@ pjournal(int p, int p1, char *fname)
 			(void) fprintf(stderr, "FICS: "
 			    "Error in journal info format. %s\n",
 			    fname);
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 			return COM_OK;
 		}
 
@@ -2156,7 +2172,8 @@ pjournal(int p, int p1, char *fname)
 		    result);
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	return COM_OK;
 }
 
@@ -2207,7 +2224,8 @@ pgames(int p, int p1, char *fname)
 			(void) fprintf(stderr, "FICS: Error in "
 			    "games info format. %s\n",
 			    fname);
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 			return COM_OK;
 		}
 
@@ -2220,7 +2238,8 @@ pgames(int p, int p1, char *fname)
 		    ctime_r(&t, tbuf) != NULL ? &tbuf[0] : "");
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	return COM_OK;
 }
 
@@ -2247,7 +2266,8 @@ game_write_complete(int g, int isDraw, char *EndSymbol)
 	if (fd >= 0) {
 		if ((fp = fdopen(fd, "w")) != NULL) {
 			WriteGameFile(fp, g);
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 		} else {
 			(void) fprintf(stderr, "Trouble writing history file "
 			    "%s\n",
