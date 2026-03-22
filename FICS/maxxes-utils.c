@@ -12,6 +12,31 @@
 
 #include "maxxes-utils.h"
 
+void
+fprintf_logerr(const char *file, const long int line,
+    FILE *fp, const char *format, ...)
+{
+	int	ret;
+	va_list	ap;
+
+	if (fp == NULL) {
+		warnx("%s:%ld: error: invalid argument (null pointer)",
+		    file, line);
+		return;
+	} else if (fp == stdin || fp == stdout || fp == stderr) {
+		warnx("%s:%ld: error: invalid stream (stdin, stdout or stderr)",
+		    file, line);
+		return;
+	}
+
+	va_start(ap, format);
+	ret = vfprintf(fp, format, ap);
+	va_end(ap);
+
+	if (ret < 0)
+		warnx("%s:%ld: warning: vfprintf() error", file, line);
+}
+
 bool
 is_too_long(const int p_ret, const size_t p_maxlen)
 {

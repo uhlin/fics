@@ -6,6 +6,8 @@
 
 #include "common.h"
 
+#define mfprintf(p_fp, ...) \
+	fprintf_logerr(__FILE__, __LINE__, (p_fp), __VA_ARGS__)
 #define msnprintf(p_str, p_size, ...) \
 	snprintf_trunc_chk(__FILE__, __LINE__, (p_str), (p_size), __VA_ARGS__)
 #define mstrlcpy(p_dst, p_src, p_dstsize) \
@@ -14,6 +16,9 @@
 	strlcat_trunc_chk((p_dst), (p_src), (p_dstsize), __FILE__, __LINE__)
 
 __FICS_BEGIN_DECLS
+void	fprintf_logerr(const char *file, const long int line,
+	    FILE *, const char *format, ...) PRINTFLIKE(4);
+
 bool	is_too_long(const int, const size_t);
 
 void	snprintf_trunc_chk(const char *file, const long int line,
