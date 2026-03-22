@@ -940,8 +940,8 @@ WriteMoves(FILE *fp, move_t *m)
 
 	MoveInfo = ((MoveInfo << 3) | useFile | useRank | check);
 
-	fprintf(fp, "%lx %x %x\n", MoveInfo, m->tookTime, m->atTime);
-	return 0;
+	return (fprintf(fp, "%lx %x %x\n",
+	    MoveInfo, m->tookTime, m->atTime) < 0 ? -1 : 0);
 }
 
 PRIVATE int
