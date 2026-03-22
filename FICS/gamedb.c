@@ -1608,7 +1608,8 @@ game_save(int g)
 		(void) fprintf(stderr, "FICS: "
 		    "Problem opening file %s for write\n",
 		    fname);
-		close(fd);
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
 		return -1;
 	}
 
@@ -1874,7 +1875,8 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 		warn("%s: open: %s", __func__, file);
 		return;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {
-		close(fd);
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
 		return;
 	}
 
@@ -2014,7 +2016,8 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		    fname);
 		pprintf(p, "Couldn't update journal! Report this to an admin."
 		    "\n");
-		close(fd);
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
 		return;
 	}
 
@@ -2274,7 +2277,8 @@ game_write_complete(int g, int isDraw, char *EndSymbol)
 			    fname);
 		}
 
-		close(fd);
+		if (close(fd) != 0)
+			warn("%s: error closing file descriptor", __func__);
 	}
 
 	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
