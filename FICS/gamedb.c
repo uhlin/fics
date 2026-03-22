@@ -976,24 +976,35 @@ ReadMove(FILE *fp, move_t *m)
 PRIVATE void
 WriteGameState(FILE *fp, game_state_t *gs)
 {
-	int	i, j;
+	const char	msg[] = "error: fprintf";
+	int		i, j;
+	int		ret;
 
 	for (i = 0; i < 8; i++) {
-		for (j = 0; j < 8; j++)
-			fprintf(fp, "%c", PieceToChar(gs->board[i][j]));
+		for (j = 0; j < 8; j++) {
+			if (fprintf(fp, "%c", PieceToChar(gs->board[i][j])) < 0)
+				warnx("%s: %s", __func__, msg);
+		}
 	}
 
-	fprintf(fp, "%d %d %d %d %d %d",
-		gs->wkmoved, gs->wqrmoved, gs->wkrmoved,
-		gs->bkmoved, gs->bqrmoved, gs->bkrmoved);
+	ret = fprintf(fp, "%d %d %d %d %d %d",
+		      gs->wkmoved, gs->wqrmoved, gs->wkrmoved,
+		      gs->bkmoved, gs->bqrmoved, gs->bkrmoved);
+	if (ret < 0)
+		warnx("%s: %s", __func__, msg);
 
 	for (i = 0; i < 8; i++) {
-		fprintf(fp, " %d %d", gs->ep_possible[0][i],
-		    gs->ep_possible[1][i]);
+		ret = fprintf(fp, " %d %d",
+			      gs->ep_possible[0][i],
+			      gs->ep_possible[1][i]);
+		if (ret < 0)
+			warnx("%s: %s", __func__, msg);
 	}
 
-	fprintf(fp, " %d %d %d\n", gs->lastIrreversable, gs->onMove,
+	ret = fprintf(fp, " %d %d %d\n", gs->lastIrreversable, gs->onMove,
 	    gs->moveNum);
+	if (ret < 0)
+		warnx("%s: %s", __func__, msg);
 }
 
 PRIVATE int
