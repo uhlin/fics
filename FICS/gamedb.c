@@ -1508,11 +1508,8 @@ game_read(int g, int wp, int bp)
 
 	msnprintf(fname, sizeof fname, "%s/%c/%s-%s", adj_dir,
 	    parray[wp].login[0], parray[wp].login, parray[bp].login);
-	fp = fopen(fname, "r");
-
-	if (!fp) {
+	if ((fp = fopen(fname, "r")) == NULL)
 		return -1;
-	}
 
 	if (ReadGameAttrs(fp, fname, g) < 0) {
 		fclose(fp);
