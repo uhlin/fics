@@ -366,7 +366,7 @@ main(int argc, char *argv[])
 
 	main_event_loop();
 
-	(void) fprintf(stderr, "FICS: Closing down.\n");
+	(void) fputs("FICS: Closing down.\n", stderr);
 	output_shut_mess();
 	net_close();
 
