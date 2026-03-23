@@ -362,8 +362,8 @@ pIsPlaying(int p)
 		 * oh oh; big bad game bug.
 		 */
 
-		fprintf(stderr, "BUG: Player %s playing game %d according to "
-		    "parray, but not according to garray.\n",
+		(void) fprintf(stderr, "BUG: Player %s playing game %d "
+		    "according to parray, but not according to garray.\n",
 		    parray[p].name, (g + 1));
 		pprintf(p, "Disconnecting you from game number %d.\n", (g + 1));
 		parray[p].game = -1;
