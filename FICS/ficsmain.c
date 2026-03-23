@@ -84,7 +84,7 @@ PRIVATE __dead void usage(char *);
 PRIVATE void
 BrokenPipe(int sig)
 {
-	fprintf(stderr, "FICS: Got Broken Pipe (%d)\n", sig);
+	(void) fprintf(stderr, "FICS: Got Broken Pipe (%d)\n", sig);
 }
 
 PRIVATE void
@@ -174,7 +174,7 @@ GetArgs(int argc, char *argv[])
 PRIVATE __dead void
 TerminateServer(int sig)
 {
-	fprintf(stderr, "FICS: Got signal %d\n", sig);
+	(void) fprintf(stderr, "FICS: Got signal %d\n", sig);
 	output_shut_mess();
 	TerminateCleanup();
 	net_close();
@@ -320,7 +320,8 @@ main(int argc, char *argv[])
 	}
 
 	if (net_init(port)) {
-		fprintf(stderr, "FICS: Network initialize failed on port %d.\n",
+		(void) fprintf(stderr, "FICS: Network initialize failed on "
+		    "port %d.\n",
 		    port);
 		return EXIT_FAILURE;
 	}
@@ -333,25 +334,27 @@ main(int argc, char *argv[])
 	quota_time = 60;
 	srand(startuptime);
 
-	fprintf(stderr, "FICS: Initialized on port %d at %s.\n", port,
+	(void) fprintf(stderr, "FICS: Initialized on port %d at %s.\n", port,
 	    strltime(&startuptime));
-	fprintf(stderr, "FICS: commands_init()\n");
+	(void) fprintf(stderr, "FICS: commands_init()\n");
 	commands_init();
 
-	fprintf(stderr, "FICS: rating_init()\n");
+	(void) fprintf(stderr, "FICS: rating_init()\n");
 	rating_init();
 
-	fprintf(stderr, "FICS: wild_init()\n");
+	(void) fprintf(stderr, "FICS: wild_init()\n");
 	wild_init();
 
 #ifndef IGNORE_ECO
-	fprintf(stderr, "FICS: book init()\n");
+	(void) fprintf(stderr, "FICS: book init()\n");
 	BookInit();
 #endif
 
-	fprintf(stderr, "FICS: player_array_init()\n");
+	(void) fprintf(stderr, "FICS: player_array_init()\n");
 	player_array_init();
-	fprintf(stderr, "FICS: player_init(withConsole=%d)\n", withConsole);
+
+	(void) fprintf(stderr, "FICS: player_init(withConsole=%d)\n",
+		       withConsole);
 	player_init(withConsole);
 
 #if defined(OpenBSD) && OpenBSD >= 201811
@@ -367,7 +370,7 @@ main(int argc, char *argv[])
 
 	main_event_loop();
 
-	fprintf(stderr, "FICS: Closing down.\n");
+	(void) fprintf(stderr, "FICS: Closing down.\n");
 	output_shut_mess();
 	net_close();
 
