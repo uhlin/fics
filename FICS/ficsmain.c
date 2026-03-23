@@ -266,15 +266,16 @@ main_event_loop(void)
 PRIVATE __dead void
 usage(char *progname)
 {
-	fprintf(stderr, "Usage: %s [-p port] [-C] [-dhlv]\n", progname);
-	fprintf(stderr, "\t\t-p port\t\tSpecify port.  (Default=%d)\n",
+	(void)fprintf(stderr, "Usage: %s [-p port] [-C] [-dhlv]\n", progname);
+	(void)fprintf(stderr, "\t\t-p port\t\tSpecify port.  (Default=%d)\n",
 	    DEFAULT_PORT);
-	fprintf(stderr, "\t\t-C\t\tStart with console player connected "
+	(void)fprintf(stderr, "\t\t-C\t\tStart with console player connected "
 	    "to stdin.\n");
-	fprintf(stderr, "\t\t-d\t\tRun in the background.\n");
-	fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
-	fprintf(stderr, "\t\t-l\t\tDisplay the legal notice and exit.\n");
-	fprintf(stderr, "\t\t-v\t\tDisplay version.\n");
+	(void)fprintf(stderr, "\t\t-d\t\tRun in the background.\n");
+	(void)fprintf(stderr, "\t\t-h\t\tDisplay this information.\n");
+	(void)fprintf(stderr, "\t\t-l\t\tDisplay the legal notice and exit.\n");
+	(void)fprintf(stderr, "\t\t-v\t\tDisplay version.\n");
+
 	exit(EXIT_FAILURE);
 }
 
