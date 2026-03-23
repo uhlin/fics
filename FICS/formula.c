@@ -53,12 +53,14 @@
 #include "common.h"
 
 #include <ctype.h>
+#include <err.h>
 
 #include "command.h"
 #include "config.h"
 #include "formula.h"
 #include "gamedb.h"
 #include "lists.h"
+#include "maxxes-utils.h"
 #include "network.h"
 #include "playerdb.h"
 #include "ratings.h"
