@@ -6,6 +6,7 @@ documented in this file.
 ## [Unreleased] ##
 - Added and made use of `mfprintf()`.
 - Added null checks.
+- Fixed hardcoded function names in text messages.
 - Fixed integer to pointer casts.
 - Fixed potential uncovered code paths, i.e. added a default label to
   the `switch` statements.
