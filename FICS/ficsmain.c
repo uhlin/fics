@@ -182,7 +182,7 @@ TerminateServer(int sig)
 	output_shut_mess();
 	TerminateCleanup();
 	net_close();
-	exit(EXIT_FAILURE);
+	_Exit(EXIT_FAILURE);
 }
 
 #if defined(OpenBSD) && OpenBSD >= 201811
