@@ -604,11 +604,20 @@ ExplainFormula(game *g, textlist **clauses)
 	which = ChooseClauses(challenged, challenged->formula);
 
 	for (i = 0; i < MAX_FORMULA; i++) {
+		int ret;
+
 		if ((which & (1 << i)) == 0)
 			continue;
 		dummy_index = 0;
 		CheckFormula(g, i, &dummy_index, OPTYPE_NONE, &value, 1);
-		snprintf(txt, sizeof txt, "%d", value);
+
+		ret = snprintf(txt, sizeof txt, "%d", value);
+
+		if (is_too_long(ret, sizeof txt)) {
+			warnx("%s: snprintf() truncated", __func__);
+			continue;
+		}
+
 		SaveTextListEntry(Cur, txt, i);
 		Cur = &(*Cur)->next;
 	}
