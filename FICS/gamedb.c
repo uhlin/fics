@@ -581,6 +581,7 @@ movesToString(int g, int pgn)
 	const char	*serv_name = settings_get("server_name");
 	int		 i, col;
 	int		 wr, br;
+	size_t		 ret;
 	struct tm	 v_tm = {0};
 	time_t		 curTime;
 
@@ -602,11 +603,14 @@ movesToString(int g, int pgn)
 		errno = 0;
 
 		if (localtime_r(&curTime, &v_tm) != NULL) {
-			strftime(tmp, sizeof(tmp),
+			ret = strftime(tmp, sizeof(tmp),
 			    "[Date \"%Y.%m.%d\"]\n"
 			    "[Time \"%H:%M:%S\"]\n",
 			    &v_tm);
-			mstrlcat(gameString, tmp, sizeof gameString);
+			if (ret != 0)
+				mstrlcat(gameString, tmp, sizeof gameString);
+			else
+				warnx("%s: strftime() returned 0", __func__);
 		} else
 			warn("%s: localtime_r()", __func__);
 
@@ -686,8 +690,12 @@ movesToString(int g, int pgn)
 		errno = 0;
 
 		if (localtime_r(&curTime, &v_tm) != NULL) {
-			strftime(tmp, sizeof tmp, "%Y.%m.%d %H:%M:%S", &v_tm);
-			mstrlcat(gameString, tmp, sizeof gameString);
+			ret = strftime(tmp, sizeof tmp, "%Y.%m.%d %H:%M:%S",
+				       &v_tm);
+			if (ret != 0)
+				mstrlcat(gameString, tmp, sizeof gameString);
+			else
+				warnx("%s: strftime() returned 0", __func__);
 		} else
 			warn("%s: localtime_r()", __func__);
 
