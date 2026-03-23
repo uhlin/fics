@@ -1303,7 +1303,7 @@ PUBLIC void
 commands_init(void)
 {
 	FILE	*fp, *afp;
-	char	 fname[MAX_FILENAME_SIZE];
+	char	 fname[MAX_FILENAME_SIZE] = { '\0' };
 	int	 fd[2];
 	int	 i = 0;
 
