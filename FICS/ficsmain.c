@@ -43,6 +43,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <string.h>
+#include <time.h>
 
 #include "addgroup.h"
 #include "board.h"
@@ -263,6 +264,17 @@ main_event_loop(void)
 	}
 }
 
+PRIVATE void
+seed_the_prng(void)
+{
+	struct timespec ts = {0};
+
+	if (clock_gettime(CLOCK_REALTIME, &ts) == -1)
+		err(1, "%s: fatal: clock_gettime", __func__);
+
+	srand(ts.tv_nsec ^ ts.tv_sec);
+}
+
 PRIVATE __dead void
 usage(char *progname)
 {
@@ -335,7 +347,7 @@ main(int argc, char *argv[])
 	game_high = 0;
 	player_high = 0;
 	quota_time = 60;
-	srand(startuptime);
+	seed_the_prng();
 
 	(void) fprintf(stderr, "FICS: Initialized on port %d at %s.\n", port,
 	    strltime(&startuptime));
