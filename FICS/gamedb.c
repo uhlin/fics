@@ -1912,7 +1912,7 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 		else
 			cResult = '-';
 
-		fprintf(fp, "%d %c %d W %d %s %s %d %d %d %d %s %s %jd\n",
+		mfprintf(fp, "%d %c %d W %d %s %s %d %d %d %d %s %s %jd\n",
 		    count, cResult, wr, br, parray[bp].name, type,
 		    garray[g].wInitTime, garray[g].wIncrement,
 		    garray[g].bInitTime, garray[g].bIncrement,
@@ -1927,7 +1927,7 @@ write_g_out(int g, char *file, int maxlines, int isDraw, char *EndSymbol,
 		else
 			cResult = '-';
 
-		fprintf(fp, "%d %c %d B %d %s %s %d %d %d %d %s %s %jd\n",
+		mfprintf(fp, "%d %c %d B %d %s %s %d %d %d %d %s %s %jd\n",
 		    count, cResult, br, wr, parray[wp].name, type,
 		    garray[g].wInitTime, garray[g].wIncrement,
 		    garray[g].bInitTime, garray[g].bIncrement,
@@ -2033,7 +2033,7 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 	}
 
 	if ((fp = fopen(fname, "r")) == NULL) { // Empty?
-		fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+		mfprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
 		    count2,
 		    WhiteName2, WhiteRating2,
 		    BlackName2, BlackRating2,
@@ -2079,7 +2079,8 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 			}
 
 			if ((count >= count2) && (!have_output)) {
-				fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+				mfprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s"
+				    "\n",
 				    count2,
 				    WhiteName2, WhiteRating2,
 				    BlackName2, BlackRating2,
@@ -2092,7 +2093,7 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 			}
 
 			if (count != count2) {
-				fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s"
+				mfprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s"
 				    "\n",
 				    count,
 				    WhiteName, WhiteRating,
@@ -2106,7 +2107,7 @@ addjournalitem(int p, char count2, char *WhiteName2, int WhiteRating2,
 		}
 
 		if (!have_output) {	// Haven't written yet
-			fprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
+			mfprintf(fp2, "%c %s %d %s %d %s %d %d %s %s %s\n",
 			    count2,
 			    WhiteName2, WhiteRating2,
 			    BlackName2, BlackRating2,
