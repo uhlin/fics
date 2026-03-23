@@ -336,21 +336,15 @@ main(int argc, char *argv[])
 
 	(void) fprintf(stderr, "FICS: Initialized on port %d at %s.\n", port,
 	    strltime(&startuptime));
-	(void) fprintf(stderr, "FICS: commands_init()\n");
+
 	commands_init();
-
-	(void) fprintf(stderr, "FICS: rating_init()\n");
 	rating_init();
-
-	(void) fprintf(stderr, "FICS: wild_init()\n");
 	wild_init();
 
 #ifndef IGNORE_ECO
-	(void) fprintf(stderr, "FICS: book init()\n");
 	BookInit();
 #endif
 
-	(void) fprintf(stderr, "FICS: player_array_init()\n");
 	player_array_init();
 
 	(void) fprintf(stderr, "FICS: player_init(withConsole=%d)\n",

@@ -673,6 +673,7 @@ com_best(int p, param_list param)
 PUBLIC void
 rating_init(void)
 {
+	(void) fprintf(stderr, "FICS: %s()\n", __func__);
 	zero_stats();
 	load_ratings();
 }

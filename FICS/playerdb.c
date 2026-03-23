@@ -140,6 +140,8 @@ get_empty_slot(void)
 PUBLIC void
 player_array_init(void)
 {
+	(void) fprintf(stderr, "FICS: %s()\n", __func__);
+
 	for (int i = 0; i < PARRAY_SIZE; i++)
 		parray[i].status = PLAYER_EMPTY;
 }

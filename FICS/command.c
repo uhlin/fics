@@ -1307,6 +1307,8 @@ commands_init(void)
 	int	 fd[2];
 	int	 i = 0;
 
+	(void) fprintf(stderr, "FICS: %s()\n", __func__);
+
 	fp = afp = NULL;
 	snprintf(fname, sizeof fname, "%s/commands", comhelp_dir);
 

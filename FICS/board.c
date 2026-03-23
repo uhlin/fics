@@ -1379,6 +1379,8 @@ wild_update(int style)
 PUBLIC void
 wild_init(void)
 {
+	(void) fprintf(stderr, "FICS: %s()\n", __func__);
+
 	wild_update(1);
 	wild_update(2);
 	wild_update(3);

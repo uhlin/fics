@@ -330,6 +330,8 @@ LONG_init(void)
 PUBLIC void
 BookInit(void)
 {
+	(void) fprintf(stderr, "FICS: %s()\n", __func__);
+
 	ECO_init();
 	NIC_init();
 	LONG_init();
