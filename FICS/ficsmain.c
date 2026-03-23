@@ -147,7 +147,7 @@ GetArgs(int argc, char *argv[])
 					usage(argv[0]);
 				break;
 			case 'C':
-				fprintf(stderr, "-C Not implemented!\n");
+				(void) fputs("-C Not implemented!\n", stderr);
 				exit(1);
 				withConsole = 1;
 				break;
