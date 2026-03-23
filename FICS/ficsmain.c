@@ -30,6 +30,8 @@
    Markus Uhlin                 25/10/14	Added usage of unveil() and
 						pledge() (OpenBSD only).
    Markus Uhlin                 26/03/02	Check signal() return.
+   Markus Uhlin                 26/03/23	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
