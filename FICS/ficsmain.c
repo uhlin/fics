@@ -32,6 +32,7 @@
    Markus Uhlin                 26/03/02	Check signal() return.
    Markus Uhlin                 26/03/23	Fixed unchecked function return
 						values.
+   Markus Uhlin                 26/03/23	Seeded the PRNG better.
 */
 
 #include "stdinclude.h"
