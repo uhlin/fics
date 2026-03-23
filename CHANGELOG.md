@@ -18,6 +18,7 @@ documented in this file.
 - Replaced `atoi()` with `strtol()`. Multiple occurrences.
 - Replaced `atoi()` with `strtonum()`. Multiple occurrences.
 - Replaced `rewind()` with `fseek()`, which offers error checking.
+- Seeded the pseudo random number generator (PRNG) better.
 - Usage of `const`.
 - Usage of begin/end decls, in header files.
 - Usage of member initializers.
