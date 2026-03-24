@@ -188,13 +188,13 @@ ECO_init(void)
 	fclose(fp);
 	ECO_book[i] = NULL;
 
-	fprintf(stderr, "%d entries in ECO book\n", i);
+	(void) fprintf(stderr, "%d entries in ECO book\n", i);
 	ECO_entries = i;
 
 	while (--i >= 0) {
 		if (ECO_book[i] == NULL) {
-			fprintf(stderr, "ERROR! ECO book position number %d "
-			    "is NULL.", i);
+			(void) fprintf(stderr, "ERROR! ECO book position "
+			    "number %d is NULL.\n", i);
 		}
 	}
 }
@@ -259,7 +259,7 @@ NIC_init(void)
 	fclose(fp);
 	NIC_book[i] = NULL;
 
-	fprintf(stderr, "%d entries in NIC book\n", i);
+	(void) fprintf(stderr, "%d entries in NIC book\n", i);
 	NIC_entries = i;
 }
 
@@ -323,7 +323,7 @@ LONG_init(void)
 	fclose(fp);
 	LONG_book[i] = NULL;
 
-	fprintf(stderr, "%d entries in LONG book\n", i);
+	(void) fprintf(stderr, "%d entries in LONG book\n", i);
 	LONG_entries = i;
 }
 
