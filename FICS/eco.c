@@ -13,6 +13,7 @@
 #include "eco.h"
 #include "gamedb.h"
 #include "gameproc.h"
+#include "maxxes-utils.h"
 #include "obsproc.h"
 #include "playerdb.h"
 #include "utils.h"
@@ -139,9 +140,12 @@ ECO_init(void)
 	char	 tmp[ECO_MAXTMP] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
+	int	 ret;
 
-	snprintf(filename, sizeof filename, "%s/eco999.idx", book_dir);
+	ret = snprintf(filename, sizeof filename, "%s/eco999.idx", book_dir);
 
+	if (is_too_long(ret, sizeof filename))
+		errx(1, "%s: fatal: too long filename", __func__);
 	if ((fp = fopen(filename, "r")) == NULL)
 		err(1, "Could not open ECO file (%s)", filename);
 
@@ -210,9 +214,12 @@ NIC_init(void)
 	char	 tmp[ECO_MAXTMP] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
+	int	 ret;
 
-	snprintf(filename, sizeof filename, "%s/nic999.idx", book_dir);
+	ret = snprintf(filename, sizeof filename, "%s/nic999.idx", book_dir);
 
+	if (is_too_long(ret, sizeof filename))
+		errx(1, "%s: fatal: too long filename", __func__);
 	if ((fp = fopen(filename, "r")) == NULL)
 		err(1, "Could not open NIC file (%s)", filename);
 
@@ -274,9 +281,12 @@ LONG_init(void)
 	char	 tmp[ECO_MAXTMP] = { '\0' };
 	char	*ptmp = tmp;
 	int	 i = 0;
+	int	 ret;
 
-	snprintf(filename, sizeof filename, "%s/long999.idx", book_dir);
+	ret = snprintf(filename, sizeof filename, "%s/long999.idx", book_dir);
 
+	if (is_too_long(ret, sizeof filename))
+		errx(1, "%s: fatal: too long filename", __func__);
 	if ((fp = fopen(filename, "r")) == NULL)
 		err(1, "Could not open LONG file (%s)", filename);
 
