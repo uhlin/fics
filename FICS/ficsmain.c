@@ -33,6 +33,7 @@
    Markus Uhlin                 26/03/23	Fixed unchecked function return
 						values.
    Markus Uhlin                 26/03/23	Seeded the PRNG better.
+   Markus Uhlin                 26/03/24	Usage of strsignal().
 */
 
 #include "stdinclude.h"
