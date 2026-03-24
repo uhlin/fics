@@ -200,10 +200,38 @@ GetArgs(int argc, char *argv[])
 PRIVATE __dead void
 TerminateServer(int sig)
 {
-	(void) fprintf(stderr, "FICS: Got signal %d\n", sig);
+	char buf[1024] = { '\0' };
+
+	// NOLINTBEGIN
+	switch (sig) {
+	case SIGINT:
+		(void) snprintf(buf, sizeof buf, "FICS: Got signal %d "
+		    "(SIGINT): ", sig);
+		break;
+	case SIGTERM:
+		(void) snprintf(buf, sizeof buf, "FICS: Got signal %d "
+		    "(SIGTERM): ", sig);
+		break;
+	default:
+		(void) snprintf(buf, sizeof buf, "FICS: Got signal %d "
+		    "(Unknown): ", sig);
+		break;
+	}
+
+	const char *desc = strsignal(sig);
+
+	(void) strlcat(buf, (desc ? desc : "n/a"), sizeof buf);
+
+	if (strlcat(buf, "\n", sizeof buf) >= sizeof buf)
+		/* null */;
+	else
+		(void) fputs(buf, stderr);
+
 	output_shut_mess();
 	TerminateCleanup();
 	net_close();
+	// NOLINTEND
+
 	_Exit(EXIT_FAILURE);
 }
 
