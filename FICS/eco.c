@@ -189,7 +189,8 @@ ECO_init(void)
 		++i;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	ECO_book[i] = NULL;
 
 	(void) fprintf(stderr, "%d entries in ECO book\n", i);
@@ -263,7 +264,8 @@ NIC_init(void)
 		++i;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	NIC_book[i] = NULL;
 
 	(void) fprintf(stderr, "%d entries in NIC book\n", i);
@@ -330,7 +332,8 @@ LONG_init(void)
 		++i;
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	LONG_book[i] = NULL;
 
 	(void) fprintf(stderr, "%d entries in LONG book\n", i);
