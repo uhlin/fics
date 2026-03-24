@@ -7,6 +7,7 @@ documented in this file.
 - Added and made use of `mfprintf()`.
 - Added null checks.
 - Fixed hardcoded function names in text messages.
+- Fixed implicit type conversions (from enum type to integer type).
 - Fixed integer to pointer casts.
 - Fixed non asynchronous-safe functions called from signal handlers.
 - Fixed potential uncovered code paths, i.e. added a default label to
