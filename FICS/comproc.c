@@ -173,7 +173,7 @@ com_news(int p, param_list param)
 	snprintf(filename, sizeof filename, "%s/newnews.index", news_dir);
 
 	if ((fp = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "Can\'t find news index.\n");
+		(void) fprintf(stderr, "Can\'t find news index.\n");
 		return COM_OK;
 	}
 
@@ -784,8 +784,9 @@ plogins(int p, char *fname)
 	while (!feof(fp)) {
 		if (fscanf(fp, v_scan_fmt, &inout, loginName, &lval,
 		    &registered, ipstr) != 5) {
-			fprintf(stderr, "FICS: Error in login info format. "
-			    "%s\n", fname);
+			(void) fprintf(stderr, "FICS: "
+			    "Error in login info format. %s\n",
+			    fname);
 			fclose(fp);
 			return COM_OK;
 		}
@@ -982,7 +983,7 @@ who_verbose(int p, int num, int plist[])
 			too_long = (ret < 0 || (size_t)ret >= sizeof tmp);
 
 			if (too_long) {
-				fprintf(stderr, "FICS: %s: warning: "
+				(void) fprintf(stderr, "FICS: %s: warning: "
 				    "snprintf truncated\n", __func__);
 			}
 		}
