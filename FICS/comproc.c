@@ -48,6 +48,8 @@
    Markus Uhlin			25/07/24	Fixed use of potentially
 						dangerous functions.
    Markus Uhlin			25/07/29	Usage of 'int64_t'.
+   Markus Uhlin			26/03/24	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
