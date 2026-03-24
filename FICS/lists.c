@@ -224,8 +224,8 @@ list_findpartial(int p, char *which, int gonnado)
 	}
 
 	if (foundit != -1) {
-		int	rights = ListArray[foundit].rights;
-		int	youlose = 0;
+		enum ListPerm	rights = ListArray[foundit].rights;
+		int		youlose = 0;
 
 		switch (rights) { // check rights
 		case P_HEAD:
@@ -244,6 +244,9 @@ list_findpartial(int p, char *which, int gonnado)
 		case P_PUBLIC:
 			if (gonnado && (parray[p].adminLevel < ADMIN_ADMIN))
 				youlose = 1;
+			break;
+		case P_PERSONAL:
+			// XXX: empty
 			break;
 		}
 
