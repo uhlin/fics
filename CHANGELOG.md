@@ -21,6 +21,7 @@ documented in this file.
 - Replaced `rewind()` with `fseek()`, which offers error checking.
 - Seeded the pseudo random number generator (PRNG) better.
 - Usage of `const`.
+- Usage of `strsignal()`.
 - Usage of begin/end decls, in header files.
 - Usage of member initializers.
 
