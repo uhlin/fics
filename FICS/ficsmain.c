@@ -88,7 +88,29 @@ PRIVATE __dead void usage(char *);
 PRIVATE void
 BrokenPipe(int sig)
 {
-	(void) fprintf(stderr, "FICS: Got Broken Pipe (%d)\n", sig);
+	char buf[1024] = { '\0' };
+
+	// NOLINTBEGIN
+	switch (sig) {
+	case SIGPIPE:
+		(void) snprintf(buf, sizeof buf, "FICS: Got signal %d "
+		    "(SIGPIPE): ", sig);
+		break;
+	default:
+		(void) snprintf(buf, sizeof buf, "FICS: Got signal %d "
+		    "(Unknown): ", sig);
+		break;
+	}
+
+	const char *desc = strsignal(sig);
+
+	(void) strlcat(buf, (desc ? desc : "n/a"), sizeof buf);
+
+	if (strlcat(buf, "\n", sizeof buf) >= sizeof buf)
+		/* null */;
+	else
+		(void) fputs(buf, stderr);
+	// NOLINTEND
 }
 
 PRIVATE void
