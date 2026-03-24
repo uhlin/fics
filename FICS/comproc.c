@@ -71,6 +71,7 @@
 #include "gamedb.h"
 #include "gameproc.h"
 #include "lists.h"
+#include "maxxes-utils.h"
 #include "multicol.h"
 #include "network.h"
 #include "obsproc.h"
