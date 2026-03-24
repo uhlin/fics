@@ -168,11 +168,16 @@ com_news(int p, param_list param)
 	char		*junkp = NULL;
 	const char	*v_scan_fmt = "%" SCNd64 " " "%9s";
 	int		 found = 0;
+	int		 ret;
 	int64_t		 lval = 0;
 	time_t		 crtime = 0;
 
-	snprintf(filename, sizeof filename, "%s/newnews.index", news_dir);
+	ret = snprintf(filename, sizeof filename, "%s/newnews.index", news_dir);
 
+	if (is_too_long(ret, sizeof filename)) {
+		warnx("%s: fatal: too long filename", __func__);
+		return COM_OK;
+	}
 	if ((fp = fopen(filename, "r")) == NULL) {
 		(void) fprintf(stderr, "Can\'t find news index.\n");
 		return COM_OK;
