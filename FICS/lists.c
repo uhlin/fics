@@ -507,10 +507,18 @@ com_showlist(int p, param_list param)
 		pprintf(p, "Lists:\n\n");
 
 		for (i = 0; ListArray[i].name != NULL; i++) {
-			if ((rights = ListArray[i].rights) > P_ADMIN ||
+			// XXX: casting enum to int
+			if ((rights = (int)ListArray[i].rights) > P_ADMIN ||
 			    parray[p].adminLevel >= ADMIN_ADMIN) {
-				pprintf(p, "%-20s is %s\n", ListArray[i].name,
-				    rightnames[rights]);
+				if (rights < 0 ||
+				    (size_t)rights >= ARRAY_SIZE(rightnames)) {
+					warnx("%s: out-of-bounds array index "
+					    "detected", __func__);
+				} else {
+					pprintf(p, "%-20s is %s\n",
+					    ListArray[i].name,
+					    rightnames[rights]);
+				}
 			}
 		}
 	} else { // find match in index
