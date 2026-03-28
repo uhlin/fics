@@ -5,6 +5,7 @@ documented in this file.
 
 ## [Unreleased] ##
 - Added and made use of `mfprintf()`.
+- Added array indices bounds checking.
 - Added null checks.
 - Fixed hardcoded function names in text messages.
 - Fixed implicit type conversions (from enum type to integer type).
