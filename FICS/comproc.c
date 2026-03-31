@@ -50,6 +50,7 @@
    Markus Uhlin			25/07/29	Usage of 'int64_t'.
    Markus Uhlin			26/03/24	Fixed unchecked function return
 						values.
+   Markus Uhlin			26/03/31	Added fclose() error checking.
 */
 
 #include "stdinclude.h"
