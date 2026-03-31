@@ -198,7 +198,10 @@ com_news(int p, param_list param)
 		if (fgets(junk, sizeof junk, fp) == NULL ||
 		    sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: error: fgets() or sscanf()", __func__);
-			fclose(fp);
+
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
+
 			return COM_FAILED;
 		}
 
@@ -211,7 +214,8 @@ com_news(int p, param_list param)
 		crtime = lval;
 		pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)),
 		    junkp);
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	} else if (param[0].type == TYPE_WORD &&
 	    !strcmp(param[0].val.word, "all")) {
 		/*
@@ -223,7 +227,10 @@ com_news(int p, param_list param)
 		if (fgets(junk, sizeof junk, fp) == NULL ||
 		    sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: error: fgets() or sscanf()", __func__);
-			fclose(fp);
+
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
+
 			return COM_FAILED;
 		}
 
@@ -236,7 +243,8 @@ com_news(int p, param_list param)
 		crtime = lval;
 		pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)),
 		    junkp);
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	} else {
 		/*
 		 * Check if the specific news file exist in index.
@@ -262,8 +270,10 @@ com_news(int p, param_list param)
 			}
 		}
 
-		fclose(fp);
-
+		if (fclose(fp) != 0) {
+			warn("%s: error: fclose", __func__);
+			return COM_OK;
+		}
 		if (!found) {
 			pprintf(p, "Bad index number!\n");
 			return COM_OK;
@@ -281,7 +291,11 @@ com_news(int p, param_list param)
 			return COM_OK;
 		}
 
-		fclose(fp);
+		if (fclose(fp) != 0) {
+			warn("%s: error: fclose", __func__);
+			return COM_OK;
+		}
+
 		snprintf(filename, sizeof filename, "news.%s",
 		    param[0].val.word);
 
@@ -795,7 +809,8 @@ plogins(int p, char *fname)
 			(void) fprintf(stderr, "FICS: "
 			    "Error in login info format. %s\n",
 			    fname);
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 			return COM_OK;
 		}
 
@@ -815,7 +830,8 @@ plogins(int p, char *fname)
 			pprintf(p, "\n");
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	return COM_OK;
 }
 
