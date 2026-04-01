@@ -447,7 +447,7 @@ com_stats(int p, param_list param)
 	char		 line[255] = { '\0' };
 	char		 tmp[255] = { '\0' };
 	int		 g, i, t;
-	int		 numbers[NUMBERS_SIZE];
+	int		 numbers[NUMBERS_SIZE] = {0};
 	int		 onTime;
 	int		 p1, connected;
 
@@ -676,7 +676,7 @@ com_password(int p, param_list param)
 {
 	char	*oldpassword = param[0].val.word;
 	char	*newpassword = param[1].val.word;
-	char	 salt[FICS_SALT_SIZE];
+	char	 salt[FICS_SALT_SIZE] = { '\0' };
 
 	if (!parray[p].registered) {
 		pprintf(p, "Setting a password is only for registered players."
@@ -1285,9 +1285,9 @@ com_who(int p, param_list param)
 	float		 stop_perc = 1.0;
 	int		 i, len;
 	int		 p1, count, num_who;
-	int		 plist[PARRAY_SIZE];
+	int		 plist[PARRAY_SIZE] = {0};
 	int		 sort_type = blitz_rat;
-	int		 sortlist[PARRAY_SIZE];
+	int		 sortlist[PARRAY_SIZE] = {0};
 	int		 startpoint;
 	int		 stoppoint;
 	int		 style = 0;
@@ -1839,7 +1839,7 @@ com_help(int p, param_list param)
 PUBLIC int
 com_info(int p, param_list param)
 {
-	char	*filenames[1000];
+	char	*filenames[1000] = { NULL };
 	int	 n;
 
 	// XXX: unused
@@ -2030,8 +2030,8 @@ com_mailhelp(int p, param_list param)
 PUBLIC int
 com_handles(int p, param_list param)
 {
-	char	*buffer[1000];
-	char	 pdir[MAX_FILENAME_SIZE];
+	char	*buffer[1000] = { NULL };
+	char	 pdir[MAX_FILENAME_SIZE] = { '\0' };
 	int	 count;
 
 	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, param[0].val.word[0]);
