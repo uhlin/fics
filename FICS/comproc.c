@@ -180,8 +180,7 @@ com_news(int p, param_list param)
 	if (is_too_long(ret, sizeof filename)) {
 		warnx("%s: fatal: too long filename", __func__);
 		return COM_OK;
-	}
-	if ((fp = fopen(filename, "r")) == NULL) {
+	} else if ((fp = fopen(filename, "r")) == NULL) {
 		(void) fprintf(stderr, "Can\'t find news index.\n");
 		return COM_OK;
 	}
@@ -290,14 +289,10 @@ com_news(int p, param_list param)
 		if (is_too_long(ret, sizeof filename)) {
 			warnx("%s: fatal: too long filename", __func__);
 			return COM_OK;
-		}
-
-		if ((fp = fopen(filename, "r")) == NULL) {
+		} else if ((fp = fopen(filename, "r")) == NULL) {
 			pprintf(p, "No more info.\n");
 			return COM_OK;
-		}
-
-		if (fclose(fp) != 0) {
+		} else if (fclose(fp) != 0) {
 			warn("%s: error: fclose", __func__);
 			return COM_OK;
 		}
