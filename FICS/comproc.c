@@ -381,19 +381,19 @@ FindPlayer(int p, char *name, int *p1, int *connected)
 }
 
 PRIVATE void
-com_stats_andify(int *numbers, int howmany, char *dest, size_t dsize)
+com_stats_andify(int *numbers, int p_howmany, char *dest, size_t dsize)
 {
 	char tmp[10] = { '\0' };
 
 	*dest = '\0';
 
-	while (howmany--) {
-		snprintf(tmp, sizeof tmp, "%d", numbers[howmany]);
+	while (p_howmany--) {
+		snprintf(tmp, sizeof tmp, "%d", numbers[p_howmany]);
 		strlcat(dest, tmp, dsize);
 
-		if (howmany > 1)
+		if (p_howmany > 1)
 			strlcpy(tmp, ", ", sizeof tmp);
-		else if (howmany == 1)
+		else if (p_howmany == 1)
 			strlcpy(tmp, " and ", sizeof tmp);
 		else
 			strlcpy(tmp, ".\n", sizeof tmp);
