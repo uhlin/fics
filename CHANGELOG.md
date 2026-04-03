@@ -7,6 +7,7 @@ documented in this file.
 - Added and made use of `mfprintf()`.
 - Added array indices bounds checking.
 - Added null checks.
+- Fixed conflicting parameter names.
 - Fixed hardcoded function names in text messages.
 - Fixed implicit type conversions (from enum type to integer type).
 - Fixed integer to pointer casts.
