@@ -284,8 +284,13 @@ com_news(int p, param_list param)
 		 * File exists - show it
 		 */
 
-		snprintf(filename, sizeof filename, "%s/news.%s", news_dir,
-		    param[0].val.word);
+		ret = snprintf(filename, sizeof filename, "%s/news.%s",
+		    news_dir, param[0].val.word);
+
+		if (is_too_long(ret, sizeof filename)) {
+			warnx("%s: fatal: too long filename", __func__);
+			return COM_OK;
+		}
 
 		if ((fp = fopen(filename, "r")) == NULL) {
 			pprintf(p, "No more info.\n");
@@ -297,8 +302,13 @@ com_news(int p, param_list param)
 			return COM_OK;
 		}
 
-		snprintf(filename, sizeof filename, "news.%s",
+		ret = snprintf(filename, sizeof filename, "news.%s",
 		    param[0].val.word);
+
+		if (is_too_long(ret, sizeof filename)) {
+			warnx("%s: fatal: too long filename", __func__);
+			return COM_OK;
+		}
 
 		if (psend_file(p, news_dir, filename) < 0) {
 			pprintf(p, "Internal error - couldn't send news file!"
