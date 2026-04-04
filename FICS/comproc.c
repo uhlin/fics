@@ -89,6 +89,9 @@
 #include <bsd/string.h>
 #endif
 
+#define NUMBERS_SIZE \
+	(MAX_OBSERVE > MAX_SIMUL ? MAX_OBSERVE : MAX_SIMUL)
+
 #define WHO_OPEN         0x01
 #define WHO_CLOSED       0x02
 #define WHO_RATED        0x04
@@ -392,6 +395,11 @@ com_stats_andify(int *numbers, int p_howmany, char *dest, size_t dsize)
 
 	*dest = '\0';
 
+	if (p_howmany < 0 || p_howmany >= NUMBERS_SIZE) {
+		warnx("%s: integer out of bounds", __func__);
+		return;
+	}
+
 	while (p_howmany--) {
 		snprintf(tmp, sizeof tmp, "%d", numbers[p_howmany]);
 		strlcat(dest, tmp, dsize);
@@ -447,8 +455,6 @@ com_stats_rating(char *hdr, statistics *stats, char *dest, const size_t dsize)
 PUBLIC int
 com_stats(int p, param_list param)
 {
-#define NUMBERS_SIZE \
-	(MAX_OBSERVE > MAX_SIMUL ? MAX_OBSERVE : MAX_SIMUL)
 	char		 line[255] = { '\0' };
 	char		 tmp[255] = { '\0' };
 	int		 g, i, t;
