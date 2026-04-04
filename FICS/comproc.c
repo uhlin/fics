@@ -491,8 +491,10 @@ com_stats(int p, param_list param)
 			(void) strlcpy(tmp, "(Never connected.)\n", sizeof tmp);
 	}
 
-	strlcat(line, tmp, sizeof line);
-	pprintf(p, "%s", line);
+	if (strlcat(line, tmp, sizeof line) >= sizeof line)
+		warnx("%s: error: strlcat() truncated", __func__);
+	else
+		pprintf(p, "%s", line);
 
 	if (parray[p1].simul_info.numBoards) {
 		t = 0;
