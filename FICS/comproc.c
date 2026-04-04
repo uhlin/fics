@@ -989,9 +989,10 @@ who_verbose(int p, int num, int plist[])
 		p1 = plist[i];
 		strlcpy(playerLine, " |", sizeof playerLine);
 
-		if (parray[p1].game >= 0)
-			snprintf(tmp, sizeof tmp, "%3d", parray[p1].game + 1);
-		else
+		if (parray[p1].game >= 0) {
+			(void) snprintf(tmp, sizeof tmp, "%3d",
+			    (parray[p1].game + 1));
+		} else
 			strlcpy(tmp, "   ", sizeof tmp);
 
 		strlcat(playerLine, tmp, sizeof playerLine);
@@ -1045,7 +1046,7 @@ who_verbose(int p, int num, int plist[])
 		strlcat(playerLine, tmp, sizeof playerLine);
 
 		if (player_idle(p1) >= 60) {
-			snprintf(tmp, sizeof tmp, "%5s   |\n",
+			(void) snprintf(tmp, sizeof tmp, "%5s   |\n",
 			    hms(player_idle(p1), 0, 0, 0));
 		} else {
 			strlcpy(tmp, "        |\n", sizeof tmp);
