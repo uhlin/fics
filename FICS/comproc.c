@@ -855,12 +855,15 @@ plogins(int p, char *fname)
 PUBLIC int
 com_llogons(int p, param_list param)
 {
-	char fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	ret;
 
 	(void) param; // XXX: unused
 
-	snprintf(fname, sizeof fname, "%s/%s", stats_dir, STATS_LOGONS);
-	return plogins(p, fname);
+	ret = snprintf(fname, sizeof fname, "%s/%s", stats_dir, STATS_LOGONS);
+
+	return (is_too_long(ret, sizeof fname) ? COM_FAILED :
+	    plogins(p, fname));
 }
 
 PUBLIC int
