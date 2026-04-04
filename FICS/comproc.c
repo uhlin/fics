@@ -933,8 +933,8 @@ who_terse(int p, int num, int *plist, int type)
 		if (type == none) {
 			strlcpy(ptmp, "     ", sizeof ptmp);
 		} else {
-			snprintf(ptmp, sizeof ptmp, "%-4s", ratstrii(rat,
-			    parray[p1].registered));
+			(void) snprintf(ptmp, sizeof ptmp, "%-4s",
+			    ratstrii(rat, parray[p1].registered));
 
 			if (parray[p1].simul_info.numBoards) {
 				strlcat(ptmp, "~", sizeof ptmp);
