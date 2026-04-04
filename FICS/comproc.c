@@ -1052,8 +1052,11 @@ who_verbose(int p, int num, int plist[])
 			strlcpy(tmp, "        |\n", sizeof tmp);
 		}
 
-		strlcat(playerLine, tmp, sizeof playerLine);
-		pprintf(p, "%s", playerLine);
+		if (strlcat(playerLine, tmp, sizeof playerLine) >=
+		    sizeof playerLine)
+			/* null */;
+		else
+			pprintf(p, "%s", playerLine);
 	}
 
 	pprintf(p, " |                                                               |\n");
