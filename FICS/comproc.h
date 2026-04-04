@@ -30,6 +30,7 @@
 
 #include "command.h"
 
+__FICS_BEGIN_DECLS
 extern const int	none;
 extern const int	blitz_rat;
 extern const int	std_rat;
@@ -81,5 +82,6 @@ extern int	com_who(int, param_list);
 
 extern void	rscan_news(FILE *, int, time_t);
 extern void	rscan_news2(FILE *, int, int);
+__FICS_END_DECLS
 
 #endif /* _COMPROC_H */
