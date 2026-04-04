@@ -391,7 +391,7 @@ FindPlayer(int p, char *name, int *p1, int *connected)
 PRIVATE void
 com_stats_andify(int *numbers, int p_howmany, char *dest, size_t dsize)
 {
-	char tmp[10] = { '\0' };
+	char tmp[40] = { '\0' };
 
 	*dest = '\0';
 
