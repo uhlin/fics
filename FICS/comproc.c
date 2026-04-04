@@ -423,7 +423,8 @@ com_stats_rating(char *hdr, statistics *stats, char *dest, const size_t dsize)
 {
 	char tmp[100] = { '\0' };
 
-	snprintf(dest, dsize, "%-10s%4s    %5.1f   %4d   %4d   %4d   %4d", hdr,
+	(void) snprintf(dest, dsize, "%-10s%4s    %5.1f   %4d   %4d   %4d   %4d",
+	    hdr,
 	    ratstr(stats->rating),
 	    stats->sterr,
 	    stats->win,
@@ -434,8 +435,8 @@ com_stats_rating(char *hdr, statistics *stats, char *dest, const size_t dsize)
 	if (stats->whenbest) {
 		struct tm res = {0};
 
-		snprintf(tmp, sizeof tmp, "   %d", stats->best);
-		strlcat(dest, tmp, dsize);
+		(void) snprintf(tmp, sizeof tmp, "   %d", stats->best);
+		(void) strlcat(dest, tmp, dsize);
 
 		errno = 0;
 
