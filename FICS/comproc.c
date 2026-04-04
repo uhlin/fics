@@ -401,15 +401,15 @@ com_stats_andify(int *numbers, int p_howmany, char *dest, size_t dsize)
 	}
 
 	while (p_howmany--) {
-		snprintf(tmp, sizeof tmp, "%d", numbers[p_howmany]);
-		strlcat(dest, tmp, dsize);
+		(void) snprintf(tmp, sizeof tmp, "%d", numbers[p_howmany]);
+		(void) strlcat(dest, tmp, dsize);
 
 		if (p_howmany > 1)
-			strlcpy(tmp, ", ", sizeof tmp);
+			(void) strlcpy(tmp, ", ", sizeof tmp);
 		else if (p_howmany == 1)
-			strlcpy(tmp, " and ", sizeof tmp);
+			(void) strlcpy(tmp, " and ", sizeof tmp);
 		else
-			strlcpy(tmp, ".\n", sizeof tmp);
+			(void) strlcpy(tmp, ".\n", sizeof tmp);
 
 		if (strlcat(dest, tmp, dsize) >= dsize) {
 			(void) fprintf(stderr, "FICS: %s: warning: strlcat() "
