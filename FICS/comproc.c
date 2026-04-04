@@ -1036,20 +1036,21 @@ who_verbose(int p, int num, int plist[])
 			}
 		}
 
-		strlcat(playerLine, tmp, sizeof playerLine);
-		snprintf(tmp, sizeof tmp, " %4s        %-4s        %5s  ",
+		(void) strlcat(playerLine, tmp, sizeof playerLine);
+		(void) snprintf(tmp, sizeof tmp, " %4s        %-4s        "
+		    "%5s  ",
 		    ratstrii(parray[p1].s_stats.rating,
 		    parray[p1].registered),
 		    ratstrii(parray[p1].b_stats.rating,
 		    parray[p1].registered),
 		    hms(player_ontime(p1), 0, 0, 0));
-		strlcat(playerLine, tmp, sizeof playerLine);
+		(void) strlcat(playerLine, tmp, sizeof playerLine);
 
 		if (player_idle(p1) >= 60) {
 			(void) snprintf(tmp, sizeof tmp, "%5s   |\n",
 			    hms(player_idle(p1), 0, 0, 0));
 		} else {
-			strlcpy(tmp, "        |\n", sizeof tmp);
+			(void) strlcpy(tmp, "        |\n", sizeof tmp);
 		}
 
 		if (strlcat(playerLine, tmp, sizeof playerLine) >=
