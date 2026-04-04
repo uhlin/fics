@@ -869,18 +869,21 @@ com_llogons(int p, param_list param)
 PUBLIC int
 com_logons(int p, param_list param)
 {
-	char fname[MAX_FILENAME_SIZE] = { '\0' };
+	char	fname[MAX_FILENAME_SIZE] = { '\0' };
+	int	ret = -1;
 
 	if (param[0].type == TYPE_WORD) {
-		snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+		ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
 		    stats_dir, param[0].val.word[0], param[0].val.word,
 		    STATS_LOGONS);
 	} else {
-		snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
+		ret = snprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
 		    stats_dir, parray[p].login[0], parray[p].login,
 		    STATS_LOGONS);
 	}
-	return plogins(p, fname);
+
+	return (is_too_long(ret, sizeof fname) ? COM_FAILED :
+	    plogins(p, fname));
 }
 
 PRIVATE void
