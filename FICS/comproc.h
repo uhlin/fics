@@ -23,6 +23,7 @@
    Markus Uhlin			23/12/09	Fixed implicit ints
    Markus Uhlin			23/12/19	Sorted declarations
    Markus Uhlin			24/01/03	Added argument lists
+   Markus Uhlin			26/04/04	Usage of begin/end decls
 */
 
 #ifndef _COMPROC_H
