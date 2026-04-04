@@ -471,22 +471,24 @@ com_stats(int p, param_list param)
 		connected = 1;
 	}
 
-	snprintf(line, sizeof line, "\nStatistics for %-11s ", parray[p1].name);
+	(void) snprintf(line, sizeof line, "\nStatistics for %-11s ",
+			parray[p1].name);
 
 	if (connected && parray[p1].status == PLAYER_PROMPT) {
-		snprintf(tmp, sizeof tmp, "On for: %s",
+		(void) snprintf(tmp, sizeof tmp, "On for: %s",
 		    hms_desc(player_ontime(p1)));
-		strlcat(line, tmp, sizeof line);
-		snprintf(tmp, sizeof tmp, "   Idle: %s\n",
+		(void) strlcat(line, tmp, sizeof line);
+		(void) snprintf(tmp, sizeof tmp, "   Idle: %s\n",
 		    hms_desc(player_idle(p1)));
 	} else {
 		time_t last;
 
 		if ((last = player_lastdisconnect(p1)) != 0) {
-			snprintf(tmp, sizeof tmp, "(Last disconnected %s):\n",
+			(void) snprintf(tmp, sizeof tmp,
+			    "(Last disconnected %s):\n",
 			    strltime(&last));
 		} else
-			strlcpy(tmp, "(Never connected.)\n", sizeof tmp);
+			(void) strlcpy(tmp, "(Never connected.)\n", sizeof tmp);
 	}
 
 	strlcat(line, tmp, sizeof line);
