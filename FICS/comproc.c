@@ -1920,10 +1920,10 @@ com_adhelp(int p, param_list param)
 PUBLIC int
 com_mailsource(int p, param_list param)
 {
-	char		*buffer[1000];
+	char		*buffer[1000] = { NULL };
 	char		*iwant;
-	char		 fname[MAX_FILENAME_SIZE];
-	char		 subj[120];
+	char		 fname[MAX_FILENAME_SIZE] = { '\0' };
+	char		 subj[120] = { '\0' };
 	int		 count;
 
 	if (!parray[p].registered) {
