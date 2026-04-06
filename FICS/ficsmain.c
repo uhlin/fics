@@ -324,7 +324,7 @@ seed_the_prng(void)
 	if (clock_gettime(CLOCK_REALTIME, &ts) == -1)
 		err(1, "%s: fatal: clock_gettime", __func__);
 
-	srand(ts.tv_nsec ^ ts.tv_sec);
+	srand(getpid() ^ ts.tv_nsec ^ ts.tv_sec);
 }
 
 PRIVATE __dead void
