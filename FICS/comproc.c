@@ -1942,7 +1942,7 @@ com_mailsource(int p, param_list param)
 	char		*iwant;
 	char		 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char		 subj[120] = { '\0' };
-	int		 count;
+	int		 count, ret;
 
 	if (!parray[p].registered) {
 		pprintf(p, "Only registered people can use the mailsource "
@@ -1964,9 +1964,14 @@ com_mailsource(int p, param_list param)
 		    "server %s: %s",
 		    fics_hostname,
 		    *buffer);
-		snprintf(fname, sizeof fname, "%s/%s",
+		ret = snprintf(fname, sizeof fname, "%s/%s",
 		    source_dir,
 		    *buffer);
+
+		if (is_too_long(ret, sizeof fname)) {
+			warnx("%s: too long filename", __func__);
+			return COM_FAILED;
+		}
 
 		mail_file_to_user(p, subj, fname);
 
@@ -2004,7 +2009,7 @@ com_mailhelp(int p, param_list param)
 	char		*iwant;
 	char		 fname[MAX_FILENAME_SIZE] = { '\0' };
 	char		 subj[120] = { '\0' };
-	int		 count;
+	int		 count, ret;
 	int		 lang = parray[p].language;
 
 	if (!parray[p].registered) {
@@ -2042,9 +2047,14 @@ com_mailhelp(int p, param_list param)
 		    "server %s: %s",
 		    fics_hostname,
 		    *buffer);
-		snprintf(fname, sizeof fname, "%s/%s",
+		ret = snprintf(fname, sizeof fname, "%s/%s",
 		    help_dir[lang],
 		    *buffer);
+
+		if (is_too_long(ret, sizeof fname)) {
+			warnx("%s: too long filename", __func__);
+			return COM_FAILED;
+		}
 
 		mail_file_to_user(p, subj, fname);
 
