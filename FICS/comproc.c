@@ -1089,29 +1089,29 @@ who_winloss(int p, int num, int plist[])
 			psprintf_highlight(p, playerLine, sizeof playerLine,
 			    "%-17s", p1WithAttrs);
 		} else {
-			snprintf(playerLine, sizeof playerLine, "%-17s",
+			(void) snprintf(playerLine, sizeof playerLine, "%-17s",
 			    p1WithAttrs);
 		}
 
-		snprintf(tmp, sizeof tmp, "  %4s     %4d %4d %4d   ",
+		(void) snprintf(tmp, sizeof tmp, "  %4s     %4d %4d %4d   ",
 		    ratstrii(parray[p1].s_stats.rating, parray[p1].registered),
 		    parray[p1].s_stats.win,
 		    parray[p1].s_stats.los,
 		    parray[p1].s_stats.dra);
-		strlcat(playerLine, tmp, sizeof playerLine);
+		(void) strlcat(playerLine, tmp, sizeof playerLine);
 
-		snprintf(tmp, sizeof tmp, "%4s    %4d %4d %4d   ",
+		(void) snprintf(tmp, sizeof tmp, "%4s    %4d %4d %4d   ",
 		    ratstrii(parray[p1].b_stats.rating, parray[p1].registered),
 		    parray[p1].b_stats.win,
 		    parray[p1].b_stats.los,
 		    parray[p1].b_stats.dra);
-		strlcat(playerLine, tmp, sizeof playerLine);
+		(void) strlcat(playerLine, tmp, sizeof playerLine);
 
 		if (player_idle(p1) >= 60) {
-			snprintf(tmp, sizeof tmp, "%5s\n", hms(player_idle(p1),
-			    0, 0, 0));
+			(void) snprintf(tmp, sizeof tmp, "%5s\n",
+			    hms(player_idle(p1), 0, 0, 0));
 		} else {
-			strlcpy(tmp, "\n", sizeof tmp);
+			(void) strlcpy(tmp, "\n", sizeof tmp);
 		}
 
 		strlcat(playerLine, tmp, sizeof playerLine);
