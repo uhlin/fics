@@ -1960,8 +1960,8 @@ com_mailsource(int p, param_list param)
 		pprintf(p, "Found no source file matching \"%s\".\n",
 		    (iwant ? iwant : ""));
 	} else if ((count == 1) || !strcmp(iwant ? iwant : "", *buffer)) {
-		snprintf(subj, sizeof subj, "FICS source file from server "
-		    "%s: %s",
+		(void) snprintf(subj, sizeof subj, "FICS source file from "
+		    "server %s: %s",
 		    fics_hostname,
 		    *buffer);
 		snprintf(fname, sizeof fname, "%s/%s",
@@ -2038,7 +2038,8 @@ com_mailhelp(int p, param_list param)
 		pprintf(p, "Found no help file matching \"%s\".\n",
 		    (iwant ? iwant : ""));
 	} else if (count == 1 || !strcmp(*buffer, iwant ? iwant : "")) {
-		snprintf(subj, sizeof subj, "FICS help file from server %s: %s",
+		(void) snprintf(subj, sizeof subj, "FICS help file from "
+		    "server %s: %s",
 		    fics_hostname,
 		    *buffer);
 		snprintf(fname, sizeof fname, "%s/%s",
