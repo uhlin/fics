@@ -1114,8 +1114,11 @@ who_winloss(int p, int num, int plist[])
 			(void) strlcpy(tmp, "\n", sizeof tmp);
 		}
 
-		strlcat(playerLine, tmp, sizeof playerLine);
-		pprintf(p, "%s", playerLine);
+		if (strlcat(playerLine, tmp, sizeof playerLine) >=
+		    sizeof playerLine)
+			warnx("%s: error: strlcat() truncated", __func__);
+		else
+			pprintf(p, "%s", playerLine);
 	}
 
 	pprintf(p, "    %3d Players Displayed.\n", num);
