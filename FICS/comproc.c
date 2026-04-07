@@ -2062,9 +2062,14 @@ com_handles(int p, param_list param)
 {
 	char	*buffer[1000] = { NULL };
 	char	 pdir[MAX_FILENAME_SIZE] = { '\0' };
-	int	 count;
+	int	 count, ret;
 
-	snprintf(pdir, sizeof pdir, "%s/%c", player_dir, param[0].val.word[0]);
+	ret = snprintf(pdir, sizeof pdir, "%s/%c", player_dir,
+	    param[0].val.word[0]);
+	if (is_too_long(ret, sizeof pdir)) {
+		warnx("%s: player dir too long", __func__);
+		return COM_FAILED;
+	}
 
 	count = search_directory(pdir, param[0].val.word, buffer,
 	    ARRAY_SIZE(buffer));
