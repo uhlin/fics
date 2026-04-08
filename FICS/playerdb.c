@@ -2652,7 +2652,7 @@ player_num_results(int p, int result)
 PUBLIC int
 player_simul_over(int p, int g, int result)
 {
-	char	tmp[1024];
+	char	tmp[1024] = { '\0' };
 	int	on, ong, p1, which = -1, won;
 
 	for (won = 0; won < parray[p].simul_info.numBoards; won++) {
