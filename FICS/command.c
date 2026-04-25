@@ -1340,9 +1340,9 @@ commands_init(void)
 
 	while (command_list[i].comm_name) {
 		if (command_list[i].adminLevel >= ADMIN_ADMIN)
-			fprintf(afp, "%s\n", command_list[i].comm_name);
+			mfprintf(afp, "%s\n", command_list[i].comm_name);
 		else
-			fprintf(fp, "%s\n", command_list[i].comm_name);
+			mfprintf(fp, "%s\n", command_list[i].comm_name);
 		i++;
 	}
 
