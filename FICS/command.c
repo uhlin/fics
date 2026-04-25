@@ -784,7 +784,10 @@ check_news(int p, int admin)
 
 		if (num_anews == -1) {
 			num_anews = count_lines(fp);
-			fclose(fp);
+
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
+
 			if ((fp = fopen(filename, "r")) == NULL) {
 				warn("%s: can't find admin news index (%s)",
 				    __func__, filename);
@@ -807,7 +810,8 @@ check_news(int p, int admin)
 		if ((crtime - lc) < 0) {
 			pprintf(p, "There are no new admin news items since "
 			    "your last login.\n\n");
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 			return;
 		} else {
 			pprintf(p, "Index of new admin news items:\n");
@@ -834,7 +838,10 @@ check_news(int p, int admin)
 
 		if (num_news == -1) {
 			num_news = count_lines(fp);
-			fclose(fp);
+
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
+
 			if ((fp = fopen(filename, "r")) == NULL) {
 				warn("%s: can't find news index (%s)", __func__,
 				    filename);
@@ -857,7 +864,8 @@ check_news(int p, int admin)
 		if ((crtime - lc) < 0) {
 			pprintf(p, "There are no new news items since your "
 			    "last login (%s).\n", strltime(&lc));
-			fclose(fp);
+			if (fclose(fp) != 0)
+				warn("%s: error: fclose", __func__);
 			return;
 		} else {
 			pprintf(p, "Index of new news items:\n");
@@ -874,7 +882,8 @@ check_news(int p, int admin)
 		}
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 }
 
 PRIVATE int
