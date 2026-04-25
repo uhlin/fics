@@ -883,7 +883,8 @@ style10(game_state_t *b, move_t *ml)
 	too_long = (ret < 0 || (size_t)ret >= sizeof tmp);
 
 	if (too_long) {
-		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		(void) fprintf(stderr, "FICS: %s: warning: "
+		    "snprintf truncated\n",
 		    __func__);
 	}
 
@@ -1042,7 +1043,8 @@ style12(game_state_t *b, move_t *ml)
 	too_long = (ret < 0 || (size_t)ret >= sizeof tmp);
 
 	if (too_long) {
-		fprintf(stderr, "FICS: %s: warning: snprintf truncated\n",
+		(void) fprintf(stderr, "FICS: %s: warning: "
+		    "snprintf truncated\n",
 		    __func__);
 	}
 
