@@ -794,11 +794,11 @@ check_news(int p, int admin)
 
 		if (fgets(junk, sizeof junk, fp) == NULL) {
 			warnx("%s: fgets() error", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return;
 		} else if (sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: sscanf() error", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return;
 		}
 
@@ -844,11 +844,11 @@ check_news(int p, int admin)
 
 		if (fgets(junk, sizeof junk, fp) == NULL) {
 			warnx("%s: fgets() error", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return;
 		} else if (sscanf(junk, v_scan_fmt, &lval, count) != 2) {
 			warnx("%s: sscanf() error", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return;
 		}
 
@@ -1348,9 +1348,9 @@ commands_init(void)
 
   clean_up:
 	if (fp)
-		fclose(fp);
+		(void) fclose(fp);
 	if (afp)
-		fclose(afp);
+		(void) fclose(afp);
 }
 
 /* Need to save rated games */
