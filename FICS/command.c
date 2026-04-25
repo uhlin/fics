@@ -520,7 +520,7 @@ process_command(int p, char *com_string, char **cmd)
 
 #ifdef DEBUG
 	if (strcasecmp(parray[p].name, parray[p].login)) {
-		fprintf(stderr, "FICS: PROBLEM Name=%s, Login=%s\n",
+		(void) fprintf(stderr, "FICS: PROBLEM Name=%s, Login=%s\n",
 		    parray[p].name,
 		    parray[p].login);
 	}
@@ -530,8 +530,11 @@ process_command(int p, char *com_string, char **cmd)
 		return COM_FAILED;
 
 #ifdef DEBUG
-	fprintf(stderr, "%s, %s, %d: >%s<\n", parray[p].name, parray[p].login,
-	    parray[p].socket, com_string);
+	(void) fprintf(stderr, "%s, %s, %d: >%s<\n",
+	    parray[p].name,
+	    parray[p].login,
+	    parray[p].socket,
+	    com_string);
 #endif
 
 	alias_substitute(parray[p].alias_list, parray[p].numAlias, com_string,
@@ -541,7 +544,7 @@ process_command(int p, char *com_string, char **cmd)
 
 #ifdef DEBUG
 	if (strcmp(com_string, alias_string2) != 0) {
-		fprintf(stderr, "%s -alias-: >%s<\n", parray[p].name,
+		(void) fprintf(stderr, "%s -alias-: >%s<\n", parray[p].name,
 		    alias_string2);
 	}
 #endif
@@ -1103,10 +1106,11 @@ process_input(int fd, char *com_string)
 	int	retval = 0;
 
 	if (p < 0) {
-		fprintf(stderr, "FICS: Input from a player not in array!\n");
+		(void) fprintf(stderr, "FICS: "
+		    "Input from a player not in array!\n");
 		return -1;
 	} else if (com_string == NULL) {
-		fprintf(stderr, "FICS: Command string is NULL!\n");
+		(void) fprintf(stderr, "FICS: Command string is NULL!\n");
 		return -1;
 	}
 
@@ -1115,10 +1119,10 @@ process_input(int fd, char *com_string)
 
 	switch (parray[p].status) {
 	case PLAYER_EMPTY:
-		fprintf(stderr, "FICS: Command from an empty player!\n");
+		(void) fprintf(stderr, "FICS: Command from an empty player!\n");
 		break;
 	case PLAYER_NEW:
-		fprintf(stderr, "FICS: Command from a new player!\n");
+		(void) fprintf(stderr, "FICS: Command from a new player!\n");
 		break;
 	case PLAYER_INQUEUE:
 		// Ignore input from player in queue
@@ -1127,8 +1131,8 @@ process_input(int fd, char *com_string)
 		retval = process_login(p, com_string);
 
 		if (retval == COM_LOGOUT) { // && com_string != NULL
-			fprintf(stderr, "%s tried to log in and failed.\n",
-			    com_string);
+			(void) fprintf(stderr, "%s tried to log in "
+			    "and failed.\n", com_string);
 		}
 
 		break;
@@ -1177,8 +1181,8 @@ process_disconnection(int fd)
 	int p = player_find(fd);
 
 	if (p < 0) {
-		fprintf(stderr, "FICS: Disconnect from a player not in array!"
-		    "\n");
+		(void) fprintf(stderr, "FICS: "
+		    "Disconnect from a player not in array!\n");
 		return -1;
 	}
 
