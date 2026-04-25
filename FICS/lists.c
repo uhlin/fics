@@ -208,7 +208,7 @@ list_size(int p, enum ListWhich l)
 PRIVATE List *
 list_findpartial(int p, char *which, int gonnado)
 {
-	List	*gl;
+	List	*gl = NULL;
 	int	 foundit, slen;
 
 	foundit     = -1;
