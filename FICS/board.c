@@ -28,6 +28,8 @@
    Markus Uhlin                 25/04/06	Fixed Clang Tidy warnings.
    Markus Uhlin                 25/09/02	wild_update: fixed file created
 						without restricting permissions.
+   Markus Uhlin                 26/04/25	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
