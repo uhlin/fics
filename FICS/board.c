@@ -1177,7 +1177,8 @@ board_read_file(char *category, char *gname, game_state_t *gs)
 		}
 	} // while
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error: fclose", __func__);
 	return 0;
 }
 
@@ -1376,7 +1377,8 @@ wild_update(int style)
 		}
 
 		mfprintf(fp, "\n");
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	}
 }
 
