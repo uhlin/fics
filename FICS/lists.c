@@ -256,7 +256,12 @@ list_findpartial(int p, char *which, int gonnado)
 			return NULL;
 		}
 
-		gl = list_find(p, foundit);
+		if (foundit >= L_ADMIN && foundit <= L_CHANNEL) // XXX
+			gl = list_find(p, (enum ListWhich)foundit);
+		else {
+			warnx("%s: 'foundit' = %d (out-of-bounds)", __func__,
+			    foundit);
+		}
 	} else {
 		pprintf(p, "\"%s\" does not match any list name.\n", which);
 		return NULL;
