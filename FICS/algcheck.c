@@ -170,7 +170,7 @@ get_move_info(char *str, int *piece, int *ff, int *fr, int *tf, int *tr,
 				lff = lfr = ALG_DROP;
 				break;
 			default:
-				fprintf(stderr, "Unknown character in "
+				(void) fprintf(stderr, "Unknown character in "
 				    "algebraic parsing\n");
 				break;
 			}
@@ -231,8 +231,8 @@ alg_parse_move(char *mstr, game_state_t *gs, move_t *mt)
 	int	piece, ff, fr, tf, tr, bc;
 
 	if (get_move_info(mstr, &piece, &ff, &fr, &tf, &tr, &bc) != MS_ALG) {
-		fprintf(stderr, "FICS: Shouldn't try to algebraically parse "
-		    "non-algebraic move string.\n");
+		(void) fprintf(stderr, "FICS: Shouldn't try to algebraically "
+		    "parse non-algebraic move string.\n");
 		return MOVE_ILLEGAL;
 	}
 
