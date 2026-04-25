@@ -1325,7 +1325,7 @@ commands_init(void)
 	(void) fprintf(stderr, "FICS: %s()\n", __func__);
 
 	fp = afp = NULL;
-	snprintf(fname, sizeof fname, "%s/commands", comhelp_dir);
+	msnprintf(fname, sizeof fname, "%s/commands", comhelp_dir);
 
 	if ((fd[0] = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: open: %s", __func__, fname);
@@ -1337,7 +1337,7 @@ commands_init(void)
 		return;
 	}
 
-	snprintf(fname, sizeof fname, "%s/admin_commands", adhelp_dir);
+	msnprintf(fname, sizeof fname, "%s/admin_commands", adhelp_dir);
 
 	if ((fd[1] = open(fname, g_open_flags[OPFL_WRITE], g_open_modes)) < 0) {
 		warn("%s: open: %s", __func__, fname);
