@@ -39,6 +39,8 @@
    Markus Uhlin                 25/07/28	Usage of 'int64_t'
    Markus Uhlin                 25/08/23	Fixed file created without
 						restricting permissions.
+   Markus Uhlin                 26/04/25	Fixed unchecked function return
+						values.
 */
 
 #include "stdinclude.h"
