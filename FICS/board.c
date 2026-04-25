@@ -1341,7 +1341,7 @@ wild_update(int style)
 			return;
 		}
 
-		fprintf(fp, "W:");
+		mfprintf(fp, "W:");
 		onPiece = -1;
 
 		for (r = 1; r >= 0; r--) {
@@ -1349,15 +1349,15 @@ wild_update(int style)
 				if (onPiece < 0 || b[f][r] != onPiece) {
 					onPiece = b[f][r];
 
-					fprintf(fp, " %s", wpstring
-					    [piecetype(b[f][r])]);
+					mfprintf(fp, " %s",
+					    wpstring[piecetype(b[f][r])]);
 				}
 
-				fprintf(fp, " %c%c", (f + 'a'), (r + '1'));
+				mfprintf(fp, " %c%c", (f + 'a'), (r + '1'));
 			}
 		}
 
-		fprintf(fp, "\nB:");
+		mfprintf(fp, "\nB:");
 		onPiece = -1;
 
 		for (r = 6; r < 8; r++) {
@@ -1365,15 +1365,15 @@ wild_update(int style)
 				if (onPiece < 0 || b[f][r] != onPiece) {
 					onPiece = b[f][r];
 
-					fprintf(fp, " %s", wpstring
-					    [piecetype(b[f][r])]);
+					mfprintf(fp, " %s",
+					    wpstring[piecetype(b[f][r])]);
 				}
 
-				fprintf(fp, " %c%c", (f + 'a'), (r + '1'));
+				mfprintf(fp, " %c%c", (f + 'a'), (r + '1'));
 			}
 		}
 
-		fprintf(fp, "\n");
+		mfprintf(fp, "\n");
 		fclose(fp);
 	}
 }
