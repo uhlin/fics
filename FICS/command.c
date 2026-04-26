@@ -398,6 +398,9 @@ get_parameters(int command, char *parameters, param_list params)
 			if (paramLower)
 				stolower((params)[i].val.string);
 			break;
+		default:
+			warnx("%s: invalid command char (%c)", __func__, c);
+			break;
 		} /* switch */
 	} /* for */
 
@@ -504,6 +507,9 @@ printusage(int p, char *command_str)
 			break;
 		case 't':	// optional string to end
 			pprintf(p, " [string]");
+			break;
+		default:
+			warnx("%s: invalid command char (%c)", __func__, c);
 			break;
 		}
 	}
