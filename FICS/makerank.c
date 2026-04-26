@@ -158,10 +158,10 @@ static int
 LoadEntries(void)
 {
 	ENTRY	 e;
-	FILE	*fpPlayerList;
-	char	 command[90];
+	FILE	*fpPlayerList = NULL;
+	char	 command[90] = { '\0' };
 	char	 letter1;
-	char	 pathInput[80];
+	char	 pathInput[80] = { '\0' };
 	int	 n = 0;
 	int	 listsize;
 
@@ -275,8 +275,8 @@ sortfunc(const void *i, const void *j)
 static void
 makerank(void)
 {
-	FILE	*fp;
-	char	 fName[200];
+	FILE	*fp = NULL;
+	char	 fName[200] = { '\0' };
 	int	 fd;
 	int	 sortnum, sortmesize, i, n;
 
