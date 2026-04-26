@@ -51,6 +51,7 @@
    Markus Uhlin			26/03/24	Fixed unchecked function return
 						values.
    Markus Uhlin			26/03/31	Added fclose() error checking.
+   Markus Uhlin			26/04/26	Fixed uncovered code paths.
 */
 
 #include "stdinclude.h"
