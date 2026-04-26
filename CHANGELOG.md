@@ -23,10 +23,10 @@ documented in this file.
 - **Replaced** `atoi()` with `strtonum()`. Multiple occurrences.
 - **Replaced** `rewind()` with `fseek()`, which offers error checking.
 - **Seeded** the pseudo random number generator (PRNG) better.
-- Usage of `const`.
-- Usage of `strsignal()`.
-- Usage of begin/end decls, in header files.
-- Usage of member initializers.
+- **Usage** of `const`.
+- **Usage** of `strsignal()`.
+- **Usage** of begin/end decls, in header files.
+- **Usage** of member initializers.
 
 ## [1.4.7] - 2025-12-01 ##
 - **Added** a config file interpreter and moved some settings from
