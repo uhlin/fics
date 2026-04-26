@@ -32,6 +32,7 @@
    Markus Uhlin			25/11/02	Require root privileges if the
 						FICS prefix compares to anything
 						else than '/home'.
+   Markus Uhlin			26/04/27	Made multiple improvements.
 */
 
 #include "stdinclude.h"
