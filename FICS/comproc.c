@@ -364,6 +364,9 @@ com_set(int p, param_list param)
 	case VAR_AMBIGUOUS:
 		pprintf(p, "Ambiguous variable name %s.\n", param[0].val.word);
 		break;
+	default:
+		pprintf(p, "%s: unknown result\n", __func__);
+		break;
 	}
 
 	return COM_OK;
