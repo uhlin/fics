@@ -1104,6 +1104,12 @@ process_prompt(int p, char *command)
 	case COM_LOGOUT:
 		retval = COM_LOGOUT;
 		break;
+	default:
+		pprintf(p, "%s: Unknown result when processing command.\n",
+		    cmd);
+		retval = COM_OK;
+		pprintf(p, "%s", parray[p].prompt);
+		break;
 	}
 
 	return retval;
