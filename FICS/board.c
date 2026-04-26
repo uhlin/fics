@@ -30,6 +30,7 @@
 						without restricting permissions.
    Markus Uhlin                 26/04/25	Fixed unchecked function return
 						values.
+   Markus Uhlin                 26/04/26	Fixed uncovered code paths.
 */
 
 #include "stdinclude.h"
