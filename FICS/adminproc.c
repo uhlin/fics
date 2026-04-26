@@ -435,7 +435,8 @@ com_anews(int p, param_list param)
 		crtime = lval;
 		pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)),
 		    junkp);
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	} else if (param[0].type == TYPE_WORD &&
 	    !strcmp(param[0].val.word, "all")) {
 		/*
@@ -464,7 +465,8 @@ com_anews(int p, param_list param)
 		crtime = lval;
 		pprintf(p, "%3s (%s) %s", count, fix_time(strltime(&crtime)),
 		    junkp);
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 	} else {
 		while (!feof(fp) && !found) {
 			junkp = junk;
@@ -493,7 +495,8 @@ com_anews(int p, param_list param)
 			}
 		}
 
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
 
 		if (!found) {
 			pprintf(p, "Bad index number!\n");
@@ -509,7 +512,9 @@ com_anews(int p, param_list param)
 			return COM_OK;
 		}
 
-		fclose(fp);
+		if (fclose(fp) != 0)
+			warn("%s: error: fclose", __func__);
+
 		msnprintf(filename, sizeof filename, "adminnews.%s",
 		    param[0].val.word);
 
