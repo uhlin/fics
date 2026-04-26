@@ -203,7 +203,7 @@ read_the_group_permissions_file(const char *path)
 #endif
 	}
 
-	if (feof(fp))
+	if (feof(fp))	// NOLINT
 		read_ok = true;
 
 	fclose(fp);
