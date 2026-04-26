@@ -45,7 +45,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 	    fgets(line, sizeof line, fp) == NULL ||
 	    feof(fp)) {
 		if (fp)
-			fclose(fp);
+			(void) fclose(fp);
 		return 0;
 	}
 
@@ -55,7 +55,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 		if (fgets(line, sizeof line, fp) == NULL ||
 		    sscanf(line, "%19s", e->name) != 1) {
 			warnx("%s: fgets() or sscanf() error", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return 0;
 		} else if (fgets(line, sizeof line, fp) == NULL ||
 			   fgets(line, sizeof line, fp) == NULL ||
@@ -78,7 +78,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 		    &(e->r[3].rating)) != 8) {
 			fprintf(stderr, "OOPS: couldn't parse player file %s."
 			    "\n", fileName);
-			fclose(fp);
+			(void) fclose(fp);
 			return 0;
 		}
 
@@ -92,7 +92,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 
 			if (sscanf(line, "%19s", field) != 1) {
 				warnx("%s: sscanf() error", __func__);
-				fclose(fp);
+				(void) fclose(fp);
 				return 0;
 			}
 
@@ -100,7 +100,7 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 				if (sscanf(line, "%*s %29s", NameWithCase) != 1) {
 					warnx("%s: expected name with case",
 					    __func__);
-					fclose(fp);
+					(void) fclose(fp);
 					return 0;
 				}
 
