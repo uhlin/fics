@@ -150,7 +150,8 @@ GetPlayerInfo(char *fileName, ENTRY *e)
 		} while (!done && !feof(fp));
 	}
 
-	fclose(fp);
+	if (fclose(fp) != 0)
+		warn("%s: error closing file pointer", __func__);
 	return (done ? 1 : 0);
 }
 
@@ -329,7 +330,9 @@ makerank(void)
 			    sortme[i]->r[rtype].num,
 			    sortme[i]->computer);
 		}
-		fclose(fp);
+
+		if (fclose(fp) != 0)
+			warn("%s: error closing file pointer", __func__);
 		free(sortme);
 	}
 }
