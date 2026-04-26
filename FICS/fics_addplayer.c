@@ -104,8 +104,7 @@ main(int argc, char *argv[])
 	char	 password[PASSLEN + 1] = { '\0' };
 	char	 salt[FICS_SALT_SIZE] = { '\0' };
 	char	 text[2048] = { '\0' };
-	int	 i;
-	int	 p;
+	int	 i, p, ret;
 
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
@@ -200,7 +199,7 @@ main(int argc, char *argv[])
 		    "the changes to take effect.\n");
 	}
 
-	snprintf(text, sizeof text,
+	ret = snprintf(text, sizeof text,
 	    "\nYour player account has been created.\n\n"
 	    "Login Name: %s\n"
 	    "Full Name: %s\n"
@@ -224,6 +223,9 @@ main(int argc, char *argv[])
 
 	    "Regards,\n\nThe FICS admins\n", funame, fname, email, password,
 	    settings_get("server_hostname"));
+
+	if (is_too_long(ret, sizeof text))
+		warnx("mail text truncated (ret: %d)", ret);
 
 	mail_string_to_address(email, "FICS Account Created", text);
 	explicit_bzero(password, sizeof(password));
