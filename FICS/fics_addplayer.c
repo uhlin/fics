@@ -65,7 +65,7 @@ PRIVATE void
 add_handle_to_list(const char *handle)
 {
 	FILE	*fp;
-	char	 path[1024];
+	char	 path[1024] = { '\0' };
 	int	 fd;
 
 	snprintf(path, sizeof path, "%s/admin", DEFAULT_LISTS);
@@ -94,9 +94,9 @@ usage(char *progname)
 PUBLIC int
 main(int argc, char *argv[])
 {
-	char	 password[PASSLEN + 1];
-	char	 salt[FICS_SALT_SIZE];
-	char	 text[2048];
+	char	 password[PASSLEN + 1] = { '\0' };
+	char	 salt[FICS_SALT_SIZE] = { '\0' };
+	char	 text[2048] = { '\0' };
 	int	 i;
 	int	 p;
 
