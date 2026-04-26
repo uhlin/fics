@@ -193,7 +193,7 @@ create_news_file(int p, param_list param, int admin)
 			    g_open_modes)) < 0)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
-				fprintf(fp, "%s\n", param[1].val.string);
+				mfprintf(fp, "%s\n", param[1].val.string);
 				(void) fclose(fp);
 			} else
 				close(fd);
@@ -210,7 +210,7 @@ create_news_file(int p, param_list param, int admin)
 			    g_open_modes)) < 0)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
-				fprintf(fp, "%s\n", param[1].val.string);
+				mfprintf(fp, "%s\n", param[1].val.string);
 				(void) fclose(fp);
 			} else
 				close(fd);
@@ -237,7 +237,7 @@ add_item(char *new_item, char *filename)
 		return 0;
 	}
 
-	fprintf(new_fp, "%s", new_item);
+	mfprintf(new_fp, "%s", new_item);
 
 	if ((old_fp = fopen(filename, "r")) == NULL)
 		goto end;
@@ -246,7 +246,7 @@ add_item(char *new_item, char *filename)
 		if (fgets(junk, sizeof junk, old_fp) == NULL ||
 		    feof(old_fp))
 			break;
-		fprintf(new_fp, "%s", junk);
+		mfprintf(new_fp, "%s", junk);
 	}
 
   end:
