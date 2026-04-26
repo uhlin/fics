@@ -194,7 +194,7 @@ create_news_file(int p, param_list param, int admin)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
 				fprintf(fp, "%s\n", param[1].val.string);
-				fclose(fp);
+				(void) fclose(fp);
 			} else
 				close(fd);
 		}
@@ -211,7 +211,7 @@ create_news_file(int p, param_list param, int admin)
 				return COM_FAILED;
 			else if ((fp = fdopen(fd, "w")) != NULL) {
 				fprintf(fp, "%s\n", param[1].val.string);
-				fclose(fp);
+				(void) fclose(fp);
 			} else
 				close(fd);
 		}
@@ -417,12 +417,12 @@ com_anews(int p, param_list param)
 
 		if (fgets(junk, sizeof junk, fp) == NULL) {
 			warnx("%s: fgets() error", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return COM_FAILED;
 		}
 		if (sscanf(junk, v_scan_junk, &lval, count) != 2) {
 			warnx("%s: sscanf() error: too few items", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return COM_FAILED;
 		}
 
@@ -446,12 +446,12 @@ com_anews(int p, param_list param)
 
 		if (fgets(junk, sizeof junk, fp) == NULL) {
 			warnx("%s: fgets() error", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return COM_FAILED;
 		}
 		if (sscanf(junk, v_scan_junk, &lval, count) != 2) {
 			warnx("%s: sscanf() error: too few items", __func__);
-			fclose(fp);
+			(void) fclose(fp);
 			return COM_FAILED;
 		}
 
