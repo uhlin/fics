@@ -257,8 +257,7 @@ add_item(char *new_item, char *filename)
 		(void) remove(filename);
 	}
 
-	(void) rename(tmp_file, filename);
-	return 1;
+	return (rename(tmp_file, filename) == 0); // XXX
 }
 
 /*
