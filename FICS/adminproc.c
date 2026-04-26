@@ -280,11 +280,11 @@ create_news_index(int p, param_list param, int admin)
 		} else {
 			num_anews++;
 
-			snprintf(new_item, sizeof new_item, "%jd %d %s\n",
+			msnprintf(new_item, sizeof new_item, "%jd %d %s\n",
 			    (intmax_t)time(NULL),
 			    num_anews,
 			    param[0].val.string);
-			snprintf(filename, sizeof filename,
+			msnprintf(filename, sizeof filename,
 			    "%s/newadminnews.index", news_dir);
 
 			if (add_item(new_item, filename)) {
@@ -304,9 +304,9 @@ create_news_index(int p, param_list param, int admin)
 		} else {
 			num_news++;
 
-			snprintf(filename, sizeof filename, "%s/newnews.index",
+			msnprintf(filename, sizeof filename, "%s/newnews.index",
 			    news_dir);
-			snprintf(new_item, sizeof new_item, "%jd %d %s\n",
+			msnprintf(new_item, sizeof new_item, "%jd %d %s\n",
 			    (intmax_t)time(NULL),
 			    num_news,
 			    param[0].val.string);
