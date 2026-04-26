@@ -4,25 +4,25 @@ All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
 ## [Unreleased] ##
-- Added and made use of `mfprintf()`.
-- Added array indices bounds checking.
-- Added null checks.
-- Fixed conflicting parameter names.
-- Fixed hardcoded function names in text messages.
-- Fixed implicit type conversions (from enum type to integer type).
-- Fixed integer to pointer casts.
-- Fixed non asynchronous-safe functions called from signal handlers.
-- Fixed potential uncovered code paths, i.e. added a default label to
+- **Added** and made use of `mfprintf()`.
+- **Added** array indices bounds checking.
+- **Added** null checks.
+- **Fixed** conflicting parameter names.
+- **Fixed** hardcoded function names in text messages.
+- **Fixed** implicit type conversions (from enum type to integer type).
+- **Fixed** integer to pointer casts.
+- **Fixed** non asynchronous-safe functions called from signal handlers.
+- **Fixed** potential uncovered code paths, i.e. added a default label to
   the `switch` statements.
-- Fixed unchecked function return values. _MULTIPLE_ occurrences.
-- Fixed uninitialized variables.
-- Made `pprintf_highlight()`, `pprintf_noformat()` and `pprintf_prompt()`
+- **Fixed** unchecked function return values. _MULTIPLE_ occurrences.
+- **Fixed** uninitialized variables.
+- **Made** `pprintf_highlight()`, `pprintf_noformat()` and `pprintf_prompt()`
   void. Their return values were unused through the whole project.
-- Replaced C-style headers in C++ files.
-- Replaced `atoi()` with `strtol()`. Multiple occurrences.
-- Replaced `atoi()` with `strtonum()`. Multiple occurrences.
-- Replaced `rewind()` with `fseek()`, which offers error checking.
-- Seeded the pseudo random number generator (PRNG) better.
+- **Replaced** C-style headers in C++ files.
+- **Replaced** `atoi()` with `strtol()`. Multiple occurrences.
+- **Replaced** `atoi()` with `strtonum()`. Multiple occurrences.
+- **Replaced** `rewind()` with `fseek()`, which offers error checking.
+- **Seeded** the pseudo random number generator (PRNG) better.
 - Usage of `const`.
 - Usage of `strsignal()`.
 - Usage of begin/end decls, in header files.
