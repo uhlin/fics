@@ -392,6 +392,9 @@ genstyle(game_state_t *b, move_t *ml, char *wp[], char *bp[],
 			break;
 		case 0:
 			break;
+		default:
+			warnx("%s: unexpected count (%d)", __func__, count);
+			break;
 		} // switch
 
 		mstrlcat(bstring, "\n", sizeof bstring);
