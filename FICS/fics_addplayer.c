@@ -44,6 +44,7 @@
 #include "config.h"
 #include "fics_getsalt.h"
 #include "ficsmain.h"
+#include "maxxes-utils.h"
 #include "playerdb.h"
 #include "prep_dir_for_privdrop.h"
 #include "settings.h"
@@ -66,11 +67,15 @@ add_handle_to_list(const char *handle)
 {
 	FILE	*fp;
 	char	 path[1024] = { '\0' };
-	int	 fd;
+	int	 fd, ret;
 
-	snprintf(path, sizeof path, "%s/admin", DEFAULT_LISTS);
+	ret = snprintf(path, sizeof path, "%s/admin", DEFAULT_LISTS);
 
-	if ((fd = open(path, g_open_flags[OPFL_APPEND], g_open_modes)) < 0) {
+	if (is_too_long(ret, sizeof path)) {
+		warnx("%s: error: path too long", __func__);
+		return;
+	} else if ((fd = open(path, g_open_flags[OPFL_APPEND],
+	    g_open_modes)) < 0) {
 		warn("%s: unable to open %s", __func__, path);
 		return;
 	} else if ((fp = fdopen(fd, "a")) == NULL) {
@@ -79,8 +84,10 @@ add_handle_to_list(const char *handle)
 		return;
 	}
 
-	fprintf(fp, "%s\n", handle);
-	fclose(fp);
+	mfprintf(fp, "%s\n", handle);
+
+	if (fclose(fp) != 0)
+		warn("%s: error closing file pointer", __func__);
 }
 
 PRIVATE __dead void
