@@ -2295,10 +2295,11 @@ game_write_complete(int g, int isDraw, char *EndSymbol)
 			(void) fprintf(stderr, "Trouble writing history file "
 			    "%s\n",
 			    fname);
+			if (close(fd) != 0) {
+				warn("%s: error closing file descriptor",
+				     __func__);
+			}
 		}
-
-		if (close(fd) != 0)
-			warn("%s: error closing file descriptor", __func__);
 	}
 
 	msnprintf(fname, sizeof fname, "%s/player_data/%c/%s.%s",
