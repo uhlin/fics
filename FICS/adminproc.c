@@ -398,7 +398,7 @@ com_anews(int p, param_list param)
 	msnprintf(filename, sizeof filename, "%s/newadminnews.index", news_dir);
 
 	if ((fp = fopen(filename, "r")) == NULL) {
-		fprintf(stderr, "Cant find news index.\n");
+		(void) fprintf(stderr, "Cant find news index.\n");
 		return COM_OK;
 	}
 
