@@ -1118,10 +1118,10 @@ com_addplayer(int p, param_list param)
 	char	*newemail = param[1].val.word;
 	char	*newname = param[2].val.string;
 	char	*newplayer = param[0].val.word;
-	char	 newplayerlower[MAX_LOGIN_NAME];
-	char	 password[PASSLEN + 1];
-	char	 salt[FICS_SALT_SIZE];
-	char	 text[2048];
+	char	 newplayerlower[MAX_LOGIN_NAME] = { '\0' };
+	char	 password[PASSLEN + 1] = { '\0' };
+	char	 salt[FICS_SALT_SIZE] = { '\0' };
+	char	 text[2048] = { '\0' };
 	int	 i;
 	int	 p1;
 
@@ -1395,9 +1395,9 @@ com_cmuzzle(int p, param_list param)
 PUBLIC int
 com_asetpasswd(int p, param_list param)
 {
-	char	 salt[FICS_SALT_SIZE];
-	char	 subject[400];
-	char	 text[10100];
+	char	 salt[FICS_SALT_SIZE] = { '\0' };
+	char	 subject[400] = { '\0' };
+	char	 text[10100] = { '\0' };
 	int	 p1, connected;
 
 	ASSERT(parray[p].adminLevel >= ADMIN_ADMIN);
