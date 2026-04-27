@@ -534,7 +534,7 @@ EndString(int g, int personal)
 		    "adjudication");
 		break;
 	default:
-		msnprintf(endstr, sizeof endstr, "???????");
+		msnprintf(endstr, sizeof endstr, "\?\?\?\?\?\?\?");
 		break;
 	}
 
