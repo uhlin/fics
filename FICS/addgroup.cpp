@@ -206,7 +206,7 @@ read_the_group_permissions_file(const char *path)
 	if (feof(fp))	// NOLINT
 		read_ok = true;
 
-	fclose(fp);
+	(void) fclose(fp);
 	delete[] line;
 
 	return (read_ok ? 0 : -1);
