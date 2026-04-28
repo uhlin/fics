@@ -3,7 +3,7 @@
 All notable changes to this fork of FICS version 1.6.2 will be
 documented in this file.
 
-## [Unreleased] ##
+## [1.4.8] - 2026-04-28 ##
 - **Added** and made use of `mfprintf()`.
 - **Added** array indices bounds checking.
 - **Added** null checks.
